@@ -7,26 +7,9 @@
 #property link      "http://www.mql5.com"
 #property version   "1.00"
 
-#include <Object.mqh>
 #include <Arrays\ArrayDouble.mqh>
 #include <Arrays\ArrayObj.mqh>
-/*
-#define CMD_VOID        -1
-#define CMD_NEUTRAL     0
-#define CMD_BUY         1
-#define CMD_SELL        2
-#define CMD_BUYLIMIT    3
-#define CMD_SELLLIMIT   4
-#define CMD_BUYSTOP     5
-#define CMD_SELLSTOP    6
-#define CMD_LONG        7
-#define CMD_SHORT       8
-#define CMD_LIMIT       9
-#define CMD_STOP        10
-#define CMD_MARKET      11
-#define CMD_PENDING     12
-#define CMD_ALL         13
-*/
+
 enum cmd {
    CMD_VOID=-1,
    CMD_NEUTRAL,

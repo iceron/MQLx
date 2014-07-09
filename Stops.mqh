@@ -14,15 +14,12 @@
 //+------------------------------------------------------------------+
 class JStops : public CArrayObj
   {
-private:
-protected:
 public:
                      JStops();
                      JStops(string name,string sl=".sl.",string tp=".tp.");
                     ~JStops();
    virtual void      AddStops(JStop *stops);
-   virtual void      CreateStops(const MqlTradeTransaction &trans);
-   virtual void      DeinitStops();
+   virtual void      CreateStops(ulong order_ticket,int order_type,double volume,double price);
    virtual void      CheckStops(JOrders &orders);
   };
 //+------------------------------------------------------------------+
@@ -30,7 +27,6 @@ public:
 //+------------------------------------------------------------------+
 JStops::JStops()
   {
-
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -39,6 +35,8 @@ JStops::~JStops()
   {
   }
 //+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 JStops::AddStops(JStop *stops)
   {
    Add(stops);
@@ -46,27 +44,13 @@ JStops::AddStops(JStop *stops)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::CreateStops(const MqlTradeTransaction &trans)
+JStops::CreateStops(ulong order_ticket,int order_type,double volume,double price)
   {
-//if(trans.type!=TRADE_TRANSACTION_REQUEST) return;
-//if(!(trans.order_state==ORDER_STATE_PARTIAL || trans.order_state==ORDER_STATE_FILLED)) return;
    for(int i=0;i<Total();i++)
      {
       JStop *stop=At(i);
       if(stop==NULL) continue;
-      stop.Create(trans);
-     }
-  }
-//+------------------------------------------------------------------+
-JStops::DeinitStops()
-  {
-//if(trans.type!=TRADE_TRANSACTION_REQUEST) return;
-//if(!(trans.order_state==ORDER_STATE_PARTIAL || trans.order_state==ORDER_STATE_FILLED)) return;
-   for(int i=0;i<Total();i++)
-     {
-      JStop *stop=At(i);
-      if(stop==NULL) continue;
-      stop.Deinit();
+      stop.Create(order_ticket,order_type,volume,price);
      }
   }
 //+------------------------------------------------------------------+
@@ -74,8 +58,6 @@ JStops::DeinitStops()
 //+------------------------------------------------------------------+
 JStops::CheckStops(JOrders &orders)
   {
-//if(trans.type!=TRADE_TRANSACTION_REQUEST) return;
-//if(!(trans.order_state==ORDER_STATE_PARTIAL || trans.order_state==ORDER_STATE_FILLED)) return;
    for(int i=0;i<Total();i++)
      {
       JStop *stop=At(i);

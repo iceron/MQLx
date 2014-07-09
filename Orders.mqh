@@ -7,14 +7,15 @@
 #property link      "http://www.mql5.com"
 #property version   "1.00"
 
-#include <Arrays\List.mqh>
+#include <Arrays\ArrayObj.mqh>
+//#include "Stops.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 class JOrders : public CArrayObj
   {
-private:
-
+protected:
+   //JStops            m_stops;
 public:
                      JOrders();
                     ~JOrders();

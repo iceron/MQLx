@@ -9,38 +9,30 @@
 #include <Arrays\ArrayObj.mqh>
 #include <Arrays\ArrayInt.mqh>
 #include <traderjet\Signal.mqh>
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
+
 class JSignalManager: public JSignal
   {
-private:
 protected:
    int               m_last_signal;
    bool              m_new_signal;
 public:
                      JSignalManager();
                     ~JSignalManager();
+   virtual bool      InitSignals();                    
    virtual bool      AddSignal(JSignal *signal);
    virtual int       LastSignal();
-   virtual void      LastSignal(int signal);
-   virtual bool      InitSignals();
+   virtual void      LastSignal(int signal);   
    virtual int       CheckSignals();
-   virtual bool      DeinitSignals();
   };
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
+
 JSignalManager::JSignalManager()
   {
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
+
 JSignalManager::~JSignalManager()
   {
   }
-//+------------------------------------------------------------------+
+
 int JSignalManager::CheckSignals()
   {
    int res=CMD_NEUTRAL;
@@ -65,47 +57,25 @@ int JSignalManager::CheckSignals()
       m_last_signal=res;
    return(res);
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
+
 bool JSignalManager::InitSignals()
   {
    return(true);
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
+
 bool JSignalManager::AddSignal(JSignal *signal)
   {
    Add(signal);
    return(true);
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JSignalManager::DeinitSignals()
-  {
-   /*
-   int total=Total();
-   for(int i=0;i<total;i++)
-     {
-      JSignal *signal=At(i);
-      if(signal==NULL) continue;
-      delete signal;
-     }
-   */
-   return(true);
-  }
-//+------------------------------------------------------------------+
+
 int JSignalManager::LastSignal()
   {
    return(m_last_signal);
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
+
 void JSignalManager::LastSignal(int signal)
   {
    m_last_signal=signal;
   }
-//+------------------------------------------------------------------+
+
