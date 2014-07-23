@@ -8,6 +8,9 @@
 #property version   "1.00"
 
 #include <Arrays\ArrayObj.mqh>
+#include "OrderStop.mqh"
+#include "OrderStops.mqh"
+#include "Stops.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -15,23 +18,29 @@ class JOrder : public CObject
   {
 private:
 protected:
-   ulong             m_order_ticket;
-   ENUM_ORDER_TYPE   m_order_type;
-   double            m_order_volume;
-   double            m_order_price;
+   ulong             m_ticket;
+   ENUM_ORDER_TYPE   m_type;
+   double            m_volume;
+   double            m_volume_initial;
+   double            m_price;
+
+   JOrderStops       m_order_stops;
 public:
                      JOrder();
                      JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price);
                     ~JOrder();
 
-   virtual void      OrderType(ENUM_ORDER_TYPE type){m_order_type=type;}
-   virtual ENUM_ORDER_TYPE OrderType() {return(m_order_type);}
-   virtual void      OrderTicket(ulong ticket) {m_order_ticket=ticket;}
-   virtual ulong     OrderTicket() {return(m_order_ticket);}
-   virtual void      OrderVolume(double volume){m_order_volume=volume;}
-   virtual double    OrderVolume(){return(m_order_volume);}
-   virtual void      OrderPrice(double price){m_order_price=price;}
-   virtual double    OrderPrice(){return(m_order_price);}
+   virtual void      OrderType(ENUM_ORDER_TYPE type){m_type=type;}
+   virtual ENUM_ORDER_TYPE OrderType() {return(m_type);}
+   virtual void      OrderTicket(ulong ticket) {m_ticket=ticket;}
+   virtual ulong     OrderTicket() {return(m_ticket);}
+   virtual void      OrderVolume(double volume){m_volume=volume;}
+   virtual double    OrderVolume(){return(m_volume);}
+   virtual void      OrderPrice(double price){m_price=price;}
+   virtual double    OrderPrice(){return(m_price);}
+
+   virtual void      CreateStops(JStops *stops);
+   virtual void      CheckStops();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -44,15 +53,42 @@ JOrder::JOrder()
 //+------------------------------------------------------------------+
 JOrder::JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price)
   {
-   m_order_ticket=ticket;
-   m_order_type=type;
-   m_order_volume= volume;
-   m_order_price = price;
+   m_ticket=ticket;
+   m_type=type;
+   m_volume_initial=volume;
+   m_volume= m_volume_initial;
+   m_price = price;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JOrder::~JOrder()
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrder::CreateStops(JStops *stops)
+  {
+   int total= stops.Total();
+   for(int i=0;i<total;i++)
+     {
+      JStop *stop=stops.At(i);
+      if(!CheckPointer(stop)) continue;
+      JOrderStop *order_stop=new JOrderStop();
+      order_stop.Init(m_ticket,m_type,m_price,m_volume,stop);
+      m_order_stops.Add(order_stop);
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrder::CheckStops()
+  {
+   int total= m_order_stops.Total();
+   for(int i=0;i<total;i++)
+     {
+      m_order_stops.Check(m_volume);
+     }
   }
 //+------------------------------------------------------------------+

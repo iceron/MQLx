@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                                       JOrders.mqh |
+//|                                                   OrderStops.mqh |
 //|                        Copyright 2014, MetaQuotes Software Corp. |
 //|                                              http://www.mql5.com |
 //+------------------------------------------------------------------+
@@ -8,40 +8,41 @@
 #property version   "1.00"
 
 #include <Arrays\ArrayObj.mqh>
-#include "Order.mqh"
+#include "OrderStop.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrders : public CArrayObj
+class JOrderStops : public CArrayObj
   {
-protected:
+private:
+
 public:
-                     JOrders();
-                    ~JOrders();
-   virtual void      CheckStops();
+                     JOrderStops();
+                    ~JOrderStops();
+   virtual void      Check(double &volume);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrders::JOrders()
+JOrderStops::JOrderStops()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrders::~JOrders()
+JOrderStops::~JOrderStops()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrders::CheckStops()
+JOrderStops::Check(double &volume)
   {
    for(int i=0;i<Total();i++)
      {
-      JOrder *order=At(i);
-      if(CheckPointer(order))
-         order.CheckStops();
+      JOrderStop *order_stop=At(i);
+      if(CheckPointer(order_stop))
+         order_stop.Check(volume);
      }
   }
 //+------------------------------------------------------------------+

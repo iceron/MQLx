@@ -27,6 +27,7 @@ protected:
    JTrade           *m_trade;
    JSignalManager    m_signal_manager;
    JOrders           m_orders;
+   JOrders           m_orders_history;
    JStops            m_stops;
 
    double            m_lotsize;
@@ -96,7 +97,6 @@ public:
    virtual bool      DeinitSymbol();
 
    virtual void      AddStops(JStop *stops);
-   virtual void      CreateStops(ulong order_ticket,int order_type,double volume,double price);
    virtual bool      DeinitStops();
 
    virtual bool      OnTick();
@@ -197,7 +197,7 @@ bool JStrategy::OnTick()
    double stoploss=0.0;
    double takeprofit=0.0;
    if(!Refresh()) return(ret);
-   m_stops.CheckStops(m_orders);
+   m_orders.CheckStops();
    if(!IsTradeProcessed())
      {
       int res=CheckSignals();
@@ -244,24 +244,17 @@ bool JStrategy::OnTick()
 //+------------------------------------------------------------------+
 void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
-
    if(request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0)
      {
       JOrder *order=new JOrder(result.order,request.type,result.volume,result.price);
+      order.CreateStops(GetPointer(m_stops));
       m_orders.Add(order);
-      CreateStops(result.order,request.type,result.volume,result.price);
      }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategy::CreateStops(ulong order_ticket,int order_type,double volume,double price)
-  {
-   m_stops.CreateStops(order_ticket,order_type,volume,price);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
+
 void JStrategy::AddStops(JStop *stops)
   {
    m_stops.AddStops(stops);
@@ -302,7 +295,7 @@ bool JStrategy::Deinit()
 //+------------------------------------------------------------------+
 bool JStrategy::DeinitStops()
   {
-   m_stops.Clear();
+//m_stops.Clear();
    return(true);
   }
 //+------------------------------------------------------------------+

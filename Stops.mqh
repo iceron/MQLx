@@ -18,9 +18,8 @@ public:
                      JStops();
                      JStops(string name,string sl=".sl.",string tp=".tp.");
                     ~JStops();
-   virtual void      AddStops(JStop *stops);
+   virtual void      AddStops(JStop *stop);
    virtual void      CreateStops(ulong order_ticket,int order_type,double volume,double price);
-   virtual void      CheckStops(JOrders &orders);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -37,32 +36,8 @@ JStops::~JStops()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::AddStops(JStop *stops)
+JStops::AddStops(JStop *stop)
   {
-   Add(stops);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-JStops::CreateStops(ulong order_ticket,int order_type,double volume,double price)
-  {
-   for(int i=0;i<Total();i++)
-     {
-      JStop *stop=At(i);
-      if(stop==NULL) continue;
-      stop.Create(order_ticket,order_type,volume,price);
-     }
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-JStops::CheckStops(JOrders &orders)
-  {
-   for(int i=0;i<Total();i++)
-     {
-      JStop *stop=At(i);
-      if(stop==NULL) continue;
-      stop.Check(orders);
-     }
+   Add(stop);
   }
 //+------------------------------------------------------------------+
