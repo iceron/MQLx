@@ -54,6 +54,11 @@ public:
                     ~JOrderStop();
    virtual void      Init(ulong ticket,ENUM_ORDER_TYPE type,double price,double volume,JStop *stop);
    virtual void      Check(double &volume);
+
+   virtual bool      ModifyOrderStop(double stoploss,double takeprofit);
+   virtual bool      CheckTrailing();
+
+   virtual bool      Deinit();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -94,6 +99,18 @@ void JOrderStop::Init(ulong ticket,ENUM_ORDER_TYPE type,double price,double volu
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+
+bool JOrderStop::Deinit()
+  {
+   if(m_stop!=NULL) delete m_stop;
+   if(m_objentry!=NULL) delete m_objentry;
+   if(m_objsl!=NULL) delete m_objsl;
+   if(m_objtp!=NULL) delete m_objtp;
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 void JOrderStop::Check(double &volume)
   {
    if(m_stop==NULL) return;
@@ -115,7 +132,7 @@ void JOrderStop::Check(double &volume)
         }
       else
         {
-         if(m_stop.CheckStopLoss(m_main_volume_initial,volume,m_volume,m_main_type,m_objsl.Price(0)))
+         if(m_stop.CheckStopLoss(m_main_volume_initial,volume,m_volume,m_main_type,m_stoploss))
            {
             m_stoploss_closed=true;
            }
@@ -129,7 +146,7 @@ void JOrderStop::Check(double &volume)
         }
       else
         {
-         if(m_stop.CheckTakeProfit(m_main_volume_initial,volume,m_volume,m_main_type,m_objtp.Price(0)))
+         if(m_stop.CheckTakeProfit(m_main_volume_initial,volume,m_volume,m_main_type,m_takeprofit))
            {
             m_takeprofit_closed=true;
            }
@@ -178,5 +195,45 @@ JOrderStop::JOrderStop() : m_stoploss_closed(false),
 //+------------------------------------------------------------------+
 JOrderStop::~JOrderStop()
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStop::CheckTrailing()
+  {
+   double stoploss=0,takeprofit=0;
+   if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_main_type,m_main_price,m_stoploss,m_takeprofit);
+   if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_main_type,m_main_price,m_stoploss,m_takeprofit);
+   return(ModifyOrderStop(stoploss,takeprofit));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStop::ModifyOrderStop(double stoploss,double takeprofit)
+  {
+   bool stoploss_modified=false,takeprofit_modified=false;
+   if(m_stop.Pending())
+     {
+     }
+   else
+     {
+      if(stoploss>0)
+        {
+         if(m_objsl.Price(0,stoploss))
+           {
+            m_stoploss=stoploss;
+            stoploss_modified=true;
+           }
+        }
+      if(takeprofit>0)
+        {
+         if(m_objtp.Price(0,takeprofit))
+           {
+            m_takeprofit=takeprofit;
+            takeprofit_modified=true;
+           }
+        }
+     }
+   return(takeprofit_modified || stoploss_modified);
   }
 //+------------------------------------------------------------------+

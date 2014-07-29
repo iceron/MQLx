@@ -12,6 +12,7 @@
 #include <Arrays\ArrayLong.mqh>
 #include <ChartObjects\ChartObjectsLines.mqh>
 #include "Trade.mqh"
+#include "Trails.mqh"
 //#include "Order.mqh"
 //#include "Orders.mqh"
 
@@ -47,7 +48,7 @@ protected:
    ENUM_STOP_TYPE    m_stop_type;
    bool              m_oco;
 
-   double            m_point_adjust;
+   double            m_points_adjust;
    int               m_digits_adjust;
 
    bool              m_entry_visible;
@@ -65,6 +66,8 @@ protected:
    double            m_volume_fixed;
    double            m_volume_percent;
    int               m_magic;
+
+   JTrails           m_trails;
 public:
                      JStop(string name);
                     ~JStop();
@@ -112,8 +115,6 @@ public:
 
    virtual void      Magic(int magic) {m_magic=magic;}
 
-   //virtual void      Visible(bool visible) {m_visible=visible;}
-   //virtual bool      Visible() {return(m_visible);}
    virtual void      StopType(ENUM_STOP_TYPE stop_type);
    virtual ENUM_STOP_TYPE      StopType(){return(m_stop_type);}
    virtual bool      Virtual() {return(m_stop_type==STOP_TYPE_VIRTUAL);}
@@ -125,6 +126,9 @@ public:
    virtual bool      InitTrade(JTrade *trade=NULL);
    virtual bool      Init(string symbol,JTrade *trade=NULL);
    virtual bool      Deinit();
+   
+   virtual double CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
+   virtual bool AddTrailing(JTrail* trail);
 
    virtual CChartObjectHLine *CreateEntryObject(long id,string name,int window,double price);
    virtual CChartObjectHLine *CreateStopLossObject(long id,string name,int window,double price);
@@ -136,7 +140,7 @@ public:
 //+------------------------------------------------------------------+
 JStop::~JStop()
   {
-//Deinit();
+   Deinit();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -196,6 +200,7 @@ CChartObjectHLine *JStop::CreateTakeProfitObject(long id,string name,int window,
 //+------------------------------------------------------------------+
 CChartObjectHLine *JStop::CreateObject(long id,string name,int window,double price)
   {
+   if (price==0.0) return(NULL);
    CChartObjectHLine*obj=new CChartObjectHLine();
    obj.Create(id,name,window,price);
    return(obj);
@@ -213,7 +218,7 @@ bool JStop::Init(string symbol,JTrade *trade=NULL)
    if(!m_symbol.Name(symbol))
       return(false);
    m_digits_adjust=(m_symbol.Digits()==3 || m_symbol.Digits()==5) ? 10 : 1;
-   m_point_adjust=m_symbol.Point()*m_digits_adjust;
+   m_points_adjust=m_symbol.Point()*m_digits_adjust;
    return(InitTrade(trade));
   }
 //+------------------------------------------------------------------+
@@ -249,7 +254,7 @@ double JStop::TakeProfitPrice(const double total_volume,const double volume_rema
      {
       if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
         {
-         val=price+m_takeprofit*m_point_adjust;
+         val=price+m_takeprofit*m_points_adjust;
          if(m_stop_type==STOP_TYPE_PENDING)
            {
             m_trade.Sell(lotsize,val,0,0);
@@ -258,7 +263,7 @@ double JStop::TakeProfitPrice(const double total_volume,const double volume_rema
         }
       else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
         {
-         val=price-m_takeprofit*m_point_adjust;
+         val=price-m_takeprofit*m_points_adjust;
          if(m_stop_type==STOP_TYPE_PENDING)
            {
             m_trade.Buy(lotsize,val,0,0);
@@ -287,7 +292,7 @@ double JStop::StopLossPrice(const double total_volume,const double volume_remain
      {
       if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
         {
-         val=price-m_stoploss*m_point_adjust;
+         val=price-m_stoploss*m_points_adjust;
          if(m_stop_type==STOP_TYPE_PENDING)
            {
             m_trade.Sell(lotsize,val,0,0);
@@ -296,7 +301,7 @@ double JStop::StopLossPrice(const double total_volume,const double volume_remain
         }
       else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
         {
-         val=price+m_stoploss*m_point_adjust;
+         val=price+m_stoploss*m_points_adjust;
          if(m_stop_type==STOP_TYPE_PENDING)
            {
             m_trade.Buy(lotsize,val,0,0);
@@ -411,6 +416,7 @@ bool JStop::CloseStop(const double total_volume,double &volume_remaining,double 
          lotsize=total_volume*volume;
       else if(m_volume_type==VOLUME_TYPE_REMAINING)
          lotsize=volume_remaining;
+
       if(type==ORDER_TYPE_BUY)
         {
          res=m_trade.Sell(MathMin(lotsize,volume_remaining),price,0,0);
@@ -440,13 +446,13 @@ bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
       else
         {
          long state;
-         double order_volume;
          h_ord.Ticket(ticket);
          if(h_ord.InfoInteger(ORDER_STATE,state))
            {
-            if(state==ORDER_STATE_FILLED)
+            if(h_ord.State()==ORDER_STATE_FILLED)
               {
-               return(DeleteStopOrder(ticket));
+               volume_remaining-=h_ord.VolumeInitial();
+               return(true);
               }
            }
          else
@@ -461,10 +467,7 @@ bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
                     {
                      if(state==ORDER_STATE_FILLED)
                        {
-                        if(h_ord.InfoDouble(ORDER_VOLUME_INITIAL,order_volume))
-                          {
-                           volume_remaining-=order_volume;
-                          }
+                        volume_remaining-=h_ord.VolumeInitial();
                         return(true);
                        }
                     }
@@ -480,6 +483,7 @@ bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
 //+------------------------------------------------------------------+
 bool JStop::DeleteStopOrder(const ulong ticket) const
   {
+   if (ticket<=0) return(true);
    if(m_trade.OrderDelete(ticket))
      {
       uint result=m_trade.ResultRetcode();
@@ -505,5 +509,21 @@ bool JStop::Deinit()
    if(m_trade!=NULL) delete m_trade;
    return(true);
   }
+  
+bool JStop::AddTrailing(JTrail *trail)
+{
+   trail.Init(m_symbol);
+   trail.PointsAdjust(m_points_adjust);
+   trail.DigitsAdjust(m_digits_adjust);
+   return(m_trails.Add(trail));
+}
+
+
+double JStop::CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
+{
+   if (!Refresh()) return(0);
+   return(m_trails.Check(type,entry_price,stoploss,takeprofit));
+}
+
 
 //+------------------------------------------------------------------+

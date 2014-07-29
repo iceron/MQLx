@@ -1,0 +1,209 @@
+//+------------------------------------------------------------------+
+//|                                                       JTrail.mqh |
+//|                        Copyright 2014, MetaQuotes Software Corp. |
+//|                                              http://www.mql5.com |
+//+------------------------------------------------------------------+
+#property copyright "Copyright 2014, MetaQuotes Software Corp."
+#property link      "http://www.mql5.com"
+#property version   "1.00"
+
+#include <Object.mqh>
+#include <Trade\SymbolInfo.mqh>
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+enum ENUM_TRAIL_TYPE
+  {
+   TRAIL_TYPE_PIPS,
+   TRAIL_TYPE_PRICE
+  };
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+enum ENUM_TRAIL_TARGET
+  {
+   TRAIL_TARGET_STOPLOSS,
+   TRAIL_TARGET_TAKEPROFIT
+  };
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+enum ENUM_TRAIL_MODE
+  {
+   TRAIL_MODE_TRAILING,
+   TRAIL_MODE_BREAKEVEN
+  };
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+class JTrail : public CObject
+  {
+private:
+   ENUM_TRAIL_TYPE   m_type;
+   ENUM_TRAIL_TARGET m_target;
+   ENUM_TRAIL_MODE   m_mode;
+   
+   double            m_trail;
+   double            m_start;
+   double            m_end;   
+   double            m_step;
+
+   double            m_points_adjust;
+   int               m_digits_adjust;
+
+   CSymbolInfo      *m_symbol;
+public:
+                     JTrail();
+                    ~JTrail();
+   virtual void      Init(CSymbolInfo *symbol=NULL);
+   
+   virtual ENUM_TRAIL_TYPE TrailType() {return(m_type);}
+   virtual void TrailType(ENUM_TRAIL_TYPE type) {m_type=type;}
+
+   virtual ENUM_TRAIL_TARGET TrailTarget() {return(m_target);}
+   virtual void TrailTarget(ENUM_TRAIL_TARGET target) {m_target=target;}
+   
+   virtual ENUM_TRAIL_MODE TrailMode() {return(m_mode);}
+   virtual void TrailMode(ENUM_TRAIL_MODE mode) {m_mode=mode;}
+   
+   virtual double Start() {return(m_start);}
+   virtual void Start(double start) {m_start = start;}
+   
+   virtual double End() {return(m_end);}
+   virtual void End(double end) {m_end = end;}
+   
+   virtual double Trail() {return(m_trail);}
+   virtual void Trail(double trail) {m_trail = trail;}
+   
+   virtual double Step() {return(m_step);}
+   virtual void Step(double step) {m_step = step;}
+   
+   virtual void Set(double trail,double start,double end,double step);
+   
+   virtual double PointsAdjust() {return(m_points_adjust);}
+   virtual void PointsAdjust(double adjust) {m_points_adjust=adjust;}
+   
+   virtual int DigitsAdjust() {return(m_digits_adjust);}
+   virtual void DigitsAdjust(int adjust) {m_digits_adjust=adjust;}  
+
+   virtual double    ActivationPrice(ENUM_ORDER_TYPE type,double entry_price);
+   virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
+   virtual double    Price(ENUM_ORDER_TYPE type);
+   
+   virtual bool Deinit();
+  };
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JTrail::JTrail() : m_type(TRAIL_TYPE_PIPS),
+                     m_target(TRAIL_TARGET_STOPLOSS),
+                     m_mode(TRAIL_MODE_TRAILING),
+                     m_start(0.0),
+                     m_end(0.0),
+                     m_trail(0.0),
+                     m_step(0.0),
+                     m_points_adjust(0),
+                     m_digits_adjust(0),
+                     m_symbol(NULL)
+  {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JTrail::~JTrail()
+  {
+   Deinit();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
+bool JTrail::Deinit(void)
+{
+   if(m_symbol!=NULL) delete m_symbol;
+   return(true);
+}
+
+void JTrail::Init(CSymbolInfo *symbol=NULL)
+  {
+   m_symbol=symbol;
+  }
+  
+void JTrail::Set(double trail,double start,double end,double step)
+  {
+   m_trail = trail;
+   m_start = start;
+   m_end = end;
+   m_step = step;
+  }
+  
+  
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double JTrail::ActivationPrice(ENUM_ORDER_TYPE type,double entry_price)
+  {
+   if(type==ORDER_TYPE_BUY)
+      return(entry_price+m_start*m_points_adjust);
+   if(type==ORDER_TYPE_SELL)
+      return(entry_price+m_start*m_points_adjust);
+   return(0);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double JTrail::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
+  {
+   double next_stop;
+   double activation=ActivationPrice(type,entry_price);
+   double new_price = Price(type);
+   if(type==ORDER_TYPE_BUY)
+     {
+      if(m_target==TRAIL_TARGET_STOPLOSS)
+        {
+         if(m_type==TRAIL_TYPE_PIPS)
+           {
+            if(stoploss>=activation)
+               next_stop=stoploss+m_step*m_points_adjust;
+            else next_stop=activation;
+            if(next_stop<=new_price) return(next_stop);
+           }
+        }
+     }
+   else if(type==ORDER_TYPE_SELL)
+     {
+      if(m_target==TRAIL_TARGET_STOPLOSS)
+        {
+         if(m_type==TRAIL_TYPE_PIPS)
+           {
+            if(stoploss<=activation)
+               next_stop=stoploss-m_step*m_points_adjust;
+            else next_stop=activation;
+            if(next_stop<=new_price) return(next_stop);
+           }
+        }
+     }
+   return(0);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double JTrail::Price(ENUM_ORDER_TYPE type)
+  {
+   if(type==ORDER_TYPE_BUY)
+     {
+      if(m_target==TRAIL_TARGET_STOPLOSS)
+        {
+         return(m_symbol.Bid()-m_trail*m_points_adjust);
+        }
+     }
+   if(type==ORDER_TYPE_SELL)
+     {
+      if(m_target==TRAIL_TARGET_STOPLOSS)
+        {
+         return(m_symbol.Ask()+m_trail*m_points_adjust);
+        }
+     }
+   return(0);
+  }
+//+------------------------------------------------------------------+

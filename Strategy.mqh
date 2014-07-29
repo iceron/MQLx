@@ -257,7 +257,7 @@ void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTra
 
 void JStrategy::AddStops(JStop *stops)
   {
-   m_stops.AddStops(stops);
+   m_stops.Add(stops);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
