@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                                        Stops.mqh |
+//|                                               MoneyFixedRisk.mqh |
 //|                        Copyright 2014, MetaQuotes Software Corp. |
 //|                                              http://www.mql5.com |
 //+------------------------------------------------------------------+
@@ -7,41 +7,59 @@
 #property link      "http://www.mql5.com"
 #property version   "1.00"
 
-#include <Arrays\ArrayObj.mqh>
-#include "Stop.mqh"
+#include "MoneyFixedRisk.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStops : public CArrayObj
+class JMoneyFixedRiskPerPip : public JMoney
   {
 public:
-                     JStops();
-                     JStops(string name,string sl=".sl.",string tp=".tp.");
-                    ~JStops();
-   virtual void      InitTrade(JTrade *trade);
-   virtual void      CreateStops(ulong order_ticket,int order_type,double volume,double price);
+                     JMoneyFixedRiskPerPip();
+                    ~JMoneyFixedRiskPerPip();
+   virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::JStops()
+JMoneyFixedRiskPerPip::JMoneyFixedRiskPerPip()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::~JStops()
+JMoneyFixedRiskPerPip::~JMoneyFixedRiskPerPip()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::InitTrade(JTrade *trade)
+void JMoneyFixedRiskPerPip::UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl)
   {
-   for(int i=0;i<Total();i++)
+   if(m_symbol==NULL)
+      return;
+   double lot;
+   double minvol=m_symbol.LotsMin();
+   if(sl==0.0)
+      m_volume=minvol;
+   else
      {
-      JStop *stop=At(i);
-      stop.InitTrade(trade);
+      double loss;
+      if(price==0.0)
+        {
+         if(type==ORDER_TYPE_BUY)
+            loss=-m_account.OrderProfitCheck(m_symbol.Name(),type,1.0,m_symbol.Ask(),sl);
+         else if(type==ORDER_TYPE_SELL)
+            loss=-m_account.OrderProfitCheck(m_symbol.Name(),type,1.0,m_symbol.Bid(),sl);
+        }
+      else
+         loss=-m_account.OrderProfitCheck(m_symbol.Name(),type,1.0,price,sl);
+      double stepvol=m_symbol.LotsStep();
+      lot=MathFloor(m_account.Balance()*m_percent/100.0/stepvol)*stepvol;
      }
+   if(m_volume<minvol)
+      m_volume=minvol;
+   double maxvol=m_symbol.LotsMax();
+   if(m_volume>maxvol)
+      m_volume=maxvol;
   }
 //+------------------------------------------------------------------+

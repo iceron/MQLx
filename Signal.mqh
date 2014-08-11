@@ -6,11 +6,13 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
-
 #include <Arrays\ArrayDouble.mqh>
 #include <Arrays\ArrayObj.mqh>
-
-enum cmd {
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+enum ENUM_CMD
+  {
    CMD_VOID=-1,
    CMD_NEUTRAL,
    CMD_BUY,
@@ -26,28 +28,34 @@ enum cmd {
    CMD_MARKET,
    CMD_PENDING,
    CMD_ALL
-};
+  };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 class JSignal : public CArrayObj
   {
-private:
-
 protected:
    string            m_name;
    int               m_signal;
-   bool              m_reverse;   
+   int               m_signal_valid;
+   bool              m_reverse;
    CArrayDouble      m_empty_value;
 public:
                      JSignal();
                     ~JSignal();
-
-   void              AddEmptyValue(double);
-   virtual int       LastSignal();
-   virtual int       SignalReverse(int);
-   virtual bool      IsEmpty(double);
+   //--- signal parameters
+   virtual string    Name() {return(m_name);}
+   virtual void      Name(string name) {m_name=name;}
+   virtual bool      Reverse() {return(m_reverse);}
+   virtual void      Reverse(bool reverse) {m_reverse=reverse;}
+   virtual int       LastSignal() {return(m_signal);}
+   virtual int       LastValidSignal() {return(m_signal);}
+   //--- signal methods
+   virtual void      AddEmptyValue(double);
    virtual int       CheckSignal();
+   virtual bool      IsEmpty(double val);
+protected:
+   virtual int       SignalReverse(int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -61,14 +69,7 @@ JSignal::JSignal()
 //+------------------------------------------------------------------+
 JSignal::~JSignal()
   {
-
   }
-//+------------------------------------------------------------------+
-
-
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -100,11 +101,16 @@ int JSignal::CheckSignal()
          res=CMD_LONG;
       else if(short_cond)
          res=CMD_SHORT;
-     }   
-   if(m_reverse) 
+     }
+   if(m_reverse)
       res=SignalReverse(res);
+   if(res!=CMD_NEUTRAL)
+      m_signal_valid=res;
+   m_signal=res;
    return(res);
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
 //+------------------------------------------------------------------+
 int JSignal::SignalReverse(int s)
   {
@@ -173,6 +179,4 @@ int JSignal::SignalReverse(int s)
      }
    return(s);
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
 //+------------------------------------------------------------------+

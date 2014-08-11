@@ -1,47 +1,51 @@
 //+------------------------------------------------------------------+
-//|                                                        Stops.mqh |
+//|                                                        Times.mqh |
 //|                        Copyright 2014, MetaQuotes Software Corp. |
 //|                                              http://www.mql5.com |
 //+------------------------------------------------------------------+
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
-
-#include <Arrays\ArrayObj.mqh>
-#include "Stop.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStops : public CArrayObj
+#include <Arrays\ArrayObj.mqh>
+#include "Time.mqh"
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+class JTimes : public CArrayObj
   {
+private:
+
 public:
-                     JStops();
-                     JStops(string name,string sl=".sl.",string tp=".tp.");
-                    ~JStops();
-   virtual void      InitTrade(JTrade *trade);
-   virtual void      CreateStops(ulong order_ticket,int order_type,double volume,double price);
+                     JTimes();
+                    ~JTimes();
+   virtual bool      Evaluate();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::JStops()
+JTimes::JTimes()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::~JStops()
+JTimes::~JTimes()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::InitTrade(JTrade *trade)
+bool JTimes::Evaluate()
   {
    for(int i=0;i<Total();i++)
      {
-      JStop *stop=At(i);
-      stop.InitTrade(trade);
+      JTime *time=At(i);
+      if(CheckPointer(time))
+         if (!time.Evaluate()) return(false);
      }
+    return(true);
   }
 //+------------------------------------------------------------------+

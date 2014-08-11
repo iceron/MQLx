@@ -6,7 +6,6 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
-
 #include <Arrays\ArrayObj.mqh>
 #include "OrderStop.mqh"
 //+------------------------------------------------------------------+
@@ -14,8 +13,6 @@
 //+------------------------------------------------------------------+
 class JOrderStops : public CArrayObj
   {
-private:
-
 public:
                      JOrderStops();
                     ~JOrderStops();
@@ -42,7 +39,11 @@ JOrderStops::Check(double &volume)
      {
       JOrderStop *order_stop=At(i);
       if(CheckPointer(order_stop))
+        {
+         order_stop.CheckTrailing();
+         order_stop.Update();
          order_stop.Check(volume);
+        }
      }
   }
 //+------------------------------------------------------------------+

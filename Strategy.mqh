@@ -17,134 +17,185 @@
 #include "Orders.mqh"
 #include "Order.mqh"
 #include "Stops.mqh"
+#include "Money.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 class JStrategy : CObject
   {
 protected:
-   CSymbolInfo      *m_symbol;
-   JTrade           *m_trade;
-   JSignalManager    m_signal_manager;
-   JOrders           m_orders;
-   JOrders           m_orders_history;
-   JStops            m_stops;
-
+   //--- trade parameters
+   string            m_comment;
+   datetime          m_expiration;
+   int               m_magic;
    double            m_lotsize;
    double            m_price;
    double            m_stoploss;
    double            m_takeprofit;
-   datetime          m_expiration;
-   int               m_magic;
-
-   ENUM_TIMEFRAMES   m_period;
+   //--- signal parameters
    bool              m_every_tick;
-   bool              m_one_trade_per_candle;
-   bool              m_position_reverse;
-   CArrayInt         m_other_magic;
+   int               m_max_orders;
    int               m_max_trades;
-
+   bool              m_one_trade_per_candle;
+   ENUM_TIMEFRAMES   m_period;
+   bool              m_position_reverse;
+   //--- market parameters
    int               m_digits_adjust;
    double            m_point_adjust;
-   CPositionInfo     m_position;
-   COrderInfo        m_order;
-   CHistoryOrderInfo m_hist_order;
+   //--- datetime parameters
    MqlDateTime       m_last_tick_time;
    datetime          m_last_trade_time;
+   //--- signal objects
+   JSignalManager    m_signal_manager;
+   //--- trade objects   
+   CPositionInfo     m_position;
+   CSymbolInfo      *m_symbol;
+   JTrade           *m_trade;
+   //--- order objects
+   CHistoryOrderInfo m_hist_order;
+   JStops            m_stops;
+   JStop            *m_main_stop;
+   JOrders           m_orders;
+   JOrders           m_orders_history;
+   CArrayInt         m_other_magic;
+   //--- money management objects
+   JMoney           *m_money;
 public:
-                     JStrategy();
-                    ~JStrategy();
-
-   virtual double    Lotsize(){return(m_lotsize);}
-   virtual void      Lotsize(double lotsize){m_lotsize=lotsize;}
-   virtual double    Price() {return(m_price);}
-   virtual void      Price(double price) {m_price=price;}
-   virtual double    StopLoss(void) {return(m_stoploss);}
-   virtual void      StopLoss(double sl) {m_stoploss=sl;}
-   virtual double    TakeProfit(void) {return(m_takeprofit);}
-   virtual void      TakeProfit(double tp){m_takeprofit=tp;}
-   virtual datetime  Expiration() {return(m_expiration);}
+                     JStrategy(void);
+                    ~JStrategy(void);
+   //--- initialization
+   virtual bool      AddSignal(JSignal *signal);
+   virtual void      AddStop(JStop *stop);
+   virtual bool      Init(string symbol,ENUM_TIMEFRAMES period,bool every_tick,int magic,bool one_trade_per_candle,bool position_reverse);
+   virtual bool      InitMoney(JMoney *money);
+   virtual bool      InitTrade(JTrade *trade);
+   //--- trade parameters
+   virtual void      AsyncMode(bool async) {m_trade.SetAsyncMode(async);}
+   virtual string    Comment(void) const {return(m_comment);}
+   virtual void      Comment(string comment){m_comment=comment;}
+   virtual datetime  Expiration(void) const {return(m_expiration);}
    virtual void      Expiration(datetime expiration) {m_expiration=expiration;}
-   virtual int       Magic() {return m_magic;}
+   virtual datetime  LastTradeTime(void) const {return(m_last_trade_time);}
+   virtual void      LastTradeTime(datetime tradetime) {m_last_trade_time=tradetime;}
+   virtual datetime  LastTickTime(void) {return(StructToTime(m_last_tick_time));}
+   virtual void      LastTickTime(datetime ticktime) {TimeToStruct(ticktime,m_last_tick_time);}
+   virtual double    Lotsize(void) const {return(m_lotsize);}
+   virtual void      Lotsize(double lotsize){m_lotsize=lotsize;}
+   virtual int       Magic(void) const {return m_magic;}
    virtual void      Magic(int magic) {m_magic=magic;}
-
-   virtual ENUM_TIMEFRAMES Period() {return(m_period);}
+   virtual double    Price(void) const {return(m_price);}
+   virtual void      Price(double price) {m_price=price;}
+   virtual double    StopLoss(void) const {return(m_stoploss);}
+   virtual void      StopLoss(double sl) {m_stoploss=sl;}
+   virtual double    TakeProfit(void) const {return(m_takeprofit);}
+   virtual void      TakeProfit(double tp){m_takeprofit=tp;}
+   //--- signal parameters
+   virtual int       Period(void) const {return(PeriodSeconds(m_period));}
    virtual void      Period(ENUM_TIMEFRAMES period) {m_period=period;}
-   virtual bool      EveryTick() {return(m_every_tick);}
+   virtual bool      EveryTick(void) const {return(m_every_tick);}
    virtual void      EveryTick(bool every_tick) {m_every_tick=every_tick;}
-   virtual bool      OneTradePerCandle(){return(m_one_trade_per_candle);}
+   virtual bool      OneTradePerCandle(void) const {return(m_one_trade_per_candle);}
    virtual void      OneTradePerCandle(bool one_trade_per_candle){m_one_trade_per_candle=one_trade_per_candle;}
-   virtual bool      PositionReverse(){return(m_position_reverse);}
+   virtual bool      PositionReverse(void) const {return(m_position_reverse);}
    virtual void      PositionReverse(bool position_reverse){m_position_reverse=position_reverse;}
    virtual bool      AddOtherMagic(int magic) {return(m_other_magic.Add(magic));}
-   virtual int       MaxTrades(){return(m_max_trades);}
+   virtual uint      MaxTrades(void) const {return(m_max_trades);}
    virtual void      MaxTrades(int max_trades){m_max_trades=max_trades;}
-
-   virtual bool      Init(string symbol,ENUM_TIMEFRAMES period,bool every_tick,int magic,bool one_trade_per_candle,bool position_reverse);
-   virtual bool      Deinit();
-
-   virtual bool      AddSignal(JSignal *signal);
-   virtual bool      InitSignals();
-   virtual int       CheckSignals();
-   virtual void      DeinitSignals();
-
-   virtual bool      InitTrade(CExpertTrade *trade=NULL);
-   virtual bool      DeinitTrade();
-
-   virtual bool      Refresh();
-   virtual bool      IsTradeProcessed();
-
-   virtual bool      DeinitSymbol();
-
-   virtual void      AddStops(JStop *stops);
-   virtual bool      DeinitStops();
-
-   virtual bool      OnTick();
-   virtual void      OnTrade();
+   virtual int       MaxOrders(void) {return(m_max_orders);}
+   virtual void      MaxOrders(int maxorders) {m_max_orders=maxorders;}
+   //--- deinitialization
+   virtual bool      Deinit(void);
+   //--- events
+   virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
+protected:
+   //--- signal processing
+   virtual int       CheckSignals(void);
+   //--- order processing
+   virtual void      ArchiveOrders(void);
+   virtual void      CloseOppositeOrders(int res);
+   virtual bool      IsTradeProcessed(void);
+   virtual double    LotSizeCalculate(double price,double stoploss);
+   virtual double    PriceCalculate(int res);
+   virtual bool      Refresh(void);
+   virtual double    StopLossCalculate(int res,double price);
+   virtual double    TakeProfitCalculate(int res,double price);
+   virtual bool      TradeOpen(int res,double price=0.0);
+   //--- deinitialization
+   virtual bool      DeinitMoney(void);
+   virtual void      DeinitSignals(void);
+   virtual bool      DeinitStops(void);
+   virtual bool      DeinitSymbol(void);
+   virtual bool      DeinitTrade(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::JStrategy()
+JStrategy::JStrategy(void) : m_expiration(0),
+                             m_magic(0),
+                             m_lotsize(0.2),
+                             m_price(0),
+                             m_stoploss(0),
+                             m_takeprofit(0),
+                             m_every_tick(true),
+                             m_max_orders(1),
+                             m_max_trades(-1),
+                             m_one_trade_per_candle(true),
+                             m_period(PERIOD_CURRENT),
+                             m_position_reverse(true),
+                             m_digits_adjust(0),
+                             m_point_adjust(0.0),
+                             m_last_trade_time(0)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::~JStrategy()
+JStrategy::~JStrategy(void)
   {
    Deinit();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::Init(string symbol,ENUM_TIMEFRAMES period,bool every_tick=true,int magic=0,bool one_trade_per_candle=true,bool position_reverse=true)
+bool JStrategy::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,bool every_tick=true,int magic=0,bool one_trade_per_candle=true,bool position_reverse=true)
   {
    if(m_symbol==NULL)
      {
       if((m_symbol=new CSymbolInfo)==NULL)
          return(false);
      }
-
    if(!m_symbol.Name(symbol))
       return(false);
-
-   m_period    =period;
+   m_period=period;
    m_every_tick=every_tick;
-   m_magic     =magic;
+   m_magic=magic;
    m_position_reverse=position_reverse;
    m_one_trade_per_candle=one_trade_per_candle;
    m_last_trade_time=0;
-   m_digits_adjust=(m_symbol.Digits()==3 || m_symbol.Digits()==5) ? 10 : 1;
+   m_digits_adjust=(m_symbol.Digits()==3 || m_symbol.Digits()==5)?10:1;
    m_point_adjust=m_symbol.Point()*m_digits_adjust;
-   InitTrade();
    return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::InitTrade(CExpertTrade *trade=NULL)
+bool JStrategy::InitMoney(JMoney *money=NULL)
+  {
+   if(m_money!=NULL)
+      delete m_money;
+   if(money==NULL)
+     {
+      if((m_money=new JMoney)==NULL)
+         return(false);
+     }
+   else m_money=money;
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategy::InitTrade(JTrade *trade=NULL)
   {
    if(m_trade!=NULL)
       delete m_trade;
@@ -154,7 +205,6 @@ bool JStrategy::InitTrade(CExpertTrade *trade=NULL)
          return(false);
      }
    else m_trade=trade;
-
    m_trade.SetSymbol(GetPointer(m_symbol));
    m_trade.SetExpertMagicNumber(m_magic);
    m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
@@ -163,81 +213,119 @@ bool JStrategy::InitTrade(CExpertTrade *trade=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::DeinitTrade()
-  {
-   if(m_trade!=NULL)
-     {
-      delete m_trade;
-      m_trade=NULL;
-     }
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStrategy::InitSignals()
-  {
-   return(m_signal_manager.InitSignals());
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool JStrategy::AddSignal(JSignal *signal)
   {
-   return(m_signal_manager.AddSignal(signal));
+   return(m_signal_manager.Add(signal));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::OnTick()
+bool JStrategy::OnTick(void)
   {
    bool ret=false;
-   double lotsize=0.2;
-   double price=0.0;
-   double stoploss=0.0;
-   double takeprofit=0.0;
    if(!Refresh()) return(ret);
-   m_orders.CheckStops();
+   m_orders.OnTick();
    if(!IsTradeProcessed())
      {
-      int res=CheckSignals();
-
-      if(res==CMD_LONG)
-        {
-         if(m_position_reverse)
-           {
-            if(m_position.Select(m_symbol.Name()))
-              {
-               if(m_position.PositionType()==POSITION_TYPE_SELL)
-                 {
-                  m_trade.PositionClose(m_symbol.Name(),ULONG_MAX);
-                  m_orders.Clear();
-                 }
-              }
-           }
-         ret=m_trade.Buy(lotsize,price,stoploss,takeprofit);
-        }
-      else if(res==CMD_SHORT)
-        {
-         if(m_position_reverse)
-           {
-            if(m_position.Select(m_symbol.Name()))
-              {
-               if(m_position.PositionType()==POSITION_TYPE_BUY)
-                 {
-                  m_trade.PositionClose(m_symbol.Name(),ULONG_MAX);
-                  m_orders.Clear();
-                 }
-              }
-           }
-         ret=m_trade.Sell(lotsize,price,stoploss,takeprofit);
-        }
-      if(ret)
-        {
-         m_last_trade_time=m_symbol.Time();
-        }
+      int signal=CheckSignals();
+      CloseOppositeOrders(signal);
+      ret=TradeOpen(signal);
+      if(ret) m_last_trade_time=m_symbol.Time();
      }
    return(ret);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategy::TradeOpen(int res,double price=0.0)
+  {
+   if(m_max_orders>m_orders.Total())
+     {
+      m_trade.SetSymbol(m_symbol);
+      if(price==0.0) price=PriceCalculate(res);
+      double stoploss=StopLossCalculate(res,price);
+      //double takeprofit=TakeProfitCalculate(res,price);
+      double lotsize=LotSizeCalculate(price,stoploss);
+      if(res==CMD_LONG)
+         return(m_trade.Buy(lotsize,price,0,0,m_comment));
+      else if(res==CMD_SHORT)
+         return(m_trade.Sell(lotsize,price,0,0,m_comment));
+     }
+   return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double JStrategy::PriceCalculate(int res)
+  {
+   if(res==CMD_LONG)
+      return(m_symbol.Ask());
+   else if(res==CMD_SHORT)
+      return(m_symbol.Bid());
+   return(0.0);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double JStrategy::LotSizeCalculate(double price,double stoploss)
+  {
+   if(CheckPointer(m_money))
+      return(m_money.Volume(price,ORDER_TYPE_SELL,stoploss));
+   return(m_lotsize);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double JStrategy::StopLossCalculate(int res,double price)
+  {
+   if(CheckPointer(m_main_stop))
+     {
+      ENUM_ORDER_TYPE type;
+      if(res==CMD_LONG) type=ORDER_TYPE_BUY;
+      else if(res==CMD_SHORT) type=ORDER_TYPE_SELL;
+      return(m_main_stop.StopLossTicks(type,price));
+     }
+   return(m_stoploss);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double JStrategy::TakeProfitCalculate(int res,double price)
+  {
+   if(CheckPointer(m_main_stop))
+     {
+      ENUM_ORDER_TYPE type;
+      if(res==CMD_LONG) type=ORDER_TYPE_BUY;
+      else if(res==CMD_SHORT) type=ORDER_TYPE_SELL;
+      return(m_main_stop.TakeProfitTicks(type,price));
+     }
+   return(m_takeprofit);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategy::ArchiveOrders(void)
+  {
+   for(int i=m_orders.Total()-1;i>=0;i--)
+      m_orders_history.Add(m_orders.Detach(i));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategy::CloseOppositeOrders(int res)
+  {
+   if(m_position_reverse)
+     {
+      if(m_position.Select(m_symbol.Name()))
+        {
+         if((m_position.PositionType()==POSITION_TYPE_SELL && res==CMD_LONG) || (m_position.PositionType()==POSITION_TYPE_BUY && res==CMD_SHORT))
+           {
+            m_trade.PositionClose(m_symbol.Name(),ULONG_MAX);
+            ArchiveOrders();
+            m_orders.Clear();
+           }
+        }
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -254,62 +342,23 @@ void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTra
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-
-void JStrategy::AddStops(JStop *stops)
+void JStrategy::AddStop(JStop *stop)
   {
-   m_stops.Add(stops);
+   if(m_main_stop==NULL && stop.StopType()==STOP_TYPE_MAIN)
+      m_main_stop=stop;
+   m_stops.Add(stop);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategy::OnTrade()
-  {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-int JStrategy::CheckSignals()
+int JStrategy::CheckSignals(void)
   {
    return(m_signal_manager.CheckSignals());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategy::DeinitSignals()
-  {
-   m_signal_manager.Clear();
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStrategy::Deinit()
-  {
-   DeinitStops();
-   DeinitSymbol();
-   DeinitTrade();
-   DeinitSignals();
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStrategy::DeinitStops()
-  {
-//m_stops.Clear();
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStrategy::DeinitSymbol()
-  {
-   if(m_symbol!=NULL) delete m_symbol;
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStrategy::Refresh()
+bool JStrategy::Refresh(void)
   {
    MqlDateTime time;
    if(!m_symbol.RefreshRates())
@@ -321,17 +370,72 @@ bool JStrategy::Refresh()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::IsTradeProcessed()
+bool JStrategy::IsTradeProcessed(void)
   {
    if(!m_one_trade_per_candle) return(false);
-   else
-     {
-      datetime arr[];
-      if(CopyTime(m_symbol.Name(),m_period,0,1,arr)==-1)
-         return(false);
-      if(m_last_trade_time>0 && m_last_trade_time>=arr[0])
-         return(true);
-     }
+   datetime arr[];
+   if(CopyTime(m_symbol.Name(),m_period,0,1,arr)==-1)
+      return(false);
+   if(m_last_trade_time>0 && m_last_trade_time>=arr[0])
+      return(true);
    return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategy::Deinit(void)
+  {
+   DeinitStops();
+   DeinitSymbol();
+   DeinitTrade();
+   DeinitSignals();
+   DeinitMoney();
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategy::DeinitSignals(void)
+  {
+   m_signal_manager.Clear();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategy::DeinitStops(void)
+  {
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategy::DeinitTrade(void)
+  {
+   if(m_trade!=NULL)
+     {
+      delete m_trade;
+      m_trade=NULL;
+     }
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategy::DeinitMoney(void)
+  {
+   if(m_money!=NULL)
+     {
+      delete m_money;
+      m_money=NULL;
+     }
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategy::DeinitSymbol(void)
+  {
+   if(m_symbol!=NULL) delete m_symbol;
+   return(true);
   }
 //+------------------------------------------------------------------+

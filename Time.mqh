@@ -1,47 +1,56 @@
 //+------------------------------------------------------------------+
-//|                                                        Stops.mqh |
+//|                                                        JTime.mqh |
 //|                        Copyright 2014, MetaQuotes Software Corp. |
 //|                                              http://www.mql5.com |
 //+------------------------------------------------------------------+
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
-
-#include <Arrays\ArrayObj.mqh>
-#include "Stop.mqh"
+#include <Object.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStops : public CArrayObj
+enum ENUM_TIME_FILTER_TYPE
   {
-public:
-                     JStops();
-                     JStops(string name,string sl=".sl.",string tp=".tp.");
-                    ~JStops();
-   virtual void      InitTrade(JTrade *trade);
-   virtual void      CreateStops(ulong order_ticket,int order_type,double volume,double price);
+   TIME_FILTER_INCLUDE,
+   TIME_FILTER_EXCLUDE
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::JStops()
+class JTime : public CObject
+  {
+protected:
+   datetime          m_time_start;
+   ENUM_TIME_FILTER_TYPE m_filter_type;
+public:
+                     JTime();
+                    ~JTime();
+   virtual bool      Evaluate();
+   virtual ENUM_TIME_FILTER_TYPE  FilterType(){return(m_filter_type);}
+   virtual void      FilterType(ENUM_TIME_FILTER_TYPE type){m_filter_type=type;}
+   virtual datetime  TimeStart(){return(m_time_start);}
+   virtual void      TimeStart(datetime start){m_time_start=start;}
+  };
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JTime::JTime() : m_time_start(0),
+                 m_filter_type(TIME_FILTER_INCLUDE)
+  {
+   m_time_start=TimeCurrent();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JTime::~JTime()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::~JStops()
+bool JTime::Evaluate()
   {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-JStops::InitTrade(JTrade *trade)
-  {
-   for(int i=0;i<Total();i++)
-     {
-      JStop *stop=At(i);
-      stop.InitTrade(trade);
-     }
+   return(true);
   }
 //+------------------------------------------------------------------+

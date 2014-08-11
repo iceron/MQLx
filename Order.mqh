@@ -6,7 +6,6 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
-
 #include <Arrays\ArrayObj.mqh>
 #include "OrderStop.mqh"
 #include "OrderStops.mqh"
@@ -16,36 +15,36 @@
 //+------------------------------------------------------------------+
 class JOrder : public CObject
   {
-private:
 protected:
+   double            m_price;
    ulong             m_ticket;
    ENUM_ORDER_TYPE   m_type;
    double            m_volume;
    double            m_volume_initial;
-   double            m_price;
-
    JOrderStops       m_order_stops;
 public:
                      JOrder();
                      JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price);
                     ~JOrder();
-
+   virtual void      CheckTrailing();
+   virtual void      CreateStops(JStops *stops);
+   virtual void      CheckStops();
+   virtual void      OrderPrice(double price){m_price=price;}
+   virtual double    OrderPrice(){return(m_price);}
    virtual void      OrderType(ENUM_ORDER_TYPE type){m_type=type;}
-   virtual ENUM_ORDER_TYPE OrderType() {return(m_type);}
    virtual void      OrderTicket(ulong ticket) {m_ticket=ticket;}
    virtual ulong     OrderTicket() {return(m_ticket);}
    virtual void      OrderVolume(double volume){m_volume=volume;}
    virtual double    OrderVolume(){return(m_volume);}
-   virtual void      OrderPrice(double price){m_price=price;}
-   virtual double    OrderPrice(){return(m_price);}
-
-   virtual void      CreateStops(JStops *stops);
-   virtual void      CheckStops();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder()
+JOrder::JOrder() : m_price(0.0),
+                   m_ticket(0),
+                   m_type(0),
+                   m_volume(0.0),
+                   m_volume_initial(0.0)
   {
   }
 //+------------------------------------------------------------------+
@@ -87,8 +86,6 @@ void JOrder::CheckStops()
   {
    int total= m_order_stops.Total();
    for(int i=0;i<total;i++)
-     {
       m_order_stops.Check(m_volume);
-     }
   }
 //+------------------------------------------------------------------+

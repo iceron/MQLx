@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                                        Stops.mqh |
+//|                                             MoneyFixedMargin.mqh |
 //|                        Copyright 2014, MetaQuotes Software Corp. |
 //|                                              http://www.mql5.com |
 //+------------------------------------------------------------------+
@@ -7,41 +7,44 @@
 #property link      "http://www.mql5.com"
 #property version   "1.00"
 
-#include <Arrays\ArrayObj.mqh>
-#include "Stop.mqh"
+#include "Money.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStops : public CArrayObj
+class JMoneyFixedMargin : public JMoney
   {
 public:
-                     JStops();
-                     JStops(string name,string sl=".sl.",string tp=".tp.");
-                    ~JStops();
-   virtual void      InitTrade(JTrade *trade);
-   virtual void      CreateStops(ulong order_ticket,int order_type,double volume,double price);
+   virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
+                     JMoneyFixedMargin();
+                    ~JMoneyFixedMargin();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::JStops()
+JMoneyFixedMargin::JMoneyFixedMargin()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::~JStops()
+JMoneyFixedMargin::~JMoneyFixedMargin()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::InitTrade(JTrade *trade)
+void JMoneyFixedMargin::UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl)
   {
-   for(int i=0;i<Total();i++)
+   if(m_symbol==NULL)
+      return;
+   if(price==0.0)
      {
-      JStop *stop=At(i);
-      stop.InitTrade(trade);
+      if(type==ORDER_TYPE_BUY)
+         m_volume=m_account.MaxLotCheck(m_symbol.Name(),type,m_symbol.Ask(),m_percent);
+      else if(type==ORDER_TYPE_SELL)
+         m_volume=m_account.MaxLotCheck(m_symbol.Name(),type,m_symbol.Bid(),m_percent);
      }
+   else
+      m_volume=m_account.MaxLotCheck(m_symbol.Name(),type,price,m_percent);
   }
 //+------------------------------------------------------------------+

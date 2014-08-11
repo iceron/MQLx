@@ -14,11 +14,10 @@
 //+------------------------------------------------------------------+
 class JOrders : public CArrayObj
   {
-protected:
 public:
                      JOrders();
                     ~JOrders();
-   virtual void      CheckStops();
+   virtual void      OnTick();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -35,7 +34,7 @@ JOrders::~JOrders()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrders::CheckStops()
+void JOrders::OnTick()
   {
    for(int i=0;i<Total();i++)
      {
