@@ -44,23 +44,23 @@ public:
                     ~JMoney();
    //--- money management parameters
    virtual void      Balance(double balance) {m_balance=balance;}
-   virtual double    Balance() {return(m_balance);}
+   virtual double    Balance() const {return(m_balance);}
    virtual void      BalanceIncrement(double balance) {m_balance_inc=balance;}
-   virtual double    BalanceIncrement() {return(m_balance_inc);}
+   virtual double    BalanceIncrement() const {return(m_balance_inc);}
    virtual void      Equity(bool equity) {m_equity=equity;}
-   virtual bool      Equity() {return(m_equity);}
+   virtual bool      Equity() const {return(m_equity);}
    virtual void      LastUpdate(datetime update) {m_last_update=update;}
-   virtual datetime  LastUpdate() {return(m_last_update);}
+   virtual datetime  LastUpdate() const {return(m_last_update);}
    virtual void      Percent(double percent) {m_percent=percent;}
-   virtual double    Percent() {return(m_percent);}
+   virtual double    Percent() const {return(m_percent);}
    virtual void      Period(int period) {m_period=period;}
-   virtual int       Period() {return(m_period);}
+   virtual int       Period() const {return(m_period);}
    virtual void      UpdateType(MONEY_UPDATE_TYPE type) {m_update=type;}
    virtual double    Volume(double price,ENUM_ORDER_TYPE type,double sl);
    virtual void      VolumeCurrent(double volume) {m_volume=volume;}
-   virtual double    VolumeCurrent() {return(m_volume);}
+   virtual double    VolumeCurrent() const {return(m_volume);}
    virtual void      VolumeBase(double volume_base) {m_volume_base=volume_base;}
-   virtual double    VolumeBase() {return(m_volume_base);}
+   virtual double    VolumeBase() const {return(m_volume_base);}
    //--- money management objects
    virtual void      InitSymbol(CSymbolInfo *symbol);
    virtual void      InitAccount(CAccountInfo *account);

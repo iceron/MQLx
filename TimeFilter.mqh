@@ -28,19 +28,19 @@ public:
    virtual bool      Evaluate();
    virtual bool      Init(int gmt,int starthour,int endhour,int startminute=0,int endminute=0,int startseconds=0,int endseconds=0);
    virtual void      SetDays(bool sun,bool mon,bool tue,bool wed,bool thu,bool fri,bool sat);
-   virtual bool      Sunday() {return(m_mon);}
+   virtual bool      Sunday() const {return(m_mon);}
    virtual void      Sunday(bool mon) {m_mon=mon;}
-   virtual bool      Monday() {return(m_mon);}
+   virtual bool      Monday() const {return(m_mon);}
    virtual void      Monday(bool mon) {m_mon=mon;}
-   virtual bool      Tuesday() {return(m_mon);}
+   virtual bool      Tuesday() const {return(m_mon);}
    virtual void      Tuesday(bool mon) {m_mon=mon;}
-   virtual bool      Wednesday() {return(m_mon);}
+   virtual bool      Wednesday() const {return(m_mon);}
    virtual void      Wednesday(bool mon) {m_mon=mon;}
-   virtual bool      Thursday() {return(m_mon);}
+   virtual bool      Thursday() const {return(m_mon);}
    virtual void      Thursday(bool mon) {m_mon=mon;}
-   virtual bool      Friday() {return(m_mon);}
+   virtual bool      Friday() const {return(m_mon);}
    virtual void      Friday(bool mon) {m_mon=mon;}
-   virtual bool      Saturday() {return(m_mon);}
+   virtual bool      Saturday() const {return(m_mon);}
    virtual void      Saturday(bool mon) {m_mon=mon;}
   };
 //+------------------------------------------------------------------+

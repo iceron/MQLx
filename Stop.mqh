@@ -78,40 +78,40 @@ public:
    virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
    //--- stop order getters and setters
    virtual void      Comment(string comment) {m_comment=comment;}
-   virtual string    Comment() {return(m_comment);}
-   virtual int       DigitsAdjust() {return(m_digits_adjust);}
+   virtual string    Comment() const {return(m_comment);}
+   virtual int       DigitsAdjust() const {return(m_digits_adjust);}
    virtual void      DigitsAdjust(int adjust) {m_digits_adjust=adjust;}
    virtual void      EntryColor(color clr) {m_entry_color=clr;}
    virtual void      EntryStyle(ENUM_LINE_STYLE style) {m_entry_style=style;}
    virtual void      Magic(int magic) {m_magic=magic;}
-   virtual int       Magic() {return(m_magic);}
-   virtual bool      Main() {return(m_stop_type==STOP_TYPE_MAIN);}
+   virtual int       Magic() const {return(m_magic);}
+   virtual bool      Main() const {return(m_stop_type==STOP_TYPE_MAIN);}
    virtual void      Name(string name) {m_name=name;}
-   virtual string    Name() {return(m_name);}
+   virtual string    Name()  const{return(m_name);}
    virtual void      OCO(bool oco) {m_oco=oco;}
-   virtual bool      OCO() {return(m_oco);}
+   virtual bool      OCO()  const{return(m_oco);}
    virtual bool      Pending() {return(m_stop_type==STOP_TYPE_PENDING);}
-   virtual double    PointsAdjust() {return(m_points_adjust);}
+   virtual double    PointsAdjust() const {return(m_points_adjust);}
    virtual void      PointsAdjust(double adjust) {m_points_adjust=adjust;}
    virtual void      StopLoss(double sl) {m_stoploss=sl;}
-   virtual double    StopLoss() {return(m_stoploss);}
+   virtual double    StopLoss() const {return(m_stoploss);}
    virtual void      StopLossColor(color clr) {m_stoploss_color=clr;}
    virtual void      StopLossName(string name) {m_stoploss_name=name;}
-   virtual string    StopLossName() {return(m_stoploss_name);}
+   virtual string    StopLossName()  const{return(m_stoploss_name);}
    virtual void      StopLossStyle(ENUM_LINE_STYLE style) {m_stoploss_style=style;}
    virtual void      StopType(ENUM_STOP_TYPE stop_type);
-   virtual ENUM_STOP_TYPE StopType(){return(m_stop_type);}
+   virtual ENUM_STOP_TYPE StopType() const {return(m_stop_type);}
    virtual void      TakeProfit(double tp) {m_takeprofit=tp;}
-   virtual double    TakeProfit() {return(m_takeprofit);}
+   virtual double    TakeProfit() const {return(m_takeprofit);}
    virtual void      TakeProfitColor(color clr) {m_takeprofit_color=clr;}
    virtual void      TakeProfitName(string name) {m_takeprofit_name=name;}
-   virtual string    TakeProfitName() {return(m_takeprofit_name);}
+   virtual string    TakeProfitName() const {return(m_takeprofit_name);}
    virtual void      TakeProfitStyle(ENUM_LINE_STYLE style) {m_takeprofit_style=style;}
-   virtual bool      Virtual() {return(m_stop_type==STOP_TYPE_VIRTUAL);}
+   virtual bool      Virtual() const {return(m_stop_type==STOP_TYPE_VIRTUAL);}
    virtual void      Volume(double &volume_fixed,double &volume_percent);
-   virtual double    VolumeFixed() {return(m_volume_fixed);}
+   virtual double    VolumeFixed() const {return(m_volume_fixed);}
    virtual void      VolumeFixed(double volume) {m_volume_fixed=volume;}
-   virtual double    VolumePercent() {return(m_volume_percent);}
+   virtual double    VolumePercent() const {return(m_volume_percent);}
    virtual void      VolumePercent(double volume) {m_volume_percent=volume;}
    virtual void      VolumeType(ENUM_VOLUME_TYPE type){m_volume_type=type;}
    //--- stop order checking

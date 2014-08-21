@@ -27,9 +27,9 @@ public:
                      JTime();
                     ~JTime();
    virtual bool      Evaluate();
-   virtual ENUM_TIME_FILTER_TYPE  FilterType(){return(m_filter_type);}
+   virtual ENUM_TIME_FILTER_TYPE FilterType() const {return(m_filter_type);}
    virtual void      FilterType(ENUM_TIME_FILTER_TYPE type){m_filter_type=type;}
-   virtual datetime  TimeStart(){return(m_time_start);}
+   virtual datetime  TimeStart() const {return(m_time_start);}
    virtual void      TimeStart(datetime start){m_time_start=start;}
   };
 //+------------------------------------------------------------------+

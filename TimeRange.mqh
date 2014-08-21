@@ -20,9 +20,9 @@ public:
                     ~JTimeRange();
    virtual bool      Init(datetime begin,datetime end);
    virtual bool      Evaluate();
-   virtual datetime  Begin() {return(m_begin);}
+   virtual datetime  Begin()  const  {return(m_begin);}
    virtual void      Begin(datetime begin) {m_begin=begin;}
-   virtual datetime  End() {return(m_end);}
+   virtual datetime  End()  const  {return(m_end);}
    virtual void      End(datetime end) {m_end=end;}
   };
 //+------------------------------------------------------------------+

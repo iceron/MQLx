@@ -32,20 +32,20 @@ public:
                     ~JTimer();
    virtual bool      Evaluate();
    virtual bool      Init(uint years,uint months,uint days,uint hours,uint minutes,uint seconds);
-   virtual bool      Elapsed() {return(m_elapsed);}
-   virtual bool      Total() {return(m_total);}
+   virtual bool      Elapsed() const {return(m_elapsed);}
+   virtual bool      Total() const {return(m_total);}
    virtual void      RecalculateTotal();
-   virtual uint      Year() {return(m_years);}
+   virtual uint      Year() const {return(m_years);}
    virtual void      Year(uint years) {m_years=years;}
-   virtual uint      Month() {return(m_months);}
+   virtual uint      Month() const {return(m_months);}
    virtual void      Month(uint months) {m_months=months;}
-   virtual uint      Days() {return(m_days);}
+   virtual uint      Days() const {return(m_days);}
    virtual void      Days(uint days) {m_days=days;}
-   virtual uint      Hours() {return(m_hours);}
+   virtual uint      Hours() const {return(m_hours);}
    virtual void      Hours(uint hours) {m_hours=hours;}
-   virtual uint      Minutes() {return(m_minutes);}
+   virtual uint      Minutes() const {return(m_minutes);}
    virtual void      Minutes(uint minutes) {m_minutes=minutes;}
-   virtual uint      Seconds() {return(m_seconds);}
+   virtual uint      Seconds() const {return(m_seconds);}
    virtual void      Seconds(uint seconds) {m_seconds=seconds;}
   };
 //+------------------------------------------------------------------+

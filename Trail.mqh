@@ -54,24 +54,24 @@ public:
    //--- initialization                    
    virtual void      Init(CSymbolInfo *symbol=NULL);
    //--- getters and setters    
-   virtual int       DigitsAdjust() {return(m_digits_adjust);}
+   virtual int       DigitsAdjust() const {return(m_digits_adjust);}
    virtual void      DigitsAdjust(int adjust) {m_digits_adjust=adjust;}
-   virtual double    End() {return(m_end);}
+   virtual double    End() const {return(m_end);}
    virtual void      End(double end) {m_end=end;}
-   virtual double    PointsAdjust() {return(m_points_adjust);}
+   virtual double    PointsAdjust() const {return(m_points_adjust);}
    virtual void      PointsAdjust(double adjust) {m_points_adjust=adjust;}
    virtual void      Set(double trail,double start,double step=1,double end=0);
-   virtual double    Start() {return(m_start);}
+   virtual double    Start() const {return(m_start);}
    virtual void      Start(double start) {m_start=start;}
-   virtual double    Step() {return(m_step);}
+   virtual double    Step() const {return(m_step);}
    virtual void      Step(double step) {m_step=step;}
-   virtual double    Trail() {return(m_trail);}
+   virtual double    Trail() const {return(m_trail);}
    virtual void      Trail(double trail) {m_trail=trail;}
-   virtual int       TrailMode() {return(m_mode);}
+   virtual int       TrailMode() const {return(m_mode);}
    virtual void      TrailMode(ENUM_TRAIL_MODE mode) {m_mode=mode;}
-   virtual int       TrailTarget() {return(m_target);}
+   virtual int       TrailTarget() const {return(m_target);}
    virtual void      TrailTarget(ENUM_TRAIL_TARGET target) {m_target=target;}
-   virtual int       TrailType() {return(m_type);}
+   virtual int       TrailType() const  {return(m_type);}
    virtual void      TrailType(ENUM_TRAIL_TYPE type) {m_type=type;}
    //--- checking
    virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);

@@ -20,7 +20,7 @@ protected:
 public:
                      JSignalManager();
                     ~JSignalManager();
-   virtual int       LastSignal();
+   virtual int       LastSignal() const{return(m_last_signal);}
    virtual void      LastSignal(int signal);
    virtual int       CheckSignals();
   };
@@ -62,13 +62,6 @@ int JSignalManager::CheckSignals()
    if(res>0)
       m_last_signal=res;
    return(res);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-int JSignalManager::LastSignal()
-  {
-   return(m_last_signal);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

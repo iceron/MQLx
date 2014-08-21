@@ -44,12 +44,12 @@ public:
                      JSignal();
                     ~JSignal();
    //--- signal parameters
-   virtual string    Name() {return(m_name);}
+   virtual string    Name() const {return(m_name);}
    virtual void      Name(string name) {m_name=name;}
-   virtual bool      Reverse() {return(m_reverse);}
+   virtual bool      Reverse() const {return(m_reverse);}
    virtual void      Reverse(bool reverse) {m_reverse=reverse;}
-   virtual int       LastSignal() {return(m_signal);}
-   virtual int       LastValidSignal() {return(m_signal);}
+   virtual int       LastSignal() const {return(m_signal);}
+   virtual int       LastValidSignal() const {return(m_signal);}
    //--- signal methods
    virtual void      AddEmptyValue(double);
    virtual int       CheckSignal();
