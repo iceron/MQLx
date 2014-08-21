@@ -42,7 +42,7 @@ protected:
    bool              m_position_reverse;
    //--- market parameters
    int               m_digits_adjust;
-   double            m_point_adjust;
+   double            m_points_adjust;
    //--- datetime parameters
    MqlDateTime       m_last_tick_time;
    datetime          m_last_trade_time;
@@ -149,7 +149,7 @@ JStrategy::JStrategy(void) : m_expiration(0),
                              m_period(PERIOD_CURRENT),
                              m_position_reverse(true),
                              m_digits_adjust(0),
-                             m_point_adjust(0.0),
+                             m_points_adjust(0.0),
                              m_last_trade_time(0)
   {
   }
@@ -179,7 +179,7 @@ bool JStrategy::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,bool ev
    m_one_trade_per_candle=one_trade_per_candle;
    m_last_trade_time=0;
    m_digits_adjust=(m_symbol.Digits()==3 || m_symbol.Digits()==5)?10:1;
-   m_point_adjust=m_symbol.Point()*m_digits_adjust;
+   m_points_adjust=m_symbol.Point()*m_digits_adjust;
    return(false);
   }
 //+------------------------------------------------------------------+
@@ -356,6 +356,9 @@ void JStrategy::AddStop(JStop *stop)
   {
    if(m_main_stop==NULL && stop.StopType()==STOP_TYPE_MAIN)
       m_main_stop=stop;
+   stop.InitSymbol(m_symbol);
+   stop.PointsAdjust(m_points_adjust);
+   stop.DigitsAdjust(m_digits_adjust);
    m_stops.Add(stop);
   }
 //+------------------------------------------------------------------+

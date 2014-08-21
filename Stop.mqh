@@ -73,11 +73,14 @@ public:
                      JStop(string name);
                     ~JStop();
    //--- initialization
-   virtual bool      Init(string symbol,JTrade *trade=NULL);
+   virtual bool      Init(JTrade *trade=NULL);
    virtual bool      InitTrade(JTrade *trade=NULL);
+   virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
    //--- stop order getters and setters
    virtual void      Comment(string comment) {m_comment=comment;}
    virtual string    Comment() {return(m_comment);}
+   virtual int       DigitsAdjust() {return(m_digits_adjust);}
+   virtual void      DigitsAdjust(int adjust) {m_digits_adjust=adjust;}
    virtual void      EntryColor(color clr) {m_entry_color=clr;}
    virtual void      EntryStyle(ENUM_LINE_STYLE style) {m_entry_style=style;}
    virtual void      Magic(int magic) {m_magic=magic;}
@@ -88,6 +91,8 @@ public:
    virtual void      OCO(bool oco) {m_oco=oco;}
    virtual bool      OCO() {return(m_oco);}
    virtual bool      Pending() {return(m_stop_type==STOP_TYPE_PENDING);}
+   virtual double    PointsAdjust() {return(m_points_adjust);}
+   virtual void      PointsAdjust(double adjust) {m_points_adjust=adjust;}
    virtual void      StopLoss(double sl) {m_stoploss=sl;}
    virtual double    StopLoss() {return(m_stoploss);}
    virtual void      StopLossColor(color clr) {m_stoploss_color=clr;}
@@ -181,18 +186,17 @@ JStop::~JStop()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::Init(string symbol,JTrade *trade=NULL)
+bool JStop::Init(JTrade *trade=NULL)
   {
-   if(m_symbol==NULL)
-     {
-      if((m_symbol=new CSymbolInfo)==NULL)
-         return(false);
-     }
-   if(!m_symbol.Name(symbol))
-      return(false);
-   m_digits_adjust=(m_symbol.Digits()==3 || m_symbol.Digits()==5) ? 10 : 1;
-   m_points_adjust=m_symbol.Point()*m_digits_adjust;
    return(InitTrade(trade));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStop::InitSymbol(CSymbolInfo *symbolinfo=NULL)
+  {
+   m_symbol = symbolinfo;
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
