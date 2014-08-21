@@ -67,11 +67,11 @@ public:
    virtual void      Step(double step) {m_step=step;}
    virtual double    Trail() {return(m_trail);}
    virtual void      Trail(double trail) {m_trail=trail;}
-   virtual ENUM_TRAIL_MODE TrailMode() {return(m_mode);}
+   virtual int       TrailMode() {return(m_mode);}
    virtual void      TrailMode(ENUM_TRAIL_MODE mode) {m_mode=mode;}
-   virtual ENUM_TRAIL_TARGET TrailTarget() {return(m_target);}
+   virtual int       TrailTarget() {return(m_target);}
    virtual void      TrailTarget(ENUM_TRAIL_TARGET target) {m_target=target;}
-   virtual ENUM_TRAIL_TYPE TrailType() {return(m_type);}
+   virtual int       TrailType() {return(m_type);}
    virtual void      TrailType(ENUM_TRAIL_TYPE type) {m_type=type;}
    //--- checking
    virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
@@ -138,7 +138,7 @@ double JTrail::ActivationPrice(ENUM_ORDER_TYPE type,double entry_price)
   {
    if(type==ORDER_TYPE_BUY)
       return(entry_price+m_start*m_points_adjust);
-   if(type==ORDER_TYPE_SELL)
+   else if(type==ORDER_TYPE_SELL)
       return(entry_price-m_start*m_points_adjust);
    return(0);
   }
@@ -149,7 +149,7 @@ double JTrail::DeactivationPrice(ENUM_ORDER_TYPE type,double entry_price)
   {
    if(type==ORDER_TYPE_BUY)
       return(m_end==0?0:entry_price+m_end*m_points_adjust);
-   if(type==ORDER_TYPE_SELL)
+   else if(type==ORDER_TYPE_SELL)
       return(m_end==0?0:entry_price-m_end*m_points_adjust);
    return(0);
   }
@@ -158,10 +158,10 @@ double JTrail::DeactivationPrice(ENUM_ORDER_TYPE type,double entry_price)
 //+------------------------------------------------------------------+
 double JTrail::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
   {
-   double next_stop;
-   double activation=ActivationPrice(type,entry_price);
-   double deactivation=DeactivationPrice(type,entry_price);
-   double new_price=Price(type);
+   double next_stop=0.0,activation=0.0,deactivation=0.0,new_price=0.0;
+   activation=ActivationPrice(type,entry_price);
+   deactivation=DeactivationPrice(type,entry_price);
+   new_price=Price(type);
    if(type==ORDER_TYPE_BUY)
      {
       if(m_target==TRAIL_TARGET_STOPLOSS)
@@ -210,7 +210,7 @@ double JTrail::Price(ENUM_ORDER_TYPE type)
       if(m_target==TRAIL_TARGET_STOPLOSS)
          return(m_symbol.Bid()-m_trail*m_points_adjust);
      }
-   if(type==ORDER_TYPE_SELL)
+   else if(type==ORDER_TYPE_SELL)
      {
       if(m_target==TRAIL_TARGET_STOPLOSS)
          return(m_symbol.Ask()+m_trail*m_points_adjust);

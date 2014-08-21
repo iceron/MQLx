@@ -35,8 +35,7 @@ JTrails::~JTrails()
 //+------------------------------------------------------------------+
 double JTrails::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
   {
-   double val=0.0;
-   double ret=0.0;
+   double val=0.0,ret=0.0;
    for(int i=0;i<Total();i++)
      {
       JTrail *trail=At(i);
@@ -48,7 +47,7 @@ double JTrails::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,do
             if(val>ret)
                ret=val;
         }
-      if(type==ORDER_TYPE_SELL)
+      else if(type==ORDER_TYPE_SELL)
         {
          if(trail.TrailTarget()==TRAIL_TARGET_STOPLOSS)
             if(val<ret)
