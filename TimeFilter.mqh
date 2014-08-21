@@ -140,8 +140,7 @@ bool JTimeFilter::Evaluate()
       if(!(current>start && current<end))
          result=false;
      }
-   if(m_filter_type==TIME_FILTER_EXCLUDE) return(!result);
-   return(result);
+   return(m_filter_type==TIME_FILTER_INCLUDE?result:!result);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

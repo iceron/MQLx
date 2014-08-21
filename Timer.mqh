@@ -91,8 +91,9 @@ void JTimer::RecalculateTotal()
 //+------------------------------------------------------------------+
 bool JTimer::Evaluate()
   {
+   bool result = true;
    m_elapsed=(int)(TimeCurrent()-m_time_start);
-   if(m_elapsed>=m_total) return(false);
-   return(true);
+   if(m_elapsed>=m_total) result = false;
+   return(m_filter_type==TIME_FILTER_INCLUDE?result:!result);
   }
 //+------------------------------------------------------------------+
