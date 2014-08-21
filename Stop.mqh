@@ -49,6 +49,7 @@ protected:
    double            m_volume_fixed;
    double            m_volume_percent;
    int               m_magic;
+   string            m_comment;
    //--- stop order market parameters
    double            m_points_adjust;
    int               m_digits_adjust;
@@ -75,6 +76,8 @@ public:
    virtual bool      Init(string symbol,JTrade *trade=NULL);
    virtual bool      InitTrade(JTrade *trade=NULL);
    //--- stop order getters and setters
+   virtual void      Comment(string comment) {m_comment=comment;}
+   virtual string    Comment() {return(m_comment);}
    virtual void      EntryColor(color clr) {m_entry_color=clr;}
    virtual void      EntryStyle(ENUM_LINE_STYLE style) {m_entry_style=style;}
    virtual void      Magic(int magic) {m_magic=magic;}
@@ -133,10 +136,10 @@ protected:
    virtual double    StopLossCalculate(ENUM_ORDER_TYPE type,double entry);
    virtual double    StopLossCustom(ENUM_ORDER_TYPE type,double price);
    virtual double    TakeProfitCalculate(ENUM_ORDER_TYPE type,double entry);
-   virtual double    TakeProfitCustom(ENUM_ORDER_TYPE type,double price);   
+   virtual double    TakeProfitCustom(ENUM_ORDER_TYPE type,double price);
    //--- stop order entry
    virtual void      OpenStop(const ENUM_ORDER_TYPE type,const double total_volume,const double volume_remaining,double volume,double val,ulong &ticket);
-   virtual bool      GetClosePrice(ENUM_ORDER_TYPE type,double &price);   
+   virtual bool      GetClosePrice(ENUM_ORDER_TYPE type,double &price);
    //--- stop order exit
    virtual bool      CloseStop(const double total_volume,double &volume_remaining,double volume,ENUM_ORDER_TYPE type,double price);
    //--- deinitialization
@@ -151,6 +154,7 @@ JStop::JStop(string name) : m_magic(INT_MAX),
                             m_volume_type(VOLUME_TYPE_FIXED),
                             m_volume_fixed(0),
                             m_volume_percent(0),
+                            m_comment(NULL),
                             m_oco(true),
                             m_stop_type(STOP_TYPE_VIRTUAL),
                             m_stoploss_name(".sl."),
@@ -250,12 +254,12 @@ void JStop::OpenStop(const ENUM_ORDER_TYPE type,const double total_volume,const 
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
      {
       if(m_stop_type==STOP_TYPE_PENDING || m_stop_type==STOP_TYPE_MAIN)
-         res=m_trade.Sell(lotsize,val,0,0);
+         res=m_trade.Sell(lotsize,val,0,0,m_comment);
      }
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
      {
       if(m_stop_type==STOP_TYPE_PENDING || m_stop_type==STOP_TYPE_MAIN)
-         res=m_trade.Buy(lotsize,val,0,0);
+         res=m_trade.Buy(lotsize,val,0,0,m_comment);
      }
    if(res) ticket=m_trade.ResultOrder();
   }
@@ -269,9 +273,9 @@ bool JStop::CloseStop(const double total_volume,double &volume_remaining,double 
      {
       double lotsize=LotSizeCalculate(volume,volume_remaining,total_volume);
       if(type==ORDER_TYPE_BUY)
-         res=m_trade.Sell(MathMin(lotsize,volume_remaining),price,0,0);
+         res=m_trade.Sell(MathMin(lotsize,volume_remaining),price,0,0,m_comment);
       else if(type==ORDER_TYPE_SELL)
-         res=m_trade.Buy(MathMin(lotsize,volume_remaining),price,0,0);
+         res=m_trade.Buy(MathMin(lotsize,volume_remaining),price,0,0,m_comment);
       if(res) volume_remaining-=lotsize;
      }
    return(res);
