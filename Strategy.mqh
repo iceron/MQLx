@@ -18,6 +18,7 @@
 #include "Order.mqh"
 #include "Stops.mqh"
 #include "Money.mqh"
+#include "Times.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -60,6 +61,8 @@ protected:
    CArrayInt         m_other_magic;
    //--- money management objects
    JMoney           *m_money;
+   //--- trading time objects
+   JTimes            *m_times;
 public:
                      JStrategy(void);
                     ~JStrategy(void);
@@ -103,6 +106,8 @@ public:
    virtual void      MaxTrades(int max_trades){m_max_trades=max_trades;}
    virtual int       MaxOrders(void) {return(m_max_orders);}
    virtual void      MaxOrders(int maxorders) {m_max_orders=maxorders;}
+   //--- trading time parameters
+   virtual bool      AddTime(JTime *time);
    //--- deinitialization
    virtual bool      Deinit(void);
    //--- events
@@ -216,6 +221,11 @@ bool JStrategy::InitTrade(JTrade *trade=NULL)
 bool JStrategy::AddSignal(JSignal *signal)
   {
    return(m_signal_manager.Add(signal));
+  }
+  
+bool JStrategy::AddTime(JTime *time)
+  {
+   return(m_times.Add(time));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
