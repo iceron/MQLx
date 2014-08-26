@@ -22,6 +22,14 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+enum ENUM_TRADE_MODE 
+  {
+   TRADE_MODE_MARKET,
+   TRADE_MODE_PENDING
+  };
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 class JStrategy : CObject
   {
 protected:
@@ -37,6 +45,7 @@ protected:
    bool              m_every_tick;
    int               m_max_orders;
    int               m_max_trades;
+   ENUM_TRADE_MODE   m_trade_mode;
    bool              m_one_trade_per_candle;
    ENUM_TIMEFRAMES   m_period;
    bool              m_position_reverse;
@@ -62,7 +71,7 @@ protected:
    //--- money management objects
    JMoney           *m_money;
    //--- trading time objects
-   JTimes            *m_times;
+   JTimes           *m_times;
 public:
                      JStrategy(void);
                     ~JStrategy(void);
@@ -122,6 +131,7 @@ protected:
    virtual bool      IsTradeProcessed(void);
    virtual double    LotSizeCalculate(double price,double stoploss);
    virtual double    PriceCalculate(int res);
+   virtual double    PriceCalculateCustom(int res);
    virtual bool      Refresh(void);
    virtual double    StopLossCalculate(int res,double price);
    virtual double    TakeProfitCalculate(int res,double price);
@@ -222,7 +232,9 @@ bool JStrategy::AddSignal(JSignal *signal)
   {
    return(m_signal_manager.Add(signal));
   }
-  
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategy::AddTime(JTime *time)
   {
    return(m_times.Add(time));
@@ -268,10 +280,24 @@ bool JStrategy::TradeOpen(int res,double price=0.0)
 //+------------------------------------------------------------------+
 double JStrategy::PriceCalculate(int res)
   {
-   if(res==CMD_LONG)
-      return(m_symbol.Ask());
-   else if(res==CMD_SHORT)
-      return(m_symbol.Bid());
+   if(m_trade_mode==TRADE_MODE_MARKET)
+     {
+      if(res==CMD_LONG)
+         return(m_symbol.Ask());
+      else if(res==CMD_SHORT)
+         return(m_symbol.Bid());
+     }
+   else if(m_trade_mode==TRADE_MODE_PENDING)
+     {
+      return(PriceCalculateCustom(res));
+     }
+   return(0.0);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double JStrategy::PriceCalculateCustom(int res)
+  {
    return(0.0);
   }
 //+------------------------------------------------------------------+
