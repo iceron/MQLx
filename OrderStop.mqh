@@ -69,6 +69,7 @@ JOrderStop::JOrderStop() : m_name(NULL),
                            m_volume(0.0),
                            m_volume_fixed(0.0),
                            m_volume_percent(0.0),
+                           m_stop(NULL),
                            m_stoploss_name(NULL),
                            m_takeprofit_name(NULL),
                            m_stoploss(0.0),
@@ -82,7 +83,7 @@ JOrderStop::JOrderStop() : m_name(NULL),
                            m_stop_type(0),
                            m_visible(true),
                            m_oco(true)
-  {   
+  {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -96,6 +97,7 @@ JOrderStop::~JOrderStop()
 //+------------------------------------------------------------------+
 void JOrderStop::Init(ulong ticket,ENUM_ORDER_TYPE type,double price,double volume,JStop *stop)
   {
+   if(!stop.Activate()) return;
    m_main_ticket=ticket;
    m_main_type=type;
    m_main_price=price;
@@ -195,6 +197,7 @@ void JOrderStop::Check(double &volume)
 //+------------------------------------------------------------------+
 bool JOrderStop::CheckTrailing()
   {
+   if(m_stop==NULL) return(false);
    if(m_stoploss_closed && m_takeprofit_closed) return(false);
    double stoploss=0,takeprofit=0;
    if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_main_type,m_main_price,m_stoploss,m_takeprofit);
@@ -253,6 +256,7 @@ bool JOrderStop::ModifyOrderStop(double stoploss,double takeprofit)
 //+------------------------------------------------------------------+
 bool JOrderStop::Update()
   {
+   if(m_stop==NULL) return(true);
    double stoploss=0.0,takeprofit=0.0;
    if(CheckPointer(m_objtp))
      {

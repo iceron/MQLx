@@ -16,6 +16,7 @@
 class JOrder : public CObject
   {
 protected:
+   bool              m_activate;
    double            m_price;
    ulong             m_ticket;
    ENUM_ORDER_TYPE   m_type;
@@ -26,7 +27,10 @@ public:
                      JOrder();
                      JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price);
                     ~JOrder();
-   virtual void      CheckTrailing();
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
+   //--- order functions                    
    virtual void      CreateStops(JStops *stops);
    virtual void      CheckStops();
    virtual void      OrderPrice(double price){m_price=price;}
@@ -40,7 +44,8 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder() : m_price(0.0),
+JOrder::JOrder() : m_activate(true),
+                   m_price(0.0),
                    m_ticket(0),
                    m_type(0),
                    m_volume(0.0),

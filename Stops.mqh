@@ -14,16 +14,21 @@
 //+------------------------------------------------------------------+
 class JStops : public CArrayObj
   {
+protected:
+   bool              m_activate;
 public:
                      JStops();
                      JStops(string name,string sl=".sl.",string tp=".tp.");
                     ~JStops();
    virtual void      CreateStops(ulong order_ticket,int order_type,double volume,double price);
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStops::JStops()
+JStops::JStops() : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+

@@ -37,6 +37,8 @@ enum ENUM_TRAIL_MODE
 //+------------------------------------------------------------------+
 class JTrail : public CObject
   {
+protected:
+   bool              m_activate;
 private:
    ENUM_TRAIL_TYPE   m_type;
    ENUM_TRAIL_TARGET m_target;
@@ -54,6 +56,8 @@ public:
    //--- initialization                    
    virtual void      Init(CSymbolInfo *symbol=NULL);
    //--- getters and setters    
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
    virtual int       DigitsAdjust() const {return(m_digits_adjust);}
    virtual void      DigitsAdjust(int adjust) {m_digits_adjust=adjust;}
    virtual double    End() const {return(m_end);}
@@ -86,7 +90,8 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrail::JTrail() : m_type(TRAIL_TYPE_PIPS),
+JTrail::JTrail() : m_activate(true),
+                   m_type(TRAIL_TYPE_PIPS),
                    m_target(TRAIL_TARGET_STOPLOSS),
                    m_mode(TRAIL_MODE_TRAILING),
                    m_start(0.0),
@@ -158,6 +163,7 @@ double JTrail::DeactivationPrice(ENUM_ORDER_TYPE type,double entry_price)
 //+------------------------------------------------------------------+
 double JTrail::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
   {
+   if (!Activate()) return(0.0);
    double next_stop=0.0,activation=0.0,deactivation=0.0,new_price=0.0;
    activation=ActivationPrice(type,entry_price);
    deactivation=DeactivationPrice(type,entry_price);

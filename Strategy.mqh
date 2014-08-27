@@ -82,8 +82,8 @@ public:
    virtual bool      InitMoney(JMoney *money);
    virtual bool      InitTrade(JTrade *trade);
    //--- activation and deactivation
-   virtual bool Activate() {return(m_activate);}
-   virtual void Activate(bool activate) {m_activate=activate;}
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
    //--- trade parameters
    virtual void      AsyncMode(bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
@@ -98,6 +98,9 @@ public:
    virtual void      Lotsize(double lotsize){m_lotsize=lotsize;}
    virtual int       Magic(void) const {return m_magic;}
    virtual void      Magic(int magic) {m_magic=magic;}
+   virtual int       OrdersTotal(void);
+   virtual int       OrdersHistoryTotal(void);
+   virtual int       TradesTotal(void);
    virtual double    Price(void) const {return(m_price);}
    virtual void      Price(double price) {m_price=price;}
    virtual double    StopLoss(void) const {return(m_stoploss);}
@@ -132,10 +135,7 @@ protected:
    virtual void      ArchiveOrders(void);
    virtual void      CloseOppositeOrders(int res);
    virtual bool      IsTradeProcessed(void);
-   virtual double    LotSizeCalculate(double price,double stoploss);
-   virtual int       OrdersTotal(void);
-   virtual int       OrdersHistoryTotal(void);
-   virtual int       TradesTotal(void);
+   virtual double    LotSizeCalculate(double price,double stoploss);   
    virtual double    PriceCalculate(int res);
    virtual double    PriceCalculateCustom(int res);
    virtual bool      Refresh(void);
@@ -252,6 +252,7 @@ bool JStrategy::AddTime(JTime *time)
 //+------------------------------------------------------------------+
 bool JStrategy::OnTick(void)
   {
+   if(!Activate()) return(false);
    bool ret=false;
    if(!Refresh()) return(ret);
    m_orders.OnTick();

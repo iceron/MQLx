@@ -15,6 +15,7 @@
 class JSignalManager: public JSignal
   {
 protected:
+   bool              m_activate;
    int               m_last_signal;
    bool              m_new_signal;
 public:
@@ -27,7 +28,8 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignalManager::JSignalManager() : m_last_signal(0),
+JSignalManager::JSignalManager() : m_activate(true),
+                                   m_last_signal(0),
                                    m_new_signal(true)
   {
   }

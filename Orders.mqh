@@ -14,15 +14,21 @@
 //+------------------------------------------------------------------+
 class JOrders : public CArrayObj
   {
+protected:
+   bool              m_activate;
 public:
                      JOrders();
                     ~JOrders();
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}  
+   //--- events                  
    virtual void      OnTick();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrders::JOrders()
+JOrders::JOrders() : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+

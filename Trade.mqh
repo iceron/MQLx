@@ -19,14 +19,19 @@ class JTrade : public CExpertTrade
 //|                                                                  |
 //+------------------------------------------------------------------+
   {
+protected:
+   bool              m_activate;
 public:
                      JTrade();
                     ~JTrade();
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrade::JTrade()
+JTrade::JTrade() : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+

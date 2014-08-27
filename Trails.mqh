@@ -13,15 +13,20 @@
 //+------------------------------------------------------------------+
 class JTrails : public CArrayObj
   {
+protected:
+   bool m_activate;
 public:
                      JTrails();
                     ~JTrails();
    virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrails::JTrails()
+JTrails::JTrails() : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
@@ -35,6 +40,7 @@ JTrails::~JTrails()
 //+------------------------------------------------------------------+
 double JTrails::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
   {
+   if (!Activate()) return(0.0);
    double val=0.0,ret=0.0;
    for(int i=0;i<Total();i++)
      {

@@ -35,6 +35,7 @@ enum ENUM_CMD
 class JSignal : public CArrayObj
   {
 protected:
+   bool              m_activate;
    string            m_name;
    int               m_signal;
    int               m_signal_valid;
@@ -43,6 +44,9 @@ protected:
 public:
                      JSignal();
                     ~JSignal();
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
    //--- signal parameters
    virtual string    Name() const {return(m_name);}
    virtual void      Name(string name) {m_name=name;}
@@ -60,7 +64,11 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignal::JSignal()
+JSignal::JSignal() : m_activate(true),
+                     m_signal(CMD_NEUTRAL),
+                     m_signal_valid(CMD_VOID),
+                     m_reverse(false)
+
   {
    AddEmptyValue(0.0);
   }

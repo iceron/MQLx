@@ -13,11 +13,14 @@
 //+------------------------------------------------------------------+
 class JExpert : public CArrayObj
   {
-private:
-
+protected:
+   bool              m_activate;
 public:
                      JExpert();
                     ~JExpert();
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
    //--- events
    virtual void      OnTick(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
@@ -29,7 +32,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JExpert::JExpert()
+JExpert::JExpert() : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+

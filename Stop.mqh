@@ -37,6 +37,7 @@ class JStop : public CObject
   {
 protected:
    //--- stop order parameters   
+   bool              m_activate;
    string            m_name;
    double            m_stoploss;
    string            m_stoploss_name;
@@ -74,7 +75,10 @@ public:
                     ~JStop();
    //--- initialization
    virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
-   virtual bool      InitTrade(JTrade *trade=NULL);   
+   virtual bool      InitTrade(JTrade *trade=NULL);
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
    //--- stop order getters and setters
    virtual void      Comment(string comment) {m_comment=comment;}
    virtual string    Comment() const {return(m_comment);}
@@ -86,9 +90,9 @@ public:
    virtual int       Magic() const {return(m_magic);}
    virtual bool      Main() const {return(m_stop_type==STOP_TYPE_MAIN);}
    virtual void      Name(string name) {m_name=name;}
-   virtual string    Name()  const{return(m_name);}
+   virtual string    Name() const{return(m_name);}
    virtual void      OCO(bool oco) {m_oco=oco;}
-   virtual bool      OCO()  const{return(m_oco);}
+   virtual bool      OCO() const{return(m_oco);}
    virtual bool      Pending() {return(m_stop_type==STOP_TYPE_PENDING);}
    virtual double    PointsAdjust() const {return(m_points_adjust);}
    virtual void      PointsAdjust(double adjust) {m_points_adjust=adjust;}
@@ -96,7 +100,7 @@ public:
    virtual double    StopLoss() const {return(m_stoploss);}
    virtual void      StopLossColor(color clr) {m_stoploss_color=clr;}
    virtual void      StopLossName(string name) {m_stoploss_name=name;}
-   virtual string    StopLossName()  const{return(m_stoploss_name);}
+   virtual string    StopLossName() const{return(m_stoploss_name);}
    virtual void      StopLossStyle(ENUM_LINE_STYLE style) {m_stoploss_style=style;}
    virtual void      StopType(ENUM_STOP_TYPE stop_type);
    virtual ENUM_STOP_TYPE StopType() const {return(m_stop_type);}
@@ -152,7 +156,8 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStop::JStop(string name) : m_magic(INT_MAX),
+JStop::JStop(string name) : m_activate(true),
+                            m_magic(INT_MAX),
                             m_stoploss(0),
                             m_takeprofit(0),
                             m_volume_type(VOLUME_TYPE_FIXED),
@@ -187,7 +192,7 @@ JStop::~JStop()
 //+------------------------------------------------------------------+
 bool JStop::InitSymbol(CSymbolInfo *symbolinfo=NULL)
   {
-   m_symbol = symbolinfo;
+   m_symbol=symbolinfo;
    return(true);
   }
 //+------------------------------------------------------------------+

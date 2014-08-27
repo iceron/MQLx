@@ -16,12 +16,15 @@
 //+------------------------------------------------------------------+
 class JTimes : public CArrayObj
   {
-private:
-
+protected:
+   bool              m_activate;
 public:
                      JTimes();
                     ~JTimes();
    virtual bool      Evaluate();
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -40,12 +43,13 @@ JTimes::~JTimes()
 //+------------------------------------------------------------------+
 bool JTimes::Evaluate()
   {
+   if (!Activate()) return(true);
    for(int i=0;i<Total();i++)
      {
       JTime *time=At(i);
       if(CheckPointer(time))
-         if (!time.Evaluate()) return(false);
+         if(!time.Evaluate()) return(false);
      }
-    return(true);
+   return(true);
   }
 //+------------------------------------------------------------------+

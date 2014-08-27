@@ -27,6 +27,7 @@ enum MONEY_UPDATE_TYPE
 class JMoney : public CObject
   {
 protected:
+   bool              m_activate;
    MONEY_UPDATE_TYPE m_update;
    double            m_volume;
    double            m_percent;
@@ -42,6 +43,9 @@ protected:
 public:
                      JMoney();
                     ~JMoney();
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
    //--- money management parameters
    virtual void      Balance(double balance) {m_balance=balance;}
    virtual double    Balance() const {return(m_balance);}
@@ -72,7 +76,8 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoney::JMoney() : m_update(MONEY_UPDATE_NONE),
+JMoney::JMoney() : m_activate(true),
+                   m_update(MONEY_UPDATE_NONE),
                    m_volume(0.2),
                    m_percent(0.0),
                    m_volume_base(0.0),
@@ -109,6 +114,7 @@ JMoney::InitAccount(CAccountInfo *account)
 //+------------------------------------------------------------------+
 double JMoney::Volume(double price,ENUM_ORDER_TYPE type,double sl)
   {
+   if(!Activate()) return(0.0);
    if(m_volume==0.0) UpdateLotSize(price,type,sl);
    switch(m_update)
      {

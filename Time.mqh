@@ -21,11 +21,16 @@ enum ENUM_TIME_FILTER_TYPE
 class JTime : public CObject
   {
 protected:
+   bool              m_activate;
    datetime          m_time_start;
    ENUM_TIME_FILTER_TYPE m_filter_type;
 public:
                      JTime();
                     ~JTime();
+   //--- activation and deactivation
+   virtual bool      Activate() {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}
+   //--- time functions                    
    virtual bool      Evaluate();
    virtual ENUM_TIME_FILTER_TYPE FilterType() const {return(m_filter_type);}
    virtual void      FilterType(ENUM_TIME_FILTER_TYPE type){m_filter_type=type;}
@@ -35,7 +40,8 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTime::JTime() : m_time_start(0),
+JTime::JTime() : m_activate(true),
+                 m_time_start(0),
                  m_filter_type(TIME_FILTER_INCLUDE)
   {
    m_time_start=TimeCurrent();
