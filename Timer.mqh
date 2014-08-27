@@ -56,7 +56,8 @@ JTimer::JTimer() : m_years(0),
                    m_days(0),
                    m_hours(0),
                    m_minutes(0),
-                   m_seconds(0)
+                   m_seconds(0),
+                   m_total(0),
   {
   }
 //+------------------------------------------------------------------+

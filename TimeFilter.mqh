@@ -138,7 +138,7 @@ bool JTimeFilter::Evaluate()
       m_filter_end.day_of_year = time.day_of_year;
       start=StructToTime(m_filter_start);
       end=StructToTime(m_filter_end);
-      if(!(current>start && current<end))
+      if(!(current>=start && current<=end))
          result=false;
      }
    return(m_filter_type==TIME_FILTER_INCLUDE?result:!result);

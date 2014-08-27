@@ -11,6 +11,8 @@
 #include <Trade\SymbolInfo.mqh>
 #include <Trade\PositionInfo.mqh>
 #include <Expert\ExpertTrade.mqh>
+#include "enum\enum.mqh"
+#include "common\common.mqh"
 #include "Signal.mqh"
 #include "Trade.mqh"
 #include "SignalManager.mqh"
@@ -19,14 +21,6 @@
 #include "Stops.mqh"
 #include "Money.mqh"
 #include "Times.mqh"
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-enum ENUM_TRADE_MODE
-  {
-   TRADE_MODE_MARKET,
-   TRADE_MODE_PENDING
-  };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

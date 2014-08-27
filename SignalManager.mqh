@@ -12,18 +12,20 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JSignalManager: public JSignal
+class JSignalManager: public CArrayObj
   {
 protected:
    bool              m_activate;
    int               m_last_signal;
    bool              m_new_signal;
+   bool              m_reverse;
 public:
                      JSignalManager();
                     ~JSignalManager();
    virtual int       LastSignal() const{return(m_last_signal);}
    virtual void      LastSignal(int signal);
    virtual int       CheckSignals();
+protected:
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

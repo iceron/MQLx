@@ -54,7 +54,7 @@ bool JTimeRange::Evaluate()
   {
    if (!Activate()) return(true);
    datetime current=TimeCurrent();
-   bool result=current>m_begin && current<m_end;
+   bool result=current>=m_begin && current<=m_end;
    return(m_filter_type==TIME_FILTER_INCLUDE?result:!result);
   }
 //+------------------------------------------------------------------+
