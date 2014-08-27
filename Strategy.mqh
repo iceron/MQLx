@@ -135,7 +135,7 @@ protected:
    virtual bool      Refresh(void);
    virtual double    StopLossCalculate(int res,double price);
    virtual double    TakeProfitCalculate(int res,double price);
-   virtual bool      TradeOpen(int res,double price=0.0);
+   virtual bool      TradeOpen(int res);
    //--- deinitialization
    virtual bool      DeinitMoney(void);
    virtual void      DeinitSignals(void);
@@ -157,6 +157,7 @@ JStrategy::JStrategy(void) : m_activate(true),
                              m_every_tick(true),
                              m_max_orders(1),
                              m_max_trades(-1),
+                             m_trade_mode(TRADE_MODE_MARKET),
                              m_one_trade_per_candle(true),
                              m_period(PERIOD_CURRENT),
                              m_position_reverse(true),
@@ -262,14 +263,14 @@ bool JStrategy::OnTick(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::TradeOpen(int res,double price=0.0)
+bool JStrategy::TradeOpen(int res)
   {
    int trades_total =TradesTotal();
    int orders_total = OrdersTotal();
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       m_trade.SetSymbol(m_symbol);
-      if(price==0.0) price=PriceCalculate(res);
+      double price=PriceCalculate(res);
       double stoploss=StopLossCalculate(res,price);
       //double takeprofit=TakeProfitCalculate(res,price);
       double lotsize=LotSizeCalculate(price,stoploss);
