@@ -22,7 +22,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-enum ENUM_TRADE_MODE 
+enum ENUM_TRADE_MODE
   {
    TRADE_MODE_MARKET,
    TRADE_MODE_PENDING
@@ -261,7 +261,7 @@ bool JStrategy::OnTick(void)
 //+------------------------------------------------------------------+
 bool JStrategy::TradeOpen(int res,double price=0.0)
   {
-   if(m_max_orders>m_orders.Total())
+   if(m_max_orders>m_orders.Total() && (m_max_trades>(m_orders.Total()+m_orders_history.Total()) || m_max_trades<=0))
      {
       m_trade.SetSymbol(m_symbol);
       if(price==0.0) price=PriceCalculate(res);
@@ -385,8 +385,9 @@ void JStrategy::AddStop(JStop *stop)
    stop.InitSymbol(m_symbol);
    stop.PointsAdjust(m_points_adjust);
    stop.DigitsAdjust(m_digits_adjust);
+   stop.InitTrade();
    m_stops.Add(stop);
-  }
+  }  
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

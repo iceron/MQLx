@@ -73,9 +73,8 @@ public:
                      JStop(string name);
                     ~JStop();
    //--- initialization
-   virtual bool      Init(JTrade *trade=NULL);
-   virtual bool      InitTrade(JTrade *trade=NULL);
    virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
+   virtual bool      InitTrade(JTrade *trade=NULL);   
    //--- stop order getters and setters
    virtual void      Comment(string comment) {m_comment=comment;}
    virtual string    Comment() const {return(m_comment);}
@@ -182,13 +181,6 @@ JStop::JStop(string name) : m_magic(INT_MAX),
 JStop::~JStop()
   {
    Deinit();
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStop::Init(JTrade *trade=NULL)
-  {
-   return(InitTrade(trade));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -126,8 +126,8 @@ void JTrail::Init(CSymbolInfo *symbol=NULL)
 //+------------------------------------------------------------------+
 void JTrail::Set(double trail,double start,double step=1,double end=0)
   {
-   m_trail = trail;
-   m_start = start;
+   m_trail=trail;
+   m_start=start;
    m_end=end;
    m_step=step;
   }

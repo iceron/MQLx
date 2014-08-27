@@ -18,7 +18,6 @@ public:
                      JStops();
                      JStops(string name,string sl=".sl.",string tp=".tp.");
                     ~JStops();
-   virtual void      InitTrade(JTrade *trade);
    virtual void      CreateStops(ulong order_ticket,int order_type,double volume,double price);
   };
 //+------------------------------------------------------------------+
@@ -32,16 +31,5 @@ JStops::JStops()
 //+------------------------------------------------------------------+
 JStops::~JStops()
   {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-JStops::InitTrade(JTrade *trade)
-  {
-   for(int i=0;i<Total();i++)
-     {
-      JStop *stop=At(i);
-      stop.InitTrade(trade);
-     }
   }
 //+------------------------------------------------------------------+
