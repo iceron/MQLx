@@ -34,6 +34,7 @@ class JStrategy : CObject
   {
 protected:
    //--- trade parameters
+   bool              m_activate;
    string            m_comment;
    datetime          m_expiration;
    int               m_magic;
@@ -62,7 +63,6 @@ protected:
    CSymbolInfo      *m_symbol;
    JTrade           *m_trade;
    //--- order objects
-   CHistoryOrderInfo m_hist_order;
    JStops            m_stops;
    JStop            *m_main_stop;
    JOrders           m_orders;
@@ -81,6 +81,9 @@ public:
    virtual bool      Init(string symbol,ENUM_TIMEFRAMES period,bool every_tick,int magic,bool one_trade_per_candle,bool position_reverse);
    virtual bool      InitMoney(JMoney *money);
    virtual bool      InitTrade(JTrade *trade);
+   //--- activation and deactivation
+   virtual bool Activate() {return(m_activate);}
+   virtual void Activate(bool activate) {m_activate=activate;}
    //--- trade parameters
    virtual void      AsyncMode(bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
@@ -130,6 +133,9 @@ protected:
    virtual void      CloseOppositeOrders(int res);
    virtual bool      IsTradeProcessed(void);
    virtual double    LotSizeCalculate(double price,double stoploss);
+   virtual int       OrdersTotal(void);
+   virtual int       OrdersHistoryTotal(void);
+   virtual int       TradesTotal(void);
    virtual double    PriceCalculate(int res);
    virtual double    PriceCalculateCustom(int res);
    virtual bool      Refresh(void);
@@ -146,7 +152,9 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::JStrategy(void) : m_expiration(0),
+JStrategy::JStrategy(void) : m_activate(true),
+                             m_comment(NULL),
+                             m_expiration(0),
                              m_magic(0),
                              m_lotsize(0.2),
                              m_price(0),
@@ -261,7 +269,9 @@ bool JStrategy::OnTick(void)
 //+------------------------------------------------------------------+
 bool JStrategy::TradeOpen(int res,double price=0.0)
   {
-   if(m_max_orders>m_orders.Total() && (m_max_trades>(m_orders.Total()+m_orders_history.Total()) || m_max_trades<=0))
+   int trades_total =TradesTotal();
+   int orders_total = OrdersTotal();
+   if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       m_trade.SetSymbol(m_symbol);
       if(price==0.0) price=PriceCalculate(res);
@@ -387,13 +397,34 @@ void JStrategy::AddStop(JStop *stop)
    stop.DigitsAdjust(m_digits_adjust);
    stop.InitTrade();
    m_stops.Add(stop);
-  }  
+  }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 int JStrategy::CheckSignals(void)
   {
    return(m_signal_manager.CheckSignals());
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int JStrategy::OrdersTotal(void)
+  {
+   return(m_orders.Total());
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int JStrategy::OrdersHistoryTotal(void)
+  {
+   return(m_orders_history.Total());
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int JStrategy::TradesTotal(void)
+  {
+   return(m_orders_history.Total()+m_orders.Total());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
