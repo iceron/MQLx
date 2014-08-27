@@ -48,7 +48,7 @@ protected:
    int               m_digits_adjust;
    double            m_points_adjust;
    //--- datetime parameters
-   MqlDateTime       m_last_tick_time;
+   datetime          m_last_tick_time;
    datetime          m_last_trade_time;
    //--- signal objects
    JSignalManager    m_signal_manager;
@@ -86,8 +86,8 @@ public:
    virtual void      Expiration(datetime expiration) {m_expiration=expiration;}
    virtual datetime  LastTradeTime(void) const {return(m_last_trade_time);}
    virtual void      LastTradeTime(datetime tradetime) {m_last_trade_time=tradetime;}
-   virtual datetime  LastTickTime(void) {return(StructToTime(m_last_tick_time));}
-   virtual void      LastTickTime(datetime ticktime) {TimeToStruct(ticktime,m_last_tick_time);}
+   virtual datetime  LastTickTime(void) {return(m_last_tick_time);}
+   virtual void      LastTickTime(datetime ticktime) {m_last_tick_time = ticktime;}
    virtual double    Lotsize(void) const {return(m_lotsize);}
    virtual void      Lotsize(double lotsize){m_lotsize=lotsize;}
    virtual int       Magic(void) const {return m_magic;}
@@ -163,6 +163,7 @@ JStrategy::JStrategy(void) : m_activate(true),
                              m_position_reverse(true),
                              m_digits_adjust(0),
                              m_points_adjust(0.0),
+                             m_last_tick_time(0),
                              m_last_trade_time(0)
   {
   }
@@ -427,11 +428,9 @@ int JStrategy::TradesTotal(void)
 //+------------------------------------------------------------------+
 bool JStrategy::Refresh(void)
   {
-   MqlDateTime time;
    if(!m_symbol.RefreshRates())
       return(false);
-   TimeToStruct(m_symbol.Time(),time);
-   m_last_tick_time=time;
+   m_last_tick_time=m_symbol.Time();
    return(true);
   }
 //+------------------------------------------------------------------+
