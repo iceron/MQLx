@@ -51,9 +51,7 @@ public:
    virtual int       TrailTarget() const {return(m_target);}
    virtual void      TrailTarget(ENUM_TRAIL_TARGET target) {m_target=target;}
    //--- checking
-   virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit,double price=0.0);
-   virtual double    CheckPrice(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit,double price);
-   virtual double    CheckTicks(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
+   virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
 protected:
    //--- price calculation
    virtual double    ActivationPrice(ENUM_ORDER_TYPE type,double entry_price);
@@ -135,68 +133,37 @@ double JTrail::DeactivationPrice(ENUM_ORDER_TYPE type,double entry_price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrail::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit,double price=0.0)
-  {
-   return(price==0.0?CheckTicks(type,entry_price,stoploss,takeprofit):CheckPrice(type,entry_price,stoploss,takeprofit,price));
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-double JTrail::CheckTicks(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
+double JTrail::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
   {
    if(!Activate()) return(0.0);
    double next_stop=0.0,activation=0.0,deactivation=0.0,new_price=0.0;
    activation=ActivationPrice(type,entry_price);
    deactivation=DeactivationPrice(type,entry_price);
    new_price=Price(type);
-
-   if(type==ORDER_TYPE_BUY)
+   if((type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
-      if(m_target==TRAIL_TARGET_STOPLOSS)
+      if(stoploss>=activation-m_trail*m_points_adjust || activation==0.0)
         {
-         if(stoploss>=activation-m_trail*m_points_adjust)
-           {
-            if(new_price>stoploss+m_step*m_points_adjust)
-               next_stop=new_price-m_trail*m_points_adjust;
-           }
-         else next_stop=activation-m_trail*m_points_adjust;
-         if((deactivation>0 && next_stop>=deactivation) || (deactivation==0))
-            if(next_stop<=new_price)
-               return(next_stop);
+         if(new_price>stoploss+m_step*m_points_adjust)
+            next_stop=new_price-m_trail*m_points_adjust;
         }
+      else next_stop=activation-m_trail*m_points_adjust;
+      if((deactivation>0 && next_stop>=deactivation && next_stop>0.0) || (deactivation==0))
+         if(next_stop<=new_price)
+            return(next_stop);
      }
-   else if(type==ORDER_TYPE_SELL)
+   if((type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
-      if(m_target==TRAIL_TARGET_STOPLOSS)
+      if(stoploss<=activation+m_trail*m_points_adjust || activation==0.0)
         {
-         if(stoploss<=activation+m_trail*m_points_adjust)
-           {
-            if(new_price<stoploss-m_step*m_points_adjust)
-               next_stop=new_price+m_trail*m_points_adjust;
-           }
-         else next_stop=activation+m_trail*m_points_adjust;
-         if((deactivation>0 && next_stop<=deactivation) || (deactivation==0))
-            if(next_stop>=new_price)
-               return(next_stop);
-
+         if(new_price<stoploss-m_step*m_points_adjust)
+            next_stop=new_price+m_trail*m_points_adjust;
         }
+      else next_stop=activation+m_trail*m_points_adjust;
+      if((deactivation>0 && next_stop<=deactivation && next_stop>0.0) || (deactivation==0))
+         if(next_stop>=new_price)
+            return(next_stop);
      }
-   return(0.0);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-double JTrail::CheckPrice(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit,double price=0.0)
-  {
-   if(type==ORDER_TYPE_BUY)
-   {
-      if (price>stoploss) return(price);
-   }
-   else if(type==ORDER_TYPE_SELL)
-   {
-      if (price<stoploss) return(price);
-   }
-   
    return(0.0);
   }
 //+------------------------------------------------------------------+
