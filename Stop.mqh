@@ -11,28 +11,6 @@
 #include <ChartObjects\ChartObjectsLines.mqh>
 #include "Trade.mqh"
 #include "Trails.mqh"
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-enum ENUM_STOP_TYPE
-  {
-   STOP_TYPE_MAIN,
-   STOP_TYPE_VIRTUAL,
-   STOP_TYPE_PENDING
-  };
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-enum ENUM_VOLUME_TYPE
-  {
-   VOLUME_TYPE_FIXED,
-   VOLUME_TYPE_PERCENT_REMAINING,
-   VOLUME_TYPE_PERCENT_TOTAL,
-   VOLUME_TYPE_REMAINING
-  };
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 class JStop : public CObject
   {
 protected:

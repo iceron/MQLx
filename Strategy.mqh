@@ -6,13 +6,13 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
-
 #include <Arrays\ArrayInt.mqh>
 #include <Trade\SymbolInfo.mqh>
 #include <Trade\PositionInfo.mqh>
 #include <Expert\ExpertTrade.mqh>
 #include "enum\enum.mqh"
 #include "common\common.mqh"
+#include "globalvar\globalvar.mqh"
 #include "Signal.mqh"
 #include "Trade.mqh"
 #include "SignalManager.mqh"

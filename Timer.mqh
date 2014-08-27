@@ -7,12 +7,6 @@
 #property link      "http://www.mql5.com"
 #property version   "1.00"
 #include "Time.mqh"
-
-#define YEAR_SECONDS 31536000
-#define MONTH_SECONDS 2419200
-#define DAY_SECONDS 86400
-#define HOUR_SECONDS 3600
-#define MINUTE_SECONDS 60
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
