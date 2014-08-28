@@ -11,6 +11,10 @@
 #include <ChartObjects\ChartObjectsLines.mqh>
 #include "Trade.mqh"
 #include "Trails.mqh"
+#include "Event.mqh"
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 class JStop : public CObject
   {
 protected:
@@ -48,12 +52,15 @@ protected:
    JTrade           *m_trade;
    //--- stop order trailing object
    JTrails           m_trails;
+   //--- events
+   JEvent           *m_event;
 public:
                      JStop(string name);
                     ~JStop();
    //--- initialization
    virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
    virtual bool      InitTrade(JTrade *trade=NULL);
+   virtual bool      InitEvent(JEvent *event);
    //--- activation and deactivation
    virtual bool      Activate() {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
@@ -189,6 +196,14 @@ bool JStop::InitTrade(JTrade *trade=NULL)
    m_trade.SetSymbol(GetPointer(m_symbol));
    m_trade.SetExpertMagicNumber(m_magic);
    m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStop::InitEvent(JEvent *event)
+  {
+   m_event=event;
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -480,7 +495,10 @@ double JStop::CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stopl
 //+------------------------------------------------------------------+
 bool JStop::OrderModify(ulong ticket,double value)
   {
-   return(m_trade.OrderModify(ticket,value,0.0,0.0,0,0,0.0));
+   bool res = m_trade.OrderModify(ticket,value,0.0,0.0,0,0,0.0);
+   if (res) 
+      m_event.Add(EVENT_TYPE_ORDER_MODIFY,__FUNCTION__,"order modified","symbol: "+m_symbol.Name()+" ticket: "+DoubleToString(ticket,0)+" price: "+DoubleToString(value));
+   return(res);      
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

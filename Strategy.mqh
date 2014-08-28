@@ -21,6 +21,7 @@
 #include "Stops.mqh"
 #include "Money.mqh"
 #include "Times.mqh"
+#include "Event.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -66,6 +67,8 @@ protected:
    JMoney           *m_money;
    //--- trading time objects
    JTimes           *m_times;
+   //--- events
+   JEvent           *m_event;
 public:
                      JStrategy(void);
                     ~JStrategy(void);
@@ -75,6 +78,7 @@ public:
    virtual bool      Init(string symbol,ENUM_TIMEFRAMES period,bool every_tick,int magic,bool one_trade_per_candle,bool position_reverse);
    virtual bool      InitMoney(JMoney *money);
    virtual bool      InitTrade(JTrade *trade);
+   virtual bool      InitEvent(JEvent *event);
    //--- activation and deactivation
    virtual bool      Activate() {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
@@ -87,7 +91,7 @@ public:
    virtual datetime  LastTradeTime(void) const {return(m_last_trade_time);}
    virtual void      LastTradeTime(datetime tradetime) {m_last_trade_time=tradetime;}
    virtual datetime  LastTickTime(void) {return(m_last_tick_time);}
-   virtual void      LastTickTime(datetime ticktime) {m_last_tick_time = ticktime;}
+   virtual void      LastTickTime(datetime ticktime) {m_last_tick_time=ticktime;}
    virtual double    Lotsize(void) const {return(m_lotsize);}
    virtual void      Lotsize(double lotsize){m_lotsize=lotsize;}
    virtual int       Magic(void) const {return m_magic;}
@@ -129,7 +133,7 @@ protected:
    virtual void      ArchiveOrders(void);
    virtual void      CloseOppositeOrders(int res);
    virtual bool      IsTradeProcessed(void);
-   virtual double    LotSizeCalculate(double price,double stoploss);   
+   virtual double    LotSizeCalculate(double price,double stoploss);
    virtual double    PriceCalculate(int res);
    virtual double    PriceCalculateCustom(int res);
    virtual bool      Refresh(void);
@@ -232,6 +236,14 @@ bool JStrategy::InitTrade(JTrade *trade=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool JStrategy::InitEvent(JEvent *event)
+  {
+   m_event=event;
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategy::AddSignal(JSignal *signal)
   {
    return(m_signal_manager.Add(signal));
@@ -266,21 +278,25 @@ bool JStrategy::OnTick(void)
 //+------------------------------------------------------------------+
 bool JStrategy::TradeOpen(int res)
   {
+   bool ret=false;
+   double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();
    int orders_total = OrdersTotal();
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       m_trade.SetSymbol(m_symbol);
-      double price=PriceCalculate(res);
+      price=PriceCalculate(res);
       double stoploss=StopLossCalculate(res,price);
       //double takeprofit=TakeProfitCalculate(res,price);
-      double lotsize=LotSizeCalculate(price,stoploss);
+      lotsize=LotSizeCalculate(price,stoploss);
       if(res==CMD_LONG)
-         return(m_trade.Buy(lotsize,price,0,0,m_comment));
+         ret= m_trade.Buy(lotsize,price,0,0,m_comment);
       else if(res==CMD_SHORT)
-         return(m_trade.Sell(lotsize,price,0,0,m_comment));
+         ret=m_trade.Sell(lotsize,price,0,0,m_comment);
      }
-   return(false);
+   if (res)
+      m_event.Add(EVENT_TYPE_ORDER_SENT,__FUNCTION__,"order sent","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period)+" ticket: "+DoubleToString(m_trade.RequestOrder(),0)+" type: "+EnumToString(m_trade.RequestType())+" lotsize: "+DoubleToString(lotsize,5)+" price: "+DoubleToString(price));
+   return(ret);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -380,6 +396,7 @@ void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTra
       JOrder *order=new JOrder(result.order,request.type,result.volume,result.price);
       order.CreateStops(GetPointer(m_stops));
       m_orders.Add(order);
+      m_event.Add(EVENT_TYPE_ORDER_ENTRY,__FUNCTION__,"order entered","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period)+" ticket: "+DoubleToString(request.order,0)+" type: "+EnumToString(request.type)+" lotsize: "+DoubleToString(request.volume,5)+" price: "+DoubleToString(request.price));
      }
   }
 //+------------------------------------------------------------------+
@@ -393,6 +410,7 @@ void JStrategy::AddStop(JStop *stop)
    stop.PointsAdjust(m_points_adjust);
    stop.DigitsAdjust(m_digits_adjust);
    stop.InitTrade();
+   stop.InitEvent(m_event);
    m_stops.Add(stop);
   }
 //+------------------------------------------------------------------+
