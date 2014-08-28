@@ -54,7 +54,6 @@ protected:
    //--- signal objects
    JSignalManager    m_signal_manager;
    //--- trade objects   
-   CPositionInfo     m_position;
    CSymbolInfo      *m_symbol;
    JTrade           *m_trade;
    //--- order objects
