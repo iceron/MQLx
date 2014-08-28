@@ -8,6 +8,11 @@
 #property version   "1.00"
 #include <Arrays\ArrayObj.mqh>
 #include "Order.mqh"
+
+enum ENUM_SORT_MODE {
+   SORT_MODE_ASCENDING,
+   SORT_MODE_DESCENDING
+};
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -25,12 +30,14 @@ public:
    virtual void      OnTick();
    //--- archiving
    virtual void      CloseStops();
+   virtual void      QuickSort(int beg,int end,const int mode=0);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JOrders::JOrders() : m_activate(true)
   {
+   m_sort_mode = SORT_MODE_ASCENDING;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -62,4 +69,9 @@ void JOrders::CloseStops()
          order.CloseStops();
      }
   }
+  
+void JOrders::QuickSort(int beg,int end,const int mode=0)
+{
+   
+}
 //+------------------------------------------------------------------+

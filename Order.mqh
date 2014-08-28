@@ -33,13 +33,13 @@ public:
    //--- order functions                    
    virtual void      CreateStops(JStops *stops);
    virtual void      CheckStops();
-   virtual void      OrderPrice(double price){m_price=price;}
-   virtual double    OrderPrice(){return(m_price);}
+   virtual void      Price(double price){m_price=price;}
+   virtual double    Price(){return(m_price);}
    virtual void      OrderType(ENUM_ORDER_TYPE type){m_type=type;}
-   virtual void      OrderTicket(ulong ticket) {m_ticket=ticket;}
-   virtual ulong     OrderTicket() {return(m_ticket);}
-   virtual void      OrderVolume(double volume){m_volume=volume;}
-   virtual double    OrderVolume(){return(m_volume);}
+   virtual void      Ticket(ulong ticket) {m_ticket=ticket;}
+   virtual ulong     Ticket() {return(m_ticket);}
+   virtual void      Volume(double volume){m_volume=volume;}
+   virtual double    Volume(){return(m_volume);}
    //--- archiving
    virtual void      CloseStops();
   };

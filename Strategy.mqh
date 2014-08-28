@@ -81,7 +81,7 @@ public:
    //--- activation and deactivation
    virtual bool      Activate() {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
-   //--- trade parameters
+   //--- setters and getters
    virtual void      AsyncMode(bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
    virtual void      Comment(string comment){m_comment=comment;}
@@ -128,9 +128,10 @@ public:
 protected:
    //--- signal processing
    virtual int       CheckSignals(void);
-   //--- order processing
-   virtual void      CloseStops(void);
+   //--- order processing   
    virtual void      ArchiveOrders(void);
+   virtual void      CheckClosedOrders(void);
+   virtual void      CloseStops(void);
    virtual void      CloseOppositeOrders(int res);
    virtual bool      IsTradeProcessed(void);
    virtual double    LotSizeCalculate(double price,double stoploss);
@@ -264,6 +265,7 @@ bool JStrategy::OnTick(void)
    bool ret=false;
    if(!Refresh()) return(ret);
    m_orders.OnTick();
+   CheckClosedOrders();
    if(!IsTradeProcessed())
      {
       int signal=CheckSignals();
@@ -372,9 +374,23 @@ void JStrategy::CloseStops(void)
 //+------------------------------------------------------------------+
 void JStrategy::ArchiveOrders(void)
   {
-   for(int i=m_orders.Total()-1;i>=0;i--)
+   int total= m_orders.Total();
+   for(int i=total-1;i>=0;i--)
      {
       m_orders_history.Add(m_orders.Detach(i));
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategy::CheckClosedOrders(void)
+  {
+   int total= m_orders.Total();
+   for(int i=0;i<total-1;i++)
+     {
+      JOrder *order=m_orders.At(i);
+      if(order.Volume()<=0.0)
+         m_orders_history.Add(m_orders.Detach(i));
      }
   }
 //+------------------------------------------------------------------+
