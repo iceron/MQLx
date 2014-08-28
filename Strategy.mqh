@@ -130,6 +130,7 @@ protected:
    //--- signal processing
    virtual int       CheckSignals(void);
    //--- order processing
+   virtual void      CloseStops(void);
    virtual void      ArchiveOrders(void);
    virtual void      CloseOppositeOrders(int res);
    virtual bool      IsTradeProcessed(void);
@@ -294,7 +295,7 @@ bool JStrategy::TradeOpen(int res)
       else if(res==CMD_SHORT)
          ret=m_trade.Sell(lotsize,price,0,0,m_comment);
      }
-   if (res)
+   if(res)
       m_event.Add(EVENT_TYPE_ORDER_SENT,__FUNCTION__,"order sent","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period)+" ticket: "+DoubleToString(m_trade.RequestOrder(),0)+" type: "+EnumToString(m_trade.RequestType())+" lotsize: "+DoubleToString(lotsize,5)+" price: "+DoubleToString(price));
    return(ret);
   }
@@ -363,10 +364,19 @@ double JStrategy::TakeProfitCalculate(int res,double price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+void JStrategy::CloseStops(void)
+  {
+   m_orders.CloseStops();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 void JStrategy::ArchiveOrders(void)
   {
    for(int i=m_orders.Total()-1;i>=0;i--)
+     {
       m_orders_history.Add(m_orders.Detach(i));
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -375,15 +385,10 @@ void JStrategy::CloseOppositeOrders(int res)
   {
    if(m_position_reverse)
      {
-      if(m_position.Select(m_symbol.Name()))
-        {
-         if((m_position.PositionType()==POSITION_TYPE_SELL && res==CMD_LONG) || (m_position.PositionType()==POSITION_TYPE_BUY && res==CMD_SHORT))
-           {
-            m_trade.PositionClose(m_symbol.Name(),ULONG_MAX);
-            ArchiveOrders();
-            m_orders.Clear();
-           }
-        }
+      CloseStops();
+      ArchiveOrders();
+      m_orders.Clear();
+      m_event.Add(EVENT_TYPE_ORDER_ENTRY,__FUNCTION__,"position reversed","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period));
      }
   }
 //+------------------------------------------------------------------+

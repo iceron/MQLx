@@ -50,6 +50,7 @@ public:
                     ~JOrderStop();
    virtual void      Init(ulong ticket,ENUM_ORDER_TYPE type,double price,double volume,JStop *stop);
    virtual void      Check(double &volume);
+   virtual void      Close();
    virtual bool      Update();
    virtual bool      CheckTrailing();
    virtual bool      Deinit();
@@ -250,6 +251,22 @@ bool JOrderStop::ModifyOrderStop(double stoploss,double takeprofit)
      }
    return(takeprofit_modified || stoploss_modified);
   }
+  
+void JOrderStop::Close()
+{
+   bool res1 = m_stop.DeleteStopOrder(m_takeprofit_ticket);      
+   bool res2 = m_stop.DeleteStopOrder(m_stoploss_ticket);
+   if (res1)
+      if(m_objsl!=NULL)
+         delete m_objsl;
+   if (res2)
+      if(m_objtp!=NULL)
+         delete m_objtp;         
+   if (res1 && res2)
+      if(m_objentry!=NULL)
+         delete m_objentry; 
+}
+
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

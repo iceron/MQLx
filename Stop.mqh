@@ -495,10 +495,10 @@ double JStop::CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stopl
 //+------------------------------------------------------------------+
 bool JStop::OrderModify(ulong ticket,double value)
   {
-   bool res = m_trade.OrderModify(ticket,value,0.0,0.0,0,0,0.0);
-   if (res) 
+   bool res=m_trade.OrderModify(ticket,value,0.0,0.0,0,0,0.0);
+   if(res)
       m_event.Add(EVENT_TYPE_ORDER_MODIFY,__FUNCTION__,"order modified","symbol: "+m_symbol.Name()+" ticket: "+DoubleToString(ticket,0)+" price: "+DoubleToString(value));
-   return(res);      
+   return(res);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

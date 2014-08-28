@@ -40,6 +40,8 @@ public:
    virtual ulong     OrderTicket() {return(m_ticket);}
    virtual void      OrderVolume(double volume){m_volume=volume;}
    virtual double    OrderVolume(){return(m_volume);}
+   //--- archiving
+   virtual void      CloseStops();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -92,5 +94,14 @@ void JOrder::CheckStops()
    int total= m_order_stops.Total();
    for(int i=0;i<total;i++)
       m_order_stops.Check(m_volume);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrder::CloseStops()
+  {
+   int total= m_order_stops.Total();
+   for(int i=0;i<total;i++)
+      m_order_stops.Close();
   }
 //+------------------------------------------------------------------+

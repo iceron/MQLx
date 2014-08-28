@@ -17,6 +17,7 @@ public:
                      JOrderStops();
                     ~JOrderStops();
    virtual void      Check(double &volume);
+   virtual void      Close();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -43,6 +44,20 @@ JOrderStops::Check(double &volume)
          order_stop.CheckTrailing();
          order_stop.Update();
          order_stop.Check(volume);
+        }
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JOrderStops::Close()
+  {
+   for(int i=0;i<Total();i++)
+     {
+      JOrderStop *order_stop=At(i);
+      if(CheckPointer(order_stop))
+        {
+         order_stop.Close();
         }
      }
   }

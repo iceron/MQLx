@@ -20,9 +20,11 @@ public:
                     ~JOrders();
    //--- activation and deactivation
    virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}  
+   virtual void      Activate(bool activate) {m_activate=activate;}
    //--- events                  
    virtual void      OnTick();
+   //--- archiving
+   virtual void      CloseStops();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -46,6 +48,18 @@ void JOrders::OnTick()
       JOrder *order=At(i);
       if(CheckPointer(order))
          order.CheckStops();
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrders::CloseStops()
+  {
+   for(int i=0;i<Total();i++)
+     {
+      JOrder *order=At(i);
+      if(CheckPointer(order))
+         order.CloseStops();
      }
   }
 //+------------------------------------------------------------------+
