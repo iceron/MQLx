@@ -21,7 +21,6 @@
 #include "Money.mqh"
 #include "Times.mqh"
 #include "Event.mqh"
-
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -269,7 +268,7 @@ bool JStrategy::OnTick(void)
    if(!IsTradeProcessed())
      {
       int signal=CheckSignals();
-      //CloseOppositeOrders(signal);
+      CloseOppositeOrders(signal);
       ret=TradeOpen(signal);
       if(ret) m_last_trade_time=m_symbol.Time();
      }
@@ -296,8 +295,8 @@ bool JStrategy::TradeOpen(int res)
       else if(res==CMD_SHORT)
          ret=m_trade.Sell(lotsize,price,0,0,m_comment);
      }
-   //if(res)
-      //m_event.Add(EVENT_TYPE_ORDER_SENT,__FUNCTION__,"order sent","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period)+" ticket: "+DoubleToString(m_trade.RequestOrder(),0)+" type: "+EnumToString(m_trade.RequestType())+" lotsize: "+DoubleToString(lotsize,5)+" price: "+DoubleToString(price));
+//if(res)
+//m_event.Add(EVENT_TYPE_ORDER_SENT,__FUNCTION__,"order sent","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period)+" ticket: "+DoubleToString(m_trade.RequestOrder(),0)+" type: "+EnumToString(m_trade.RequestType())+" lotsize: "+DoubleToString(lotsize,5)+" price: "+DoubleToString(price));
    return(ret);
   }
 //+------------------------------------------------------------------+
@@ -398,12 +397,18 @@ void JStrategy::CheckClosedOrders(void)
 //+------------------------------------------------------------------+
 void JStrategy::CloseOppositeOrders(int res)
   {
+   if (m_orders.Total()==0) return;
    if(m_position_reverse)
      {
-      CloseStops();
-      ArchiveOrders();
-      m_orders.Clear();
-      //m_event.Add(EVENT_TYPE_ORDER_ENTRY,__FUNCTION__,"position reversed","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period));
+      JOrder *order=m_orders.At(m_orders.Total()-1);
+      ENUM_ORDER_TYPE type=order.OrderType();
+      if((res==CMD_LONG && IsOrderTypeShort(type)) || (res==CMD_SHORT && IsOrderTypeLong(type)))
+        {
+         CloseStops();
+         ArchiveOrders();
+         m_orders.Clear();
+         //m_event.Add(EVENT_TYPE_ORDER_ENTRY,__FUNCTION__,"position reversed","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period));
+        }
      }
   }
 //+------------------------------------------------------------------+
@@ -470,16 +475,19 @@ bool JStrategy::Refresh(void)
       return(false);
    m_last_tick_time=m_symbol.Time();
    return(true);
-  }  
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategy::AddOtherMagic(int magic)
-{
-   if (m_other_magic.Add(magic))
-   {
+  {
+   if(m_other_magic.Add(magic))
+     {
       m_other_magic.Sort();
       return(true);
-   }
-   return(false);  
-}
+     }
+   return(false);
+  }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

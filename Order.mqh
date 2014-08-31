@@ -36,6 +36,7 @@ public:
    virtual void      Price(double price){m_price=price;}
    virtual double    Price(){return(m_price);}
    virtual void      OrderType(ENUM_ORDER_TYPE type){m_type=type;}
+   virtual ENUM_ORDER_TYPE OrderType(){return(m_type);}
    virtual void      Ticket(ulong ticket) {m_ticket=ticket;}
    virtual ulong     Ticket() {return(m_ticket);}
    virtual void      Volume(double volume){m_volume=volume;}
