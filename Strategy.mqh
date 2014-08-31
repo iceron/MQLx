@@ -268,7 +268,7 @@ bool JStrategy::OnTick(void)
    if(!IsTradeProcessed())
      {
       int signal=CheckSignals();
-      CloseOppositeOrders(signal);
+      //CloseOppositeOrders(signal);
       ret=TradeOpen(signal);
       if(ret) m_last_trade_time=m_symbol.Time();
      }
@@ -295,8 +295,8 @@ bool JStrategy::TradeOpen(int res)
       else if(res==CMD_SHORT)
          ret=m_trade.Sell(lotsize,price,0,0,m_comment);
      }
-   if(res)
-      m_event.Add(EVENT_TYPE_ORDER_SENT,__FUNCTION__,"order sent","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period)+" ticket: "+DoubleToString(m_trade.RequestOrder(),0)+" type: "+EnumToString(m_trade.RequestType())+" lotsize: "+DoubleToString(lotsize,5)+" price: "+DoubleToString(price));
+   //if(res)
+      //m_event.Add(EVENT_TYPE_ORDER_SENT,__FUNCTION__,"order sent","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period)+" ticket: "+DoubleToString(m_trade.RequestOrder(),0)+" type: "+EnumToString(m_trade.RequestType())+" lotsize: "+DoubleToString(lotsize,5)+" price: "+DoubleToString(price));
    return(ret);
   }
 //+------------------------------------------------------------------+
@@ -402,7 +402,7 @@ void JStrategy::CloseOppositeOrders(int res)
       CloseStops();
       ArchiveOrders();
       m_orders.Clear();
-      m_event.Add(EVENT_TYPE_ORDER_ENTRY,__FUNCTION__,"position reversed","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period));
+      //m_event.Add(EVENT_TYPE_ORDER_ENTRY,__FUNCTION__,"position reversed","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period));
      }
   }
 //+------------------------------------------------------------------+
@@ -415,7 +415,7 @@ void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTra
       JOrder *order=new JOrder(result.order,request.type,result.volume,result.price);
       order.CreateStops(GetPointer(m_stops));
       m_orders.Add(order);
-      m_event.Add(EVENT_TYPE_ORDER_ENTRY,__FUNCTION__,"order entered","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period)+" ticket: "+DoubleToString(request.order,0)+" type: "+EnumToString(request.type)+" lotsize: "+DoubleToString(request.volume,5)+" price: "+DoubleToString(request.price));
+      //m_event.Add(EVENT_TYPE_ORDER_ENTRY,__FUNCTION__,"order entered","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period)+" ticket: "+DoubleToString(request.order,0)+" type: "+EnumToString(request.type)+" lotsize: "+DoubleToString(request.volume,5)+" price: "+DoubleToString(request.price));
      }
   }
 //+------------------------------------------------------------------+

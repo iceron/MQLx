@@ -245,15 +245,16 @@ void JStop::OpenStop(const ENUM_ORDER_TYPE type,const double total_volume,const 
   {
    bool res;
    double lotsize=LotSizeCalculate(volume,volume_remaining,total_volume);
-   if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
+   if(m_stop_type==STOP_TYPE_PENDING || m_stop_type==STOP_TYPE_MAIN)
      {
-      if(m_stop_type==STOP_TYPE_PENDING || m_stop_type==STOP_TYPE_MAIN)
+      if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
+        {
          res=m_trade.Sell(lotsize,val,0,0,m_comment);
-     }
-   else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
-     {
-      if(m_stop_type==STOP_TYPE_PENDING || m_stop_type==STOP_TYPE_MAIN)
+        }
+      else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
+        {
          res=m_trade.Buy(lotsize,val,0,0,m_comment);
+        }
      }
    if(res) ticket=m_trade.ResultOrder();
   }
@@ -282,7 +283,7 @@ double JStop::TakeProfitPrice(const double total_volume,const double volume_rema
    double val=m_takeprofit>0?TakeProfitCalculate(type,price):TakeProfitCustom(type,price);
    if((m_stop_type==STOP_TYPE_PENDING || m_stop_type==STOP_TYPE_MAIN) && (val>0.0))
       OpenStop(type,total_volume,volume_remaining,volume,val,ticket);
-   return(NormalizeDouble(val,m_digits_adjust));
+   return(NormalizeDouble(val,m_symbol.Digits()));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -292,7 +293,7 @@ double JStop::StopLossPrice(const double total_volume,const double volume_remain
    double val=m_stoploss>0?StopLossCalculate(type,price):StopLossCustom(type,price);
    if((m_stop_type==STOP_TYPE_PENDING || m_stop_type==STOP_TYPE_MAIN) && (val>0.0))
       OpenStop(type,total_volume,volume_remaining,volume,val,ticket);
-   return(NormalizeDouble(val,m_digits_adjust));
+   return(NormalizeDouble(val,m_symbol.Digits()));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -496,8 +497,8 @@ double JStop::CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stopl
 bool JStop::OrderModify(ulong ticket,double value)
   {
    bool res=m_trade.OrderModify(ticket,value,0.0,0.0,0,0,0.0);
-   if(res)
-      m_event.Add(EVENT_TYPE_ORDER_MODIFY,__FUNCTION__,"order modified","symbol: "+m_symbol.Name()+" ticket: "+DoubleToString(ticket,0)+" price: "+DoubleToString(value));
+   //if(res)
+      //m_event.Add(EVENT_TYPE_ORDER_MODIFY,__FUNCTION__,"order modified","symbol: "+m_symbol.Name()+" ticket: "+DoubleToString(ticket,0)+" price: "+DoubleToString(value));
    return(res);
   }
 //+------------------------------------------------------------------+

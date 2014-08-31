@@ -30,7 +30,6 @@ public:
    virtual void      OnTick();
    //--- archiving
    virtual void      CloseStops();
-   virtual void      QuickSort(int beg,int end,const int mode=0);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -69,9 +68,4 @@ void JOrders::CloseStops()
          order.CloseStops();
      }
   }
-  
-void JOrders::QuickSort(int beg,int end,const int mode=0)
-{
-   
-}
 //+------------------------------------------------------------------+
