@@ -377,7 +377,7 @@ void JStrategy::ArchiveOrders(void)
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
      {
-      m_orders_history.Add(m_orders.Detach(i));
+      m_orders_history.InsertSort(m_orders.Detach(i));
      }
   }
 //+------------------------------------------------------------------+
@@ -390,7 +390,7 @@ void JStrategy::CheckClosedOrders(void)
      {
       JOrder *order=m_orders.At(i);
       if(order.Volume()<=0.0)
-         m_orders_history.Add(m_orders.Detach(i));
+         m_orders_history.InsertSort(m_orders.Detach(i));
      }
   }
 //+------------------------------------------------------------------+
@@ -415,7 +415,7 @@ void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTra
      {
       JOrder *order=new JOrder(result.order,request.type,result.volume,result.price);
       order.CreateStops(GetPointer(m_stops));
-      m_orders.Add(order);
+      m_orders.InsertSort(order);
       //m_event.Add(EVENT_TYPE_ORDER_ENTRY,__FUNCTION__,"order entered","symbol: "+m_symbol.Name()+" period: "+EnumToString(m_period)+" ticket: "+DoubleToString(request.order,0)+" type: "+EnumToString(request.type)+" lotsize: "+DoubleToString(request.volume,5)+" price: "+DoubleToString(request.price));
      }
   }
