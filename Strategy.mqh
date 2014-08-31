@@ -112,7 +112,7 @@ public:
    virtual void      OneTradePerCandle(bool one_trade_per_candle){m_one_trade_per_candle=one_trade_per_candle;}
    virtual bool      PositionReverse(void) const {return(m_position_reverse);}
    virtual void      PositionReverse(bool position_reverse){m_position_reverse=position_reverse;}
-   virtual bool      AddOtherMagic(int magic) {return(m_other_magic.Add(magic));}
+   virtual bool      AddOtherMagic(int magic);
    virtual uint      MaxTrades(void) const {return(m_max_trades);}
    virtual void      MaxTrades(int max_trades){m_max_trades=max_trades;}
    virtual int       MaxOrders(void) {return(m_max_orders);}
@@ -469,7 +469,16 @@ bool JStrategy::Refresh(void)
       return(false);
    m_last_tick_time=m_symbol.Time();
    return(true);
-  }
+  }  
+bool JStrategy::AddOtherMagic(int magic)
+{
+   if (m_other_magic.Add(magic))
+   {
+      m_other_magic.Sort();
+      return(true);
+   }
+   return(false);  
+}
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
