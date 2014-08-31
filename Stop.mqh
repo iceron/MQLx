@@ -123,7 +123,7 @@ public:
    virtual double    CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
 protected:
    //--- object creation
-   virtual CChartObjectHLine *CreateObject(long id,string name,int window,double price);
+   virtual JStopLine *CreateObject(long id,string name,int window,double price);
    //--- stop order price calculation
    virtual double    LotSizeCalculate(double volume,double volume_remaining,double total_volume);
    virtual double    StopLossCalculate(ENUM_ORDER_TYPE type,double entry);
@@ -531,10 +531,10 @@ JStopLine *JStop::CreateTakeProfitObject(long id,string name,int window,double p
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CChartObjectHLine *JStop::CreateObject(long id,string name,int window,double price)
+JStopLine *JStop::CreateObject(long id,string name,int window,double price)
   {
    if(price==0.0) return(NULL);
-   CChartObjectHLine*obj=new CChartObjectHLine();
+   JStopLine *obj=new JStopLine();
    obj.Create(id,name,window,price);
    return(obj);
   }
