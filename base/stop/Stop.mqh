@@ -6,14 +6,16 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
-
+#include <traderjet-cross\common\enum\ENUM_TRAIL_TARGET.mqh>
+#include <traderjet-cross\common\enum\ENUM_TRAIL_MODE.mqh>
+#include <traderjet-cross\common\enum\ENUM_STOP_TYPE.mqh>
 #include <Trade\OrderInfo.mqh>
 #include <ChartObjects\ChartObjectsLines.mqh>
-#include "Trade.mqh"
-#include "Trails.mqh"
-#include "Event.mqh"
-#include "OrderStop.mqh"
-class JOrderStop;
+#include <traderjet-cross\mql5\trade\Trade.mqh>
+#include <traderjet-cross\mql5\trailing\Trails.mqh>
+#include <traderjet-cross\mql5\event\Event.mqh>
+#include <traderjet-cross\mql5\order\OrderStop.mqh>
+#include <traderjet-cross\mql5\stop\StopLine.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

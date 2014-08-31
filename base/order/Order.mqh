@@ -7,9 +7,7 @@
 #property link      "http://www.mql5.com"
 #property version   "1.00"
 #include <Arrays\ArrayObj.mqh>
-#include "OrderStop.mqh"
 #include "OrderStops.mqh"
-#include "Stops.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

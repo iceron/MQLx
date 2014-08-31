@@ -9,7 +9,6 @@
 #include <traderjet-cross\common\enum\ENUM_TRADE_MODE.mqh>
 #include <Arrays\ArrayInt.mqh>
 #include <Trade\SymbolInfo.mqh>
-#include <Expert\ExpertTrade.mqh>
 #include <traderjet-cross\mql5\signal\SignalManager.mqh>
 #include <traderjet-cross\mql5\trade\Trade.mqh>
 #include <traderjet-cross\mql5\stop\Stops.mqh>

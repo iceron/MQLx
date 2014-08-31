@@ -6,6 +6,7 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
+#include <traderjet-cross\common\enum\ENUM_TIME_FILTER_TYPE.mqh>
 #include <Object.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |

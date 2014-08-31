@@ -6,21 +6,16 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
+#include <traderjet-cross\common\enum\ENUM_TRADE_MODE.mqh>
 #include <Arrays\ArrayInt.mqh>
 #include <Trade\SymbolInfo.mqh>
 #include <Expert\ExpertTrade.mqh>
-#include "enum\enum.mqh"
-#include "common\common.mqh"
-#include "globalvar\globalvar.mqh"
-#include "StopLine.mqh"
-#include "Trade.mqh"
-#include "SignalManager.mqh"
-#include "Orders.mqh"
-#include "Order.mqh"
-#include "Stops.mqh"
-#include "Money.mqh"
-#include "Times.mqh"
-#include "Event.mqh"
+#include <traderjet-cross\mql5\signal\SignalManager.mqh>
+#include <traderjet-cross\mql5\trade\Trade.mqh>
+#include <traderjet-cross\mql5\stop\Stops.mqh>
+#include <traderjet-cross\mql5\order\Orders.mqh>
+#include <traderjet-cross\mql5\money\Money.mqh>
+#include <traderjet-cross\mql5\time\Times.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

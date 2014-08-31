@@ -6,11 +6,13 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
+#include <traderjet-cross\common\enum\ENUM_VOLUME_TYPE.mqh>
 #include <Object.mqh>
 #include <Trade\SymbolInfo.mqh>
-#include "Trade.mqh"
-#include "Stop.mqh"
-#include <ChartObjects\ChartObjectsLines.mqh>
+#include <traderjet-cross\mql5\trade\Trade.mqh>
+#include <traderjet-cross\mql5\stop\Stop.mqh>
+#include <traderjet-cross\mql5\stop\StopLine.mqh>
+class JStop;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
