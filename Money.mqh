@@ -57,8 +57,8 @@ public:
    virtual void      VolumeBase(double volume_base) {m_volume_base=volume_base;}
    virtual double    VolumeBase() const {return(m_volume_base);}
    //--- money management objects
-   virtual void      InitSymbol(CSymbolInfo *symbol);
-   virtual void      InitAccount(CAccountInfo *account);
+   virtual bool      InitSymbol(CSymbolInfo *symbol);
+   virtual bool      InitAccount(CAccountInfo *account);
 protected:
    virtual bool      UpdateByMargin();
    virtual bool      UpdateByPeriod();
@@ -89,16 +89,25 @@ JMoney::~JMoney()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoney::InitSymbol(CSymbolInfo *symbol)
+bool JMoney::InitSymbol(CSymbolInfo *symbol)
   {
    m_symbol=symbol;
+   return(CheckPointer(m_symbol));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoney::InitAccount(CAccountInfo *account)
-  {
-   m_account=account;
+bool JMoney::InitAccount(CAccountInfo *account)
+  {  
+   if(m_account!=NULL)
+      delete m_account;
+   if(account==NULL)
+     {
+      if((m_account=new CAccountInfo)==NULL)
+         return(false);
+     }
+   else m_account=account;
+   return(CheckPointer(m_account));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
