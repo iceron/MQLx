@@ -48,12 +48,40 @@ protected:
 public:
                      JOrderStop();
                     ~JOrderStop();
+   //--- initialization
    virtual void      Init(ulong ticket,ENUM_ORDER_TYPE type,double price,double volume,JStop *stop);
+   //--- getters and setters   
+   virtual void      MainTicket(ulong ticket) {m_main_ticket=ticket;}
+   virtual ulong     MainTicket() {return(m_main_ticket);}
+   virtual void      MainTicketPrice(double price) {m_main_price=price;}
+   virtual double    MainTicketPrice() {return(m_main_price);}
+   virtual void      MainTicketType(ENUM_ORDER_TYPE type) {m_main_type=type;}
+   virtual ENUM_ORDER_TYPE    MainTicketType() {return(m_main_type);}    
+   virtual void      StopLoss(double stoploss) {m_stoploss=stoploss;}
+   virtual double    StopLoss() {return(m_stoploss);}
+   virtual void      StopLossTicket(ulong ticket) {m_stoploss_ticket=ticket;}
+   virtual ulong     StopLossTicket() {return(m_stoploss_ticket);}
+   virtual void      TakeProfit(double takeprofit) {m_takeprofit=takeprofit;}
+   virtual double    TakeProfit() {return(m_takeprofit);}
+   virtual void      TakeProfitTicket(ulong ticket) {m_takeprofit_ticket=ticket;}
+   virtual ulong     TakeProfitTicket() {return(m_takeprofit_ticket);}
+   virtual void      Volume(double volume) {m_volume=volume;}
+   virtual double    Volume() {return(m_volume);}
+   virtual void      VolumeFixed(double volume) {m_volume_fixed=volume;}
+   virtual double    VolumeFixed() {return(m_volume_fixed);}
+   virtual void      VolumeMain(double volume) {m_main_volume=volume;}
+   virtual double    VolumeMain() {return(m_main_volume);}
+   virtual void      VolumeMainInitial(double volume) {m_main_volume_initial=volume;}
+   virtual double    VolumeMainInitial() {return(m_main_volume_initial);}
+   virtual void      VolumePercent(double volume) {m_volume_percent=volume;}
+   virtual double    VolumePercent() {return(m_volume_percent);}  
+   //--- checking   
    virtual void      Check(double &volume);
    virtual void      Close();
    virtual bool      Update();
    virtual bool      CheckTrailing();
-   virtual bool      Deinit();
+   //--- deinitialization 
+   virtual bool      Deinit();   
 protected:
    virtual bool      ModifyOrderStop(double stoploss,double takeprofit);
   };
@@ -108,12 +136,12 @@ void JOrderStop::Init(ulong ticket,ENUM_ORDER_TYPE type,double price,double volu
    m_name= stop.Name()+"."+ticket_str;
    m_stoploss_name=stop.Name()+stop.StopLossName()+ticket_str;
    m_takeprofit_name=stop.Name()+stop.TakeProfitName()+ticket_str;
-   stop.Volume(m_volume_fixed,m_volume_percent);
+   stop.Volume(GetPointer(this));
    m_volume=MathMax(m_volume_fixed,m_volume_percent);
    m_oco=stop.OCO();
    m_stop.Refresh();
-   m_stoploss_initial=stop.StopLossPrice(m_main_volume_initial,m_main_volume,m_volume,m_main_price,m_main_type,m_stoploss_ticket);
-   m_takeprofit_initial=stop.TakeProfitPrice(m_main_volume_initial,m_main_volume,m_volume,m_main_price,m_main_type,m_takeprofit_ticket);
+   m_stoploss_initial=stop.StopLossPrice(GetPointer(this));
+   m_takeprofit_initial=stop.TakeProfitPrice(GetPointer(this));
    m_stoploss=m_stoploss_initial;
    m_takeprofit=m_takeprofit_initial;
    m_objentry=stop.CreateEntryObject(0,m_name,0,m_main_price);
@@ -151,14 +179,14 @@ void JOrderStop::Check(double &volume)
      {
       if(m_stop.Pending())
          if(m_stop.CheckStopOrder(volume,m_stoploss_ticket)) m_stoploss_closed=true;
-      else if(m_stop.CheckStopLoss(m_main_volume_initial,volume,m_volume,m_main_type,m_stoploss))
+      else if(m_stop.CheckStopLoss(GetPointer(this)))
          m_stoploss_closed=true;
      }
    if(CheckPointer(m_objtp) && !m_takeprofit_closed)
      {
       if(m_stop.Pending())
          if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket)) m_takeprofit_closed=true;
-      else if(m_stop.CheckTakeProfit(m_main_volume_initial,volume,m_volume,m_main_type,m_takeprofit))
+      else if(m_stop.CheckTakeProfit(GetPointer(this)))
          m_takeprofit_closed=true;
      }
    if(m_stoploss_closed || m_takeprofit_closed)

@@ -12,6 +12,8 @@
 #include "Trade.mqh"
 #include "Trails.mqh"
 #include "Event.mqh"
+#include "OrderStop.mqh"
+class JOrderStop;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -96,15 +98,15 @@ public:
    virtual string    TakeProfitName() const {return(m_takeprofit_name);}
    virtual void      TakeProfitStyle(ENUM_LINE_STYLE style) {m_takeprofit_style=style;}
    virtual bool      Virtual() const {return(m_stop_type==STOP_TYPE_VIRTUAL);}
-   virtual void      Volume(double &volume_fixed,double &volume_percent);
+   virtual void      Volume(JOrderStop *orderstop);
    virtual double    VolumeFixed() const {return(m_volume_fixed);}
    virtual void      VolumeFixed(double volume) {m_volume_fixed=volume;}
    virtual double    VolumePercent() const {return(m_volume_percent);}
    virtual void      VolumePercent(double volume) {m_volume_percent=volume;}
    virtual void      VolumeType(ENUM_VOLUME_TYPE type){m_volume_type=type;}
    //--- stop order checking
-   virtual bool      CheckStopLoss(const double total_volume,double &volume_remaining,double volume,ENUM_ORDER_TYPE type,double stoploss);
-   virtual bool      CheckTakeProfit(const double total_volume,double &volume_remaining,double volume,ENUM_ORDER_TYPE type,double takeprofit);
+   virtual bool      CheckStopLoss(JOrderStop *orderstop);
+   virtual bool      CheckTakeProfit(JOrderStop *orderstop);
    virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const;
    virtual bool      DeleteStopOrder(const ulong ticket) const;
    virtual bool      OrderModify(ulong ticket,double value);
@@ -113,10 +115,10 @@ public:
    virtual JStopLine *CreateStopLossObject(long id,string name,int window,double price);
    virtual JStopLine *CreateTakeProfitObject(long id,string name,int window,double price);
    //--- stop order price calculation
-   virtual double    TakeProfitPrice(const double total_volume,const double volume_remaining,double volume,double price,ENUM_ORDER_TYPE type,ulong &ticket);
-   virtual double    StopLossPrice(const double total_volume,const double volume_remaining,double volume,double price,ENUM_ORDER_TYPE type,ulong &ticket);
-   virtual double    StopLossTicks(ENUM_ORDER_TYPE type,double price) {return(m_stoploss>0?m_stoploss:StopLossCustom(type,price));}
-   virtual double    TakeProfitTicks(ENUM_ORDER_TYPE type,double price) {return(m_takeprofit>0?m_takeprofit:TakeProfitCustom(type,price));}
+   virtual double    TakeProfitPrice(JOrderStop *orderstop);
+   virtual double    StopLossPrice(JOrderStop *orderstop);
+   virtual double    StopLossTicks(ENUM_ORDER_TYPE type,double price) {return(m_stoploss);}
+   virtual double    TakeProfitTicks(ENUM_ORDER_TYPE type,double price) {return(m_takeprofit);}
    virtual bool      Refresh();
    //--- trailing   
    virtual bool      AddTrailing(JTrail *trail);
@@ -125,16 +127,16 @@ protected:
    //--- object creation
    virtual JStopLine *CreateObject(long id,string name,int window,double price);
    //--- stop order price calculation
-   virtual double    LotSizeCalculate(double volume,double volume_remaining,double total_volume);
-   virtual double    StopLossCalculate(ENUM_ORDER_TYPE type,double entry);
-   virtual double    StopLossCustom(ENUM_ORDER_TYPE type,double price);
-   virtual double    TakeProfitCalculate(ENUM_ORDER_TYPE type,double entry);
-   virtual double    TakeProfitCustom(ENUM_ORDER_TYPE type,double price);
-   //--- stop order entry
-   virtual void      OpenStop(const ENUM_ORDER_TYPE type,const double total_volume,const double volume_remaining,double volume,double val,ulong &ticket);
+   virtual double    LotSizeCalculate(JOrderStop *orderstop);
+   virtual double    StopLossCalculate(JOrderStop *orderstop);
+   virtual double    StopLossCustom(JOrderStop *orderstop);
+   virtual double    TakeProfitCalculate(JOrderStop *orderstop);
+   virtual double    TakeProfitCustom(JOrderStop *orderstop);
+   //--- stop order entry   
+   virtual bool      OpenStop(JOrderStop *orderstop,double val);
    virtual bool      GetClosePrice(ENUM_ORDER_TYPE type,double &price);
    //--- stop order exit
-   virtual bool      CloseStop(const double total_volume,double &volume_remaining,double volume,ENUM_ORDER_TYPE type,double price);
+   virtual bool      CloseStop(JOrderStop *orderstop,double price);
    //--- deinitialization
    virtual bool      Deinit();
   };
@@ -209,42 +211,43 @@ bool JStop::InitEvent(JEvent *event)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStop::Volume(double &volume_fixed,double &volume_percent)
+void JStop::Volume(JOrderStop *orderstop)
   {
    if(m_volume_type==VOLUME_TYPE_FIXED || m_volume_type==VOLUME_TYPE_REMAINING)
      {
-      volume_fixed=m_volume_fixed;
-      volume_percent=0.0;
+      orderstop.VolumeFixed(m_volume_fixed);
+      orderstop.VolumePercent(0);
      }
    else if(m_volume_type==VOLUME_TYPE_PERCENT_REMAINING || m_volume_type==VOLUME_TYPE_PERCENT_TOTAL)
      {
-      volume_percent=m_volume_percent;
-      volume_fixed=0.0;
+      orderstop.VolumeFixed(0);
+      orderstop.VolumePercent(m_volume_percent);
      }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::LotSizeCalculate(double volume,double volume_remaining,double total_volume)
+double JStop::LotSizeCalculate(JOrderStop *orderstop)
   {
    double lotsize=0.0;
    if(m_volume_type==VOLUME_TYPE_FIXED)
-      lotsize=volume;
+      return(orderstop.Volume());
    else if(m_volume_type==VOLUME_TYPE_PERCENT_REMAINING)
-      lotsize=volume*volume_remaining;
+      return(orderstop.Volume()*orderstop.VolumeMain());
    if(m_volume_type==VOLUME_TYPE_PERCENT_TOTAL)
-      lotsize=volume*total_volume;
+      lotsize=orderstop.Volume()*orderstop.VolumeMainInitial();
    else if(m_volume_type==VOLUME_TYPE_REMAINING)
-      lotsize=volume_remaining;
-   return(lotsize);
+      lotsize=orderstop.VolumeMain();
+   return(0.0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStop::OpenStop(const ENUM_ORDER_TYPE type,const double total_volume,const double volume_remaining,double volume,double val,ulong &ticket)
+bool JStop::OpenStop(JOrderStop *orderstop,double val)
   {
-   bool res;
-   double lotsize=LotSizeCalculate(volume,volume_remaining,total_volume);
+   bool res=false;
+   double lotsize=LotSizeCalculate(orderstop);
+   ENUM_ORDER_TYPE type = orderstop.MainTicketType();
    if(m_stop_type==STOP_TYPE_PENDING || m_stop_type==STOP_TYPE_MAIN)
      {
       if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
@@ -256,50 +259,65 @@ void JStop::OpenStop(const ENUM_ORDER_TYPE type,const double total_volume,const 
          res=m_trade.Buy(lotsize,val,0,0,m_comment);
         }
      }
-   if(res) ticket=m_trade.ResultOrder();
+   return(res);   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::CloseStop(const double total_volume,double &volume_remaining,double volume,ENUM_ORDER_TYPE type,double price)
+bool JStop::CloseStop(JOrderStop *orderstop,double price)
   {
    bool res=false;
+   ENUM_ORDER_TYPE type = orderstop.MainTicketType();
    if(m_stop_type==STOP_TYPE_VIRTUAL)
      {
-      double lotsize=LotSizeCalculate(volume,volume_remaining,total_volume);
+      double lotsize=LotSizeCalculate(orderstop);
       if(type==ORDER_TYPE_BUY)
-         res=m_trade.Sell(MathMin(lotsize,volume_remaining),price,0,0,m_comment);
+         res=m_trade.Sell(MathMin(lotsize,orderstop.VolumeMain()),price,0,0,m_comment);
       else if(type==ORDER_TYPE_SELL)
-         res=m_trade.Buy(MathMin(lotsize,volume_remaining),price,0,0,m_comment);
-      if(res) volume_remaining-=lotsize;
+         res=m_trade.Buy(MathMin(lotsize,orderstop.VolumeMain()),price,0,0,m_comment);
+      if(res) orderstop.VolumeMain(orderstop.VolumeMain()-lotsize);
      }
    return(res);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::TakeProfitPrice(const double total_volume,const double volume_remaining,double volume,double price,ENUM_ORDER_TYPE type,ulong &ticket)
-  {
-   double val=m_takeprofit>0?TakeProfitCalculate(type,price):TakeProfitCustom(type,price);
+double JStop::TakeProfitPrice(JOrderStop *orderstop)
+  {  
+   double val = m_takeprofit>0?TakeProfitCalculate(orderstop):TakeProfitCustom(orderstop);
    if((m_stop_type==STOP_TYPE_PENDING || m_stop_type==STOP_TYPE_MAIN) && (val>0.0))
-      OpenStop(type,total_volume,volume_remaining,volume,val,ticket);
-   return(NormalizeDouble(val,m_symbol.Digits()));
+   {
+      if (OpenStop(orderstop,val))
+      {
+         orderstop.TakeProfitTicket(m_trade.ResultOrder());
+         return(NormalizeDouble(val,m_symbol.Digits()));
+      }         
+   }  
+   return(0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::StopLossPrice(const double total_volume,const double volume_remaining,double volume,double price,ENUM_ORDER_TYPE type,ulong &ticket)
+double JStop::StopLossPrice(JOrderStop *orderstop)
   {
-   double val=m_stoploss>0?StopLossCalculate(type,price):StopLossCustom(type,price);
+   double val = m_stoploss>0?StopLossCalculate(orderstop):StopLossCustom(orderstop);
    if((m_stop_type==STOP_TYPE_PENDING || m_stop_type==STOP_TYPE_MAIN) && (val>0.0))
-      OpenStop(type,total_volume,volume_remaining,volume,val,ticket);
-   return(NormalizeDouble(val,m_symbol.Digits()));
+   {
+      if (OpenStop(orderstop,val))
+      {
+         orderstop.StopLossTicket(m_trade.ResultOrder());
+         return(NormalizeDouble(val,m_symbol.Digits()));
+      }         
+   }      
+   return(0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::StopLossCalculate(ENUM_ORDER_TYPE type,double price)
+double JStop::StopLossCalculate(JOrderStop *orderstop)
   {
+   ENUM_ORDER_TYPE type = orderstop.MainTicketType();
+   double price = orderstop.MainTicketPrice();
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
       return(price-m_stoploss*m_points_adjust);
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
@@ -309,8 +327,10 @@ double JStop::StopLossCalculate(ENUM_ORDER_TYPE type,double price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::TakeProfitCalculate(ENUM_ORDER_TYPE type,double price)
+double JStop::TakeProfitCalculate(JOrderStop *orderstop)
   {
+   ENUM_ORDER_TYPE type = orderstop.MainTicketType();
+   double price = orderstop.MainTicketPrice();
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
       return(price+m_takeprofit*m_points_adjust);
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
@@ -320,14 +340,14 @@ double JStop::TakeProfitCalculate(ENUM_ORDER_TYPE type,double price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::TakeProfitCustom(ENUM_ORDER_TYPE type,double price)
+double JStop::TakeProfitCustom(JOrderStop *orderstop)
   {
    return(0.0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::StopLossCustom(ENUM_ORDER_TYPE type,double price)
+double JStop::StopLossCustom(JOrderStop *orderstop)
   {
    return(0.0);
   }
@@ -353,10 +373,12 @@ bool JStop::GetClosePrice(ENUM_ORDER_TYPE type,double &price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::CheckStopLoss(const double total_volume,double &volume_remaining,double volume,ENUM_ORDER_TYPE type,double stoploss)
+bool JStop::CheckStopLoss(JOrderStop *orderstop)
   {
+   double stoploss = orderstop.StopLoss();
    if(stoploss<=0.0) return(false);
    double price=0.0;
+   ENUM_ORDER_TYPE type = orderstop.MainTicketType();
    if(!GetClosePrice(type,price)) return(false);
    bool close=false;
    if(type==ORDER_TYPE_BUY)
@@ -369,17 +391,19 @@ bool JStop::CheckStopLoss(const double total_volume,double &volume_remaining,dou
      }
    if(close)
      {
-      return(CloseStop(total_volume,volume_remaining,volume,type,price));
+      return(CloseStop(orderstop,price));
      }
    return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::CheckTakeProfit(const double total_volume,double &volume_remaining,double volume,ENUM_ORDER_TYPE type,double takeprofit)
+bool JStop::CheckTakeProfit(JOrderStop *orderstop)
   {
+   double takeprofit = orderstop.TakeProfit();
    if(takeprofit<=0.0) return(false);
    double price=0.0;
+   ENUM_ORDER_TYPE type = orderstop.MainTicketType();
    if(!GetClosePrice(type,price)) return(false);
    bool close=false;
    if(type==ORDER_TYPE_BUY)
@@ -392,7 +416,7 @@ bool JStop::CheckTakeProfit(const double total_volume,double &volume_remaining,d
      }
    if(close)
      {
-      return(CloseStop(total_volume,volume_remaining,volume,type,price));
+      return(CloseStop(orderstop,price));
      }
    return(false);
   }
