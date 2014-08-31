@@ -6,6 +6,7 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
+#include <traderjet-cross\common\globalvar\seconds.mqh>
 #include "Time.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -51,7 +52,7 @@ JTimer::JTimer() : m_years(0),
                    m_hours(0),
                    m_minutes(0),
                    m_seconds(0),
-                   m_total(0),
+                   m_total(0)
   {
   }
 //+------------------------------------------------------------------+

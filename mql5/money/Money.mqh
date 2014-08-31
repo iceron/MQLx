@@ -12,6 +12,7 @@
 #include <Object.mqh>
 #include <Trade\SymbolInfo.mqh>
 #include <Trade\AccountInfo.mqh>
+#include <traderjet-cross\common\enum\ENUM_MONEY_UPDATE_TYPE.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -19,7 +20,7 @@ class JMoney : public CObject
   {
 protected:
    bool              m_activate;
-   MONEY_UPDATE_TYPE m_update;
+   ENUM_MONEY_UPDATE_TYPE m_update;
    double            m_volume;
    double            m_percent;
    double            m_volume_base;
@@ -50,7 +51,7 @@ public:
    virtual double    Percent() const {return(m_percent);}
    virtual void      Period(int period) {m_period=period;}
    virtual int       Period() const {return(m_period);}
-   virtual void      UpdateType(MONEY_UPDATE_TYPE type) {m_update=type;}
+   virtual void      UpdateType(ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
    virtual double    Volume(double price,ENUM_ORDER_TYPE type,double sl);
    virtual void      VolumeCurrent(double volume) {m_volume=volume;}
    virtual double    VolumeCurrent() const {return(m_volume);}

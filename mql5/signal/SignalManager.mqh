@@ -8,7 +8,7 @@
 #property version   "1.00"
 #include <Arrays\ArrayObj.mqh>
 #include <Arrays\ArrayInt.mqh>
-#include <traderjet\Signal.mqh>
+#include "Signal.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

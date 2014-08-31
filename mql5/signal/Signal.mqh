@@ -8,6 +8,8 @@
 #property version   "1.00"
 #include <Object.mqh>
 #include <Arrays\ArrayDouble.mqh>
+#include <traderjet-cross\common\enum\ENUM_CMD.mqh>
+#include <traderjet-cross\common\common.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
