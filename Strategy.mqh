@@ -13,7 +13,6 @@
 #include "enum\enum.mqh"
 #include "common\common.mqh"
 #include "globalvar\globalvar.mqh"
-#include "Signal.mqh"
 #include "Trade.mqh"
 #include "SignalManager.mqh"
 #include "Orders.mqh"
