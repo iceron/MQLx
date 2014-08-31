@@ -42,9 +42,9 @@ protected:
    bool              m_oco;
    //--- stop objects
    JStop            *m_stop;
-   CChartObjectHLine *m_objentry;
-   CChartObjectHLine *m_objsl;
-   CChartObjectHLine *m_objtp;
+   JStopLine        *m_objentry;
+   JStopLine        *m_objsl;
+   JStopLine        *m_objtp;
 public:
                      JOrderStop();
                     ~JOrderStop();
@@ -251,22 +251,23 @@ bool JOrderStop::ModifyOrderStop(double stoploss,double takeprofit)
      }
    return(takeprofit_modified || stoploss_modified);
   }
-  
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 void JOrderStop::Close()
-{
-   bool res1 = m_stop.DeleteStopOrder(m_takeprofit_ticket);      
+  {
+   bool res1 = m_stop.DeleteStopOrder(m_takeprofit_ticket);
    bool res2 = m_stop.DeleteStopOrder(m_stoploss_ticket);
-   if (res1)
+   if(res1)
       if(m_objsl!=NULL)
          delete m_objsl;
-   if (res2)
+   if(res2)
       if(m_objtp!=NULL)
-         delete m_objtp;         
-   if (res1 && res2)
+         delete m_objtp;
+   if(res1 && res2)
       if(m_objentry!=NULL)
-         delete m_objentry; 
-}
-
+         delete m_objentry;
+  }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

@@ -109,9 +109,9 @@ public:
    virtual bool      DeleteStopOrder(const ulong ticket) const;
    virtual bool      OrderModify(ulong ticket,double value);
    //--- stop order object creation
-   virtual CChartObjectHLine *CreateEntryObject(long id,string name,int window,double price);
-   virtual CChartObjectHLine *CreateStopLossObject(long id,string name,int window,double price);
-   virtual CChartObjectHLine *CreateTakeProfitObject(long id,string name,int window,double price);
+   virtual JStopLine *CreateEntryObject(long id,string name,int window,double price);
+   virtual JStopLine *CreateStopLossObject(long id,string name,int window,double price);
+   virtual JStopLine *CreateTakeProfitObject(long id,string name,int window,double price);
    //--- stop order price calculation
    virtual double    TakeProfitPrice(const double total_volume,const double volume_remaining,double volume,double price,ENUM_ORDER_TYPE type,ulong &ticket);
    virtual double    StopLossPrice(const double total_volume,const double volume_remaining,double volume,double price,ENUM_ORDER_TYPE type,ulong &ticket);
@@ -497,14 +497,14 @@ double JStop::CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stopl
 bool JStop::OrderModify(ulong ticket,double value)
   {
    bool res=m_trade.OrderModify(ticket,value,0.0,0.0,0,0,0.0);
-   //if(res)
-      //m_event.Add(EVENT_TYPE_ORDER_MODIFY,__FUNCTION__,"order modified","symbol: "+m_symbol.Name()+" ticket: "+DoubleToString(ticket,0)+" price: "+DoubleToString(value));
+//if(res)
+//m_event.Add(EVENT_TYPE_ORDER_MODIFY,__FUNCTION__,"order modified","symbol: "+m_symbol.Name()+" ticket: "+DoubleToString(ticket,0)+" price: "+DoubleToString(value));
    return(res);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CChartObjectHLine *JStop::CreateEntryObject(long id,string name,int window,double price)
+JStopLine *JStop::CreateEntryObject(long id,string name,int window,double price)
   {
    if(m_entry_visible)
       return(CreateObject(id,name,window,price));
@@ -513,7 +513,7 @@ CChartObjectHLine *JStop::CreateEntryObject(long id,string name,int window,doubl
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CChartObjectHLine *JStop::CreateStopLossObject(long id,string name,int window,double price)
+JStopLine *JStop::CreateStopLossObject(long id,string name,int window,double price)
   {
    if(m_stoploss_visible)
       return(CreateObject(id,name,window,price));
@@ -522,7 +522,7 @@ CChartObjectHLine *JStop::CreateStopLossObject(long id,string name,int window,do
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CChartObjectHLine *JStop::CreateTakeProfitObject(long id,string name,int window,double price)
+JStopLine *JStop::CreateTakeProfitObject(long id,string name,int window,double price)
   {
    if(m_takeprofit_visible)
       return(CreateObject(id,name,window,price));
