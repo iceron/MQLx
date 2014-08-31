@@ -169,7 +169,6 @@ void JOrderStop::Check(double &volume)
            {
             if(m_stop.Pending())
               {
-               Print("closing stop order");
                if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
                   m_takeprofit_closed=true;
               }
