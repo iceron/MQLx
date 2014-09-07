@@ -1,56 +1,26 @@
 //+------------------------------------------------------------------+
-//|                                                       Expert.mqh |
-//|                        Copyright 2014, MetaQuotes Software Corp. |
-//|                                              http://www.mql5.com |
+//|                                                      ProjectName |
+//|                                      Copyright 2012, CompanyName |
+//|                                       http://www.companyname.net |
 //+------------------------------------------------------------------+
-#property copyright "Copyright 2014, MetaQuotes Software Corp."
-#property link      "http://www.mql5.com"
-#property version   "1.00"
-#include <Arrays\ArrayObj.mqh>
-#include "Strategy.mqh"
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-class JExpert : public CArrayObj
+class JExpert : public JExpertBase
   {
-protected:
-   bool              m_activate;
 public:
-                     JExpert();
-                    ~JExpert();
-   //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
-   //--- events
-   virtual void      OnTick(void);
+                     JExpert(void);
+                    ~JExpert(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
-   //--- orders
-   virtual int       OrdersTotal(void);
-   virtual int       OrdersHistoryTotal(void);
-   virtual int       TradesTotal(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JExpert::JExpert() : m_activate(true)
+JExpert::JExpert(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JExpert::~JExpert()
+JExpert::~JExpert(void)
   {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JExpert::OnTick(void)
-  {
-   for(int i=0;i<Total();i++)
-     {
-      JStrategy *strategy=At(i);
-      bool res=strategy.OnTick();
-     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -59,47 +29,8 @@ void JExpert::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTrade
   {
    for(int i=0;i<Total();i++)
      {
-      JStrategy *strategy=At(i);
+      JStrategy *strat=At(i);
       strategy.OnTradeTransaction(trans,request,result);
      }
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-int JExpert::OrdersTotal()
-  {
-   int total=0;
-   for(int i=0;i<Total();i++)
-     {
-      JStrategy *strategy=At(i);
-      total+=strategy.OrdersTotal();
-     }
-   return(total);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-int JExpert::OrdersHistoryTotal()
-  {
-   int total=0;
-   for(int i=0;i<Total();i++)
-     {
-      JStrategy *strategy=At(i);
-      total+=strategy.OrdersHistoryTotal();
-     }
-   return(total);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-int JExpert::TradesTotal()
-  {
-   int total=0;
-   for(int i=0;i<Total();i++)
-     {
-      JStrategy *strategy=At(i);
-      total+=strategy.TradesTotal();
-     }
-   return(total);
   }
 //+------------------------------------------------------------------+

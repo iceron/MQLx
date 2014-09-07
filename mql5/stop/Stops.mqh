@@ -1,32 +1,11 @@
-//+------------------------------------------------------------------+
-//|                                                        Stops.mqh |
-//|                        Copyright 2014, MetaQuotes Software Corp. |
-//|                                              http://www.mql5.com |
-//+------------------------------------------------------------------+
-#property copyright "Copyright 2014, MetaQuotes Software Corp."
-#property link      "http://www.mql5.com"
-#property version   "1.00"
-#include <Arrays\ArrayObj.mqh>
-#include "Stop.mqh"
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-class JStops : public CArrayObj
-  {
-protected:
-   bool              m_activate;
+class JStops : public JStopsBase
+{
 public:
-                     JStops();
-                     JStops(string name,string sl=".sl.",string tp=".tp.");
-                    ~JStops();
-   //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+                     JStops(void);
+                    ~JStops(void);
   };
 //+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-JStops::JStops() : m_activate(true)
+JStops::JStops()
   {
   }
 //+------------------------------------------------------------------+
