@@ -25,8 +25,8 @@ public:
    //--- initialization
    virtual void      SetContainer(JTimes *times){m_times=times;}
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual bool      Active() {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}
    //--- time functions                    
    virtual bool      Evaluate() {return(true);}
    virtual ENUM_TIME_FILTER_TYPE FilterType() const {return(m_filter_type);}

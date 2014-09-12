@@ -94,7 +94,7 @@ void JTimerBase::RecalculateTotal()
 //+------------------------------------------------------------------+
 bool JTimerBase::Evaluate()
   {
-   if(!Activate()) return(true);
+   if(!Active()) return(true);
    bool result=true;
    m_elapsed=(int)(TimeCurrent()-m_time_start);
    if(m_elapsed>=m_total) result=false;

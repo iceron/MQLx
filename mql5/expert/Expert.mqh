@@ -30,7 +30,7 @@ void JExpert::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTrade
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=At(i);
-      strategy.OnTradeTransaction(trans,request,result);
+      strat.OnTradeTransaction(trans,request,result);
      }
   }
 //+------------------------------------------------------------------+

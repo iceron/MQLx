@@ -24,6 +24,8 @@ protected:
 public:
                      JSignalsBase();
                     ~JSignalsBase();
+   virtual bool      Active() {return(m_activate);}
+   virtual void      Active(bool active) {m_activate=active;}
    virtual int       CheckSignals();
    virtual int       LastSignal() const{return(m_last_signal);}
    virtual void      LastSignal(int signal);
@@ -49,6 +51,7 @@ JSignalsBase::~JSignalsBase()
 //+------------------------------------------------------------------+
 int JSignalsBase::CheckSignals()
   {
+   if(!Active()) return(CMD_NEUTRAL);
    int res=CMD_NEUTRAL;
    int total=Total();
    for(int i=0;i<total;i++)

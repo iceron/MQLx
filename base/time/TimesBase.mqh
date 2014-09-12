@@ -26,8 +26,8 @@ public:
    //-- initialization
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual bool      Active() {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}
    //--- evaluation
    virtual bool      Evaluate();
   };
@@ -48,7 +48,7 @@ JTimesBase::~JTimesBase()
 //+------------------------------------------------------------------+
 bool JTimesBase::Evaluate()
   {
-   if(!Activate()) return(true);
+   if(!Active()) return(true);
    for(int i=0;i<Total();i++)
      {
       JTime *time=At(i);

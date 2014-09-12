@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                                        Stops.mqh |
+//|                                                   MoneysBase.mqh |
 //|                        Copyright 2014, MetaQuotes Software Corp. |
 //|                                              http://www.mql5.com |
 //+------------------------------------------------------------------+
@@ -7,42 +7,27 @@
 #property link      "http://www.mql5.com"
 #property version   "1.00"
 #include <Arrays\ArrayObj.mqh>
-#include "StopBase.mqh"
-class JStrategy;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStopsBase : public CArrayObj
+class JMoneysBase : public CArrayObj
   {
-protected:
-   bool              m_activate;
-   JStrategy        *m_strategy;
-public:
-                     JStopsBase();
-                     JStopsBase(string name,string sl=".sl.",string tp=".tp.");
-                    ~JStopsBase();
-   virtual bool      Active() {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
-   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
-protected:
+private:
 
+public:
+                     MoneysBase();
+                    ~MoneysBase();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopsBase::JStopsBase() : m_activate(true)
+MoneysBase::MoneysBase()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopsBase::~JStopsBase()
+MoneysBase::~MoneysBase()
   {
   }
-//+------------------------------------------------------------------+
-#ifdef __MQL5__
-#include "..\..\mql5\stop\Stops.mqh"
-#else
-#include "..\..\mql4\stop\Stops.mqh"
-#endif
 //+------------------------------------------------------------------+

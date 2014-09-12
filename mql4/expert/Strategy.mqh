@@ -35,7 +35,7 @@ JStrategy::~JStrategy(void)
 //+------------------------------------------------------------------+
 bool JStrategy::OnTick()
   {
-   if(!Activate()) return(false);
+   if(!Active()) return(false);
    bool ret=false;
    if(!Refresh()) return(ret);
    m_orders.OnTick();

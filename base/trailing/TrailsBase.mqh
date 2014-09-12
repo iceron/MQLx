@@ -22,8 +22,8 @@ public:
                     ~JTrailsBase();
    virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual bool      Active() {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}
 
    virtual void      SetContainer(JStop *stop){m_stop=stop;}
 protected:
@@ -46,7 +46,7 @@ JTrailsBase::~JTrailsBase()
 //+------------------------------------------------------------------+
 double JTrailsBase::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
   {
-   if(!Activate()) return(0.0);
+   if(!Active()) return(0.0);
    double val=0.0,ret=0.0;
    for(int i=0;i<Total();i++)
      {

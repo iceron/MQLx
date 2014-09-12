@@ -52,7 +52,7 @@ bool JTimeRangeBase::Init(datetime begin,datetime end)
 //+------------------------------------------------------------------+
 bool JTimeRangeBase::Evaluate()
   {
-   if(!Activate()) return(true);
+   if(!Active()) return(true);
    datetime current=TimeCurrent();
    bool result=current>=m_begin && current<=m_end;
    return(m_filter_type==TIME_FILTER_INCLUDE?result:!result);

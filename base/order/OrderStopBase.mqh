@@ -115,7 +115,7 @@ JOrderStopBase::~JOrderStopBase()
 //+------------------------------------------------------------------+
 void JOrderStopBase::Init(JOrder *order,JStop *stop)
   {
-   if(!stop.Activate()) return;
+   if(!stop.Active()) return;
    m_order=order;
    m_stop=stop;
    m_stop.Volume(GetPointer(this),m_volume_fixed,m_volume_percent);

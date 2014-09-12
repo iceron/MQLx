@@ -35,8 +35,8 @@ public:
                      JMoneyBase();
                     ~JMoneyBase();
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual bool      Active() {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}
    //--- money management parameters
    virtual void      Balance(double balance) {m_balance=balance;}
    virtual double    Balance() const {return(m_balance);}
@@ -115,7 +115,7 @@ bool JMoneyBase::InitAccount(CAccountInfo *account)
 //+------------------------------------------------------------------+
 double JMoneyBase::Volume(double price,ENUM_ORDER_TYPE type,double sl)
   {
-   if(!Activate()) return(0.0);
+   if(!Active()) return(0.0);
    if(m_volume==0.0) UpdateLotSize(price,type,sl);
    switch(m_update)
      {

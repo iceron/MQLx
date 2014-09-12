@@ -79,7 +79,7 @@ bool JTimeFilterBase::Init(int gmt,int starthour,int endhour,int startminute=0,i
 //+------------------------------------------------------------------+
 bool JTimeFilterBase::Evaluate()
   {
-   if(!Activate()) return(true);
+   if(!Active()) return(true);
    bool result=true;
    MqlDateTime time;
    datetime current=TimeCurrent(),start=0,end=0;

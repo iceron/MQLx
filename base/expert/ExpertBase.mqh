@@ -21,8 +21,8 @@ public:
    //--- events
    virtual void      OnTick();
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual bool      Active() {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}
    //--- orders
    virtual int       OrdersTotal(void);
    virtual int       OrdersHistoryTotal(void);
@@ -51,7 +51,7 @@ int JExpertBase::OrdersTotal()
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=At(i);
-      total+=strategy.OrdersTotal();
+      total+=strat.OrdersTotal();
      }
    return(total);
   }
@@ -60,10 +60,11 @@ int JExpertBase::OrdersTotal()
 //+------------------------------------------------------------------+
 void JExpertBase::OnTick(void)
   {
+   if (!Active()) return;
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=At(i);
-      bool res=strategy.OnTick();
+      bool res=strat.OnTick();
      }
   }
 //+------------------------------------------------------------------+
@@ -75,7 +76,7 @@ int JExpertBase::OrdersHistoryTotal()
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=At(i);
-      total+=strategy.OrdersHistoryTotal();
+      total+=strat.OrdersHistoryTotal();
      }
    return(total);
   }
@@ -88,7 +89,7 @@ int JExpertBase::TradesTotal()
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=At(i);
-      total+=strategy.TradesTotal();
+      total+=strat.TradesTotal();
      }
    return(total);
   }
@@ -100,7 +101,7 @@ bool JExpertBase::Deinit(void)
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=At(i);
-      bool res=strategy.Deinit();
+      bool res=strat.Deinit();
      }
    return(true);
   }

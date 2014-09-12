@@ -79,8 +79,8 @@ public:
    virtual bool      InitEvent(JEvent *event);
    //virtual void      SetContainer(JExpert *expert){m_expert=expert;}
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual bool      Active() {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}
    //--- setters and getters
    virtual void      AsyncMode(bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
@@ -91,8 +91,8 @@ public:
    virtual void      LastTradeTime(datetime tradetime) {m_last_trade_time=tradetime;}
    virtual datetime  LastTickTime(void) {return(m_last_tick_time);}
    virtual void      LastTickTime(datetime ticktime) {m_last_tick_time=ticktime;}
-   virtual double    Lotsize(void) const {return(m_lotsize);}
-   virtual void      Lotsize(double lotsize){m_lotsize=lotsize;}
+   virtual double    LotSize(void) const {return(m_lotsize);}
+   virtual void      LotSize(double lotsize){m_lotsize=lotsize;}
    virtual int       Magic(void) const {return m_magic;}
    virtual void      Magic(int magic) {m_magic=magic;}
    virtual int       OrdersTotal(void);
@@ -104,6 +104,8 @@ public:
    virtual void      StopLoss(double sl) {m_stoploss=sl;}
    virtual double    TakeProfit(void) const {return(m_takeprofit);}
    virtual void      TakeProfit(double tp){m_takeprofit=tp;}
+   virtual ENUM_TRADE_MODE TradeMode(void) const {return(m_trade_mode);}
+   virtual void      TradeMode(ENUM_TRADE_MODE mode){m_trade_mode=mode;}
    //--- signal parameters
    virtual int       Period(void) const {return(PeriodSeconds(m_period));}
    virtual void      Period(ENUM_TIMEFRAMES period) {m_period=period;}

@@ -30,8 +30,8 @@ public:
    //--- initialization
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual bool      Active() {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}
    //--- signal parameters
    virtual string    Name() const {return(m_name);}
    virtual void      Name(string name) {m_name=name;}
@@ -83,6 +83,7 @@ bool JSignalBase::IsEmpty(double val)
 //+------------------------------------------------------------------+
 int JSignalBase::CheckSignal()
   {
+   if(!Active()) return(CMD_NEUTRAL);
    int res=CMD_NEUTRAL;
    bool long_cond=LongCondition();
    bool short_cond=ShortCondition();

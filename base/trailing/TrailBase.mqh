@@ -35,8 +35,8 @@ public:
    virtual void      Init(CSymbolInfo *symbol=NULL);
    virtual void      SetContainer(JTrails *trails){m_trails=trails;}
    //--- getters and setters    
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual bool      Active() {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}
    virtual int       DigitsAdjust() const {return(m_digits_adjust);}
    virtual void      DigitsAdjust(int adjust) {m_digits_adjust=adjust;}
    virtual double    End() const {return(m_end);}
@@ -138,7 +138,7 @@ double JTrailBase::DeactivationPrice(ENUM_ORDER_TYPE type,double entry_price)
 //+------------------------------------------------------------------+
 double JTrailBase::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
   {
-   if(!Activate()) return(0.0);
+   if(!Active()) return(0.0);
    double next_stop=0.0,activation=0.0,deactivation=0.0,new_price=0.0;
    activation=ActivationPrice(type,entry_price);
    deactivation=DeactivationPrice(type,entry_price);

@@ -71,8 +71,8 @@ public:
    virtual bool      InitTrade(JTrade *trade=NULL);
    virtual bool      InitEvent(JEvent *event);
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual bool      Active() {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}
    //--- stop order getters and setters
    virtual void      Comment(string comment) {m_comment=comment;}
    virtual string    Comment() const {return(m_comment);}
