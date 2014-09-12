@@ -23,6 +23,7 @@ protected:
 public:
                      JTimesBase();
                     ~JTimesBase();
+   virtual int       Type() {return(CLASS_TYPE_TIMES);}
    //-- initialization
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    //--- activation and deactivation

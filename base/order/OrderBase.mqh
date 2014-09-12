@@ -49,6 +49,7 @@ public:
    virtual ENUM_ORDER_TYPE OrderType(){return(m_type);}
    virtual void      Ticket(ulong ticket) {m_ticket=ticket;}
    virtual ulong     Ticket() {return(m_ticket);}
+   virtual int       Type() {return(CLASS_TYPE_ORDER);}
    virtual void      Volume(double volume){m_volume=volume;}
    virtual double    Volume(){return(m_volume);}
    virtual void      VolumeInitial(double volume){m_volume_initial=volume;}

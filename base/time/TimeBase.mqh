@@ -22,6 +22,7 @@ protected:
 public:
                      JTimeBase();
                     ~JTimeBase();
+   virtual int       Type() {return(CLASS_TYPE_TIME);}                    
    //--- initialization
    virtual void      SetContainer(JTimes *times){m_times=times;}
    //--- activation and deactivation

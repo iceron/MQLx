@@ -22,6 +22,7 @@ public:
    virtual double    GetPrice(int point=0);
    virtual bool      Move(double price);
    virtual void      SetContainer(JStop *stop){m_stop=stop;}
+   virtual int       Type() {return(CLASS_TYPE_STOPLINE);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -24,6 +24,7 @@ public:
    virtual bool      Active() {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   virtual int       Type() {return(CLASS_TYPE_STOPS);}
 protected:
 
   };

@@ -30,6 +30,7 @@ public:
    virtual int       LastSignal() const{return(m_last_signal);}
    virtual void      LastSignal(int signal);
    virtual void      SetContainer(CObject *s){m_strategy=s;}
+   virtual int       Type() {return(CLASS_TYPE_SIGNALS);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

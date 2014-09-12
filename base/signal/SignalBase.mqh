@@ -27,6 +27,7 @@ protected:
 public:
                      JSignalBase();
                     ~JSignalBase();
+   virtual int       Type() {return(CLASS_TYPE_SIGNAL);}
    //--- initialization
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
    //--- activation and deactivation

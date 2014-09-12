@@ -28,6 +28,7 @@ protected:
 public:
                      JOrdersBase();
                     ~JOrdersBase();
+   virtual int       Type() {return(CLASS_TYPE_ORDERS);}                    
    //--- initialization
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}                    
    //--- activation and deactivation

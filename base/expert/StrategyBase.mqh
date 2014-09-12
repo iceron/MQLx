@@ -6,6 +6,7 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
+#include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\enum\ENUM_TRADE_MODE.mqh"
 #include <Object.mqh>
 #include <Arrays\ArrayInt.mqh>
@@ -15,7 +16,7 @@
 #include "..\trade\TradeBase.mqh"
 #include "..\order\OrdersBase.mqh"
 #include "..\stop\StopsBase.mqh"
-#include "..\money\MoneyBase.mqh"
+#include "..\money\MoneysBase.mqh"
 #include "..\time\TimesBase.mqh"
 #include "..\event\EventBase.mqh"
 //class JExpert;
@@ -106,6 +107,7 @@ public:
    virtual void      TakeProfit(double tp){m_takeprofit=tp;}
    virtual ENUM_TRADE_MODE TradeMode(void) const {return(m_trade_mode);}
    virtual void      TradeMode(ENUM_TRADE_MODE mode){m_trade_mode=mode;}
+   virtual int       Type() {return(CLASS_TYPE_STRATEGY);}
    //--- signal parameters
    virtual int       Period(void) const {return(PeriodSeconds(m_period));}
    virtual void      Period(ENUM_TIMEFRAMES period) {m_period=period;}

@@ -18,6 +18,7 @@ protected:
 public:
                      JExpertBase();
                     ~JExpertBase();
+   virtual int       Type() {return(CLASS_TYPE_EXPERT);}
    //--- events
    virtual void      OnTick();
    //--- activation and deactivation
@@ -28,7 +29,7 @@ public:
    virtual int       OrdersHistoryTotal(void);
    virtual int       TradesTotal(void);
    //--- deinitialization
-   virtual bool      Deinit();
+   virtual bool      OnDeinit();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -60,7 +61,7 @@ int JExpertBase::OrdersTotal()
 //+------------------------------------------------------------------+
 void JExpertBase::OnTick(void)
   {
-   if (!Active()) return;
+   if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=At(i);
@@ -96,7 +97,7 @@ int JExpertBase::TradesTotal()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JExpertBase::Deinit(void)
+bool JExpertBase::OnDeinit(void)
   {
    for(int i=0;i<Total();i++)
      {

@@ -31,6 +31,7 @@ public:
    virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);
    virtual bool      Activate() {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual int       Type() {return(CLASS_TYPE_EVENT);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

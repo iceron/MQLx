@@ -24,8 +24,8 @@ public:
    //--- activation and deactivation
    virtual bool      Active() {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
-
    virtual void      SetContainer(JStop *stop){m_stop=stop;}
+   virtual int       Type() {return(CLASS_TYPE_TRAILS);}
 protected:
 
   };

@@ -24,6 +24,7 @@ public:
    virtual bool      CheckNewTicket(JOrderStop *orderstop) {return(true);}
    virtual bool      Close();
    virtual void      SetContainer(JOrder *order){m_order=order;}
+   virtual int       Type() {return(CLASS_TYPE_ORDERSTOPS);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

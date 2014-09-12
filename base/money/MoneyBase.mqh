@@ -34,6 +34,7 @@ protected:
 public:
                      JMoneyBase();
                     ~JMoneyBase();
+   virtual int       Type() {return(CLASS_TYPE_MONEY);}
    //--- activation and deactivation
    virtual bool      Active() {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}

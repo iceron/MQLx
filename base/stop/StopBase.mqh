@@ -107,6 +107,7 @@ public:
    virtual void      TakeProfitName(string name) {m_takeprofit_name=name;}
    virtual string    TakeProfitName() const {return(m_takeprofit_name);}
    virtual void      TakeProfitStyle(ENUM_LINE_STYLE style) {m_takeprofit_style=style;}
+   virtual int       Type() {return(CLASS_TYPE_STOP);}
    virtual bool      Virtual() const {return(m_stop_type==STOP_TYPE_VIRTUAL);}
    virtual void      Volume(JOrderStop *orderstop,double &volume_fixed,double &volume_percent);
    virtual double    VolumeFixed() const {return(m_volume_fixed);}

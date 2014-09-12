@@ -64,6 +64,7 @@ public:
    virtual string    TakeProfitName() {return(m_stop.Name()+m_stop.TakeProfitName()+(string)m_order.Ticket());}
    virtual void      TakeProfitTicket(ulong ticket) {m_takeprofit_ticket=ticket;}
    virtual ulong     TakeProfitTicket() {return(m_takeprofit_ticket);}
+   virtual int       Type() {return(CLASS_TYPE_ORDERSTOP);}
    virtual void      Volume(double volume) {m_volume=volume;}
    virtual double    Volume() {return(m_volume);}
    virtual void      VolumeFixed(double volume) {m_volume_fixed=volume;}

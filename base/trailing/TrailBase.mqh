@@ -54,6 +54,7 @@ public:
    virtual void      TrailMode(ENUM_TRAIL_MODE mode) {m_mode=mode;}
    virtual int       TrailTarget() const {return(m_target);}
    virtual void      TrailTarget(ENUM_TRAIL_TARGET target) {m_target=target;}
+   virtual int       Type() {return(CLASS_TYPE_TRAIL);}
    //--- checking
    virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
 protected:
