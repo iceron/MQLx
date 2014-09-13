@@ -492,6 +492,7 @@ JStopLine *JStopBase::CreateEntryObject(long id,string name,int window,double pr
       {
          obj.SetStyle(m_entry_style);
          obj.SetColor(m_entry_color);
+         return(obj);
       }
    }   
    return(NULL);
@@ -508,6 +509,7 @@ JStopLine *JStopBase::CreateStopLossObject(long id,string name,int window,double
       {
          obj.SetStyle(m_stoploss_style);
          obj.SetColor(m_stoploss_color);
+         return(obj);
       }
    }   
    return(NULL);
@@ -524,6 +526,7 @@ JStopLine *JStopBase::CreateTakeProfitObject(long id,string name,int window,doub
       {
          obj.SetStyle(m_takeprofit_style);
          obj.SetColor(m_takeprofit_color);
+         return(obj);
       }
    }   
    return(NULL);

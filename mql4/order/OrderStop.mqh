@@ -156,14 +156,14 @@ void JOrderStop::Check(double &volume)
            }
         }
      }
-   if(CheckPointer(m_objsl)==POINTER_DYNAMIC /*&& !m_stoploss_closed*/)
+   if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
      {
       if(m_stop.Pending())
          m_stoploss_closed=m_stop.CheckStopOrder(volume,m_stoploss_ticket);
       else
          m_stoploss_closed=m_stop.CheckStopLoss(m_order,GetPointer(this));
      }
-   if(CheckPointer(m_objtp)==POINTER_DYNAMIC /*&& !m_takeprofit_closed*/)
+   if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
      {
       if(m_stop.Pending())
          m_takeprofit_closed=m_stop.CheckStopOrder(volume,m_takeprofit_ticket);

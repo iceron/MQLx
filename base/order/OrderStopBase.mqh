@@ -80,7 +80,7 @@ public:
    virtual bool      DeleteStopLines(void);
    virtual bool      DeleteStopLoss(void);
    virtual bool      DeleteTakeProfit(void);
-   virtual bool      IsClosed(void) const {return(CheckPointer(m_objentry)==POINTER_INVALID);}
+   virtual bool      IsClosed(void) const {return(CheckPointer(m_objentry)!=POINTER_DYNAMIC);}
    virtual bool      Update(void);
    //--- deinitialization 
    virtual bool      Deinit(void);

@@ -26,7 +26,8 @@ public:
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    //--- setters and getters
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}   
+   virtual void      Active(bool activate) {m_activate=activate;}
+   virtual JStop    *Main();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -52,6 +53,18 @@ bool JStopsBase::Init(JStrategy *s)
      }
    SetContainer(s);
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JStop *JStopsBase::Main()
+  {
+   for(int i=0;i<Total();i++)
+     {
+      JStop *stop=At(i);
+      if (stop.Main()) return(stop);
+     }
+   return(NULL);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -299,6 +299,7 @@ bool JStrategyBase::Add(CObject *object)
       case CLASS_TYPE_STOPS:
         {
          m_stops=object;
+         m_main_stop = m_stops.Main();
          break;
         }
       case CLASS_TYPE_TIMES:

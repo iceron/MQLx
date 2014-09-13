@@ -47,7 +47,10 @@ bool JOrder::IsClosed(void)
      }
    if (CheckPointer(m_main_stop)==POINTER_DYNAMIC)
       if (m_main_stop.IsClosed()) 
+      {
+         m_closed=true;
          return(true);
+      }   
    return(false);
   }
 //+------------------------------------------------------------------+

@@ -82,18 +82,18 @@ void JOrderStop::Check(double &volume)
       bool delete_sl=false,delete_tp=false;
       if(m_stop.Pending())
         {
-         if (m_stoploss_ticket>0 && !m_stoploss_closed)
+         if(m_stoploss_ticket>0 && !m_stoploss_closed)
             if(m_stop.DeleteStopOrder(m_stoploss_ticket))
-            {
-               m_stoploss_closed = true;
+              {
+               m_stoploss_closed=true;
                delete_sl=DeleteStopLoss();
-            }  
-         if (m_takeprofit_ticket>0 && !m_takeprofit_closed)
+              }
+         if(m_takeprofit_ticket>0 && !m_takeprofit_closed)
             if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
-            {
-               m_takeprofit_closed = true;
+              {
+               m_takeprofit_closed=true;
                delete_tp=DeleteTakeProfit();
-            }  
+              }
         }
       else
         {
@@ -156,42 +156,16 @@ void JOrderStop::Check(double &volume)
             else m_stoploss_closed=true;
            }
         }
-      else
-        {
-         if(m_stoploss_closed && CheckPointer(m_objsl)==POINTER_DYNAMIC)
-           {
-            delete m_objsl;
-            if(ObjectFind(0,StopLossName())>=0)
-               DeleteChartObject(StopLossName());
-           }
-         if(m_takeprofit_closed && CheckPointer(m_objtp)==POINTER_DYNAMIC)
-           {
-            delete m_objtp;
-            if(ObjectFind(0,TakeProfitName())>=0)
-               DeleteChartObject(TakeProfitName());
-           }
-        }
+      if(m_stoploss_closed)
+         DeleteStopLoss();
+      if(m_takeprofit_closed)
+         DeleteTakeProfit();
      }
    if(((m_stoploss_closed || m_objsl==NULL) && (m_takeprofit_closed || m_objtp==NULL)) || volume<=0)
      {
-      if(CheckPointer(m_objentry)==POINTER_DYNAMIC)
-        {
-         delete m_objentry;
-         if(ObjectFind(0,EntryName())>=0)
-            DeleteChartObject(EntryName());
-        }
-      if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
-        {
-         delete m_objsl;
-         if(ObjectFind(0,StopLossName())>=0)
-            DeleteChartObject(StopLossName());
-        }
-      if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
-        {
-         delete m_objtp;
-         if(ObjectFind(0,TakeProfitName())>=0)
-            DeleteChartObject(TakeProfitName());
-        }
+      DeleteStopLines();
+      if(m_stop.Main())
+         m_order.IsClosed(true);
      }
   }
 //+------------------------------------------------------------------+
