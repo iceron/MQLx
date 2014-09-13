@@ -60,7 +60,7 @@ protected:
    //--- stop order trade object
    JTrade           *m_trade;
    //--- stop order trailing object
-   JTrails           m_trails;
+   JTrails          *m_trails;
    //--- events
    JEvent           *m_event;
    //-- stops
@@ -139,7 +139,7 @@ public:
    virtual double    TakeProfitCalculate(ENUM_ORDER_TYPE type,double price);
    virtual double    TakeProfitCustom(ENUM_ORDER_TYPE type,double price);
    //--- trailing   
-   virtual bool      Add(JTrail *trail);
+   virtual bool      Add(JTrails *trails);
    virtual double    CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
 
    virtual void      SetContainer(JStops *stops){m_stops=stops;}
@@ -202,7 +202,8 @@ bool JStopBase::Init(JStrategy *s)
    m_points_adjust = s.PointsAdjust();
    m_digits_adjust = s.DigitsAdjust();
    InitTrade();
-   m_trails.Init(s);
+   if (CheckPointer(m_trails)==POINTER_DYNAMIC)
+      m_trails.Init(s);
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -408,6 +409,12 @@ bool JStopBase::Deinit()
   {
    if(m_symbol!=NULL) delete m_symbol;
    if(m_trade!=NULL) delete m_trade;
+   if(m_trails!=NULL)
+     {
+      m_trails.Clear();
+      delete m_trails;
+      m_trails=NULL;
+     }
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -421,7 +428,7 @@ void JStopBase::StopType(ENUM_STOP_TYPE type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopBase::Add(JTrail *trail)
+bool JStopBase::Add(JTrails *trails)
   {
    /*
    if(m_trails.Add(trail))
@@ -434,13 +441,16 @@ bool JStopBase::Add(JTrail *trail)
      }
    return(false);
    */
-   return(m_trails.Add(trail));
+   
+   m_trails = trails;
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 double JStopBase::CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
   {
+   if (!CheckPointer(m_trails)) return(0);
    if(!Refresh()) return(0);
    return(m_trails.Check(type,entry_price,stoploss,takeprofit));
   }
