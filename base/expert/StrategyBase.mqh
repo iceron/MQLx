@@ -454,6 +454,8 @@ bool JStrategyBase::Refresh(void)
 //+------------------------------------------------------------------+
 bool JStrategyBase::AddOtherMagic(int magic)
   {
+   if (m_other_magic.Search(magic)) 
+      return(true);
    if(m_other_magic.Add(magic))
      {
       m_other_magic.Sort();
