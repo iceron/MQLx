@@ -343,7 +343,6 @@ double JStrategyBase::PriceCalculateCustom(int res)
 //+------------------------------------------------------------------+
 double JStrategyBase::LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss)
   {
-
    if(CheckPointer(m_moneys))
       return(m_moneys.Volume(price,type,stoploss));
    return(m_lotsize);
