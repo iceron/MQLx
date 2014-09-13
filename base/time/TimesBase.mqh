@@ -21,28 +21,28 @@ protected:
    bool              m_activate;
    JStrategy        *m_strategy;
 public:
-                     JTimesBase();
-                    ~JTimesBase();
-   virtual int       Type() {return(CLASS_TYPE_TIMES);}
+                     JTimesBase(void);
+                    ~JTimesBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_TIMES);}
    //-- initialization
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Init(JStrategy *s);
    //--- activation and deactivation
-   virtual bool      Active() {return(m_activate);}
+   virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    //--- evaluation
-   virtual bool      Evaluate();
+   virtual bool      Evaluate(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimesBase::JTimesBase() : m_activate(true)
+JTimesBase::JTimesBase(void) : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimesBase::~JTimesBase()
+JTimesBase::~JTimesBase(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -60,7 +60,7 @@ bool JTimesBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimesBase::Evaluate()
+bool JTimesBase::Evaluate(void)
   {
    if(!Active()) return(true);
    for(int i=0;i<Total();i++)

@@ -66,8 +66,9 @@ protected:
    //-- stops
    JStops           *m_stops;
 public:
-                     JStopBase();
-                    ~JStopBase();
+                     JStopBase(void);
+                    ~JStopBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_STOP);}
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
@@ -75,48 +76,47 @@ public:
    virtual bool      InitTrade(JTrade *trade=NULL);
    virtual bool      InitEvent(JEvent *event);
    //--- activation and deactivation
-   virtual bool      Active() {return(m_activate);}
+   virtual bool      Active(void) {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    //--- stop order getters and setters
    virtual void      Comment(string comment) {m_comment=comment;}
-   virtual string    Comment() const {return(m_comment);}
-   virtual int       DigitsAdjust() const {return(m_digits_adjust);}
+   virtual string    Comment(void) const {return(m_comment);}
+   virtual int       DigitsAdjust(void) const {return(m_digits_adjust);}
    virtual void      DigitsAdjust(int adjust) {m_digits_adjust=adjust;}
    virtual void      EntryColor(color clr) {m_entry_color=clr;}
    virtual void      EntryStyle(ENUM_LINE_STYLE style) {m_entry_style=style;}
    virtual void      Magic(int magic) {m_magic=magic;}
-   virtual int       Magic() const {return(m_magic);}
+   virtual int       Magic(void) const {return(m_magic);}
    virtual void      Main(bool main) {m_main=main;}
-   virtual bool      Main() const {return(m_main);}
+   virtual bool      Main(void) const {return(m_main);}
    virtual void      Name(string name) {m_name=name;}
-   virtual string    Name() const{return(m_name);}
+   virtual string    Name(void) const{return(m_name);}
    virtual void      OCO(bool oco) {if(!Main())m_oco=oco;}
-   virtual bool      OCO() const{return(m_oco);}
+   virtual bool      OCO(void) const{return(m_oco);}
    virtual bool      Pending() {return(m_stop_type==STOP_TYPE_PENDING);}
-   virtual double    PointsAdjust() const {return(m_points_adjust);}
+   virtual double    PointsAdjust(void) const {return(m_points_adjust);}
    virtual void      PointsAdjust(double adjust) {m_points_adjust=adjust;}
    virtual void      StopLoss(double sl) {m_stoploss=sl;}
-   virtual double    StopLoss() const {return(m_stoploss);}
+   virtual double    StopLoss(void) const {return(m_stoploss);}
    virtual void      StopLossColor(color clr) {m_stoploss_color=clr;}
-   virtual bool      StopLossCustom() {return(m_stoploss==0);}
+   virtual bool      StopLossCustom(void) {return(m_stoploss==0);}
    virtual void      StopLossName(string name) {m_stoploss_name=name;}
-   virtual string    StopLossName() const{return(m_stoploss_name);}
+   virtual string    StopLossName(void) const{return(m_stoploss_name);}
    virtual void      StopLossStyle(ENUM_LINE_STYLE style) {m_stoploss_style=style;}
    virtual void      StopType(ENUM_STOP_TYPE stop_type);
-   virtual ENUM_STOP_TYPE StopType() {return(m_stop_type);}
+   virtual ENUM_STOP_TYPE StopType(void) {return(m_stop_type);}
    virtual void      TakeProfit(double tp) {m_takeprofit=tp;}
-   virtual double    TakeProfit() const {return(m_takeprofit);}
+   virtual double    TakeProfit(void) const {return(m_takeprofit);}
    virtual void      TakeProfitColor(color clr) {m_takeprofit_color=clr;}
-   virtual bool      TakeProfitCustom() {return(m_takeprofit==0);}
+   virtual bool      TakeProfitCustom(void) {return(m_takeprofit==0);}
    virtual void      TakeProfitName(string name) {m_takeprofit_name=name;}
-   virtual string    TakeProfitName() const {return(m_takeprofit_name);}
+   virtual string    TakeProfitName(void) const {return(m_takeprofit_name);}
    virtual void      TakeProfitStyle(ENUM_LINE_STYLE style) {m_takeprofit_style=style;}
-   virtual int       Type() {return(CLASS_TYPE_STOP);}
-   virtual bool      Virtual() const {return(m_stop_type==STOP_TYPE_VIRTUAL);}
+   virtual bool      Virtual(void) const {return(m_stop_type==STOP_TYPE_VIRTUAL);}
    virtual void      Volume(JOrderStop *orderstop,double &volume_fixed,double &volume_percent);
-   virtual double    VolumeFixed() const {return(m_volume_fixed);}
+   virtual double    VolumeFixed(void) const {return(m_volume_fixed);}
    virtual void      VolumeFixed(double volume) {m_volume_fixed=volume;}
-   virtual double    VolumePercent() const {return(m_volume_percent);}
+   virtual double    VolumePercent(void) const {return(m_volume_percent);}
    virtual void      VolumePercent(double volume) {m_volume_percent=volume;}
    virtual void      VolumeType(ENUM_VOLUME_TYPE type){m_volume_type=type;}
    //--- stop order checking
@@ -133,7 +133,7 @@ public:
    virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop){return(0.0);}
    virtual double    StopLossTicks(ENUM_ORDER_TYPE type,double price) {return(m_stoploss);}
    virtual double    TakeProfitTicks(ENUM_ORDER_TYPE type,double price) {return(m_takeprofit);}
-   virtual bool      Refresh();
+   virtual bool      Refresh(void);
    virtual double    StopLossCalculate(ENUM_ORDER_TYPE type,double price);
    virtual double    StopLossCustom(ENUM_ORDER_TYPE type,double price);
    virtual double    TakeProfitCalculate(ENUM_ORDER_TYPE type,double price);
@@ -153,42 +153,45 @@ protected:
    //--- stop order exit
    virtual bool      CloseStop(JOrder *order,JOrderStop *orderstop,double price);
    //--- deinitialization
-   virtual bool      Deinit();
+   virtual void      Deinit(void);
+   virtual void      DeinitSymbol(void);
+   virtual void      DeinitTrade(void);
+   virtual void      DeinitTrails(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopBase::JStopBase() : m_activate(true),
-                         m_convert_stop_type(true),
-                         m_magic(INT_MAX),
-                         m_main(false),
-                         m_oco(true),
-                         m_stoploss(0),
-                         m_takeprofit(0),
-                         m_volume_type(VOLUME_TYPE_FIXED),
-                         m_volume_fixed(0),
-                         m_volume_percent(0),
-                         m_comment(NULL),
-                         m_points_adjust(0),
-                         m_digits_adjust(0),
-                         m_stop_type(STOP_TYPE_VIRTUAL),
-                         m_stoploss_name(".sl."),
-                         m_takeprofit_name(".tp."),
-                         m_entry_visible(true),
-                         m_stoploss_visible(true),
-                         m_takeprofit_visible(true),
-                         m_entry_color(clrGray),
-                         m_stoploss_color(clrRed),
-                         m_takeprofit_color(clrRed),
-                         m_entry_style(STYLE_SOLID),
-                         m_stoploss_style(STYLE_SOLID),
-                         m_takeprofit_style(STYLE_SOLID)
+JStopBase::JStopBase(void) : m_activate(true),
+                             m_convert_stop_type(true),
+                             m_magic(INT_MAX),
+                             m_main(false),
+                             m_oco(true),
+                             m_stoploss(0),
+                             m_takeprofit(0),
+                             m_volume_type(VOLUME_TYPE_FIXED),
+                             m_volume_fixed(0),
+                             m_volume_percent(0),
+                             m_comment(NULL),
+                             m_points_adjust(0),
+                             m_digits_adjust(0),
+                             m_stop_type(STOP_TYPE_VIRTUAL),
+                             m_stoploss_name(".sl."),
+                             m_takeprofit_name(".tp."),
+                             m_entry_visible(true),
+                             m_stoploss_visible(true),
+                             m_takeprofit_visible(true),
+                             m_entry_color(clrGray),
+                             m_stoploss_color(clrRed),
+                             m_takeprofit_color(clrRed),
+                             m_entry_style(STYLE_SOLID),
+                             m_stoploss_style(STYLE_SOLID),
+                             m_takeprofit_style(STYLE_SOLID)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopBase::~JStopBase()
+JStopBase::~JStopBase(void)
   {
    Deinit();
   }
@@ -202,7 +205,7 @@ bool JStopBase::Init(JStrategy *s)
    m_points_adjust = s.PointsAdjust();
    m_digits_adjust = s.DigitsAdjust();
    InitTrade();
-   if (CheckPointer(m_trails)==POINTER_DYNAMIC)
+   if(CheckPointer(m_trails)==POINTER_DYNAMIC)
       m_trails.Init(s);
    return(true);
   }
@@ -395,7 +398,7 @@ bool JStopBase::CheckTakeProfit(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopBase::Refresh()
+bool JStopBase::Refresh(void)
   {
    if(CheckPointer(m_symbol)==POINTER_DYNAMIC)
       return(m_symbol.RefreshRates());
@@ -404,18 +407,45 @@ bool JStopBase::Refresh()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-
-bool JStopBase::Deinit()
+void JStopBase::Deinit(void)
   {
-   if(m_symbol!=NULL) delete m_symbol;
-   if(m_trade!=NULL) delete m_trade;
+   DeinitSymbol();
+   DeinitTrade();
+   DeinitTrails();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStopBase::DeinitSymbol(void)
+  {
+   if(m_symbol!=NULL)
+     {
+      delete m_symbol;
+      m_symbol=NULL;
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStopBase::DeinitTrade(void)
+  {
+   if(m_trade!=NULL)
+     {
+      delete m_trade;
+      m_trade=NULL;
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStopBase::DeinitTrails(void)
+  {
    if(m_trails!=NULL)
      {
       m_trails.Clear();
       delete m_trails;
       m_trails=NULL;
      }
-   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -430,19 +460,8 @@ void JStopBase::StopType(ENUM_STOP_TYPE type)
 //+------------------------------------------------------------------+
 bool JStopBase::Add(JTrails *trails)
   {
-   /*
-   if(m_trails.Add(trail))
-     {
-      trail.Init(m_symbol);
-      trail.PointsAdjust(m_points_adjust);
-      trail.DigitsAdjust(m_digits_adjust);
-      trail.SetContainer(GetPointer(m_trails));
-      return(true);
-     }
-   return(false);
-   */
-   
-   m_trails = trails;
+   if(CheckPointer(trails)==POINTER_DYNAMIC)
+      m_trails=trails;
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -450,7 +469,7 @@ bool JStopBase::Add(JTrails *trails)
 //+------------------------------------------------------------------+
 double JStopBase::CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
   {
-   if (!CheckPointer(m_trails)) return(0);
+   if(!CheckPointer(m_trails)) return(0);
    if(!Refresh()) return(0);
    return(m_trails.Check(type,entry_price,stoploss,takeprofit));
   }

@@ -6,8 +6,8 @@
 class JTime : public JTimeBase
   {
 public:
-                     JTime();
-                    ~JTime();
+                     JTime(void);
+                    ~JTime(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

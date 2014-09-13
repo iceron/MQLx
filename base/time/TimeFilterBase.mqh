@@ -23,30 +23,30 @@ protected:
    bool              m_fri;
    bool              m_sat;
 public:
-                     JTimeFilterBase();
-                    ~JTimeFilterBase();
-   virtual bool      Evaluate();
+                     JTimeFilterBase(void);
+                    ~JTimeFilterBase(void);
+   virtual bool      Evaluate(void);
    virtual bool      Init(int gmt,int starthour,int endhour,int startminute=0,int endminute=0,int startseconds=0,int endseconds=0);
    virtual void      SetDays(bool sun,bool mon,bool tue,bool wed,bool thu,bool fri,bool sat);
-   virtual bool      Sunday() const {return(m_mon);}
+   virtual bool      Sunday(void) const {return(m_mon);}
    virtual void      Sunday(bool mon) {m_mon=mon;}
-   virtual bool      Monday() const {return(m_mon);}
+   virtual bool      Monday(void) const {return(m_mon);}
    virtual void      Monday(bool mon) {m_mon=mon;}
-   virtual bool      Tuesday() const {return(m_mon);}
+   virtual bool      Tuesday(void) const {return(m_mon);}
    virtual void      Tuesday(bool mon) {m_mon=mon;}
-   virtual bool      Wednesday() const {return(m_mon);}
+   virtual bool      Wednesday(void) const {return(m_mon);}
    virtual void      Wednesday(bool mon) {m_mon=mon;}
-   virtual bool      Thursday() const {return(m_mon);}
+   virtual bool      Thursday(void) const {return(m_mon);}
    virtual void      Thursday(bool mon) {m_mon=mon;}
-   virtual bool      Friday() const {return(m_mon);}
+   virtual bool      Friday(void) const {return(m_mon);}
    virtual void      Friday(bool mon) {m_mon=mon;}
-   virtual bool      Saturday() const {return(m_mon);}
+   virtual bool      Saturday(void) const {return(m_mon);}
    virtual void      Saturday(bool mon) {m_mon=mon;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeFilterBase::JTimeFilterBase() : m_sun(false),
+JTimeFilterBase::JTimeFilterBase(void) : m_sun(false),
                                      m_mon(true),
                                      m_tue(true),
                                      m_wed(true),
@@ -58,7 +58,7 @@ JTimeFilterBase::JTimeFilterBase() : m_sun(false),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeFilterBase::~JTimeFilterBase()
+JTimeFilterBase::~JTimeFilterBase(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -77,7 +77,7 @@ bool JTimeFilterBase::Init(int gmt,int starthour,int endhour,int startminute=0,i
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeFilterBase::Evaluate()
+bool JTimeFilterBase::Evaluate(void)
   {
    if(!Active()) return(true);
    bool result=true;

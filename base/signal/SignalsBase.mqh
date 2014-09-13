@@ -22,30 +22,30 @@ protected:
    bool              m_reverse;
    JStrategy        *m_strategy;
 public:
-                     JSignalsBase();
-                    ~JSignalsBase();
+                     JSignalsBase(void);
+                    ~JSignalsBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_SIGNALS);}
    virtual bool      Init(JStrategy *s);
-   virtual bool      Active() {return(m_activate);}
+   virtual bool      Active(void) const{return(m_activate);}
    virtual void      Active(bool active) {m_activate=active;}
-   virtual int       CheckSignals();
-   virtual int       LastSignal() const{return(m_last_signal);}
+   virtual int       CheckSignals(void);
+   virtual int       LastSignal(void) const {return(m_last_signal);}
    virtual void      LastSignal(int signal);
    virtual void      SetContainer(CObject *s){m_strategy=s;}
-   virtual int       Type() {return(CLASS_TYPE_SIGNALS);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignalsBase::JSignalsBase() : m_activate(true),
-                               m_last_signal(0),
-                               m_new_signal(true),
-                               m_reverse(false)
+JSignalsBase::JSignalsBase(void) : m_activate(true),
+                                   m_last_signal(0),
+                                   m_new_signal(true),
+                                   m_reverse(false)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignalsBase::~JSignalsBase()
+JSignalsBase::~JSignalsBase(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -63,7 +63,7 @@ bool JSignalsBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JSignalsBase::CheckSignals()
+int JSignalsBase::CheckSignals(void)
   {
    if(!Active()) return(CMD_NEUTRAL);
    int res=CMD_NEUTRAL;

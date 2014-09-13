@@ -27,39 +27,39 @@ protected:
    CSymbolInfo      *m_symbol;
    CAccountInfo     *m_account;
 public:
-                     JSignalBase();
-                    ~JSignalBase();
+                     JSignalBase(void);
+                    ~JSignalBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_SIGNAL);}   
+   //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
-   virtual int       Type() {return(CLASS_TYPE_SIGNAL);}
-   //--- initialization
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
    //--- activation and deactivation
-   virtual bool      Active() {return(m_activate);}
+   virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    //--- signal parameters
-   virtual string    Name() const {return(m_name);}
+   virtual string    Name(void) const {return(m_name);}
    virtual void      Name(string name) {m_name=name;}
-   virtual bool      Reverse() const {return(m_reverse);}
+   virtual bool      Reverse(void) const {return(m_reverse);}
    virtual void      Reverse(bool reverse) {m_reverse=reverse;}
-   virtual int       LastSignal() const {return(m_signal);}
-   virtual int       LastValidSignal() const {return(m_signal);}
+   virtual int       LastSignal(void) const {return(m_signal);}
+   virtual int       LastValidSignal(void) const {return(m_signal);}
    //--- signal methods
-   virtual ENUM_CMD  LongCondition() {return(0);}
-   virtual ENUM_CMD  ShortCondition() {return(0);}
+   virtual ENUM_CMD  LongCondition(void) {return(0);}
+   virtual ENUM_CMD  ShortCondition(void) {return(0);}
    virtual void      AddEmptyValue(double);
-   virtual int       CheckSignal();
+   virtual int       CheckSignal(void);
    virtual bool      IsEmpty(double val);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignalBase::JSignalBase() : m_activate(true),
-                             m_name(NULL),
-                             m_signal(CMD_NEUTRAL),
-                             m_signal_valid(CMD_VOID),
-                             m_reverse(false)
+JSignalBase::JSignalBase(void) : m_activate(true),
+                                 m_name(NULL),
+                                 m_signal(CMD_NEUTRAL),
+                                 m_signal_valid(CMD_VOID),
+                                 m_reverse(false)
 
   {
    AddEmptyValue(0.0);
@@ -67,7 +67,7 @@ JSignalBase::JSignalBase() : m_activate(true),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignalBase::~JSignalBase()
+JSignalBase::~JSignalBase(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -112,7 +112,7 @@ bool JSignalBase::IsEmpty(double val)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JSignalBase::CheckSignal()
+int JSignalBase::CheckSignal(void)
   {
    if(!Active()) return(CMD_NEUTRAL);
    int res=CMD_NEUTRAL;

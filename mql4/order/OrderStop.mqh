@@ -6,10 +6,10 @@
 class JOrderStop : public JOrderStopBase
   {
 public:
-                     JOrderStop();
-                    ~JOrderStop();
+                     JOrderStop(void);
+                    ~JOrderStop(void);
    virtual void      Check(double &volume);
-   virtual bool      NewTicket();
+   virtual bool      NewTicket(void);
    virtual void      NewTicket(bool value);
    virtual bool      Recreate(void);
    virtual void      UpdateTicket(ulong ticket);

@@ -13,20 +13,20 @@
 class JMoneyFixedRiskPerPipBase : public JMoney
   {
 public:
-                     JMoneyFixedRiskPerPipBase();
-                    ~JMoneyFixedRiskPerPipBase();
+                     JMoneyFixedRiskPerPipBase(void);
+                    ~JMoneyFixedRiskPerPipBase(void);
    virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedRiskPerPipBase::JMoneyFixedRiskPerPipBase()
+JMoneyFixedRiskPerPipBase::JMoneyFixedRiskPerPipBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedRiskPerPipBase::~JMoneyFixedRiskPerPipBase()
+JMoneyFixedRiskPerPipBase::~JMoneyFixedRiskPerPipBase(void)
   {
   }
 //+------------------------------------------------------------------+

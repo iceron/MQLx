@@ -12,9 +12,9 @@
 class JStrategy : public JStrategyBase
   {
 public:
-                     JStrategy();
-                    ~JStrategy();
-   virtual bool      OnTick();
+                     JStrategy(void);
+                    ~JStrategy(void);
+   virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
    virtual bool      TradeOpen(int res);
   };
@@ -33,7 +33,7 @@ JStrategy::~JStrategy(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::OnTick()
+bool JStrategy::OnTick(void)
   {
    if(!Active()) return(false);
    bool ret=false;

@@ -43,71 +43,71 @@ protected:
    JStopLine        *m_objtp;
    JOrderStops      *m_order_stops;
 public:
-                     JOrderStopBase();
-                    ~JOrderStopBase();
+                     JOrderStopBase(void);
+                    ~JOrderStopBase(void);
    //--- initialization
    virtual void      Init(JOrder *order,JStop *stop);
    virtual void      SetContainer(JOrderStops *orderstops){m_order_stops=orderstops;}
    //--- getters and setters  
-   virtual ulong     MainMagic() {return(m_order.Magic());}
-   virtual ulong     MainTicket() {return(m_order.Ticket());}
-   virtual double    MainTicketPrice() {return(m_order.Price());}
-   virtual ENUM_ORDER_TYPE    MainTicketType() {return(m_order.OrderType());}
-   virtual string    EntryName() {return(m_stop.Name()+"."+(string)m_order.Ticket());}
+   virtual ulong     MainMagic(void) const {return(m_order.Magic());}
+   virtual ulong     MainTicket(void) const {return(m_order.Ticket());}
+   virtual double    MainTicketPrice() const {return(m_order.Price());}
+   virtual ENUM_ORDER_TYPE    MainTicketType(void) const {return(m_order.OrderType());}
+   virtual string    EntryName(void) const {return(m_stop.Name()+"."+(string)m_order.Ticket());}
    virtual void      StopLoss(double stoploss) {m_stoploss=stoploss;}
-   virtual double    StopLoss() {return(m_stoploss);}
-   virtual string    StopLossName() {return(m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket());}
+   virtual double    StopLoss(void) const {return(m_stoploss);}
+   virtual string    StopLossName(void) const {return(m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket());}
    virtual void      StopLossTicket(ulong ticket) {m_stoploss_ticket=ticket;}
-   virtual ulong     StopLossTicket() {return(m_stoploss_ticket);}
+   virtual ulong     StopLossTicket(void) const {return(m_stoploss_ticket);}
    virtual void      TakeProfit(double takeprofit) {m_takeprofit=takeprofit;}
-   virtual double    TakeProfit() {return(m_takeprofit);}
-   virtual string    TakeProfitName() {return(m_stop.Name()+m_stop.TakeProfitName()+(string)m_order.Ticket());}
+   virtual double    TakeProfit(void) const {return(m_takeprofit);}
+   virtual string    TakeProfitName(void) const {return(m_stop.Name()+m_stop.TakeProfitName()+(string)m_order.Ticket());}
    virtual void      TakeProfitTicket(ulong ticket) {m_takeprofit_ticket=ticket;}
-   virtual ulong     TakeProfitTicket() {return(m_takeprofit_ticket);}
-   virtual int       Type() {return(CLASS_TYPE_ORDERSTOP);}
+   virtual ulong     TakeProfitTicket(void) const {return(m_takeprofit_ticket);}
+   virtual int       Type(void) const {return(CLASS_TYPE_ORDERSTOP);}
    virtual void      Volume(double volume) {m_volume=volume;}
-   virtual double    Volume() {return(m_volume);}
+   virtual double    Volume(void) const {return(m_volume);}
    virtual void      VolumeFixed(double volume) {m_volume_fixed=volume;}
-   virtual double    VolumeFixed() {return(m_volume_fixed);}
+   virtual double    VolumeFixed(void) const {return(m_volume_fixed);}
    virtual void      VolumePercent(double volume) {m_volume_percent=volume;}
-   virtual double    VolumePercent() {return(m_volume_percent);}
+   virtual double    VolumePercent(void) const {return(m_volume_percent);}
    //--- checking   
    virtual void      Check(double &volume) {}
-   virtual bool      Close();
-   virtual bool      CheckTrailing();
+   virtual bool      Close(void);
+   virtual bool      CheckTrailing(void);
    virtual bool      DeleteChartObject(string name);
-   virtual bool      DeleteEntry();
-   virtual bool      DeleteStopLines();
-   virtual bool      DeleteStopLoss();
-   virtual bool      DeleteTakeProfit();
-   virtual bool      IsClosed();
-   virtual bool      Update();
+   virtual bool      DeleteEntry(void);
+   virtual bool      DeleteStopLines(void);
+   virtual bool      DeleteStopLoss(void);
+   virtual bool      DeleteTakeProfit(void);
+   virtual bool      IsClosed(void) const {return(CheckPointer(m_objentry)==POINTER_INVALID);}
+   virtual bool      Update(void);
    //--- deinitialization 
-   virtual bool      Deinit();
+   virtual bool      Deinit(void);
 protected:
    virtual bool      ModifyOrderStop(double stoploss,double takeprofit) {return(true);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopBase::JOrderStopBase() : m_volume(0.0),
-                                   m_volume_fixed(0.0),
-                                   m_volume_percent(0.0),
-                                   m_stoploss(0.0),
-                                   m_takeprofit(0.0),
-                                   m_stoploss_initial(0.0),
-                                   m_takeprofit_initial(0.0),
-                                   m_stoploss_ticket(0),
-                                   m_takeprofit_ticket(0),
-                                   m_stoploss_closed(false),
-                                   m_takeprofit_closed(false),
-                                   m_stop_type(0)
+JOrderStopBase::JOrderStopBase(void) : m_volume(0.0),
+                                       m_volume_fixed(0.0),
+                                       m_volume_percent(0.0),
+                                       m_stoploss(0.0),
+                                       m_takeprofit(0.0),
+                                       m_stoploss_initial(0.0),
+                                       m_takeprofit_initial(0.0),
+                                       m_stoploss_ticket(0),
+                                       m_takeprofit_ticket(0),
+                                       m_stoploss_closed(false),
+                                       m_takeprofit_closed(false),
+                                       m_stop_type(0)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopBase::~JOrderStopBase()
+JOrderStopBase::~JOrderStopBase(void)
   {
    Deinit();
   }
@@ -136,7 +136,7 @@ void JOrderStopBase::Init(JOrder *order,JStop *stop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::Deinit()
+bool JOrderStopBase::Deinit(void)
   {
    if(m_stop!=NULL) delete m_stop;
    if(m_objentry!=NULL) delete m_objentry;
@@ -147,7 +147,7 @@ bool JOrderStopBase::Deinit()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::CheckTrailing()
+bool JOrderStopBase::CheckTrailing(void)
   {
    if(m_stop==NULL) return(false);
    if(m_order.IsClosed()) return(false);
@@ -160,13 +160,13 @@ bool JOrderStopBase::CheckTrailing()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::Close()
+bool JOrderStopBase::Close(void)
   {
    bool res1=false,res2=false;
-   if (m_stoploss_ticket>0 && !m_stoploss_closed)
+   if(m_stoploss_ticket>0 && !m_stoploss_closed)
       if(m_stop.DeleteStopOrder(m_stoploss_ticket))
          res1=DeleteStopLoss();
-   if (m_takeprofit_ticket>0 && !m_takeprofit_closed)         
+   if(m_takeprofit_ticket>0 && !m_takeprofit_closed)
       if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
          res2=DeleteTakeProfit();
    if(res1 && res2)
@@ -176,7 +176,7 @@ bool JOrderStopBase::Close()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::Update()
+bool JOrderStopBase::Update(void)
   {
    if(m_stop==NULL) return(true);
    if(m_order.IsClosed()) return(false);
@@ -205,7 +205,7 @@ bool JOrderStopBase::DeleteChartObject(string name)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::DeleteStopLoss()
+bool JOrderStopBase::DeleteStopLoss(void)
   {
    if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
      {
@@ -221,7 +221,7 @@ bool JOrderStopBase::DeleteStopLoss()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::DeleteTakeProfit()
+bool JOrderStopBase::DeleteTakeProfit(void)
   {
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
      {
@@ -237,7 +237,7 @@ bool JOrderStopBase::DeleteTakeProfit()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::DeleteEntry()
+bool JOrderStopBase::DeleteEntry(void)
   {
    if(CheckPointer(m_objentry)==POINTER_DYNAMIC)
      {
@@ -253,18 +253,11 @@ bool JOrderStopBase::DeleteEntry()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::DeleteStopLines()
+bool JOrderStopBase::DeleteStopLines(void)
   {
    if(DeleteStopLoss() && DeleteTakeProfit())
       return(DeleteEntry());
    return(false);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrderStopBase::IsClosed(void)
-  {
-   return(CheckPointer(m_objentry)==POINTER_INVALID);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

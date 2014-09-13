@@ -6,8 +6,8 @@
 class JMoney : public JMoneyBase
   {
 public:
-                     JMoney();
-                    ~JMoney();
+                     JMoney(void);
+                    ~JMoney(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

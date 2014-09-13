@@ -6,8 +6,8 @@
 class JMoneyFixedMargin : public JMoneyFixedMarginBase
   {
 public:
-                     JMoneyFixedMargin();
-                    ~JMoneyFixedMargin();
+                     JMoneyFixedMargin(void);
+                    ~JMoneyFixedMargin(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

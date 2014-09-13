@@ -14,19 +14,19 @@ class JMoneyFixedMarginBase : public JMoney
   {
 public:
    virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
-                     JMoneyFixedMarginBase();
-                    ~JMoneyFixedMarginBase();
+                     JMoneyFixedMarginBase(void);
+                    ~JMoneyFixedMarginBase(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedMarginBase::JMoneyFixedMarginBase()
+JMoneyFixedMarginBase::JMoneyFixedMarginBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedMarginBase::~JMoneyFixedMarginBase()
+JMoneyFixedMarginBase::~JMoneyFixedMarginBase(void)
   {
   }
 //+------------------------------------------------------------------+

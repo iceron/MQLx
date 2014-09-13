@@ -9,20 +9,20 @@ protected:
    ulong             m_ticket_current;
    bool              m_ticket_updated;
 public:
-                     JOrder();
+                     JOrder(void);
                      JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price);
-                    ~JOrder();
-   virtual bool      IsClosed();
+                    ~JOrder(void);
+   virtual bool      IsClosed(void);
    virtual void      Ticket(ulong ticket) {m_ticket_current=ticket;}
-   virtual ulong     Ticket() {return(MathMax(m_ticket_current,m_ticket));}
+   virtual ulong     Ticket(void) const {return(MathMax(m_ticket_current,m_ticket));}
    virtual void      NewTicket(bool n) {m_ticket_updated=n;}
-   virtual bool      NewTicket() {return(m_ticket_updated);}
+   virtual bool      NewTicket(void) const {return(m_ticket_updated);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder(): m_ticket_current(0),
-                  m_ticket_updated(false)
+JOrder::JOrder(void): m_ticket_current(0),
+                      m_ticket_updated(false)
   {
   }
 //+------------------------------------------------------------------+
@@ -40,13 +40,13 @@ JOrder::JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::~JOrder()
+JOrder::~JOrder(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrder::IsClosed()
+bool JOrder::IsClosed(void)
   {
    if(m_closed) return(true);
    if(Volume()<=0.0)

@@ -6,8 +6,8 @@
 class JTimer : public JTimerBase
   {
 public:
-                     JTimer();
-                    ~JTimer();
+                     JTimer(void);
+                    ~JTimer(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -29,51 +29,52 @@ protected:
    JOrderStop       *m_main_stop;
    JOrders          *m_orders;
 public:
-                     JOrderBase();
-                    ~JOrderBase();
+                     JOrderBase(void);
+                    ~JOrderBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_ORDER);}
    //--- initialization
-   virtual void      SetContainer(JOrders *orders){m_orders=orders;}                    
+   virtual void      SetContainer(JOrders *orders){m_orders=orders;}
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
+   virtual bool      Activate(void) const {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
    //--- order functions                    
    virtual void      CreateStops(JStops *stops);
-   virtual void      CheckStops();
+   virtual void      CheckStops(void);
    virtual void      IsClosed(bool closed) {m_closed=closed;}
-   virtual bool      IsClosed() {return(false);}
+   virtual bool      IsClosed(void) const {return(false);}
    virtual void      Magic(int magic){m_magic=magic;}
-   virtual int       Magic(){return(m_magic);}
+   virtual int       Magic(void) const {return(m_magic);}
    virtual void      Price(double price){m_price=price;}
-   virtual double    Price(){return(m_price);}
+   virtual double    Price(void) const {return(m_price);}
    virtual void      OrderType(ENUM_ORDER_TYPE type){m_type=type;}
-   virtual ENUM_ORDER_TYPE OrderType(){return(m_type);}
+   virtual ENUM_ORDER_TYPE OrderType(void) const {return(m_type);}
    virtual void      Ticket(ulong ticket) {m_ticket=ticket;}
-   virtual ulong     Ticket() {return(m_ticket);}
-   virtual int       Type() {return(CLASS_TYPE_ORDER);}
+   virtual ulong     Ticket(void) const {return(m_ticket);}
+
    virtual void      Volume(double volume){m_volume=volume;}
-   virtual double    Volume(){return(m_volume);}
+   virtual double    Volume(void) const {return(m_volume);}
    virtual void      VolumeInitial(double volume){m_volume_initial=volume;}
-   virtual double    VolumeInitial(){return(m_volume_initial);}
+   virtual double    VolumeInitial(void) const {return(m_volume_initial);}
    //--- archiving
-   virtual bool      CloseStops();
+   virtual bool      CloseStops(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderBase::JOrderBase() : m_activate(true),
-                           m_closed(false),
-                           m_magic(0),
-                           m_price(0.0),
-                           m_ticket(0),
-                           m_type(0),
-                           m_volume(0.0),
-                           m_volume_initial(0.0)
+JOrderBase::JOrderBase(void) : m_activate(true),
+                               m_closed(false),
+                               m_magic(0),
+                               m_price(0.0),
+                               m_ticket(0),
+                               m_type(0),
+                               m_volume(0.0),
+                               m_volume_initial(0.0)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderBase::~JOrderBase()
+JOrderBase::~JOrderBase(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -97,14 +98,14 @@ void JOrderBase::CreateStops(JStops *stops)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderBase::CheckStops()
+void JOrderBase::CheckStops(void)
   {
    m_order_stops.Check(m_volume);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderBase::CloseStops()
+bool JOrderBase::CloseStops(void)
   {
    return(m_order_stops.Close());
   }

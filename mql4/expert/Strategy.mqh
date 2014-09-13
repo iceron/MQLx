@@ -12,10 +12,10 @@
 class JStrategy : public JStrategyBase
   {
 public:
-                     JStrategy();
-                    ~JStrategy();
-   virtual bool      OnTick();
-   virtual void      OnTradeTransaction();
+                     JStrategy(void);
+                    ~JStrategy(void);
+   virtual bool      OnTick(void);
+   virtual void      OnTradeTransaction(void);
    virtual bool      TradeOpen(int res);
   };
 //+------------------------------------------------------------------+
@@ -33,7 +33,7 @@ JStrategy::~JStrategy(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::OnTick()
+bool JStrategy::OnTick(void)
   {
    if(!Active()) return(false);
    bool ret=false;
@@ -53,7 +53,7 @@ bool JStrategy::OnTick()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategy::OnTradeTransaction()
+void JStrategy::OnTradeTransaction(void)
   {
    JOrder *temp=new JOrder();
    int total= ::OrdersTotal();

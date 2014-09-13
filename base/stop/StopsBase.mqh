@@ -18,27 +18,25 @@ protected:
    bool              m_activate;
    JStrategy        *m_strategy;
 public:
-                     JStopsBase();
+                     JStopsBase(void);
                      JStopsBase(string name,string sl=".sl.",string tp=".tp.");
-                    ~JStopsBase();
+                    ~JStopsBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_STOPS);}
    virtual bool      Init(JStrategy *s);
-   virtual bool      Active() {return(m_activate);}
+   virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
-   virtual int       Type() {return(CLASS_TYPE_STOPS);}
-protected:
-
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopsBase::JStopsBase() : m_activate(true)
+JStopsBase::JStopsBase(void) : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopsBase::~JStopsBase()
+JStopsBase::~JStopsBase(void)
   {
   }
 //+------------------------------------------------------------------+

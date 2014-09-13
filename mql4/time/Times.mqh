@@ -6,8 +6,8 @@
 class JTimes : public JTimesBase
   {
 public:
-                     JTimes();
-                    ~JTimes();
+                     JTimes(void);
+                    ~JTimes(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

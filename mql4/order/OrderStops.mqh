@@ -6,8 +6,8 @@
 class JOrderStops : public JOrderStopsBase
   {
 public:
-                     JOrderStops();
-                    ~JOrderStops();
+                     JOrderStops(void);
+                    ~JOrderStops(void);
    virtual bool      CheckNewTicket(JOrderStop *orderstop);
    virtual ulong     GetNewTicket(JOrderStop *orderstop);
    virtual bool      UpdateStopsByTicket(ulong ticket);

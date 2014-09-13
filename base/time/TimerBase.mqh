@@ -27,45 +27,45 @@ protected:
    int               m_total;
    int               m_elapsed;
 public:
-                     JTimerBase();
-                    ~JTimerBase();
+                     JTimerBase(void);
+                    ~JTimerBase(void);
    //--- initialization
    virtual bool      Init(uint years,uint months,uint days,uint hours,uint minutes,uint seconds);
    //--- getters and setters
-   virtual uint      Year() const {return(m_years);}
+   virtual uint      Year(void) const {return(m_years);}
    virtual void      Year(uint years) {m_years=years;}
-   virtual uint      Month() const {return(m_months);}
+   virtual uint      Month(void) const {return(m_months);}
    virtual void      Month(uint months) {m_months=months;}
-   virtual uint      Days() const {return(m_days);}
+   virtual uint      Days(void) const {return(m_days);}
    virtual void      Days(uint days) {m_days=days;}
-   virtual uint      Hours() const {return(m_hours);}
+   virtual uint      Hours(void) const {return(m_hours);}
    virtual void      Hours(uint hours) {m_hours=hours;}
-   virtual uint      Minutes() const {return(m_minutes);}
+   virtual uint      Minutes(void) const {return(m_minutes);}
    virtual void      Minutes(uint minutes) {m_minutes=minutes;}
-   virtual uint      Seconds() const {return(m_seconds);}
+   virtual uint      Seconds(void) const {return(m_seconds);}
    virtual void      Seconds(uint seconds) {m_seconds=seconds;}
+   virtual bool      Total(void) const {return(m_total);}
    //--- evaluation   
-   virtual bool      Elapsed() const {return(m_elapsed);}
-   virtual bool      Evaluate();
-   virtual void      RecalculateTotal();
-   virtual bool      Total() const {return(m_total);}
+   virtual bool      Elapsed(void) const {return(m_elapsed);}
+   virtual bool      Evaluate(void);
+   virtual void      RecalculateTotal(void);   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimerBase::JTimerBase() : m_years(0),
-                           m_months(0),
-                           m_days(0),
-                           m_hours(0),
-                           m_minutes(0),
-                           m_seconds(0),
-                           m_total(0)
+JTimerBase::JTimerBase(void) : m_years(0),
+                               m_months(0),
+                               m_days(0),
+                               m_hours(0),
+                               m_minutes(0),
+                               m_seconds(0),
+                               m_total(0)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimerBase::~JTimerBase()
+JTimerBase::~JTimerBase(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -85,14 +85,14 @@ bool JTimerBase::Init(uint years,uint months,uint days,uint hours,uint minutes,u
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JTimerBase::RecalculateTotal()
+void JTimerBase::RecalculateTotal(void)
   {
    m_total=(int)((m_years*YEAR_SECONDS)+(m_months*MONTH_SECONDS)+(m_days*DAY_SECONDS)+(m_hours*HOUR_SECONDS)+(m_minutes*MINUTE_SECONDS));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimerBase::Evaluate()
+bool JTimerBase::Evaluate(void)
   {
    if(!Active()) return(true);
    bool result=true;

@@ -6,8 +6,8 @@
 class JOrders : public JOrdersBase
   {
 public:
-                     JOrders();
-                    ~JOrders();
+                     JOrders(void);
+                    ~JOrders(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

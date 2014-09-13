@@ -6,8 +6,8 @@
 class JOrderStop : public JOrderStopBase
   {
 public:
-                     JOrderStop();
-                    ~JOrderStop();
+                     JOrderStop(void);
+                    ~JOrderStop(void);
    virtual void      Check(double &volume);
 protected:
    virtual bool      ModifyOrderStop(double stoploss,double takeprofit);

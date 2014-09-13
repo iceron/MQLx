@@ -13,20 +13,20 @@
 class JMoneyFixedRiskBase : public JMoney
   {
 public:
-                     JMoneyFixedRiskBase();
-                    ~JMoneyFixedRiskBase();
+                     JMoneyFixedRiskBase(void);
+                    ~JMoneyFixedRiskBase(void);
    virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedRiskBase::JMoneyFixedRiskBase()
+JMoneyFixedRiskBase::JMoneyFixedRiskBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedRiskBase::~JMoneyFixedRiskBase()
+JMoneyFixedRiskBase::~JMoneyFixedRiskBase(void)
   {
   }
 //+------------------------------------------------------------------+

@@ -6,8 +6,8 @@
 class JOrderStops : public JOrderStopsBase
   {
 public:
-                     JOrderStops();
-                    ~JOrderStops();
+                     JOrderStops(void);
+                    ~JOrderStops(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -42,10 +42,10 @@ protected:
    color             m_color_exit;
    CSymbolInfo      *m_symbol;
 public:
-                     JTrade();
-                    ~JTrade();
+                     JTrade(void);
+                    ~JTrade(void);
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
+   virtual bool      Activate() const {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
    //--- setters and getters
    virtual color     ArrowColor(ENUM_ORDER_TYPE type);
@@ -64,26 +64,26 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrade::JTrade() : m_activate(true),
-                   m_magic(0),
-                   m_deviation(10),
-                   m_order_type_time(0),
-                   m_symbol(NULL),
-                   m_async_mode(0),
-                   m_color_long(clrGreen),
-                   m_color_buystop(clrGreen),
-                   m_color_buylimit(clrGreen),
-                   m_color_sellstop(clrRed),
-                   m_color_selllimit(clrRed),
-                   m_color_short(clrRed),
-                   m_color_modify(clrNONE),
-                   m_color_exit(clrNONE)
+JTrade::JTrade(void) : m_activate(true),
+                       m_magic(0),
+                       m_deviation(10),
+                       m_order_type_time(0),
+                       m_symbol(NULL),
+                       m_async_mode(0),
+                       m_color_long(clrGreen),
+                       m_color_buystop(clrGreen),
+                       m_color_buylimit(clrGreen),
+                       m_color_sellstop(clrRed),
+                       m_color_selllimit(clrRed),
+                       m_color_short(clrRed),
+                       m_color_modify(clrNONE),
+                       m_color_exit(clrNONE)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrade::~JTrade()
+JTrade::~JTrade(void)
   {
   }
 //+------------------------------------------------------------------+

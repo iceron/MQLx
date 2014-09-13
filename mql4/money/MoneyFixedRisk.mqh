@@ -6,8 +6,8 @@
 class MoneyFixedRisk : public JMoneyFixedRiskBase
   {
 public:
-                     MoneyFixedRisk();
-                    ~MoneyFixedRisk();
+                     MoneyFixedRisk(void);
+                    ~MoneyFixedRisk(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -6,8 +6,8 @@
 class JMoneyFixedRiskPerPip : public JMoneyFixedRiskPerPipBase
   {
 public:
-                     JMoneyFixedRiskPerPip();
-                    ~JMoneyFixedRiskPerPip();
+                     JMoneyFixedRiskPerPip(void);
+                    ~JMoneyFixedRiskPerPip(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

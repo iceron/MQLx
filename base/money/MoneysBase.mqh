@@ -19,12 +19,12 @@ protected:
    bool              m_activate;
    int               m_selected;
 public:
-                     JMoneysBase();
-                    ~JMoneysBase();
-                   virtual bool      Init(JStrategy *s);
-   virtual bool      Active() {return(m_activate);}
+                     JMoneysBase(void);
+                    ~JMoneysBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_MONEYS);}
+   virtual bool      Init(JStrategy *s);
+   virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
-   virtual int       Type() {return(CLASS_TYPE_MONEYS);}
    virtual double    Volume(double price,ENUM_ORDER_TYPE type,double sl);
   };
 //+------------------------------------------------------------------+

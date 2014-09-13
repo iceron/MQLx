@@ -6,15 +6,15 @@
 class JOrder : public JOrderBase
   {
 public:
-                     JOrder();
+                     JOrder(void);
                      JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price);
-                    ~JOrder();
-   virtual bool      IsClosed();
+                    ~JOrder(void);
+   virtual bool      IsClosed(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder()
+JOrder::JOrder(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -31,7 +31,7 @@ JOrder::JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::~JOrder()
+JOrder::~JOrder(void)
   {
   }
 //+------------------------------------------------------------------+

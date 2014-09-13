@@ -16,37 +16,37 @@ class JExpertBase : public CArrayObj
 protected:
    bool              m_activate;
 public:
-                     JExpertBase();
-                    ~JExpertBase();
-   virtual int       Type() {return(CLASS_TYPE_EXPERT);}
+                     JExpertBase(void);
+                    ~JExpertBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_EXPERT);}
    //--- events
-   virtual void      OnTick();
+   virtual void      OnTick(void);
    //--- activation and deactivation
-   virtual bool      Active() {return(m_activate);}
+   virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    //--- orders
-   virtual int       OrdersTotal(void);
-   virtual int       OrdersHistoryTotal(void);
-   virtual int       TradesTotal(void);
+   virtual int       OrdersTotal(void) const;
+   virtual int       OrdersHistoryTotal(void) const;
+   virtual int       TradesTotal(void) const;
    //--- deinitialization
-   virtual bool      OnDeinit();
+   virtual void      OnDeinit(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JExpertBase::JExpertBase() : m_activate(true)
+JExpertBase::JExpertBase(void) : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JExpertBase::~JExpertBase()
+JExpertBase::~JExpertBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JExpertBase::OrdersTotal()
+int JExpertBase::OrdersTotal(void) const
   {
    int total=0;
    for(int i=0;i<Total();i++)
@@ -71,7 +71,7 @@ void JExpertBase::OnTick(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JExpertBase::OrdersHistoryTotal()
+int JExpertBase::OrdersHistoryTotal(void) const
   {
    int total=0;
    for(int i=0;i<Total();i++)
@@ -84,7 +84,7 @@ int JExpertBase::OrdersHistoryTotal()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JExpertBase::TradesTotal()
+int JExpertBase::TradesTotal(void) const
   {
    int total=0;
    for(int i=0;i<Total();i++)
@@ -97,14 +97,13 @@ int JExpertBase::TradesTotal()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JExpertBase::OnDeinit(void)
+void JExpertBase::OnDeinit(void)
   {
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=At(i);
-      bool res=strat.Deinit();
+      strat.Deinit();
      }
-   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

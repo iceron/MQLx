@@ -26,36 +26,36 @@ protected:
    bool              m_activate;
    JStrategy        *m_strategy;
 public:
-                     JOrdersBase();
-                    ~JOrdersBase();
-   virtual int       Type() {return(CLASS_TYPE_ORDERS);}                    
+                     JOrdersBase(void);
+                    ~JOrdersBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_ORDERS);}                    
    //--- initialization
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}                    
    //--- activation and deactivation
-   virtual bool      Activate() {return(m_activate);}
+   virtual bool      Activate(void) const {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
    //--- events                  
-   virtual void      OnTick();
+   virtual void      OnTick(void);
    //--- archiving
-   virtual bool      CloseStops();
+   virtual bool      CloseStops(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrdersBase::JOrdersBase() : m_activate(true)
+JOrdersBase::JOrdersBase(void) : m_activate(true)
   {
    m_sort_mode=SORT_MODE_ASCENDING;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrdersBase::~JOrdersBase()
+JOrdersBase::~JOrdersBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrdersBase::OnTick()
+void JOrdersBase::OnTick(void)
   {
    for(int i=0;i<Total();i++)
      {
@@ -67,17 +67,15 @@ void JOrdersBase::OnTick()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::CloseStops()
+bool JOrdersBase::CloseStops(void)
   {
    bool res=true;
    for(int i=0;i<Total();i++)
      {
       JOrder *order=At(i);
       if(CheckPointer(order))
-        {
          if(!order.CloseStops())
             res=false;
-        }
      }
    return(res);
   }

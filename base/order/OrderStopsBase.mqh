@@ -18,24 +18,24 @@ class JOrderStopsBase : public CArrayObj
 protected:
    JOrder           *m_order;
 public:
-                     JOrderStopsBase();
-                    ~JOrderStopsBase();
+                     JOrderStopsBase(void);
+                    ~JOrderStopsBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_ORDERSTOPS);}
    virtual void      Check(double &volume);
    virtual bool      CheckNewTicket(JOrderStop *orderstop) {return(true);}
-   virtual bool      Close();
+   virtual bool      Close(void);
    virtual void      SetContainer(JOrder *order){m_order=order;}
-   virtual int       Type() {return(CLASS_TYPE_ORDERSTOPS);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopsBase::JOrderStopsBase()
+JOrderStopsBase::JOrderStopsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopsBase::~JOrderStopsBase()
+JOrderStopsBase::~JOrderStopsBase(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -58,7 +58,7 @@ JOrderStopsBase::Check(double &volume)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopsBase::Close()
+bool JOrderStopsBase::Close(void)
   {
    bool res=true;
    for(int i=0;i<Total();i++)

@@ -16,26 +16,26 @@ protected:
    datetime          m_begin;
    datetime          m_end;
 public:
-                     JTimeRangeBase();
-                    ~JTimeRangeBase();
+                     JTimeRangeBase(void);
+                    ~JTimeRangeBase(void);
    virtual bool      Init(datetime begin,datetime end);
-   virtual datetime  Begin() const  {return(m_begin);}
+   virtual datetime  Begin(void) const  {return(m_begin);}
    virtual void      Begin(datetime begin) {m_begin=begin;}
-   virtual datetime  End() const  {return(m_end);}
+   virtual datetime  End(void) const  {return(m_end);}
    virtual void      End(datetime end) {m_end=end;}
-   virtual bool      Evaluate();
+   virtual bool      Evaluate(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeRangeBase::JTimeRangeBase() : m_begin(0),
-                                   m_end(0)
+JTimeRangeBase::JTimeRangeBase(void) : m_begin(0),
+                                       m_end(0)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeRangeBase::~JTimeRangeBase()
+JTimeRangeBase::~JTimeRangeBase(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -50,7 +50,7 @@ bool JTimeRangeBase::Init(datetime begin,datetime end)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeRangeBase::Evaluate()
+bool JTimeRangeBase::Evaluate(void)
   {
    if(!Active()) return(true);
    datetime current=TimeCurrent();

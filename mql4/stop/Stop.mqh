@@ -7,7 +7,7 @@ class JStop : public JStopBase
   {
 public:
                      JStop(string name);
-                    ~JStop();
+                    ~JStop(void);
    virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const;
    virtual bool      DeleteStopOrder(const ulong ticket) const;
    virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop);
@@ -27,7 +27,7 @@ JStop::JStop(string name)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStop::~JStop()
+JStop::~JStop(void)
   {
   }
 //+------------------------------------------------------------------+

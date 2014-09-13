@@ -6,8 +6,8 @@
 class JSignals : public JSignalsBase
   {
 public:
-                     JSignals();
-                    ~JSignals();
+                     JSignals(void);
+                    ~JSignals(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

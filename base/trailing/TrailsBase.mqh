@@ -18,28 +18,29 @@ protected:
    bool              m_activate;
    JStop            *m_stop;
 public:
-                     JTrailsBase();
-                    ~JTrailsBase();
+                     JTrailsBase(void);
+                    ~JTrailsBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_TRAILS);}
    virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
    virtual bool      Init(JStrategy *s);
    //--- activation and deactivation
-   virtual bool      Active() {return(m_activate);}
+   virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    virtual void      SetContainer(JStop *stop){m_stop=stop;}
-   virtual int       Type() {return(CLASS_TYPE_TRAILS);}
+
 protected:
 
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrailsBase::JTrailsBase() : m_activate(true)
+JTrailsBase::JTrailsBase(void) : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrailsBase::~JTrailsBase()
+JTrailsBase::~JTrailsBase(void)
   {
   }
 //+------------------------------------------------------------------+

@@ -20,35 +20,35 @@ protected:
    ENUM_TIME_FILTER_TYPE m_filter_type;
    JTimes           *m_times;
 public:
-                     JTimeBase();
-                    ~JTimeBase();
-   virtual int       Type() {return(CLASS_TYPE_TIME);}
+                     JTimeBase(void);
+                    ~JTimeBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_TIME);}
    //--- initialization
    virtual void      SetContainer(JTimes *times){m_times=times;}
    //--- activation and deactivation
-   virtual bool      Active() {return(m_activate);}
+   virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    //--- time functions                    
-   virtual bool      Evaluate() {return(true);}
-   virtual ENUM_TIME_FILTER_TYPE FilterType() const {return(m_filter_type);}
+   virtual bool      Evaluate(void) {return(true);}
+   virtual ENUM_TIME_FILTER_TYPE FilterType(void) const {return(m_filter_type);}
    virtual void      FilterType(ENUM_TIME_FILTER_TYPE type){m_filter_type=type;}
    virtual bool      Init(JStrategy *s);
-   virtual datetime  TimeStart() const {return(m_time_start);}
+   virtual datetime  TimeStart(void) const {return(m_time_start);}
    virtual void      TimeStart(datetime start){m_time_start=start;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeBase::JTimeBase() : m_activate(true),
-                         m_time_start(0),
-                         m_filter_type(TIME_FILTER_INCLUDE)
+JTimeBase::JTimeBase(void) : m_activate(true),
+                             m_time_start(0),
+                             m_filter_type(TIME_FILTER_INCLUDE)
   {
    m_time_start=TimeCurrent();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeBase::~JTimeBase()
+JTimeBase::~JTimeBase(void)
   {
   }
 //+------------------------------------------------------------------+

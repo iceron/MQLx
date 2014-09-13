@@ -27,28 +27,29 @@ protected:
 public:
                      JEventBase(void);
                     ~JEventBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_EVENT);}
    virtual bool      Add(ENUM_EVENT_TYPE type,string func,string action,string info);
    virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);
-   virtual bool      Activate() {return(m_activate);}
+   virtual bool      Activate(void) const {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
-   virtual int       Type() {return(CLASS_TYPE_EVENT);}
+
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventBase::JEventBase() : m_activate(true),
-                           m_order_sent(0),
-                           m_order_entry(0),
-                           m_order_modify(0),
-                           m_order_exit(0),
-                           m_order_reverse(0),
-                           m_error(0)
+JEventBase::JEventBase(void) : m_activate(true),
+                               m_order_sent(0),
+                               m_order_entry(0),
+                               m_order_modify(0),
+                               m_order_exit(0),
+                               m_order_reverse(0),
+                               m_error(0)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventBase::~JEventBase()
+JEventBase::~JEventBase(void)
   {
   }
 //+------------------------------------------------------------------+

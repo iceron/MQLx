@@ -32,69 +32,72 @@ protected:
    CAccountInfo     *m_account;
    JStrategy        *m_strategy;
 public:
-                     JMoneyBase();
-                    ~JMoneyBase();
-   virtual int       Type() {return(CLASS_TYPE_MONEY);}
+                     JMoneyBase(void);
+                    ~JMoneyBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_MONEY);}
    //--- activation and deactivation
-   virtual bool      Active() {return(m_activate);}
+   virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    //--- money management parameters
    virtual void      Balance(double balance) {m_balance=balance;}
-   virtual double    Balance() const {return(m_balance);}
+   virtual double    Balance(void) const {return(m_balance);}
    virtual void      BalanceIncrement(double balance) {m_balance_inc=balance;}
-   virtual double    BalanceIncrement() const {return(m_balance_inc);}
+   virtual double    BalanceIncrement(void) const {return(m_balance_inc);}
    virtual void      Equity(bool equity) {m_equity=equity;}
-   virtual bool      Equity() const {return(m_equity);}
+   virtual bool      Equity(void) const {return(m_equity);}
    virtual void      LastUpdate(datetime update) {m_last_update=update;}
-   virtual datetime  LastUpdate() const {return(m_last_update);}
+   virtual datetime  LastUpdate(void) const {return(m_last_update);}
    virtual void      Percent(double percent) {m_percent=percent;}
-   virtual double    Percent() const {return(m_percent);}
+   virtual double    Percent(void) const {return(m_percent);}
    virtual void      Period(int period) {m_period=period;}
-   virtual int       Period() const {return(m_period);}
+   virtual int       Period(void) const {return(m_period);}
    virtual void      UpdateType(ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
    virtual double    Volume(double price,ENUM_ORDER_TYPE type,double sl);
    virtual void      VolumeCurrent(double volume) {m_volume=volume;}
-   virtual double    VolumeCurrent() const {return(m_volume);}
+   virtual double    VolumeCurrent(void) const {return(m_volume);}
    virtual void      VolumeBase(double volume_base) {m_volume_base=volume_base;}
-   virtual double    VolumeBase() const {return(m_volume_base);}
+   virtual double    VolumeBase(void) const {return(m_volume_base);}
    //--- money management objects
    virtual bool      Init(JStrategy *s);
    virtual bool      InitSymbol(CSymbolInfo *symbol);
    virtual bool      InitAccount(CAccountInfo *account);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
 protected:
-   virtual bool      UpdateByMargin();
-   virtual bool      UpdateByPeriod();
+   virtual bool      UpdateByMargin(void);
+   virtual bool      UpdateByPeriod(void);
    virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyBase::JMoneyBase() : m_activate(true),
-                           m_update(MONEY_UPDATE_NONE),
-                           m_volume(0.2),
-                           m_percent(0.0),
-                           m_volume_base(0.0),
-                           m_volume_inc(0.0),
-                           m_balance(0.0),
-                           m_balance_inc(0.0),
-                           m_period(0),
-                           m_last_update(0),
-                           m_equity(false)
+JMoneyBase::JMoneyBase(void) : m_activate(true),
+                               m_update(MONEY_UPDATE_NONE),
+                               m_volume(0.2),
+                               m_percent(0.0),
+                               m_volume_base(0.0),
+                               m_volume_inc(0.0),
+                               m_balance(0.0),
+                               m_balance_inc(0.0),
+                               m_period(0),
+                               m_last_update(0),
+                               m_equity(false)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyBase::~JMoneyBase()
+JMoneyBase::~JMoneyBase(void)
   {
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JMoneyBase::Init(JStrategy *s)
-{
+  {
    InitSymbol(s.SymbolInfo());
    InitAccount(s.AccountInfo());
    return(true);
-}
+  }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -159,26 +162,20 @@ void JMoneyBase::UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyBase::UpdateByMargin()
+bool JMoneyBase::UpdateByMargin(void)
   {
    double balance=m_equity==false?m_account.Margin():m_account.Equity();
    if(balance>=m_balance+m_balance_inc || balance<=m_balance-m_balance_inc)
-     {
-      //m_last_update=TimeCurrent();
       return(true);
-     }
    return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyBase::UpdateByPeriod()
+bool JMoneyBase::UpdateByPeriod(void)
   {
    if(TimeCurrent()>=m_last_update+m_period)
-     {
-      //m_last_update=TimeCurrent();
       return(true);
-     }
    return(false);
   }
 //+------------------------------------------------------------------+

@@ -6,8 +6,8 @@
 class JTimeRange : public JTimeRangeBase
   {
 public:
-                     JTimeRange();
-                    ~JTimeRange();
+                     JTimeRange(void);
+                    ~JTimeRange(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

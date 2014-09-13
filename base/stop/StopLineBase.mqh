@@ -17,23 +17,24 @@ class JStopLineBase : public CChartObjectHLine
 protected:
    JStop            *m_stop;
 public:
-                     JStopLineBase();
-                    ~JStopLineBase();
+                     JStopLineBase(void);
+                    ~JStopLineBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_STOPLINE);}
    virtual double    GetPrice(int point=0);
    virtual bool      Move(double price);
    virtual void      SetContainer(JStop *stop){m_stop=stop;}
-   virtual int       Type() {return(CLASS_TYPE_STOPLINE);}
+
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopLineBase::JStopLineBase()
+JStopLineBase::JStopLineBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopLineBase::~JStopLineBase()
+JStopLineBase::~JStopLineBase(void)
   {
   }
 //+------------------------------------------------------------------+
