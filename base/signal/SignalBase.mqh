@@ -24,9 +24,14 @@ protected:
    bool              m_reverse;
    CArrayDouble      m_empty_value;
    JSignals         *m_signals;
+   CSymbolInfo      *m_symbol;
+   CAccountInfo     *m_account;
 public:
                      JSignalBase();
                     ~JSignalBase();
+   virtual bool      Init(JStrategy *s);
+   virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
+   virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
    virtual int       Type() {return(CLASS_TYPE_SIGNAL);}
    //--- initialization
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
@@ -64,6 +69,31 @@ JSignalBase::JSignalBase() : m_activate(true),
 //+------------------------------------------------------------------+
 JSignalBase::~JSignalBase()
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalBase::Init(JStrategy *s)
+  {
+   InitSymbol(s.SymbolInfo());
+   InitAccount(s.AccountInfo());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
+  {
+   m_symbol=symbolinfo;
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalBase::InitAccount(CAccountInfo *accountinfo=NULL)
+  {
+   m_account=accountinfo;
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

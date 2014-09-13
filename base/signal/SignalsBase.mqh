@@ -24,6 +24,7 @@ protected:
 public:
                      JSignalsBase();
                     ~JSignalsBase();
+   virtual bool      Init(JStrategy *s);
    virtual bool      Active() {return(m_activate);}
    virtual void      Active(bool active) {m_activate=active;}
    virtual int       CheckSignals();
@@ -46,6 +47,18 @@ JSignalsBase::JSignalsBase() : m_activate(true),
 //+------------------------------------------------------------------+
 JSignalsBase::~JSignalsBase()
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalsBase::Init(JStrategy *s)
+  {
+   for(int i=0;i<Total();i++)
+     {
+      JSignal *signal=At(i);
+      signal.Init(s);
+     }
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

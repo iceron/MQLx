@@ -21,6 +21,7 @@ public:
                      JTrailsBase();
                     ~JTrailsBase();
    virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
+   virtual bool      Init(JStrategy *s);
    //--- activation and deactivation
    virtual bool      Active() {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
@@ -40,6 +41,18 @@ JTrailsBase::JTrailsBase() : m_activate(true)
 //+------------------------------------------------------------------+
 JTrailsBase::~JTrailsBase()
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTrailsBase::Init(JStrategy *s)
+  {
+   for(int i=0;i<Total();i++)
+     {
+      JTrail *trail=At(i);
+      trail.Init(s);
+     }
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

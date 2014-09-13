@@ -55,6 +55,8 @@ protected:
    ENUM_LINE_STYLE   m_takeprofit_style;
    //--- stop order symbol object
    CSymbolInfo      *m_symbol;
+   //--- stop order account object
+   CAccountInfo     *m_account;
    //--- stop order trade object
    JTrade           *m_trade;
    //--- stop order trailing object
@@ -67,6 +69,8 @@ public:
                      JStopBase();
                     ~JStopBase();
    //--- initialization
+   virtual bool      Init(JStrategy *s);
+   virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
    virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
    virtual bool      InitTrade(JTrade *trade=NULL);
    virtual bool      InitEvent(JEvent *event);
@@ -135,7 +139,7 @@ public:
    virtual double    TakeProfitCalculate(ENUM_ORDER_TYPE type,double price);
    virtual double    TakeProfitCustom(ENUM_ORDER_TYPE type,double price);
    //--- trailing   
-   virtual bool      AddTrailing(JTrail *trail);
+   virtual bool      Add(JTrail *trail);
    virtual double    CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
 
    virtual void      SetContainer(JStops *stops){m_stops=stops;}
@@ -191,9 +195,30 @@ JStopBase::~JStopBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool JStopBase::Init(JStrategy *s)
+  {
+   InitSymbol(s.SymbolInfo());
+   InitAccount(s.AccountInfo());
+   m_points_adjust = s.PointsAdjust();
+   m_digits_adjust = s.DigitsAdjust();
+   InitTrade();
+   m_trails.Init(s);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStopBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
   {
    m_symbol=symbolinfo;
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStopBase::InitAccount(CAccountInfo *accountinfo=NULL)
+  {
+   m_account=accountinfo;
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -371,7 +396,9 @@ bool JStopBase::CheckTakeProfit(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 bool JStopBase::Refresh()
   {
-   return(m_symbol.RefreshRates());
+   if(CheckPointer(m_symbol)==POINTER_DYNAMIC)
+      return(m_symbol.RefreshRates());
+   return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -394,8 +421,9 @@ void JStopBase::StopType(ENUM_STOP_TYPE type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopBase::AddTrailing(JTrail *trail)
+bool JStopBase::Add(JTrail *trail)
   {
+   /*
    if(m_trails.Add(trail))
      {
       trail.Init(m_symbol);
@@ -405,6 +433,8 @@ bool JStopBase::AddTrailing(JTrail *trail)
       return(true);
      }
    return(false);
+   */
+   return(m_trails.Add(trail));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

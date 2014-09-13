@@ -32,7 +32,7 @@ public:
                      JTrailBase();
                     ~JTrailBase();
    //--- initialization                    
-   virtual void      Init(CSymbolInfo *symbol=NULL);
+   virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JTrails *trails){m_trails=trails;}
    //--- getters and setters    
    virtual bool      Active() {return(m_activate);}
@@ -89,7 +89,16 @@ JTrailBase::~JTrailBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-
+bool JTrailBase::Init(JStrategy *s)
+  {
+   m_symbol = s.SymbolInfo();
+   m_points_adjust = s.PointsAdjust();
+   m_digits_adjust = s.DigitsAdjust();
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JTrailBase::Deinit(void)
   {
    if(m_symbol!=NULL) delete m_symbol;
@@ -98,10 +107,12 @@ bool JTrailBase::Deinit(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+/*
 void JTrailBase::Init(CSymbolInfo *symbol=NULL)
   {
    m_symbol=symbol;
   }
+*/  
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

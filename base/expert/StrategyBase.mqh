@@ -10,6 +10,7 @@
 #include "..\..\common\enum\ENUM_TRADE_MODE.mqh"
 #include <Object.mqh>
 #include <Arrays\ArrayInt.mqh>
+#include <Trade\AccountInfo.mqh>
 #include "..\lib\SymbolInfo.mqh"
 #include "..\event\EventBase.mqh"
 #include "..\signal\SignalsBase.mqh"
@@ -50,18 +51,19 @@ protected:
    datetime          m_last_tick_time;
    datetime          m_last_trade_time;
    //--- signal objects
-   JSignals          m_signals;
+   JSignals         *m_signals;
    //--- trade objects   
+   CAccountInfo     *m_account;
    CSymbolInfo      *m_symbol;
    JTrade           *m_trade;
    //--- order objects
-   JStops            m_stops;
+   JStops           *m_stops;
    JStop            *m_main_stop;
    JOrders           m_orders;
    JOrders           m_orders_history;
    CArrayInt         m_other_magic;
    //--- money management objects
-   JMoney           *m_money;
+   JMoneys          *m_moneys;
    //--- trading time objects
    JTimes           *m_times;
    //--- events
@@ -72,20 +74,31 @@ public:
                      JStrategyBase(void);
                     ~JStrategyBase(void);
    //--- initialization
+   virtual bool      Add(CObject *object);
+   virtual bool      AddMoney(JMoney *money);
    virtual bool      AddSignal(JSignal *signal);
-   virtual void      AddStop(JStop *stop);
+   virtual bool      AddStop(JStop *stop);
    virtual bool      Init(string symbol,ENUM_TIMEFRAMES period,bool every_tick,int magic,bool one_trade_per_candle,bool position_reverse);
    virtual bool      InitMoney(JMoney *money);
    virtual bool      InitTrade(JTrade *trade);
    virtual bool      InitEvent(JEvent *event);
+   virtual bool      InitComponents();
+   virtual bool      InitMoneys();
+   virtual bool      InitSignals();
+   virtual bool      InitTimes();
+   virtual bool      InitStops();
    //virtual void      SetContainer(JExpert *expert){m_expert=expert;}
    //--- activation and deactivation
    virtual bool      Active() {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
-   //--- setters and getters
+   //--- setters and getters   
+   virtual CAccountInfo *AccountInfo() {return(m_account);}
+   virtual CSymbolInfo *SymbolInfo() {return(m_symbol);}
    virtual void      AsyncMode(bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
    virtual void      Comment(string comment){m_comment=comment;}
+   virtual int       DigitsAdjust(void) const {return(m_digits_adjust);}
+   virtual void      DigitsAdjust(int adjust) {m_digits_adjust=adjust;}
    virtual datetime  Expiration(void) const {return(m_expiration);}
    virtual void      Expiration(datetime expiration) {m_expiration=expiration;}
    virtual datetime  LastTradeTime(void) const {return(m_last_trade_time);}
@@ -99,6 +112,8 @@ public:
    virtual int       OrdersTotal(void);
    virtual int       OrdersHistoryTotal(void);
    virtual int       TradesTotal(void);
+   virtual double    PointsAdjust(void) const {return(m_points_adjust);}
+   virtual void      PointsAdjust(double adjust) {m_points_adjust=adjust;}
    virtual double    Price(void) const {return(m_price);}
    virtual void      Price(double price) {m_price=price;}
    virtual double    StopLoss(void) const {return(m_stoploss);}
@@ -143,11 +158,11 @@ protected:
    virtual double    TakeProfitCalculate(int res,double price);
    virtual bool      TradeOpen(int res) {return(true);}
    //--- deinitialization
-   virtual bool      DeinitMoney(void);
+   virtual void      DeinitMoneys(void);
    virtual void      DeinitSignals(void);
-   virtual bool      DeinitStops(void);
-   virtual bool      DeinitSymbol(void);
-   virtual bool      DeinitTrade(void);
+   virtual void      DeinitStops(void);
+   virtual void      DeinitSymbol(void);
+   virtual void      DeinitTrade(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -205,8 +220,48 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool JStrategyBase::InitComponents()
+  {
+   return(InitSignals()&&InitStops()&&InitMoneys()&& InitTimes());
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::InitSignals()
+  {
+   if(m_signals==NULL) return(true);
+   return(m_signals.Init(GetPointer(this)));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::InitStops()
+  {
+   if(m_stops==NULL) return(true);
+   return(m_stops.Init(GetPointer(this)));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::InitMoneys()
+  {
+   if(m_moneys==NULL) return(true);
+   return(m_moneys.Init(GetPointer(this)));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::InitTimes()
+  {
+   if(m_times==NULL) return(true);
+   return(m_times.Init(GetPointer(this)));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategyBase::InitMoney(JMoney *money=NULL)
   {
+/*
    if(m_money!=NULL)
       delete m_money;
    if(money==NULL)
@@ -215,6 +270,7 @@ bool JStrategyBase::InitMoney(JMoney *money=NULL)
          return(false);
      }
    else m_money=money;
+   */
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -246,6 +302,40 @@ bool JStrategyBase::InitEvent(JEvent *event)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool JStrategyBase::Add(CObject *object)
+  {
+   switch(object.Type())
+     {
+      case CLASS_TYPE_SIGNALS:
+        {
+         m_signals=object;
+         break;
+        }
+      case CLASS_TYPE_MONEYS:
+        {
+         m_moneys=object;
+         break;
+        }
+      case CLASS_TYPE_STOPS:
+        {
+         m_stops=object;
+         break;
+        }
+      case CLASS_TYPE_TIMES:
+        {
+         m_times=object;
+         break;
+        }
+      default:
+        {
+         Print("unknown object");
+        }
+     }
+   return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategyBase::AddSignal(JSignal *signal)
   {
    if(m_signals.Add(signal))
@@ -263,6 +353,19 @@ bool JStrategyBase::AddTime(JTime *time)
    if(m_times.Add(time))
      {
       time.SetContainer(GetPointer(m_times));
+      return(true);
+     }
+   return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::AddMoney(JMoney *money)
+  {
+   if(m_moneys.Add(money))
+     {
+      //money.SetContainer(GetPointer(m_moneys));
+      return(true);
      }
    return(false);
   }
@@ -278,6 +381,9 @@ double JStrategyBase::PriceCalculate(int res)
       else if(res==CMD_SHORT)
          return(m_symbol.Bid());
      }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
    else if(m_trade_mode==TRADE_MODE_PENDING)
      {
       return(PriceCalculateCustom(res));
@@ -296,8 +402,9 @@ double JStrategyBase::PriceCalculateCustom(int res)
 //+------------------------------------------------------------------+
 double JStrategyBase::LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss)
   {
-   if(CheckPointer(m_money))
-      return(m_money.Volume(price,type,stoploss));
+
+   if(CheckPointer(m_moneys))
+      return(m_moneys.Volume(price,type,stoploss));
    return(m_lotsize);
   }
 //+------------------------------------------------------------------+
@@ -342,6 +449,9 @@ void JStrategyBase::ArchiveOrders(void)
   {
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
+      //+------------------------------------------------------------------+
+      //|                                                                  |
+      //+------------------------------------------------------------------+
      {
       m_orders_history.InsertSort(m_orders.Detach(i));
      }
@@ -353,6 +463,9 @@ void JStrategyBase::CheckClosedOrders(void)
   {
    int total= m_orders.Total();
    for(int i=0;i<total;i++)
+      //+------------------------------------------------------------------+
+      //|                                                                  |
+      //+------------------------------------------------------------------+
      {
       JOrder *order=m_orders.At(i);
       if(order.IsClosed())
@@ -366,6 +479,9 @@ void JStrategyBase::CheckClosedOrders(void)
 void JStrategyBase::CloseOppositeOrders(int res)
   {
    if(m_orders.Total()==0) return;
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
    if(m_position_reverse)
      {
       JOrder *order=m_orders.At(m_orders.Total()-1);
@@ -383,7 +499,7 @@ void JStrategyBase::CloseOppositeOrders(int res)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategyBase::AddStop(JStop *stop)
+bool JStrategyBase::AddStop(JStop *stop)
   {
    if(m_stops.Add(stop))
      {
@@ -395,14 +511,18 @@ void JStrategyBase::AddStop(JStop *stop)
       stop.InitTrade();
       stop.InitEvent(m_event);
       stop.SetContainer(GetPointer(m_stops));
+      return(true);
      }
+   return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 int JStrategyBase::CheckSignals(void)
   {
-   return(m_signals.CheckSignals());
+   if(CheckPointer(m_signals)==POINTER_DYNAMIC)
+      return(m_signals.CheckSignals());
+   return(CMD_NEUTRAL);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -469,7 +589,7 @@ bool JStrategyBase::Deinit(void)
    DeinitSymbol();
    DeinitTrade();
    DeinitSignals();
-   DeinitMoney();
+   DeinitMoneys();
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -477,50 +597,58 @@ bool JStrategyBase::Deinit(void)
 //+------------------------------------------------------------------+
 void JStrategyBase::DeinitSignals(void)
   {
-   m_signals.Clear();
+   if(m_signals!=NULL)
+     {
+      m_signals.Clear();
+      delete m_signals;
+      m_signals=NULL;
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategyBase::DeinitStops(void)
+void JStrategyBase::DeinitStops(void)
   {
-   return(true);
+   if(m_stops!=NULL)
+     {
+      m_stops.Clear();
+      delete m_stops;
+      m_stops=NULL;
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategyBase::DeinitTrade(void)
+void JStrategyBase::DeinitTrade(void)
   {
    if(m_trade!=NULL)
      {
       delete m_trade;
       m_trade=NULL;
      }
-   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategyBase::DeinitMoney(void)
+void JStrategyBase::DeinitMoneys(void)
   {
-   if(m_money!=NULL)
+   if(m_moneys!=NULL)
      {
-      delete m_money;
-      m_money=NULL;
+      m_moneys.Clear();
+      delete m_moneys;
+      m_moneys=NULL;
      }
-   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategyBase::DeinitSymbol(void)
+void JStrategyBase::DeinitSymbol(void)
   {
    if(m_symbol!=NULL)
      {
       delete m_symbol;
       m_symbol=NULL;
      }
-   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

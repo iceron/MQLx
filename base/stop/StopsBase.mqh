@@ -21,6 +21,7 @@ public:
                      JStopsBase();
                      JStopsBase(string name,string sl=".sl.",string tp=".tp.");
                     ~JStopsBase();
+   virtual bool      Init(JStrategy *s);
    virtual bool      Active() {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
@@ -39,6 +40,18 @@ JStopsBase::JStopsBase() : m_activate(true)
 //+------------------------------------------------------------------+
 JStopsBase::~JStopsBase()
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStopsBase::Init(JStrategy *s)
+  {
+   for(int i=0;i<Total();i++)
+     {
+      JStop *stop=At(i);
+      stop.Init(s);
+     }
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

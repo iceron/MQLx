@@ -58,6 +58,7 @@ public:
    virtual void      VolumeBase(double volume_base) {m_volume_base=volume_base;}
    virtual double    VolumeBase() const {return(m_volume_base);}
    //--- money management objects
+   virtual bool      Init(JStrategy *s);
    virtual bool      InitSymbol(CSymbolInfo *symbol);
    virtual bool      InitAccount(CAccountInfo *account);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
@@ -88,6 +89,12 @@ JMoneyBase::JMoneyBase() : m_activate(true),
 JMoneyBase::~JMoneyBase()
   {
   }
+bool JMoneyBase::Init(JStrategy *s)
+{
+   InitSymbol(s.SymbolInfo());
+   InitAccount(s.AccountInfo());
+   return(true);
+}
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

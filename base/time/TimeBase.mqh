@@ -22,7 +22,7 @@ protected:
 public:
                      JTimeBase();
                     ~JTimeBase();
-   virtual int       Type() {return(CLASS_TYPE_TIME);}                    
+   virtual int       Type() {return(CLASS_TYPE_TIME);}
    //--- initialization
    virtual void      SetContainer(JTimes *times){m_times=times;}
    //--- activation and deactivation
@@ -32,6 +32,7 @@ public:
    virtual bool      Evaluate() {return(true);}
    virtual ENUM_TIME_FILTER_TYPE FilterType() const {return(m_filter_type);}
    virtual void      FilterType(ENUM_TIME_FILTER_TYPE type){m_filter_type=type;}
+   virtual bool      Init(JStrategy *s);
    virtual datetime  TimeStart() const {return(m_time_start);}
    virtual void      TimeStart(datetime start){m_time_start=start;}
   };
@@ -49,6 +50,13 @@ JTimeBase::JTimeBase() : m_activate(true),
 //+------------------------------------------------------------------+
 JTimeBase::~JTimeBase()
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTimeBase::Init(JStrategy *s)
+  {
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
