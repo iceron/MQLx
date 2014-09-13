@@ -33,9 +33,6 @@ protected:
    datetime          m_expiration;
    int               m_magic;
    double            m_lotsize;
-   double            m_price;
-   double            m_stoploss;
-   double            m_takeprofit;
    //--- signal parameters
    bool              m_every_tick;
    int               m_max_orders;
@@ -112,12 +109,6 @@ public:
    virtual int       TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total());}
    virtual double    PointsAdjust(void) const {return(m_points_adjust);}
    virtual void      PointsAdjust(double adjust) {m_points_adjust=adjust;}
-   virtual double    Price(void) const {return(m_price);}
-   virtual void      Price(double price) {m_price=price;}
-   virtual double    StopLoss(void) const {return(m_stoploss);}
-   virtual void      StopLoss(double sl) {m_stoploss=sl;}
-   virtual double    TakeProfit(void) const {return(m_takeprofit);}
-   virtual void      TakeProfit(double tp){m_takeprofit=tp;}
    virtual ENUM_TRADE_MODE TradeMode(void) const {return(m_trade_mode);}
    virtual void      TradeMode(ENUM_TRADE_MODE mode){m_trade_mode=mode;}
    //--- signal parameters
@@ -169,9 +160,6 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_expiration(0),
                                      m_magic(0),
                                      m_lotsize(1.0),
-                                     m_price(0),
-                                     m_stoploss(0),
-                                     m_takeprofit(0),
                                      m_every_tick(true),
                                      m_max_orders(1),
                                      m_max_trades(-1),
@@ -360,7 +348,7 @@ double JStrategyBase::StopLossCalculate(int res,double price)
       else if(res==CMD_SHORT) type=ORDER_TYPE_SELL;
       return(m_main_stop.StopLossTicks(type,price));
      }
-   return(m_stoploss);
+   return(0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -374,7 +362,7 @@ double JStrategyBase::TakeProfitCalculate(int res,double price)
       else if(res==CMD_SHORT) type=ORDER_TYPE_SELL;
       return(m_main_stop.TakeProfitTicks(type,price));
      }
-   return(m_takeprofit);
+   return(0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
