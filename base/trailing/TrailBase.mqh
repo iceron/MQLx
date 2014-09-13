@@ -33,7 +33,7 @@ public:
                     ~JTrailBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_TRAIL);}
    //--- initialization                    
-   virtual bool      Init(JStrategy *s);
+   virtual bool      Init(JStrategy *s,JTrails *t);
    virtual void      SetContainer(JTrails *trails){m_trails=trails;}
    //--- getters and setters    
    virtual bool      Active(void) const {return(m_activate);}
@@ -89,11 +89,12 @@ JTrailBase::~JTrailBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrailBase::Init(JStrategy *s)
+bool JTrailBase::Init(JStrategy *s,JTrails *t)
   {
    m_symbol=s.SymbolInfo();
    m_points_adjust = s.PointsAdjust();
    m_digits_adjust = s.DigitsAdjust();
+   SetContainer(t);
    return(true);
   }
 //+------------------------------------------------------------------+

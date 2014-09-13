@@ -22,12 +22,12 @@ public:
                     ~JTrailsBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_TRAILS);}
    virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
-   virtual bool      Init(JStrategy *s);
+   //--- initialization
+   virtual bool      Init(JStrategy *s,JStop *stop);
+   virtual void      SetContainer(JStop *stop){m_stop=stop;}
    //--- activation and deactivation
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
-   virtual void      SetContainer(JStop *stop){m_stop=stop;}
-
+   virtual void      Active(bool activate) {m_activate=activate;}  
 protected:
 
   };
@@ -46,14 +46,15 @@ JTrailsBase::~JTrailsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrailsBase::Init(JStrategy *s)
+bool JTrailsBase::Init(JStrategy *s,JStop *stop)
   {
    if(!Active()) return(true);
    for(int i=0;i<Total();i++)
      {
       JTrail *trail=At(i);
-      trail.Init(s);
+      trail.Init(s,GetPointer(this));
      }
+   SetContainer(stop);
    return(true);
   }
 //+------------------------------------------------------------------+

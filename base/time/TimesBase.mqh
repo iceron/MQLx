@@ -25,12 +25,12 @@ public:
                     ~JTimesBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_TIMES);}
    //-- initialization
-   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Init(JStrategy *s);
+   virtual void      SetContainer(JStrategy *s){m_strategy=s;}   
    //--- activation and deactivation
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
-   //--- evaluation
+   //--- checking
    virtual bool      Evaluate(void);
   };
 //+------------------------------------------------------------------+
@@ -53,8 +53,9 @@ bool JTimesBase::Init(JStrategy *s)
    for(int i=0;i<Total();i++)
      {
       JTime *time=At(i);
-      time.Init(s);
+      time.Init(s,GetPointer(this));
      }
+   SetContainer(s);
    return(true);
   }
 //+------------------------------------------------------------------+

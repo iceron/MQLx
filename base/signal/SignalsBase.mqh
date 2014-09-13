@@ -25,13 +25,18 @@ public:
                      JSignalsBase(void);
                     ~JSignalsBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_SIGNALS);}
+   //--- initialization
    virtual bool      Init(JStrategy *s);
+   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   //--- checking   
    virtual bool      Active(void) const{return(m_activate);}
    virtual void      Active(bool active) {m_activate=active;}
    virtual int       CheckSignals(void);
    virtual int       LastSignal(void) const {return(m_last_signal);}
    virtual void      LastSignal(int signal);
-   virtual void      SetContainer(CObject *s){m_strategy=s;}
+   virtual bool      Reverse(void) const{return(m_reverse);}
+   virtual void      Reverse(bool reverse) {m_reverse=reverse;}
+   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -58,6 +63,7 @@ bool JSignalsBase::Init(JStrategy *s)
       JSignal *signal=At(i);
       signal.Init(s);
      }
+   SetContainer(s);
    return(true);
   }
 //+------------------------------------------------------------------+

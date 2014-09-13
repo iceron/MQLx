@@ -206,7 +206,7 @@ bool JStopBase::Init(JStrategy *s)
    m_digits_adjust = s.DigitsAdjust();
    InitTrade();
    if(CheckPointer(m_trails)==POINTER_DYNAMIC)
-      m_trails.Init(s);
+      m_trails.Init(s,GetPointer(this));
    return(true);
   }
 //+------------------------------------------------------------------+

@@ -24,17 +24,17 @@ public:
                     ~JTimeBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_TIME);}
    //--- initialization
+   virtual bool      Init(JStrategy *s,JTimes *times);
    virtual void      SetContainer(JTimes *times){m_times=times;}
-   //--- activation and deactivation
+   //--- setters and getters
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
-   //--- time functions                    
-   virtual bool      Evaluate(void) {return(true);}
+   virtual void      Active(bool activate) {m_activate=activate;}              
    virtual ENUM_TIME_FILTER_TYPE FilterType(void) const {return(m_filter_type);}
-   virtual void      FilterType(ENUM_TIME_FILTER_TYPE type){m_filter_type=type;}
-   virtual bool      Init(JStrategy *s);
+   virtual void      FilterType(ENUM_TIME_FILTER_TYPE type){m_filter_type=type;}   
    virtual datetime  TimeStart(void) const {return(m_time_start);}
    virtual void      TimeStart(datetime start){m_time_start=start;}
+   //--- checking
+   virtual bool      Evaluate(void) {return(true);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -54,8 +54,9 @@ JTimeBase::~JTimeBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeBase::Init(JStrategy *s)
+bool JTimeBase::Init(JStrategy *s,JTimes *times)
   {
+   SetContainer(times);
    return(true);
   }
 //+------------------------------------------------------------------+

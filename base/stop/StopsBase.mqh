@@ -19,13 +19,14 @@ protected:
    JStrategy        *m_strategy;
 public:
                      JStopsBase(void);
-                     JStopsBase(string name,string sl=".sl.",string tp=".tp.");
                     ~JStopsBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_STOPS);}
+   //--- initialization
    virtual bool      Init(JStrategy *s);
-   virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   //--- setters and getters
+   virtual bool      Active(void) const {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -49,6 +50,7 @@ bool JStopsBase::Init(JStrategy *s)
       JStop *stop=At(i);
       stop.Init(s);
      }
+   SetContainer(s);
    return(true);
   }
 //+------------------------------------------------------------------+

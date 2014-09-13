@@ -21,10 +21,12 @@ public:
                      JOrderStopsBase(void);
                     ~JOrderStopsBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_ORDERSTOPS);}
+   //--- initialization
+   virtual void      SetContainer(JOrder *order){m_order=order;}
+   //--- checking
    virtual void      Check(double &volume);
    virtual bool      CheckNewTicket(JOrderStop *orderstop) {return(true);}
    virtual bool      Close(void);
-   virtual void      SetContainer(JOrder *order){m_order=order;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
