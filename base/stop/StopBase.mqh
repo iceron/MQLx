@@ -184,8 +184,8 @@ JStopBase::JStopBase(void) : m_activate(true),
                              m_stoploss_color(clrRed),
                              m_takeprofit_color(clrRed),
                              m_entry_style(STYLE_SOLID),
-                             m_stoploss_style(STYLE_SOLID),
-                             m_takeprofit_style(STYLE_SOLID)
+                             m_stoploss_style(STYLE_DASH),
+                             m_takeprofit_style(STYLE_DASH)
   {
   }
 //+------------------------------------------------------------------+
@@ -486,7 +486,14 @@ bool JStopBase::OrderModify(ulong ticket,double value)
 JStopLine *JStopBase::CreateEntryObject(long id,string name,int window,double price)
   {
    if(m_entry_visible)
-      return(CreateObject(id,name,window,price));
+   {
+      JStopLine* obj = CreateObject(id,name,window,price);
+      if (CheckPointer(obj)==POINTER_DYNAMIC)
+      {
+         obj.SetStyle(m_entry_style);
+         obj.SetColor(m_entry_color);
+      }
+   }   
    return(NULL);
   }
 //+------------------------------------------------------------------+
@@ -495,7 +502,14 @@ JStopLine *JStopBase::CreateEntryObject(long id,string name,int window,double pr
 JStopLine *JStopBase::CreateStopLossObject(long id,string name,int window,double price)
   {
    if(m_stoploss_visible)
-      return(CreateObject(id,name,window,price));
+   {
+      JStopLine* obj = CreateObject(id,name,window,price);
+      if (CheckPointer(obj)==POINTER_DYNAMIC)
+      {
+         obj.SetStyle(m_stoploss_style);
+         obj.SetColor(m_stoploss_color);
+      }
+   }   
    return(NULL);
   }
 //+------------------------------------------------------------------+
@@ -504,7 +518,14 @@ JStopLine *JStopBase::CreateStopLossObject(long id,string name,int window,double
 JStopLine *JStopBase::CreateTakeProfitObject(long id,string name,int window,double price)
   {
    if(m_takeprofit_visible)
-      return(CreateObject(id,name,window,price));
+   {
+      JStopLine* obj = CreateObject(id,name,window,price);
+      if (CheckPointer(obj)==POINTER_DYNAMIC)
+      {
+         obj.SetStyle(m_takeprofit_style);
+         obj.SetColor(m_takeprofit_color);
+      }
+   }   
    return(NULL);
   }
 //+------------------------------------------------------------------+
@@ -514,7 +535,8 @@ JStopLine *JStopBase::CreateObject(long id,string name,int window,double price)
   {
    if(price==0.0) return(NULL);
    JStopLine *obj=new JStopLine();
-   if(obj.Create(id,name,window,price)) return(obj);
+   if(obj.Create(id,name,window,price)) 
+      return(obj);
    return(NULL);
   }
 //+------------------------------------------------------------------+
