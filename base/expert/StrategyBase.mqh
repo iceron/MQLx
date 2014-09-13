@@ -128,7 +128,7 @@ public:
    //--- trading time parameters
    virtual bool      AddTime(JTime *time);
    //--- deinitialization
-   virtual void      Deinit(void);
+   virtual void      Deinit(const int reason=0);
 protected:
    //--- signal processing
    virtual int       CheckSignals(void);
@@ -468,7 +468,7 @@ bool JStrategyBase::IsTradeProcessed(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategyBase::Deinit(void)
+void JStrategyBase::Deinit(const int reason=0)
   {
    DeinitStops();
    DeinitSymbol();

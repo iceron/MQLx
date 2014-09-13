@@ -29,7 +29,7 @@ public:
    virtual int       OrdersHistoryTotal(void) const;
    virtual int       TradesTotal(void) const;
    //--- deinitialization
-   virtual void      OnDeinit(void);
+   virtual void      OnDeinit(const int reason=0);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -97,12 +97,12 @@ int JExpertBase::TradesTotal(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JExpertBase::OnDeinit(void)
+void JExpertBase::OnDeinit(const int reason=0)
   {
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=At(i);
-      strat.Deinit();
+      strat.Deinit(reason);
      }
   }
 //+------------------------------------------------------------------+
