@@ -33,11 +33,10 @@ public:
                     ~JOrderBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_ORDER);}
    //--- initialization
-   virtual void      SetContainer(JOrders *orders){m_orders=orders;}
-   //--- activation and deactivation
-   virtual bool      Activate(void) const {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
-   //--- order functions                    
+   virtual void      SetContainer(JOrders *orders){m_orders=orders;}   
+   //--- getters and setters       
+   virtual bool      Active(void) const {return(m_activate);}
+   virtual void      Active(bool activate) {m_activate=activate;}           
    virtual void      CreateStops(JStops *stops);
    virtual void      CheckStops(void);
    virtual void      IsClosed(bool closed) {m_closed=closed;}
@@ -50,7 +49,6 @@ public:
    virtual ENUM_ORDER_TYPE OrderType(void) const {return(m_type);}
    virtual void      Ticket(ulong ticket) {m_ticket=ticket;}
    virtual ulong     Ticket(void) const {return(m_ticket);}
-
    virtual void      Volume(double volume){m_volume=volume;}
    virtual double    Volume(void) const {return(m_volume);}
    virtual void      VolumeInitial(double volume){m_volume_initial=volume;}

@@ -53,17 +53,12 @@ protected:
    ENUM_LINE_STYLE   m_entry_style;
    ENUM_LINE_STYLE   m_stoploss_style;
    ENUM_LINE_STYLE   m_takeprofit_style;
-   //--- stop order symbol object
+   //--- objects
    CSymbolInfo      *m_symbol;
-   //--- stop order account object
    CAccountInfo     *m_account;
-   //--- stop order trade object
    JTrade           *m_trade;
-   //--- stop order trailing object
    JTrails          *m_trails;
-   //--- events
    JEvent           *m_event;
-   //-- stops
    JStops           *m_stops;
 public:
                      JStopBase(void);
@@ -75,10 +70,10 @@ public:
    virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
    virtual bool      InitTrade(JTrade *trade=NULL);
    virtual bool      InitEvent(JEvent *event);
-   //--- activation and deactivation
+   virtual void      SetContainer(JStops *stops){m_stops=stops;}
+   //--- getters and setters
    virtual bool      Active(void) {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
-   //--- stop order getters and setters
    virtual void      Comment(string comment) {m_comment=comment;}
    virtual string    Comment(void) const {return(m_comment);}
    virtual int       DigitsAdjust(void) const {return(m_digits_adjust);}
@@ -128,21 +123,19 @@ public:
    virtual JStopLine *CreateEntryObject(long id,string name,int window,double price);
    virtual JStopLine *CreateStopLossObject(long id,string name,int window,double price);
    virtual JStopLine *CreateTakeProfitObject(long id,string name,int window,double price);
-   //--- stop order price calculation
-   virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop) {return(0.0);}
-   virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop){return(0.0);}
-   virtual double    StopLossTicks(ENUM_ORDER_TYPE type,double price) {return(m_stoploss);}
-   virtual double    TakeProfitTicks(ENUM_ORDER_TYPE type,double price) {return(m_takeprofit);}
+   //--- stop order price calculation   
    virtual bool      Refresh(void);
    virtual double    StopLossCalculate(ENUM_ORDER_TYPE type,double price);
    virtual double    StopLossCustom(ENUM_ORDER_TYPE type,double price);
+   virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop){return(0.0);}
+   virtual double    StopLossTicks(ENUM_ORDER_TYPE type,double price) {return(m_stoploss);}
    virtual double    TakeProfitCalculate(ENUM_ORDER_TYPE type,double price);
    virtual double    TakeProfitCustom(ENUM_ORDER_TYPE type,double price);
+   virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop) {return(0.0);}
+   virtual double    TakeProfitTicks(ENUM_ORDER_TYPE type,double price) {return(m_takeprofit);}     
    //--- trailing   
    virtual bool      Add(JTrails *trails);
    virtual double    CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
-
-   virtual void      SetContainer(JStops *stops){m_stops=stops;}
 protected:
    //--- object creation
    virtual JStopLine *CreateObject(long id,string name,int window,double price);

@@ -20,7 +20,7 @@
 #include "..\money\MoneysBase.mqh"
 #include "..\time\TimesBase.mqh"
 #include "..\event\EventBase.mqh"
-//class JExpert;
+class JExpert;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -66,7 +66,7 @@ protected:
    //--- events
    JEvent           *m_event;
    //--- container
-   //JExpert          *m_expert;
+   JExpert          *m_expert;
 public:
                      JStrategyBase(void);
                     ~JStrategyBase(void);
@@ -74,7 +74,6 @@ public:
    //--- initialization
    virtual bool      Add(CObject *object);
    virtual bool      Init(string symbol,ENUM_TIMEFRAMES period,bool every_tick,int magic,bool one_trade_per_candle,bool position_reverse);
-   virtual bool      InitMoney(JMoney *money);
    virtual bool      InitTrade(JTrade *trade);
    virtual bool      InitEvent(JEvent *event);
    virtual bool      InitComponents(void);
@@ -82,13 +81,16 @@ public:
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
    virtual bool      InitStops(void);
-   //virtual void      SetContainer(JExpert *expert){m_expert=expert;}
+   virtual void      SetContainer(JExpert *e){m_expert=e;}
    //--- activation and deactivation
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
    //--- setters and getters   
    virtual CAccountInfo *AccountInfo(void) const {return(m_account);}
    virtual CSymbolInfo *SymbolInfo(void) const {return(m_symbol);}
+   virtual JMoneys   *Moneys(void) const {return(m_moneys);}
+   virtual JSignals  *Signals(void) const {return(m_signals);}
+   virtual JStops    *Stops(void) const {return(m_stops);}   
    virtual void      AsyncMode(bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
    virtual void      Comment(string comment){m_comment=comment;}
@@ -287,7 +289,7 @@ bool JStrategyBase::Add(CObject *object)
       case CLASS_TYPE_STOPS:
         {
          m_stops=object;
-         m_main_stop = m_stops.Main();
+         m_main_stop=m_stops.Main();
          break;
         }
       case CLASS_TYPE_TIMES:
@@ -443,7 +445,7 @@ bool JStrategyBase::Refresh(void)
 //+------------------------------------------------------------------+
 bool JStrategyBase::AddOtherMagic(int magic)
   {
-   if (m_other_magic.Search(magic)) 
+   if(m_other_magic.Search(magic))
       return(true);
    if(m_other_magic.Add(magic))
      {

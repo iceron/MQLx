@@ -20,14 +20,15 @@ protected:
 public:
                      JTrailsBase(void);
                     ~JTrailsBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_TRAILS);}
-   virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
+   virtual int       Type(void) {return(CLASS_TYPE_TRAILS);}   
    //--- initialization
    virtual bool      Init(JStrategy *s,JStop *stop);
    virtual void      SetContainer(JStop *stop){m_stop=stop;}
-   //--- activation and deactivation
+   //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}  
+   //--- checking
+   virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
 protected:
 
   };

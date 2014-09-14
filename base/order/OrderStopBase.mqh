@@ -45,15 +45,16 @@ protected:
 public:
                      JOrderStopBase(void);
                     ~JOrderStopBase(void);
+   virtual int       Type(void) const {return(CLASS_TYPE_ORDERSTOP);}
    //--- initialization
    virtual void      Init(JOrder *order,JStop *stop);
    virtual void      SetContainer(JOrderStops *orderstops){m_order_stops=orderstops;}
    //--- getters and setters  
+   virtual string    EntryName(void) const {return(m_stop.Name()+"."+(string)m_order.Ticket());}
    virtual ulong     MainMagic(void) const {return(m_order.Magic());}
    virtual ulong     MainTicket(void) const {return(m_order.Ticket());}
    virtual double    MainTicketPrice() const {return(m_order.Price());}
-   virtual ENUM_ORDER_TYPE    MainTicketType(void) const {return(m_order.OrderType());}
-   virtual string    EntryName(void) const {return(m_stop.Name()+"."+(string)m_order.Ticket());}
+   virtual ENUM_ORDER_TYPE MainTicketType(void) const {return(m_order.OrderType());}
    virtual void      StopLoss(double stoploss) {m_stoploss=stoploss;}
    virtual double    StopLoss(void) const {return(m_stoploss);}
    virtual string    StopLossName(void) const {return(m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket());}
@@ -64,7 +65,6 @@ public:
    virtual string    TakeProfitName(void) const {return(m_stop.Name()+m_stop.TakeProfitName()+(string)m_order.Ticket());}
    virtual void      TakeProfitTicket(ulong ticket) {m_takeprofit_ticket=ticket;}
    virtual ulong     TakeProfitTicket(void) const {return(m_takeprofit_ticket);}
-   virtual int       Type(void) const {return(CLASS_TYPE_ORDERSTOP);}
    virtual void      Volume(double volume) {m_volume=volume;}
    virtual double    Volume(void) const {return(m_volume);}
    virtual void      VolumeFixed(double volume) {m_volume_fixed=volume;}

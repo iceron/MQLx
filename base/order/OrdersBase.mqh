@@ -31,7 +31,7 @@ public:
    virtual int       Type(void) {return(CLASS_TYPE_ORDERS);}                    
    //--- initialization
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}                    
-   //--- activation and deactivation
+   //--- getters and setters
    virtual bool      Activate(void) const {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
    //--- events                  

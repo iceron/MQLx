@@ -35,10 +35,14 @@ public:
                      JMoneyBase(void);
                     ~JMoneyBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_MONEY);}
-   //--- activation and deactivation
+   //--- initialization
+   virtual bool      Init(JStrategy *s);
+   virtual bool      InitAccount(CAccountInfo *account);
+   virtual bool      InitSymbol(CSymbolInfo *symbol);   
+   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
-   //--- money management parameters
    virtual void      Balance(double balance) {m_balance=balance;}
    virtual double    Balance(void) const {return(m_balance);}
    virtual void      BalanceIncrement(double balance) {m_balance_inc=balance;}
@@ -57,11 +61,6 @@ public:
    virtual double    VolumeCurrent(void) const {return(m_volume);}
    virtual void      VolumeBase(double volume_base) {m_volume_base=volume_base;}
    virtual double    VolumeBase(void) const {return(m_volume_base);}
-   //--- money management objects
-   virtual bool      Init(JStrategy *s);
-   virtual bool      InitSymbol(CSymbolInfo *symbol);
-   virtual bool      InitAccount(CAccountInfo *account);
-   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
 protected:
    virtual bool      UpdateByMargin(void);
    virtual bool      UpdateByPeriod(void);

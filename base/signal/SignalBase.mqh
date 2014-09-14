@@ -35,10 +35,9 @@ public:
    virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
-   //--- activation and deactivation
+   //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
-   //--- signal parameters
    virtual string    Name(void) const {return(m_name);}
    virtual void      Name(string name) {m_name=name;}
    virtual bool      Reverse(void) const {return(m_reverse);}
@@ -46,11 +45,11 @@ public:
    virtual int       LastSignal(void) const {return(m_signal);}
    virtual int       LastValidSignal(void) const {return(m_signal);}
    //--- signal methods
-   virtual ENUM_CMD  LongCondition(void) {return(0);}
-   virtual ENUM_CMD  ShortCondition(void) {return(0);}
    virtual void      AddEmptyValue(double);
    virtual int       CheckSignal(void);
    virtual bool      IsEmpty(double val);
+   virtual ENUM_CMD  LongCondition(void) {return(0);}
+   virtual ENUM_CMD  ShortCondition(void) {return(0);}   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
