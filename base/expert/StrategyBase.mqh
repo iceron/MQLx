@@ -6,7 +6,7 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
-#include "..\..\common\enum\ENUM_PLATFORM_MODE.mqh"
+#include "..\..\common\enum\ENUM_EXECUTION_MODE.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\enum\ENUM_TRADE_MODE.mqh"
 #include <Object.mqh>
@@ -36,11 +36,11 @@ protected:
    double            m_lotsize;
    //--- signal parameters
    bool              m_every_tick;
+   ENUM_EXECUTION_MODE m_exec_mode;
    int               m_max_orders;
    int               m_max_trades;
    bool              m_one_trade_per_candle;
    ENUM_TIMEFRAMES   m_period;
-   ENUM_PLATFORM_MODE m_platform_mode;
    bool              m_position_reverse;
    ENUM_TRADE_MODE   m_trade_mode;
    //--- market parameters
@@ -110,11 +110,13 @@ public:
    virtual void      Magic(int magic) {m_magic=magic;}
    virtual int       OrdersTotal(void) const {return(m_orders.Total());}
    virtual int       OrdersHistoryTotal(void) const {return(m_orders_history.Total());}
-   virtual int       TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total());}
    virtual double    PointsAdjust(void) const {return(m_points_adjust);}
    virtual void      PointsAdjust(double adjust) {m_points_adjust=adjust;}
    virtual ENUM_TRADE_MODE TradeMode(void) const {return(m_trade_mode);}
    virtual void      TradeMode(ENUM_TRADE_MODE mode){m_trade_mode=mode;}
+   virtual int       TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total());}
+   virtual ENUM_EXECUTION_MODE ExecutionMode(void) {return(m_exec_mode);}
+   virtual void      ExecutionMode(ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
    //--- signal parameters
    virtual int       Period(void) const {return(PeriodSeconds(m_period));}
    virtual void      Period(ENUM_TIMEFRAMES period) {m_period=period;}
@@ -165,13 +167,13 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_magic(0),
                                      m_lotsize(1.0),
                                      m_every_tick(true),
+                                     m_exec_mode(MODE_TRADE),
                                      m_max_orders(1),
                                      m_max_trades(-1),
                                      m_one_trade_per_candle(true),
                                      m_period(PERIOD_CURRENT),
-                                     m_platform_mode(MODE_LIVE|MODE_BACKTEST|MODE_VISUAL|MODE_OPTIMIZATION),
                                      m_position_reverse(true),
-                                     m_trade_mode(TRADE_MODE_MARKET),                                     
+                                     m_trade_mode(TRADE_MODE_MARKET),
                                      m_digits_adjust(0),
                                      m_points_adjust(0.0),
                                      m_last_tick_time(0),
