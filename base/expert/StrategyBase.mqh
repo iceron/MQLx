@@ -414,9 +414,6 @@ void JStrategyBase::ArchiveOrders(void)
   {
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
-      //+------------------------------------------------------------------+
-      //|                                                                  |
-      //+------------------------------------------------------------------+
      {
       m_orders_history.InsertSort(m_orders.Detach(i));
      }
