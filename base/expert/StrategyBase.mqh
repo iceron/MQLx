@@ -6,6 +6,7 @@
 #property copyright "Copyright 2014, MetaQuotes Software Corp."
 #property link      "http://www.mql5.com"
 #property version   "1.00"
+#include "..\..\common\enum\ENUM_PLATFORM_MODE.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\enum\ENUM_TRADE_MODE.mqh"
 #include <Object.mqh>
@@ -37,10 +38,11 @@ protected:
    bool              m_every_tick;
    int               m_max_orders;
    int               m_max_trades;
-   ENUM_TRADE_MODE   m_trade_mode;
    bool              m_one_trade_per_candle;
    ENUM_TIMEFRAMES   m_period;
+   ENUM_PLATFORM_MODE m_platform_mode;
    bool              m_position_reverse;
+   ENUM_TRADE_MODE   m_trade_mode;
    //--- market parameters
    int               m_digits_adjust;
    double            m_points_adjust;
@@ -90,7 +92,7 @@ public:
    virtual CSymbolInfo *SymbolInfo(void) const {return(m_symbol);}
    virtual JMoneys   *Moneys(void) const {return(m_moneys);}
    virtual JSignals  *Signals(void) const {return(m_signals);}
-   virtual JStops    *Stops(void) const {return(m_stops);}   
+   virtual JStops    *Stops(void) const {return(m_stops);}
    virtual void      AsyncMode(bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
    virtual void      Comment(string comment){m_comment=comment;}
@@ -165,10 +167,11 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_every_tick(true),
                                      m_max_orders(1),
                                      m_max_trades(-1),
-                                     m_trade_mode(TRADE_MODE_MARKET),
                                      m_one_trade_per_candle(true),
                                      m_period(PERIOD_CURRENT),
+                                     m_platform_mode(MODE_LIVE|MODE_BACKTEST|MODE_VISUAL|MODE_OPTIMIZATION),
                                      m_position_reverse(true),
+                                     m_trade_mode(TRADE_MODE_MARKET),                                     
                                      m_digits_adjust(0),
                                      m_points_adjust(0.0),
                                      m_last_tick_time(0),
