@@ -23,6 +23,7 @@ public:
                      JMoneysBase(void);
                     ~JMoneysBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_MONEYS);}
+   virtual bool      Validate(void);
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s) {m_strategy=s;}
@@ -57,6 +58,19 @@ bool JMoneysBase::Init(JStrategy *s)
       money.Init(s);
      }
    SetContainer(s);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JMoneysBase::Validate(void)
+  {
+   for(int i=0;i<Total();i++)
+     {
+      JMoney *money=At(i);
+      if(!money.Validate())
+         return(false);
+     }
    return(true);
   }
 //+------------------------------------------------------------------+

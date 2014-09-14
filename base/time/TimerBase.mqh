@@ -31,6 +31,7 @@ public:
                     ~JTimerBase(void);
    //--- initialization
    virtual bool      Init(uint years,uint months,uint days,uint hours,uint minutes,uint seconds);
+   virtual bool      Validate(void);
    //--- getters and setters
    virtual uint      Year(void) const {return(m_years);}
    virtual void      Year(uint years) {m_years=years;}
@@ -48,7 +49,7 @@ public:
    //--- evaluation   
    virtual bool      Elapsed(void) const {return(m_elapsed);}
    virtual bool      Evaluate(void);
-   virtual void      RecalculateTotal(void);   
+   virtual void      RecalculateTotal(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -80,6 +81,18 @@ bool JTimerBase::Init(uint years,uint months,uint days,uint hours,uint minutes,u
    m_minutes=minutes;
    m_seconds=seconds;
    RecalculateTotal();
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTimerBase::Validate(void)
+  {
+   if(m_total<=0)
+     {
+      Print("Invalid time setting for timer");
+      return(false);
+     }
    return(true);
   }
 //+------------------------------------------------------------------+

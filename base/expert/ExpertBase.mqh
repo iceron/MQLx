@@ -19,12 +19,12 @@ public:
                      JExpertBase(void);
                     ~JExpertBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_EXPERT);}
+   virtual bool      Validate(void);
    //--- events
    virtual void      OnTick(void);
-   //--- activation and deactivation
+   //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
-   //--- orders
    virtual int       OrdersTotal(void) const;
    virtual int       OrdersHistoryTotal(void) const;
    virtual int       TradesTotal(void) const;
@@ -42,6 +42,19 @@ JExpertBase::JExpertBase(void) : m_activate(true)
 //+------------------------------------------------------------------+
 JExpertBase::~JExpertBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JExpertBase::Validate(void)
+  {
+   for (int i=0;i<Total();i++)
+   {
+      JStrategy *strat=At(i);
+      if (!strat.Validate())
+         return(false);
+   }
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

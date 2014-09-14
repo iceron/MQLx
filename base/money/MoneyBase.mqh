@@ -38,8 +38,9 @@ public:
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual bool      InitAccount(CAccountInfo *account);
-   virtual bool      InitSymbol(CSymbolInfo *symbol);   
+   virtual bool      InitSymbol(CSymbolInfo *symbol);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   virtual bool      Validate(void);
    //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
@@ -95,6 +96,18 @@ bool JMoneyBase::Init(JStrategy *s)
   {
    InitSymbol(s.SymbolInfo());
    InitAccount(s.AccountInfo());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JMoneyBase::Validate(void)
+  {
+   if (m_volume_base>0)
+   {
+      Print("invalid volume: "+(string)m_volume_base);
+      return(false);
+   }   
    return(true);
   }
 //+------------------------------------------------------------------+

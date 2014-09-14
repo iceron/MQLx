@@ -71,6 +71,7 @@ public:
    virtual bool      InitTrade(JTrade *trade=NULL);
    virtual bool      InitEvent(JEvent *event);
    virtual void      SetContainer(JStops *stops){m_stops=stops;}
+   virtual bool      Validate(void);
    //--- getters and setters
    virtual bool      Active(void) {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
@@ -132,7 +133,7 @@ public:
    virtual double    TakeProfitCalculate(ENUM_ORDER_TYPE type,double price);
    virtual double    TakeProfitCustom(ENUM_ORDER_TYPE type,double price);
    virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop) {return(0.0);}
-   virtual double    TakeProfitTicks(ENUM_ORDER_TYPE type,double price) {return(m_takeprofit);}     
+   virtual double    TakeProfitTicks(ENUM_ORDER_TYPE type,double price) {return(m_takeprofit);}
    //--- trailing   
    virtual bool      Add(JTrails *trails);
    virtual double    CheckTrailing(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
@@ -187,6 +188,27 @@ JStopBase::JStopBase(void) : m_activate(true),
 JStopBase::~JStopBase(void)
   {
    Deinit();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStopBase::Validate(void)
+  {
+   if (m_name==NULL)
+   {
+      Print("Empty name for stop.");
+      return(false);
+   }
+   if (CheckPointer(m_trails))
+   {
+      for (int i=0;i<m_trails.Total();i++)
+      {
+         JTrail *trail = m_trails.At(i);
+         if (!trail.Validate())
+            return(false);
+      }
+   }   
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -479,15 +501,15 @@ bool JStopBase::OrderModify(ulong ticket,double value)
 JStopLine *JStopBase::CreateEntryObject(long id,string name,int window,double price)
   {
    if(m_entry_visible)
-   {
-      JStopLine* obj = CreateObject(id,name,window,price);
-      if (CheckPointer(obj)==POINTER_DYNAMIC)
-      {
+     {
+      JStopLine *obj=CreateObject(id,name,window,price);
+      if(CheckPointer(obj)==POINTER_DYNAMIC)
+        {
          obj.SetStyle(m_entry_style);
          obj.SetColor(m_entry_color);
          return(obj);
-      }
-   }   
+        }
+     }
    return(NULL);
   }
 //+------------------------------------------------------------------+
@@ -496,15 +518,15 @@ JStopLine *JStopBase::CreateEntryObject(long id,string name,int window,double pr
 JStopLine *JStopBase::CreateStopLossObject(long id,string name,int window,double price)
   {
    if(m_stoploss_visible)
-   {
-      JStopLine* obj = CreateObject(id,name,window,price);
-      if (CheckPointer(obj)==POINTER_DYNAMIC)
-      {
+     {
+      JStopLine *obj=CreateObject(id,name,window,price);
+      if(CheckPointer(obj)==POINTER_DYNAMIC)
+        {
          obj.SetStyle(m_stoploss_style);
          obj.SetColor(m_stoploss_color);
          return(obj);
-      }
-   }   
+        }
+     }
    return(NULL);
   }
 //+------------------------------------------------------------------+
@@ -513,15 +535,15 @@ JStopLine *JStopBase::CreateStopLossObject(long id,string name,int window,double
 JStopLine *JStopBase::CreateTakeProfitObject(long id,string name,int window,double price)
   {
    if(m_takeprofit_visible)
-   {
-      JStopLine* obj = CreateObject(id,name,window,price);
-      if (CheckPointer(obj)==POINTER_DYNAMIC)
-      {
+     {
+      JStopLine *obj=CreateObject(id,name,window,price);
+      if(CheckPointer(obj)==POINTER_DYNAMIC)
+        {
          obj.SetStyle(m_takeprofit_style);
          obj.SetColor(m_takeprofit_color);
          return(obj);
-      }
-   }   
+        }
+     }
    return(NULL);
   }
 //+------------------------------------------------------------------+
@@ -531,7 +553,7 @@ JStopLine *JStopBase::CreateObject(long id,string name,int window,double price)
   {
    if(price==0.0) return(NULL);
    JStopLine *obj=new JStopLine();
-   if(obj.Create(id,name,window,price)) 
+   if(obj.Create(id,name,window,price))
       return(obj);
    return(NULL);
   }

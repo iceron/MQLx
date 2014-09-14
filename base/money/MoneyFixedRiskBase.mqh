@@ -16,6 +16,7 @@ public:
                      JMoneyFixedRiskBase(void);
                     ~JMoneyFixedRiskBase(void);
    virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
+   virtual bool      Validate(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -28,6 +29,18 @@ JMoneyFixedRiskBase::JMoneyFixedRiskBase(void)
 //+------------------------------------------------------------------+
 JMoneyFixedRiskBase::~JMoneyFixedRiskBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JMoneyFixedRiskBase::Validate(void)
+  {
+   if (m_percent<=0)
+   {
+      Print("invalid percentage: "+(string)m_percent);
+      return(false);
+   }
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

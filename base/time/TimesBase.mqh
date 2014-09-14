@@ -26,7 +26,8 @@ public:
    virtual int       Type(void) {return(CLASS_TYPE_TIMES);}
    //-- initialization
    virtual bool      Init(JStrategy *s);
-   virtual void      SetContainer(JStrategy *s){m_strategy=s;}   
+   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   virtual bool      Validate(void);
    //--- activation and deactivation
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
@@ -56,6 +57,19 @@ bool JTimesBase::Init(JStrategy *s)
       time.Init(s,GetPointer(this));
      }
    SetContainer(s);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTimesBase::Validate(void)
+  {
+   for(int i=0;i<Total();i++)
+     {
+      JTime *time=At(i);
+      if(!time.Validate())
+         return(false);
+     }
    return(true);
   }
 //+------------------------------------------------------------------+

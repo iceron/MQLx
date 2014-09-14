@@ -19,6 +19,7 @@ public:
                      JTimeRangeBase(void);
                     ~JTimeRangeBase(void);
    virtual bool      Init(datetime begin,datetime end);
+   virtual bool      Validate(void);
    virtual datetime  Begin(void) const  {return(m_begin);}
    virtual void      Begin(datetime begin) {m_begin=begin;}
    virtual datetime  End(void) const  {return(m_end);}
@@ -45,6 +46,18 @@ bool JTimeRangeBase::Init(datetime begin,datetime end)
   {
    m_begin=begin;
    m_end=end;
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTimeRangeBase::Validate(void)
+  {
+   if (m_begin>m_start)
+   {
+      Print("Invalid setting for start and end times.");
+      return(false);
+   }
    return(true);
   }
 //+------------------------------------------------------------------+

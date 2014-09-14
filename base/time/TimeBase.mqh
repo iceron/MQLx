@@ -23,14 +23,15 @@ public:
                      JTimeBase(void);
                     ~JTimeBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_TIME);}
+   virtual bool      Validate() {return(true);}
    //--- initialization
    virtual bool      Init(JStrategy *s,JTimes *times);
    virtual void      SetContainer(JTimes *times){m_times=times;}
    //--- setters and getters
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}              
+   virtual void      Active(bool activate) {m_activate=activate;}
    virtual ENUM_TIME_FILTER_TYPE FilterType(void) const {return(m_filter_type);}
-   virtual void      FilterType(ENUM_TIME_FILTER_TYPE type){m_filter_type=type;}   
+   virtual void      FilterType(ENUM_TIME_FILTER_TYPE type){m_filter_type=type;}
    virtual datetime  TimeStart(void) const {return(m_time_start);}
    virtual void      TimeStart(datetime start){m_time_start=start;}
    //--- checking

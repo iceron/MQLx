@@ -29,12 +29,13 @@ protected:
 public:
                      JSignalBase(void);
                     ~JSignalBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_SIGNAL);}   
+   virtual int       Type(void) {return(CLASS_TYPE_SIGNAL);}
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
+   virtual bool      Validate(void);
    //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
@@ -49,7 +50,7 @@ public:
    virtual int       CheckSignal(void);
    virtual bool      IsEmpty(double val);
    virtual ENUM_CMD  LongCondition(void) {return(0);}
-   virtual ENUM_CMD  ShortCondition(void) {return(0);}   
+   virtual ENUM_CMD  ShortCondition(void) {return(0);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -68,6 +69,13 @@ JSignalBase::JSignalBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 JSignalBase::~JSignalBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalBase::Validate(void)
+  {
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

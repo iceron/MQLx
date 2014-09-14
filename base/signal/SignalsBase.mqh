@@ -28,6 +28,7 @@ public:
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   virtual bool      Validate();
    //--- checking   
    virtual bool      Active(void) const{return(m_activate);}
    virtual void      Active(bool active) {m_activate=active;}
@@ -36,7 +37,7 @@ public:
    virtual void      LastSignal(int signal);
    virtual bool      Reverse(void) const{return(m_reverse);}
    virtual void      Reverse(bool reverse) {m_reverse=reverse;}
-   
+
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -64,6 +65,19 @@ bool JSignalsBase::Init(JStrategy *s)
       signal.Init(s);
      }
    SetContainer(s);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalsBase::Validate(void)
+  {
+   for(int i=0;i<Total();i++)
+     {
+      JSignal *signal=At(i);
+      if(!signal.Validate())
+         return(false);
+     }
    return(true);
   }
 //+------------------------------------------------------------------+

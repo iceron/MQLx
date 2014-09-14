@@ -13,9 +13,11 @@
 class JMoneyFixedMarginBase : public JMoney
   {
 public:
-   virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
                      JMoneyFixedMarginBase(void);
                     ~JMoneyFixedMarginBase(void);
+   virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
+   virtual bool      Validate(void);
+
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -28,6 +30,18 @@ JMoneyFixedMarginBase::JMoneyFixedMarginBase(void)
 //+------------------------------------------------------------------+
 JMoneyFixedMarginBase::~JMoneyFixedMarginBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JMoneyFixedMarginBase::Validate(void)
+  {
+   if (m_percent<=0)
+   {
+      Print("invalid percentage: "+(string)m_percent);
+      return(false);
+   }
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -84,6 +84,7 @@ public:
    virtual bool      InitTimes(void);
    virtual bool      InitStops(void);
    virtual void      SetContainer(JExpert *e){m_expert=e;}
+   virtual bool      Validate(void);
    //--- activation and deactivation
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
@@ -308,6 +309,33 @@ bool JStrategyBase::Add(CObject *object)
         }
      }
    return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::Validate(void)
+  {
+   if(CheckPointer(m_signals)==POINTER_DYNAMIC)
+     {
+      if(!m_signals.Validate())
+         return(false);
+     }
+   if(CheckPointer(m_moneys)==POINTER_DYNAMIC)
+     {
+      if(!m_moneys.Validate())
+         return(false);
+     }
+   if(CheckPointer(m_stops)==POINTER_DYNAMIC)
+     {
+      if(!m_stops.Validate())
+         return(false);
+     }
+   if(CheckPointer(m_times)==POINTER_DYNAMIC)
+     {
+      if(!m_times.Validate())
+         return(false);
+     }
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

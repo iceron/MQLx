@@ -25,6 +25,7 @@ protected:
 public:
                      JTimeFilterBase(void);
                     ~JTimeFilterBase(void);
+   virtual bool      Validate(void);
    virtual bool      Evaluate(void);
    virtual bool      Init(int gmt,int starthour,int endhour,int startminute=0,int endminute=0,int startseconds=0,int endseconds=0);
    virtual void      SetDays(bool sun,bool mon,bool tue,bool wed,bool thu,bool fri,bool sat);
@@ -47,12 +48,12 @@ public:
 //|                                                                  |
 //+------------------------------------------------------------------+
 JTimeFilterBase::JTimeFilterBase(void) : m_sun(false),
-                                     m_mon(true),
-                                     m_tue(true),
-                                     m_wed(true),
-                                     m_thu(true),
-                                     m_fri(true),
-                                     m_sat(false)
+                                         m_mon(true),
+                                         m_tue(true),
+                                         m_wed(true),
+                                         m_thu(true),
+                                         m_fri(true),
+                                         m_sat(false)
   {
   }
 //+------------------------------------------------------------------+
@@ -60,6 +61,20 @@ JTimeFilterBase::JTimeFilterBase(void) : m_sun(false),
 //+------------------------------------------------------------------+
 JTimeFilterBase::~JTimeFilterBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTimeFilterBase::Validate(void)
+  {
+   start=StructToTime(m_filter_start);
+   end=StructToTime(m_filter_end);
+   if(end<start)
+     {
+      Print("Invalid setting for start and end times.");
+      return(false);
+     }
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -74,6 +89,9 @@ bool JTimeFilterBase::Init(int gmt,int starthour,int endhour,int startminute=0,i
    m_filter_end.sec=endseconds;
    return(true);
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -141,6 +159,9 @@ bool JTimeFilterBase::Evaluate(void)
      }
    return(m_filter_type==TIME_FILTER_INCLUDE?result:!result);
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

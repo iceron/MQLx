@@ -16,6 +16,7 @@ public:
                      JMoneyFixedRiskPerPipBase(void);
                     ~JMoneyFixedRiskPerPipBase(void);
    virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
+   virtual bool      Validate(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -28,6 +29,18 @@ JMoneyFixedRiskPerPipBase::JMoneyFixedRiskPerPipBase(void)
 //+------------------------------------------------------------------+
 JMoneyFixedRiskPerPipBase::~JMoneyFixedRiskPerPipBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JMoneyFixedRiskPerPipBase::Validate(void)
+  {
+   if (m_percent<=0)
+   {
+      Print("invalid percentage: "+(string)m_percent);
+      return(false);
+   }
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -55,6 +68,7 @@ void JMoneyFixedRiskPerPipBase::UpdateLotSize(double price,ENUM_ORDER_TYPE type,
       double stepvol=m_symbol.LotsStep();
       lot=MathFloor(m_account.Balance()*m_percent/100.0/stepvol)*stepvol;
      }
+   m_volume = lot;
    if(m_volume<minvol)
       m_volume=minvol;
    double maxvol=m_symbol.LotsMax();

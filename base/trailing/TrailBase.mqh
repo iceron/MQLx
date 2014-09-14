@@ -35,6 +35,7 @@ public:
    //--- initialization                    
    virtual bool      Init(JStrategy *s,JTrails *t);
    virtual void      SetContainer(JTrails *trails){m_trails=trails;}
+   virtual bool      Validate(void);
    //--- getters and setters    
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(bool activate) {m_activate=activate;}
@@ -85,6 +86,13 @@ JTrailBase::JTrailBase(void) : m_activate(true),
 JTrailBase::~JTrailBase(void)
   {
    Deinit();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTrailBase::Validate(void)
+  {
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
