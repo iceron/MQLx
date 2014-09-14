@@ -265,6 +265,7 @@ bool JStrategyBase::InitTrade(JTrade *trade=NULL)
    m_trade.SetSymbol(GetPointer(m_symbol));
    m_trade.SetExpertMagicNumber(m_magic);
    m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
+   m_trade.SetOrderExpiration(m_expiration);
    return(true);
   }
 //+------------------------------------------------------------------+
