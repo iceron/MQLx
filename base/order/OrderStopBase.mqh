@@ -85,6 +85,7 @@ public:
    virtual bool      Deinit(void);
 protected:
    virtual bool      ModifyOrderStop(double stoploss,double takeprofit) {return(true);}
+   virtual bool      UpdateOrderStop(double stoploss,double takeprofit) {return(true);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -182,17 +183,17 @@ bool JOrderStopBase::Update(void)
    double stoploss=0.0,takeprofit=0.0;
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
      {
-      double tp_line=m_objtp.GetPrice(0);
+      double tp_line=m_objtp.GetPrice();
       if(tp_line!=m_takeprofit)
          takeprofit=tp_line;
      }
    if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
      {
-      double sl_line=m_objsl.GetPrice(0);
+      double sl_line=m_objsl.GetPrice();
       if(sl_line!=m_stoploss)
          stoploss=sl_line;
      }
-   return(ModifyOrderStop(stoploss,takeprofit));
+   return(UpdateOrderStop(stoploss,takeprofit));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

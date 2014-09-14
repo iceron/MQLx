@@ -131,8 +131,6 @@ public:
    virtual void      MaxTrades(int max_trades){m_max_trades=max_trades;}
    virtual int       MaxOrders(void) const {return(m_max_orders);}
    virtual void      MaxOrders(int maxorders) {m_max_orders=maxorders;}
-   //--- trading time parameters
-   virtual bool      AddTime(JTime *time);
    //--- deinitialization
    virtual void      Deinit(const int reason=0);
 protected:

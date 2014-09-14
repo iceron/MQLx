@@ -51,6 +51,7 @@ public:
    virtual void      SetAsyncMode(const bool mode) {m_async_mode=mode;}
    virtual void      SetExpertMagicNumber(int magic) {m_magic=magic;}
    virtual void      SetDeviationInPoints(ulong deviation) {m_deviation=deviation;}
+   virtual void      SetOrderExpiration(datetime expire) {m_order_expiration=expire;}
    virtual bool      SetSymbol(CSymbolInfo *symbol);
    //-- trade methods   
    virtual int       Buy(double volume,double price,double sl,double tp,const string comment="");

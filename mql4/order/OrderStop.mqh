@@ -20,6 +20,7 @@ public:
    virtual void      UpdateTicket(ulong ticket);
 protected:
    virtual bool      ModifyOrderStop(double stoploss,double takeprofit);
+   virtual bool      UpdateOrderStop(double stoploss,double takeprofit);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -91,9 +92,10 @@ bool JOrderStop::ModifyOrderStop(double stoploss,double takeprofit)
          modify=m_stop.OrderModify(m_stoploss_ticket,stoploss);
       else if(m_stop.Main() && !m_stop.Virtual())
          modify=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
-      else modify=true;
+      else m_stoploss=stoploss;
       if(modify)
         {
+         Sleep(500);
          if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
            {
             if(m_objsl.Move(stoploss))
@@ -110,9 +112,10 @@ bool JOrderStop::ModifyOrderStop(double stoploss,double takeprofit)
          modify=m_stop.OrderModify(m_takeprofit_ticket,stoploss);
       else if(m_stop.Main() && !m_stop.Virtual())
          modify=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
-      else modify=true;
+      else m_takeprofit=takeprofit;
       if(modify)
         {
+         Sleep(500);
          if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
            {
             if(m_objtp.Move(takeprofit))
@@ -124,6 +127,40 @@ bool JOrderStop::ModifyOrderStop(double stoploss,double takeprofit)
         }
      }
    return(takeprofit_modified || stoploss_modified);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStop::UpdateOrderStop(double stoploss,double takeprofit)
+  {   
+   bool modify_sl=false,modify_tp=false,stoploss_modified=false,takeprofit_modified=false;
+   if (stoploss>0)
+   {
+      if(m_stop.Pending())
+         modify_sl=m_stop.OrderModify(m_stoploss_ticket,stoploss);
+      else if(m_stop.Main() && !m_stop.Virtual())
+         modify_sl=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
+      else m_stoploss=stoploss;
+      if (modify_sl)
+      {
+         Sleep(500);
+         stoploss_modified = modify_sl;
+      }
+   }
+   if (takeprofit>0)
+   {
+      if(m_stop.Pending())
+         modify_tp=m_stop.OrderModify(m_takeprofit_ticket,stoploss);
+      else if(m_stop.Main() && !m_stop.Virtual())
+         modify_tp=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
+      else m_takeprofit=takeprofit;
+      if (modify_tp)
+      {
+         Sleep(500);
+         takeprofit_modified = modify_tp;
+      }
+   }
+   return(modify_tp||modify_sl);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
