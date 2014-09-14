@@ -1,11 +1,10 @@
 //+------------------------------------------------------------------+
-//|                                                     JStrategyBase.mqh |
-//|                        Copyright 2014, MetaQuotes Software Corp. |
-//|                                              http://www.mql5.com |
+//|                                                 StrategyBase.mqh |
+//|                                                   Enrico Lambino |
+//|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
-#property copyright "Copyright 2014, MetaQuotes Software Corp."
-#property link      "http://www.mql5.com"
-#property version   "1.00"
+#property copyright "Enrico Lambino"
+#property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_EXECUTION_MODE.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\enum\ENUM_TRADE_MODE.mqh"

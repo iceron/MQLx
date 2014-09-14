@@ -1,8 +1,10 @@
 //+------------------------------------------------------------------+
-//|                                                      ProjectName |
-//|                                      Copyright 2012, CompanyName |
-//|                                       http://www.companyname.net |
+//|                                                         Stop.mqh |
+//|                                                   Enrico Lambino |
+//|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
+#property copyright "Enrico Lambino"
+#property link      "http://www.cyberforexworks.com"
 #include <Trade\OrderInfo.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -17,7 +19,7 @@ public:
    virtual bool      OpenStop(JOrder *order,JOrderStop *orderstop,double val);
    virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop);
    virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop);
-   
+
   };
 //+------------------------------------------------------------------+
 JStop::JStop(string name)

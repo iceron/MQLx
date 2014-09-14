@@ -1,5 +1,15 @@
+//+------------------------------------------------------------------+
+//|                                                       Signal.mqh |
+//|                                                   Enrico Lambino |
+//|                                   http://www.cyberforexworks.com |
+//+------------------------------------------------------------------+
+#property copyright "Enrico Lambino"
+#property link      "http://www.cyberforexworks.com"
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 class JSignal : public JSignalBase
-{
+  {
 public:
                      JSignal(void);
                     ~JSignal(void);

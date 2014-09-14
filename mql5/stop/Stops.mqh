@@ -1,5 +1,15 @@
+//+------------------------------------------------------------------+
+//|                                                        Stops.mqh |
+//|                                                   Enrico Lambino |
+//|                                   http://www.cyberforexworks.com |
+//+------------------------------------------------------------------+
+#property copyright "Enrico Lambino"
+#property link      "http://www.cyberforexworks.com"
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 class JStops : public JStopsBase
-{
+  {
 public:
                      JStops(void);
                     ~JStops(void);

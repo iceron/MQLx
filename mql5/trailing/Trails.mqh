@@ -1,5 +1,15 @@
+//+------------------------------------------------------------------+
+//|                                                       Trails.mqh |
+//|                                                   Enrico Lambino |
+//|                                   http://www.cyberforexworks.com |
+//+------------------------------------------------------------------+
+#property copyright "Enrico Lambino"
+#property link      "http://www.cyberforexworks.com"
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 class JTrails : public JTrailsBase
-{
+  {
 public:
                      JTrails(void);
                     ~JTrails(void);

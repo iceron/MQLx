@@ -1,11 +1,10 @@
 //+------------------------------------------------------------------+
-//|                                                       JTrailBase.mqh |
-//|                        Copyright 2014, MetaQuotes Software Corp. |
-//|                                              http://www.mql5.com |
+//|                                                    TrailBase.mqh |
+//|                                                   Enrico Lambino |
+//|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
-#property copyright "Copyright 2014, MetaQuotes Software Corp."
-#property link      "http://www.mql5.com"
-#property version   "1.00"
+#property copyright "Enrico Lambino"
+#property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_TRAIL_TARGET.mqh"
 #include "..\..\common\enum\ENUM_TRAIL_MODE.mqh"
 #include <Object.mqh>

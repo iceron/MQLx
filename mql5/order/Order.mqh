@@ -1,7 +1,12 @@
 //+------------------------------------------------------------------+
-//|                                                      ProjectName |
-//|                                      Copyright 2012, CompanyName |
-//|                                       http://www.companyname.net |
+//|                                                        Order.mqh |
+//|                                                   Enrico Lambino |
+//|                                   http://www.cyberforexworks.com |
+//+------------------------------------------------------------------+
+#property copyright "Enrico Lambino"
+#property link      "http://www.cyberforexworks.com"
+//+------------------------------------------------------------------+
+//|                                                                  |
 //+------------------------------------------------------------------+
 class JOrder : public JOrderBase
   {
@@ -45,12 +50,12 @@ bool JOrder::IsClosed(void)
       m_closed=true;
       return(true);
      }
-   if (CheckPointer(m_main_stop)==POINTER_DYNAMIC)
-      if (m_main_stop.IsClosed()) 
-      {
+   if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
+      if(m_main_stop.IsClosed())
+        {
          m_closed=true;
          return(true);
-      }   
+        }
    return(false);
   }
 //+------------------------------------------------------------------+

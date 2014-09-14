@@ -1,11 +1,10 @@
 //+------------------------------------------------------------------+
-//|                                                       JSignalBase.mqh |
-//|                        Copyright 2014, MetaQuotes Software Corp. |
-//|                                              http://www.mql5.com |
+//|                                                   SignalBase.mqh |
+//|                                                   Enrico Lambino |
+//|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
-#property copyright "Copyright 2014, MetaQuotes Software Corp."
-#property link      "http://www.mql5.com"
-#property version   "1.00"
+#property copyright "Enrico Lambino"
+#property link      "http://www.cyberforexworks.com"
 #include <Object.mqh>
 #include <Arrays\ArrayDouble.mqh>
 #include <traderjet-cross\common\enum\ENUM_CMD.mqh>

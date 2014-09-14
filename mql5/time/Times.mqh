@@ -1,5 +1,15 @@
+//+------------------------------------------------------------------+
+//|                                                        Times.mqh |
+//|                                                   Enrico Lambino |
+//|                                   http://www.cyberforexworks.com |
+//+------------------------------------------------------------------+
+#property copyright "Enrico Lambino"
+#property link      "http://www.cyberforexworks.com"
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 class JTimes : public JTimesBase
-{
+  {
 public:
                      JTimes(void);
                     ~JTimes(void);
@@ -16,3 +26,4 @@ JTimes::JTimes(void)
 JTimes::~JTimes(void)
   {
   }
+//+------------------------------------------------------------------+
