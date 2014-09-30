@@ -504,6 +504,7 @@ JStopLine *JStopBase::CreateEntryObject(long id,string name,int window,double pr
       JStopLine *obj=CreateObject(id,name,window,price);
       if(CheckPointer(obj)==POINTER_DYNAMIC)
         {
+         obj.Selectable(false);
          obj.SetStyle(m_entry_style);
          obj.SetColor(m_entry_color);
          return(obj);
@@ -521,6 +522,7 @@ JStopLine *JStopBase::CreateStopLossObject(long id,string name,int window,double
       JStopLine *obj=CreateObject(id,name,window,price);
       if(CheckPointer(obj)==POINTER_DYNAMIC)
         {
+         obj.Selectable(true);
          obj.SetStyle(m_stoploss_style);
          obj.SetColor(m_stoploss_color);
          return(obj);
@@ -538,6 +540,7 @@ JStopLine *JStopBase::CreateTakeProfitObject(long id,string name,int window,doub
       JStopLine *obj=CreateObject(id,name,window,price);
       if(CheckPointer(obj)==POINTER_DYNAMIC)
         {
+         obj.Selectable(true);
          obj.SetStyle(m_takeprofit_style);
          obj.SetColor(m_takeprofit_color);
          return(obj);
