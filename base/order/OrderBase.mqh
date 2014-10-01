@@ -79,6 +79,7 @@ JOrderBase::~JOrderBase(void)
 //+------------------------------------------------------------------+
 void JOrderBase::CreateStops(JStops *stops)
   {
+   if (!CheckPointer(stops)) return;
    int total= stops.Total();
    for(int i=0;i<total;i++)
      {

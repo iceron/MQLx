@@ -423,9 +423,10 @@ void JStrategyBase::ArchiveOrders(void)
 void JStrategyBase::CheckClosedOrders(void)
   {
    int total= m_orders.Total();
-   for(int i=0;i<total;i++)
+   for(int i=total-1;i>=0;i--)
      {
       JOrder *order=m_orders.At(i);
+      ulong ticket = order.Ticket();
       if(order.IsClosed())
          if(order.CloseStops())
             m_orders_history.InsertSort(m_orders.Detach(i));
@@ -445,6 +446,7 @@ void JStrategyBase::CloseOppositeOrders(int res)
         {
          if(CloseStops())
            {
+            m_trade.PositionClose(m_symbol.Name());
             ArchiveOrders();
             m_orders.Clear();
            }

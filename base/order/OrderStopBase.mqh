@@ -163,11 +163,23 @@ bool JOrderStopBase::Close(void)
   {
    bool res1=false,res2=false;
    if(m_stoploss_ticket>0 && !m_stoploss_closed)
+   {
       if(m_stop.DeleteStopOrder(m_stoploss_ticket))
          res1=DeleteStopLoss();
+   }      
+   else if (m_stoploss_closed) 
+   {
+      res1 = true;
+   }   
    if(m_takeprofit_ticket>0 && !m_takeprofit_closed)
+   {
       if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
          res2=DeleteTakeProfit();
+   }      
+   else if (m_takeprofit_closed) 
+   {
+      res2 = true;   
+   }   
    if(res1 && res2)
       return(DeleteEntry());
    return(false);
