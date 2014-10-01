@@ -43,7 +43,7 @@ public:
    virtual bool      Reverse(void) const {return(m_reverse);}
    virtual void      Reverse(bool reverse) {m_reverse=reverse;}
    virtual int       LastSignal(void) const {return(m_signal);}
-   virtual int       LastValidSignal(void) const {return(m_signal);}
+   virtual int       LastValidSignal(void) const {return(m_signal_valid);}
    //--- signal methods
    virtual void      AddEmptyValue(double);
    virtual int       CheckSignal(void);

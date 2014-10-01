@@ -32,8 +32,10 @@ public:
    virtual bool      Active(void) const{return(m_activate);}
    virtual void      Active(bool active) {m_activate=active;}
    virtual int       CheckSignals(void);
+   virtual int       NewSignal(void) const {return(m_new_signal);}
+   virtual void      NewSignal(int signal) {m_new_signal=signal;}
    virtual int       LastSignal(void) const {return(m_last_signal);}
-   virtual void      LastSignal(int signal);
+   virtual void      LastSignal(int signal) {m_last_signal=signal;}
    virtual bool      Reverse(void) const{return(m_reverse);}
    virtual void      Reverse(bool reverse) {m_reverse=reverse;}
 
@@ -43,7 +45,7 @@ public:
 //+------------------------------------------------------------------+
 JSignalsBase::JSignalsBase(void) : m_activate(true),
                                    m_last_signal(0),
-                                   m_new_signal(true),
+                                   m_new_signal(false),
                                    m_reverse(false)
   {
   }
@@ -105,13 +107,6 @@ int JSignalsBase::CheckSignals(void)
    if(res>0)
       m_last_signal=res;
    return(res);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JSignalsBase::LastSignal(int signal)
-  {
-   m_last_signal=signal;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
