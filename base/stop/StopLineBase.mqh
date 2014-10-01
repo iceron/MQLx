@@ -46,7 +46,7 @@ bool JStopLineBase::Move(double price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStopLineBase::GetPrice(int point)
+double JStopLineBase::GetPrice(int point=0)
   {
    return(ObjectGetDouble(0,m_name,OBJPROP_PRICE,point));
   }
