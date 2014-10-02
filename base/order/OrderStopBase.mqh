@@ -154,7 +154,7 @@ bool JOrderStopBase::CheckTrailing(void)
    if(m_stoploss_closed && m_takeprofit_closed) return(false);
    double stoploss=0,takeprofit=0;
    if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,m_takeprofit);
-   if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,m_takeprofit);
+   //if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,m_takeprofit);
    return(ModifyOrderStop(stoploss,takeprofit));
   }
 //+------------------------------------------------------------------+
