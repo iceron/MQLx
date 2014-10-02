@@ -88,15 +88,16 @@ int JSignalsBase::CheckSignals(void)
   {
    if(!Active()) return(CMD_NEUTRAL);
    int res=CMD_NEUTRAL;
-   int total=Total();
-   for(int i=0;i<total;i++)
+   for(int i=0;i<Total();i++)
      {
       JSignal *signal=At(i);
       if(signal==NULL) continue;
       int ret=signal.CheckSignal();
-      if(ret==CMD_VOID) return(CMD_VOID);
+      if(ret==CMD_VOID) 
+         return(CMD_VOID);
       if(ret==CMD_ALL) return(CMD_ALL);
-      if(res>0 && ret!=res) return (CMD_VOID);
+      if(res>0 && ret!=res) 
+         return (CMD_VOID);
       if(ret>0) res=ret;
      }
    if(m_reverse)
