@@ -39,9 +39,10 @@ bool JStrategy::OnTick(void)
    if(!Refresh()) return(ret);
    m_orders.OnTick();
    CheckClosedOrders();
+   int signal=CheckSignals(); 
+   if (signal==CMD_VOID) CloseOrders();
    if(!IsTradeProcessed())
-     {
-      int signal=CheckSignals();      
+     {           
       CloseOppositeOrders(signal);      
       ret=TradeOpen(signal);
       if(ret) m_last_trade_time=m_symbol.Time();
@@ -76,6 +77,7 @@ bool JStrategy::TradeOpen(int res)
    int orders_total = OrdersTotal();
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
+      Print("max orders: "+m_max_orders+" orders count: "+OrdersTotal()+" signal: "+res);
       m_trade.SetSymbol(m_symbol);
       price=PriceCalculate(res);
       if(res==CMD_LONG)

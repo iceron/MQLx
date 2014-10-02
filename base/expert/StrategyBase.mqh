@@ -141,6 +141,7 @@ protected:
    virtual void      CheckClosedOrders(void);
    virtual bool      CloseStops(void);
    virtual void      CloseOppositeOrders(int res);
+   virtual void      CloseOrders();
    virtual bool      IsTradeProcessed(void);
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
    virtual double    PriceCalculate(int res);
@@ -448,6 +449,25 @@ void JStrategyBase::CloseOppositeOrders(int res)
             ArchiveOrders();
             m_orders.Clear();
            }
+        }
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::CloseOrders()
+  {
+   return;
+   if(m_orders.Total()==0) return;
+   if(m_position_reverse)
+     {
+      JOrder *order=m_orders.At(m_orders.Total()-1);
+      ENUM_ORDER_TYPE type=order.OrderType();
+      if(CloseStops())
+        {
+         m_trade.PositionClose(m_symbol.Name());
+         ArchiveOrders();
+         m_orders.Clear();
         }
      }
   }
