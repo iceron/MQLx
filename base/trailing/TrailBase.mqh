@@ -150,6 +150,7 @@ double JTrailBase::DeactivationPrice(ENUM_ORDER_TYPE type,double entry_price)
 double JTrailBase::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
   {
    if(!Active()) return(0.0);
+   if (m_start==0 || m_trail==0) return(0.0);
    double next_stop=0.0,activation=0.0,deactivation=0.0,new_price=0.0;
    activation=ActivationPrice(type,entry_price);
    deactivation=DeactivationPrice(type,entry_price);
