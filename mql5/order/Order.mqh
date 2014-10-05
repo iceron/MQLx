@@ -44,7 +44,10 @@ JOrder::~JOrder(void)
 //+------------------------------------------------------------------+
 bool JOrder::IsClosed(void)
   {
-   if(m_closed) return(true);
+   if(m_closed) 
+   {
+      return(true);     
+   }   
    if(Volume()<=0.0)
      {
       m_closed=true;
