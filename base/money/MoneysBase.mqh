@@ -67,6 +67,7 @@ bool JMoneysBase::Validate(void)
    for(int i=0;i<Total();i++)
      {
       JMoney *money=At(i);
+      if (money==NULL) continue;
       if(!money.Validate())
          return(false);
      }
@@ -78,7 +79,7 @@ bool JMoneysBase::Validate(void)
 double JMoneysBase::Volume(double price,ENUM_ORDER_TYPE type,double sl)
   {
    JMoney *money=m_data[m_selected];
-   return(money.Volume(price,type,sl));
+   return(money==NULL?0:money.Volume(price,type,sl));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

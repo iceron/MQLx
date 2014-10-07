@@ -36,7 +36,7 @@ bool JMoneyFixedRiskBase::Validate(void)
   {
    if (m_percent<=0)
    {
-      Print("invalid percentage: "+(string)m_percent);
+      Print(__FUNCTION__+": invalid percentage: "+(string)m_percent);
       return(false);
    }
    return(true);
@@ -46,8 +46,7 @@ bool JMoneyFixedRiskBase::Validate(void)
 //+------------------------------------------------------------------+
 void JMoneyFixedRiskBase::UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl)
   {
-   if(m_symbol==NULL)
-      return;
+   if(m_symbol==NULL) return;
    double lot;
    double minvol=m_symbol.LotsMin();
    if(sl==0.0)

@@ -195,7 +195,7 @@ bool JStopBase::Validate(void)
   {
    if (m_name==NULL)
    {
-      Print("Empty name for stop.");
+      Print(__FUNCTION__+": Empty name for stop.");
       return(false);
    }
    if (CheckPointer(m_trails))
@@ -214,6 +214,7 @@ bool JStopBase::Validate(void)
 //+------------------------------------------------------------------+
 bool JStopBase::Init(JStrategy *s)
   {
+   if (s==NULL) return(false);
    InitSymbol(s.SymbolInfo());
    InitAccount(s.AccountInfo());
    m_points_adjust = s.PointsAdjust();
@@ -228,6 +229,7 @@ bool JStopBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 bool JStopBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
   {
+   if (symbolinfo==NULL) return(false);
    m_symbol=symbolinfo;
    return(true);
   }
@@ -236,6 +238,7 @@ bool JStopBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
 //+------------------------------------------------------------------+
 bool JStopBase::InitAccount(CAccountInfo *accountinfo=NULL)
   {
+   if (accountinfo==NULL) return(false);
    m_account=accountinfo;
    return(true);
   }
@@ -262,6 +265,7 @@ bool JStopBase::InitTrade(JTrade *trade=NULL)
 //+------------------------------------------------------------------+
 bool JStopBase::InitEvent(JEvent *event)
   {
+   if (event==NULL) return(false);
    m_event=event;
    return(true);
   }

@@ -271,6 +271,7 @@ bool JStrategyBase::InitTrade(JTrade *trade=NULL)
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitEvent(JEvent *event)
   {
+   if (event==NULL) return(false);
    m_event=event;
    return(true);
   }
@@ -279,6 +280,7 @@ bool JStrategyBase::InitEvent(JEvent *event)
 //+------------------------------------------------------------------+
 bool JStrategyBase::Add(CObject *object)
   {
+   if (object==NULL) return(false);
    switch(object.Type())
      {
       case CLASS_TYPE_SIGNALS:
@@ -485,6 +487,7 @@ int JStrategyBase::CheckSignals(void)
 //+------------------------------------------------------------------+
 bool JStrategyBase::Refresh(void)
   {
+   if (m_symbol==NULL) return(false);
    if(!m_symbol.RefreshRates())
       return(false);
    m_last_tick_time=m_symbol.Time();

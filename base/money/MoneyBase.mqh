@@ -114,6 +114,7 @@ bool JMoneyBase::Validate(void)
 //+------------------------------------------------------------------+
 bool JMoneyBase::InitSymbol(CSymbolInfo *symbol)
   {
+   if (symbol==NULL) return(false);
    m_symbol=symbol;
    return(CheckPointer(m_symbol));
   }

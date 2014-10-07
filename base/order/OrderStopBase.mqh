@@ -116,6 +116,7 @@ JOrderStopBase::~JOrderStopBase(void)
 //+------------------------------------------------------------------+
 void JOrderStopBase::Init(JOrder *order,JStop *stop)
   {
+   if (stop==NULL || order==NULL) return;
    if(!stop.Active()) return;
    m_order=order;
    m_stop=stop;

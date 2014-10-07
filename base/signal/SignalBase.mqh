@@ -90,6 +90,7 @@ bool JSignalBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 bool JSignalBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
   {
+   if (symbolinfo==NULL) return(false);
    m_symbol=symbolinfo;
    return(true);
   }
@@ -98,6 +99,7 @@ bool JSignalBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
 //+------------------------------------------------------------------+
 bool JSignalBase::InitAccount(CAccountInfo *accountinfo=NULL)
   {
+   if (accountinfo==NULL) return(false);
    m_account=accountinfo;
    return(true);
   }
