@@ -40,10 +40,9 @@ bool JStrategy::OnTick(void)
    m_orders.OnTick();
    CheckClosedOrders();
    int signal=CheckSignals(); 
-   if (signal==CMD_VOID) CloseOrders();
+   CloseOppositeOrders(signal);  
    if(!IsTradeProcessed())
-     {           
-      CloseOppositeOrders(signal);      
+     {         
       ret=TradeOpen(signal);
       if(ret) m_last_trade_time=m_symbol.Time();
      }
