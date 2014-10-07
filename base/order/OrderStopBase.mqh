@@ -116,7 +116,7 @@ JOrderStopBase::~JOrderStopBase(void)
 //+------------------------------------------------------------------+
 void JOrderStopBase::Init(JOrder *order,JStop *stop)
   {
-   if (stop==NULL || order==NULL) return;
+   if(stop==NULL || order==NULL) return;
    if(!stop.Active()) return;
    m_order=order;
    m_stop=stop;
@@ -150,21 +150,21 @@ bool JOrderStopBase::Deinit(void)
 //+------------------------------------------------------------------+
 bool JOrderStopBase::CheckTrailing(void)
   {
-   if(m_stop==NULL) 
-   {
+   if(m_stop==NULL)
+     {
       return(false);
-   }
-   if(m_order.IsClosed()) 
-   {
+     }
+   if(m_order.IsClosed())
+     {
       return(false);
-   }
-   if(m_stoploss_closed && m_takeprofit_closed) 
-   {
-       return(false);
-   }   
+     }
+   if(m_stoploss_closed && m_takeprofit_closed)
+     {
+      return(false);
+     }
    double stoploss=0,takeprofit=0;
    if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,m_takeprofit);
-   //if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,m_takeprofit);
+//if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,m_takeprofit);
    return(ModifyOrderStop(stoploss,takeprofit));
   }
 //+------------------------------------------------------------------+
@@ -173,24 +173,25 @@ bool JOrderStopBase::CheckTrailing(void)
 bool JOrderStopBase::Close(void)
   {
    bool res1=false,res2=false;
-   if(m_stoploss_ticket>0 && !m_stoploss_closed)
-   {
+   if(m_stoploss_closed || m_stoploss==0)
+     {
+      res1=true;
+     }
+   else if(m_stoploss_ticket>0 && !m_stoploss_closed)
+     {
       if(m_stop.DeleteStopOrder(m_stoploss_ticket))
          res1=DeleteStopLoss();
-   }      
-   else if (m_stoploss_closed) 
-   {
-      res1 = true;
-   }   
-   if(m_takeprofit_ticket>0 && !m_takeprofit_closed)
-   {
+     }
+   if(m_takeprofit_closed || m_takeprofit==0)
+     {
+      res2=true;
+     }
+   else if(m_takeprofit_ticket>0 && !m_takeprofit_closed)
+     {
       if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
          res2=DeleteTakeProfit();
-   }      
-   else if (m_takeprofit_closed) 
-   {
-      res2 = true;   
-   }   
+     }
+
    if(res1 && res2)
       return(DeleteEntry());
    return(false);

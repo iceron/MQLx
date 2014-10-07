@@ -101,7 +101,7 @@ double JStop::TakeProfitPrice(JOrder *order,JOrderStop *orderstop)
    if((m_stop_type==STOP_TYPE_PENDING || m_main) && (val>0.0))
       if(OpenStop(order,orderstop,val))
          orderstop.TakeProfitTicket(m_trade.ResultOrder());
-   return(NormalizeDouble(val,m_symbol.Digits()));
+   return(val==0?val:NormalizeDouble(val,m_symbol.Digits()));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -112,13 +112,14 @@ double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
    if((m_stop_type==STOP_TYPE_PENDING || m_main) && (val>0.0))
       if(OpenStop(order,orderstop,val))
          orderstop.StopLossTicket(m_trade.ResultOrder());
-   return(NormalizeDouble(val,m_symbol.Digits()));
+   return(val==0?val:NormalizeDouble(val,m_symbol.Digits()));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStop::OpenStop(JOrder *order,JOrderStop *orderstop,double val)
   {
+   if (val==0) return(false);
    bool res=false;
    double lotsize=LotSizeCalculate(order,orderstop);
    ENUM_ORDER_TYPE type=orderstop.MainTicketType();
