@@ -43,7 +43,6 @@ bool JStrategy::OnTick(void)
    CloseOppositeOrders(signal);
    if(!IsTradeProcessed())
      {      
-      CloseOppositeOrders(signal);
       ret=TradeOpen(signal);
       if(ret) m_last_trade_time=m_symbol.Time();
      }
@@ -81,6 +80,7 @@ void JStrategy::OnTradeTransaction(void)
 //+------------------------------------------------------------------+
 bool JStrategy::TradeOpen(int res)
   {
+   if (res<=0) return(false);
    bool ret=false;
    double sl=0,tp=0;
    double lotsize=0.0,price=0.0;

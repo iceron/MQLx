@@ -70,6 +70,7 @@ void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTra
 //+------------------------------------------------------------------+
 bool JStrategy::TradeOpen(int res)
   {
+   if (res<=0) return(false);
    bool ret=false;
    double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();

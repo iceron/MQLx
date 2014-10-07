@@ -9,7 +9,16 @@
 #include <Arrays\ArrayDouble.mqh>
 #include <traderjet-cross\common\enum\ENUM_CMD.mqh>
 #include <traderjet-cross\common\common.mqh>
-#include "StrategyBase.mqh"
+#include "..\lib\AccountInfo.mqh"
+#include "..\lib\SymbolInfo.mqh"
+#include "..\event\EventBase.mqh"
+#include "..\signal\SignalsBase.mqh"
+#include "..\trade\TradeBase.mqh"
+#include "..\order\OrdersBase.mqh"
+#include "..\stop\StopsBase.mqh"
+#include "..\money\MoneysBase.mqh"
+#include "..\time\TimesBase.mqh"
+#include "..\event\EventBase.mqh"
 class JSignals;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -25,12 +34,13 @@ protected:
    JStrategy        *m_strategy;
    CArrayDouble     *m_empty_value;
    CAccountInfo     *m_account;
+   JSignals         *m_signals;
    CSymbolInfo      *m_symbol;
    JStops           *m_stops;
    JStop            *m_main_stop;
    JOrders          *m_orders;
    JOrders          *m_orders_history;
-   CArrayInt         m_other_magic;
+   CArrayInt        *m_other_magic;
    JMoneys          *m_moneys;
    JTimes           *m_times;
    JEvent           *m_event;
@@ -90,15 +100,15 @@ bool JSignalBase::Validate(void)
 //+------------------------------------------------------------------+
 bool JSignalBase::Init(JStrategy *s)
   {
-   m_strategy=s;    
+   m_strategy=s;
    m_account = m_strategy.AccountInfo();
-   m_symbol = m_strategy.SymbolInfo();
+   m_symbol= m_strategy.SymbolInfo();
    m_stops = m_strategy.Stops();
-   m_main_stop = m_strategy.MainStop();
-   m_orders = m_strategy.Orders();
-   m_orders_history = m_strategy.OrdersHistory();
-   m_other_magic = m_strategy.OtherMagic();
-   m_moneys = m_strategy.Moneys();
+   m_main_stop=m_strategy.MainStop();
+   m_orders=m_strategy.Orders();
+   m_orders_history=m_strategy.OrdersHistory();
+   m_other_magic=m_strategy.OtherMagic();
+   m_moneys= m_strategy.Moneys();
    m_times = m_strategy.Times();
    m_event = m_strategy.Event();
    return(true);
