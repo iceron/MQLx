@@ -9,6 +9,7 @@
 #include <Arrays\ArrayDouble.mqh>
 #include <traderjet-cross\common\enum\ENUM_CMD.mqh>
 #include <traderjet-cross\common\common.mqh>
+#include "StrategyBase.mqh"
 class JSignals;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -21,10 +22,18 @@ protected:
    int               m_signal;
    int               m_signal_valid;
    bool              m_reverse;
-   CArrayDouble      m_empty_value;
-   JSignals         *m_signals;
-   CSymbolInfo      *m_symbol;
+   JStrategy        *m_strategy;
+   CArrayDouble     *m_empty_value;
    CAccountInfo     *m_account;
+   CSymbolInfo      *m_symbol;
+   JStops           *m_stops;
+   JStop            *m_main_stop;
+   JOrders          *m_orders;
+   JOrders          *m_orders_history;
+   CArrayInt         m_other_magic;
+   JMoneys          *m_moneys;
+   JTimes           *m_times;
+   JEvent           *m_event;
 public:
                      JSignalBase(void);
                     ~JSignalBase(void);
@@ -81,26 +90,17 @@ bool JSignalBase::Validate(void)
 //+------------------------------------------------------------------+
 bool JSignalBase::Init(JStrategy *s)
   {
-   InitSymbol(s.SymbolInfo());
-   InitAccount(s.AccountInfo());
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JSignalBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
-  {
-   if (symbolinfo==NULL) return(false);
-   m_symbol=symbolinfo;
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JSignalBase::InitAccount(CAccountInfo *accountinfo=NULL)
-  {
-   if (accountinfo==NULL) return(false);
-   m_account=accountinfo;
+   m_strategy=s;    
+   m_account = m_strategy.AccountInfo();
+   m_symbol = m_strategy.SymbolInfo();
+   m_stops = m_strategy.Stops();
+   m_main_stop = m_strategy.MainStop();
+   m_orders = m_strategy.Orders();
+   m_orders_history = m_strategy.OrdersHistory();
+   m_other_magic = m_strategy.OtherMagic();
+   m_moneys = m_strategy.Moneys();
+   m_times = m_strategy.Times();
+   m_event = m_strategy.Event();
    return(true);
   }
 //+------------------------------------------------------------------+

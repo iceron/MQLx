@@ -89,10 +89,16 @@ public:
    virtual void      Active(bool activate) {m_activate=activate;}
    //--- setters and getters   
    virtual CAccountInfo *AccountInfo(void) const {return(m_account);}
-   virtual CSymbolInfo *SymbolInfo(void) const {return(m_symbol);}
+   virtual JEvent    *Event(void) const {return(m_event);}
+   virtual JStop     *MainStop(void) const {return(m_main_stop);}
    virtual JMoneys   *Moneys(void) const {return(m_moneys);}
+   virtual JOrders   *Orders() const {return(GetPointer(m_orders));}
+   virtual JOrders   *OrdersHistory() const {return(GetPointer(m_orders_history));}
+   virtual CArrayInt *OtherMagic() const {return(GetPointer(m_other_magic));}
    virtual JSignals  *Signals(void) const {return(m_signals);}
    virtual JStops    *Stops(void) const {return(m_stops);}
+   virtual CSymbolInfo *SymbolInfo(void) const {return(m_symbol);}
+   virtual JTimes    *Times(void) const {return(m_times);}
    virtual void      AsyncMode(bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
    virtual void      Comment(string comment){m_comment=comment;}
@@ -270,7 +276,7 @@ bool JStrategyBase::InitTrade(JTrade *trade=NULL)
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitEvent(JEvent *event)
   {
-   if (event==NULL) return(false);
+   if(event==NULL) return(false);
    m_event=event;
    return(true);
   }
@@ -279,7 +285,7 @@ bool JStrategyBase::InitEvent(JEvent *event)
 //+------------------------------------------------------------------+
 bool JStrategyBase::Add(CObject *object)
   {
-   if (object==NULL) return(false);
+   if(object==NULL) return(false);
    switch(object.Type())
      {
       case CLASS_TYPE_SIGNALS:
@@ -467,7 +473,7 @@ int JStrategyBase::CheckSignals(void)
 //+------------------------------------------------------------------+
 bool JStrategyBase::Refresh(void)
   {
-   if (m_symbol==NULL) return(false);
+   if(m_symbol==NULL) return(false);
    if(!m_symbol.RefreshRates())
       return(false);
    m_last_tick_time=m_symbol.Time();
