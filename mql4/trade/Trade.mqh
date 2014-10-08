@@ -58,6 +58,7 @@ public:
    virtual int       Sell(double volume,double price,double sl,double tp,const string comment="");
    virtual bool      OrderDelete(ulong ticket);
    virtual bool      OrderClose(ulong ticket,double lotsize,double price);
+   virtual bool      OrderCloseAll(CArrayInt *other_magic);
    virtual bool      OrderModify(const ulong ticket,const double price,const double sl,const double tp,const ENUM_ORDER_TYPE_TIME type_time,const datetime expiration,const double stoplimit=0.0);
    virtual int       OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,const double limit_price,const double price,const double sl,const double tp,ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,const string comment="");
   };
@@ -186,11 +187,28 @@ int JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderClose(ulong ticket,double lotsize,double price)
+bool JTrade::OrderClose(ulong ticket,double lotsize,double price=0)
   {
    double close_price=NormalizeDouble(price,m_symbol.Digits());
    int deviation=(int)(m_deviation*m_symbol.Point());
    return(::OrderClose((int)ticket,lotsize,close_price,deviation,m_color_exit));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTrade::OrderCloseAll(CArrayInt *other_magic)
+  {
+   bool res=true;
+   m_symbol.RefreshRates();
+   int total = OrdersTotal();
+   for (int i=total-1;i>=0;i--)
+   {
+      if (!OrderSelect(i,SELECT_BY_POS)) continue;
+      if (OrderSymbol()!=m_symbol.Name()) continue;
+      if (OrderMagicNumber()!=m_magic && other_magic.Search(OrderMagicNumber())<0) continue;
+      if (res) res = OrderClose(OrderTicket(),OrderLots(),OrderType()==ORDER_TYPE_BUY?m_symbol.Bid():m_symbol.Ask());
+   }
+   return(res);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

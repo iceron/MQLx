@@ -443,6 +443,7 @@ void JStrategyBase::CheckClosedOrders(void)
 //+------------------------------------------------------------------+
 void JStrategyBase::CloseOppositeOrders(int res)
   {
+   /*
    if(m_orders.Total()==0) return;
    if(m_position_reverse)
      {
@@ -458,6 +459,7 @@ void JStrategyBase::CloseOppositeOrders(int res)
            }
         }
      }
+   */
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -484,7 +486,7 @@ bool JStrategyBase::Refresh(void)
 //+------------------------------------------------------------------+
 bool JStrategyBase::AddOtherMagic(int magic)
   {
-   if(m_other_magic.Search(magic))
+   if(m_other_magic.Search(magic)>=0)
       return(true);
    if(m_other_magic.Add(magic))
      {

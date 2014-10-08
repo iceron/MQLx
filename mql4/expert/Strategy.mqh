@@ -13,6 +13,7 @@ class JStrategy : public JStrategyBase
 public:
                      JStrategy(void);
                     ~JStrategy(void);
+   virtual void      CloseOppositeOrders(int res);
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void);
    virtual bool      TradeOpen(int res);
@@ -32,6 +33,27 @@ JStrategy::~JStrategy(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+JStrategy::CloseOppositeOrders(int res)
+  {
+   if(m_orders.Total()==0) return;
+   if(m_position_reverse)
+     {
+      JOrder *order=m_orders.At(m_orders.Total()-1);
+      ENUM_ORDER_TYPE type=order.OrderType();
+      if((res==CMD_LONG && IsOrderTypeShort(type)) || (res==CMD_SHORT && IsOrderTypeLong(type)) || res==CMD_VOID)
+        {
+         if(CloseStops())
+           {
+            m_trade.OrderCloseAll(GetPointer(m_other_magic));
+            ArchiveOrders();
+            m_orders.Clear();
+           }
+        }
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategy::OnTick(void)
   {
    if(!Active()) return(false);
@@ -42,7 +64,7 @@ bool JStrategy::OnTick(void)
    int signal=CheckSignals();
    CloseOppositeOrders(signal);
    if(!IsTradeProcessed())
-     {      
+     {
       ret=TradeOpen(signal);
       if(ret) m_last_trade_time=m_symbol.Time();
      }
@@ -80,7 +102,7 @@ void JStrategy::OnTradeTransaction(void)
 //+------------------------------------------------------------------+
 bool JStrategy::TradeOpen(int res)
   {
-   if (res<=0) return(false);
+   if(res<=0) return(false);
    bool ret=false;
    double sl=0,tp=0;
    double lotsize=0.0,price=0.0;

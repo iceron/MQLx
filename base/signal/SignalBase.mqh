@@ -32,7 +32,7 @@ protected:
    int               m_signal_valid;
    bool              m_reverse;
    JStrategy        *m_strategy;
-   CArrayDouble     *m_empty_value;
+   CArrayDouble      m_empty_value;
    CAccountInfo     *m_account;
    JSignals         *m_signals;
    CSymbolInfo      *m_symbol;
@@ -50,8 +50,6 @@ public:
    virtual int       Type(void) {return(CLASS_TYPE_SIGNAL);}
    //--- initialization
    virtual bool      Init(JStrategy *s);
-   virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
-   virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
    virtual bool      Validate(void);
    //--- getters and setters
