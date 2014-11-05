@@ -77,7 +77,8 @@ public:
    //--- initialization
    virtual bool      Add(CObject *object);
    virtual bool      Init(string symbol,ENUM_TIMEFRAMES period,bool every_tick,int magic,bool one_trade_per_candle,bool position_reverse);
-   virtual bool      InitTrade(JTrade *trade);
+   virtual bool      InitAccount(CAccountInfo *account=NULL);
+   virtual bool      InitTrade(JTrade *trade=NULL);
    virtual bool      InitEvent(JEvent *event);
    virtual bool      InitComponents(void);
    virtual bool      InitMoneys(void);
@@ -158,6 +159,7 @@ protected:
    virtual double    TakeProfitCalculate(int res,double price);
    virtual bool      TradeOpen(int res) {return(true);}
    //--- deinitialization
+   virtual void      DeinitAccount(void);
    virtual void      DeinitMoneys(void);
    virtual void      DeinitSignals(void);
    virtual void      DeinitStops(void);
@@ -222,7 +224,7 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitComponents(void)
   {
-   return(InitSignals()&&InitStops()&&InitMoneys()&& InitTimes());
+   return(InitSignals()&&InitStops()&&InitMoneys()&&InitTimes()&&InitAccount());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -273,6 +275,21 @@ bool JStrategyBase::InitTrade(JTrade *trade=NULL)
    m_trade.SetExpertMagicNumber(m_magic);
    m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
    m_trade.SetOrderExpiration(m_expiration);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::InitAccount(CAccountInfo *account=NULL)
+  {
+   if(m_account!=NULL)
+      delete m_account;
+   if(account==NULL)
+     {
+      if((m_account=new CAccountInfo)==NULL)
+         return(false);
+     }
+   else m_account=account;
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -522,6 +539,7 @@ void JStrategyBase::Deinit(const int reason=0)
    DeinitTrade();
    DeinitSignals();
    DeinitMoneys();
+   DeinitAccount();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -579,6 +597,17 @@ void JStrategyBase::DeinitSymbol(void)
      {
       delete m_symbol;
       m_symbol=NULL;
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::DeinitAccount(void)
+  {
+   if(m_account!=NULL)
+     {
+      delete m_account;
+      m_account=NULL;
      }
   }
 //+------------------------------------------------------------------+
