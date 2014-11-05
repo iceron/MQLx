@@ -33,6 +33,8 @@ protected:
    datetime          m_expiration;
    int               m_magic;
    double            m_lotsize;
+   int               m_sleep_success;
+   int               m_sleep_error;
    //--- signal parameters
    bool              m_every_tick;
    ENUM_EXECUTION_MODE m_exec_mode;
@@ -170,6 +172,8 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_expiration(0),
                                      m_magic(0),
                                      m_lotsize(1.0),
+                                     m_sleep_success(500),
+                                     m_sleep_error(500),
                                      m_every_tick(true),
                                      m_exec_mode(MODE_TRADE),
                                      m_max_orders(1),
@@ -443,7 +447,7 @@ void JStrategyBase::CheckClosedOrders(void)
 //+------------------------------------------------------------------+
 void JStrategyBase::CloseOppositeOrders(int res)
   {
-   /*
+/*
    if(m_orders.Total()==0) return;
    if(m_position_reverse)
      {

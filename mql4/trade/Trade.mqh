@@ -58,7 +58,7 @@ public:
    virtual int       Sell(double volume,double price,double sl,double tp,const string comment="");
    virtual bool      OrderDelete(ulong ticket);
    virtual bool      OrderClose(ulong ticket,double lotsize,double price);
-   virtual bool      OrderCloseAll(CArrayInt *other_magic);
+   virtual bool      OrderCloseAll(CArrayInt *other_magic,bool restrict_symbol=true);
    virtual bool      OrderModify(const ulong ticket,const double price,const double sl,const double tp,const ENUM_ORDER_TYPE_TIME type_time,const datetime expiration,const double stoplimit=0.0);
    virtual int       OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,const double limit_price,const double price,const double sl,const double tp,ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,const string comment="");
   };
