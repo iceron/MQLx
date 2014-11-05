@@ -196,7 +196,7 @@ bool JTrade::OrderClose(ulong ticket,double lotsize,double price=0)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderCloseAll(CArrayInt *other_magic)
+bool JTrade::OrderCloseAll(CArrayInt *other_magic, bool restrict_symbol=true)
   {
    bool res=true;   
    int total = OrdersTotal();
@@ -204,7 +204,7 @@ bool JTrade::OrderCloseAll(CArrayInt *other_magic)
    {
       double bid=0.0, ask = 0.0;
       if (!OrderSelect(i,SELECT_BY_POS)) continue;
-      if (OrderSymbol()!=m_symbol.Name()) continue;
+      if (OrderSymbol()!=m_symbol.Name() && restrict_symbol) continue;
       if (OrderMagicNumber()!=m_magic && other_magic.Search(OrderMagicNumber())<0) continue;
       m_symbol.RefreshRates();
       RefreshRates();
