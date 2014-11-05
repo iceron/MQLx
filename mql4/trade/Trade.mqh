@@ -57,7 +57,7 @@ public:
    virtual int       Buy(double volume,double price,double sl,double tp,const string comment="");
    virtual int       Sell(double volume,double price,double sl,double tp,const string comment="");
    virtual bool      OrderDelete(ulong ticket);
-   virtual bool      OrderClose(ulong ticket,double lotsize,double price);
+   virtual bool      OrderClose(ulong ticket,double lotsize=0,double price=0);
    virtual bool      OrderCloseAll(CArrayInt *other_magic,bool restrict_symbol=true);
    virtual bool      OrderModify(const ulong ticket,const double price,const double sl,const double tp,const ENUM_ORDER_TYPE_TIME type_time,const datetime expiration,const double stoplimit=0.0);
    virtual int       OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,const double limit_price,const double price,const double sl,const double tp,ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,const string comment="");
@@ -187,11 +187,23 @@ int JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderClose(ulong ticket,double lotsize,double price=0)
+bool JTrade::OrderClose(ulong ticket,double lotsize=0.0,double price=0.0)
   {
-   double close_price=NormalizeDouble(price,m_symbol.Digits());
-   int deviation=(int)(m_deviation*m_symbol.Point());
-   return(::OrderClose((int)ticket,lotsize,close_price,deviation,m_color_exit));
+   if (!OrderSelect((int)ticket,SELECT_BY_TICKET)) return(false);
+   double close_price=0.0;
+   int deviation = 0;
+   if (OrderSymbol()==m_symbol.Name() && price>0.0)
+   {
+      close_price=NormalizeDouble(price,m_symbol.Digits());
+      deviation=(int)(m_deviation*m_symbol.Point());
+   }
+   else
+   {
+      close_price=NormalizeDouble(OrderClosePrice(),(int)MarketInfo(OrderSymbol(),MODE_DIGITS));
+      deviation=(int)(m_deviation*MarketInfo(OrderSymbol(),MODE_POINT));
+   }
+   if (lotsize==0.0) lotsize = OrderLots();
+   return(::OrderClose((int)ticket,lotsize,close_price,deviation,m_color_exit)); 
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
