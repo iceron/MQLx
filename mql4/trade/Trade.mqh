@@ -198,15 +198,27 @@ bool JTrade::OrderClose(ulong ticket,double lotsize,double price=0)
 //+------------------------------------------------------------------+
 bool JTrade::OrderCloseAll(CArrayInt *other_magic)
   {
-   bool res=true;
-   m_symbol.RefreshRates();
+   bool res=true;   
    int total = OrdersTotal();
    for (int i=total-1;i>=0;i--)
    {
+      double bid=0.0, ask = 0.0;
       if (!OrderSelect(i,SELECT_BY_POS)) continue;
       if (OrderSymbol()!=m_symbol.Name()) continue;
       if (OrderMagicNumber()!=m_magic && other_magic.Search(OrderMagicNumber())<0) continue;
-      if (res) res = OrderClose(OrderTicket(),OrderLots(),OrderType()==ORDER_TYPE_BUY?m_symbol.Bid():m_symbol.Ask());
+      m_symbol.RefreshRates();
+      RefreshRates();
+      if (OrderSymbol()==m_symbol.Name())
+      {
+         bid = m_symbol.Bid();
+         ask = m_symbol.Ask();
+      }
+      else
+      {
+         bid = MarketInfo(OrderSymbol(),MODE_BID);
+         ask = MarketInfo(OrderSymbol(),MODE_ASK);
+      }
+      if (res) res = OrderClose(OrderTicket(),OrderLots(),OrderType()==ORDER_TYPE_BUY?bid:ask);
    }
    return(res);
   }
