@@ -64,11 +64,14 @@ bool JStrategy::OnTick(void)
    if(IsNewBar())
      {
       int signal=CheckSignals();
+      Print("signal: "+signal);
       CloseOppositeOrders(signal);
       if(!IsTradeProcessed())
         {
+         Print("signal process: "+signal);
          ret=TradeOpen(signal);
          if(ret) m_last_trade_time=m_symbol.Time();
+         Print("after: ",GetLastError());
         }
       OnTradeTransaction();
      }

@@ -534,7 +534,7 @@ bool JStrategyBase::IsTradeProcessed(void)
 //+------------------------------------------------------------------+
 bool JStrategyBase::IsNewBar(void)
   {
-   if(!m_every_tick) return(false);
+   if(m_every_tick) return(true);
    datetime arr[];
    if(CopyTime(m_symbol.Name(),m_period,0,1,arr)==-1)
       return(false);
