@@ -150,6 +150,7 @@ protected:
    virtual void      CheckClosedOrders(void);
    virtual bool      CloseStops(void);
    virtual void      CloseOppositeOrders(int res);
+   virtual bool      IsNewBar(void);
    virtual bool      IsTradeProcessed(void);
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
    virtual double    PriceCalculate(int res);
@@ -499,7 +500,6 @@ bool JStrategyBase::Refresh(void)
    if(m_symbol==NULL) return(false);
    if(!m_symbol.RefreshRates())
       return(false);
-   m_last_tick_time=m_symbol.Time();
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -526,6 +526,19 @@ bool JStrategyBase::IsTradeProcessed(void)
    if(CopyTime(m_symbol.Name(),m_period,0,1,arr)==-1)
       return(false);
    if(m_last_trade_time>0 && m_last_trade_time>=arr[0])
+      return(true);
+   return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::IsNewBar(void)
+  {
+   if(!m_every_tick) return(false);
+   datetime arr[];
+   if(CopyTime(m_symbol.Name(),m_period,0,1,arr)==-1)
+      return(false);
+   if(m_last_tick_time>0 && m_last_tick_time<arr[0])
       return(true);
    return(false);
   }

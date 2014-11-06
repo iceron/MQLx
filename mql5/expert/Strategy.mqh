@@ -40,13 +40,17 @@ bool JStrategy::OnTick(void)
    if(!Refresh()) return(ret);
    m_orders.OnTick();
    CheckClosedOrders();
-   int signal=CheckSignals();
-   CloseOppositeOrders(signal);
-   if(!IsTradeProcessed())
+   if(IsNewBar())
      {
-      ret=TradeOpen(signal);
-      if(ret) m_last_trade_time=m_symbol.Time();
+      int signal=CheckSignals();
+      CloseOppositeOrders(signal);
+      if(!IsTradeProcessed())
+        {
+         ret=TradeOpen(signal);
+         if(ret) m_last_trade_time=m_symbol.Time();
+        }
      }
+   m_last_tick_time=m_symbol.Time();
    return(ret);
   }
 //+------------------------------------------------------------------+
