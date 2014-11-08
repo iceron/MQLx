@@ -54,6 +54,7 @@ public:
    virtual double    VolumeInitial(void) const {return(m_volume_initial);}
    //--- archiving
    virtual bool      CloseStops(void);
+   virtual int       Compare(const CObject *node,const int mode=0) const {return(0);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

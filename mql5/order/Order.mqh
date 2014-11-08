@@ -15,6 +15,7 @@ public:
                      JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price);
                     ~JOrder(void);
    virtual bool      IsClosed(void);
+   virtual int       Compare(const CObject *node,const int mode=0) const;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -44,10 +45,10 @@ JOrder::~JOrder(void)
 //+------------------------------------------------------------------+
 bool JOrder::IsClosed(void)
   {
-   if(m_closed) 
-   {
-      return(true);     
-   }   
+   if(m_closed)
+     {
+      return(true);
+     }
    if(Volume()<=0.0)
      {
       m_closed=true;
@@ -60,5 +61,16 @@ bool JOrder::IsClosed(void)
          return(true);
         }
    return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int JOrder::Compare(const CObject *node,const int mode=0)  const
+  {
+   if (Ticket()>node.Ticket())
+      return(1);
+   if (Ticket()<node.Ticket())
+      return(-1);
+   return(0);
   }
 //+------------------------------------------------------------------+

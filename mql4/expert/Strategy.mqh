@@ -88,9 +88,7 @@ void JStrategy::OnTradeTransaction(void)
       if(OrderMagicNumber()!=m_magic && m_other_magic.Search(OrderMagicNumber())<0) continue;
       if(m_symbol.Name()!=OrderSymbol()) continue;
       temp.Ticket(OrderTicket());
-      if(m_orders.Total()>0)
-         if(m_orders.Search(temp)>=0)
-            continue;
+      if(m_orders.Search(temp)>=0) continue;
       JOrder *order=new JOrder(OrderTicket(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
       if(m_orders.InsertSort(order))
         {
@@ -105,7 +103,7 @@ void JStrategy::OnTradeTransaction(void)
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategy::TradeOpen(int res)
-  {   
+  {
    if(res<=0) return(false);
    bool ret=false;
    double sl=0,tp=0;
