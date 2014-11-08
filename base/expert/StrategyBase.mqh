@@ -136,6 +136,7 @@ public:
    virtual bool      PositionReverse(void) const {return(m_position_reverse);}
    virtual void      PositionReverse(bool position_reverse){m_position_reverse=position_reverse;}
    virtual bool      AddOtherMagic(int magic);
+   virtual void      AddOtherMagicString(string &magics[]);
    virtual uint      MaxTrades(void) const {return(m_max_trades);}
    virtual void      MaxTrades(int max_trades){m_max_trades=max_trades;}
    virtual int       MaxOrders(void) const {return(m_max_orders);}
@@ -515,6 +516,16 @@ bool JStrategyBase::AddOtherMagic(int magic)
       return(true);
      }
    return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::AddOtherMagicString(string &magics[])
+  {
+   for(int i=0;i<ArraySize(magics);i++)
+     {
+      AddOtherMagic(StrToInteger(magics[i]));
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
