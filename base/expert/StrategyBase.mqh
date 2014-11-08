@@ -148,6 +148,7 @@ protected:
    virtual int       CheckSignals(void);
    //--- order processing   
    virtual void      ArchiveOrders(void);
+   virtual bool      ArchiveOrder(JOrder *order);
    virtual void      CheckClosedOrders(void);
    virtual bool      CloseStops(void);
    virtual void      CloseOppositeOrders(int res);
@@ -445,6 +446,13 @@ void JStrategyBase::ArchiveOrders(void)
      {
       m_orders_history.InsertSort(m_orders.Detach(i));
      }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::ArchiveOrder(JOrder *order)
+  {
+   return(m_orders_history.InsertSort(order));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

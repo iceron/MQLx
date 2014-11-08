@@ -17,6 +17,8 @@ public:
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void);
    virtual bool      TradeOpen(int res);
+   virtual void      CloseOrders(int res);
+   virtual void      CloseOrder(JOrder *order,int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -38,6 +40,11 @@ JStrategy::CloseOppositeOrders(int res)
    if(m_orders.Total()==0) return;
    if(m_position_reverse)
      {
+      CloseOrders(res);
+     }
+/*
+   if(m_position_reverse)
+     {
       JOrder *order=m_orders.At(m_orders.Total()-1);
       ENUM_ORDER_TYPE type=order.OrderType();
       if((res==CMD_LONG && IsOrderTypeShort(type)) || (res==CMD_SHORT && IsOrderTypeLong(type)) || res==CMD_VOID)
@@ -47,6 +54,47 @@ JStrategy::CloseOppositeOrders(int res)
             m_trade.OrderCloseAll(GetPointer(m_other_magic));
             ArchiveOrders();
             m_orders.Clear();
+           }
+        }
+     }
+   */
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JStrategy::CloseOrders(int res)
+  {
+   int total= m_orders.Total();
+   for(int i=total-1;i>=0;i--)
+     {
+      JOrder *order=m_orders.At(i);
+      if((IsSignalTypeLong((ENUM_CMD) res) && IsOrderTypeLong(order.OrderType()))
+         || (IsSignalTypeShort((ENUM_CMD)res) && IsOrderTypeShort(order.OrderType()))
+         || (res=CMD_VOID))
+         CloseOrder(order,i);
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JStrategy::CloseOrder(JOrder *order,int index)
+  {
+   bool closed=false;
+   if(CheckPointer(order))
+     {
+      if(CheckPointer(order))
+        {
+         if(order.OrderType()<=1)
+            closed=m_trade.OrderClose(order.Ticket());
+         else
+            closed=m_trade.OrderDelete(order.Ticket());
+         if(closed)
+           {
+            if(order.CloseStops())
+              {
+               if(ArchiveOrder(m_orders.Detach(index)))
+                  order.IsClosed(true);
+              }
            }
         }
      }

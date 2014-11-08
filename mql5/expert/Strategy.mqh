@@ -105,6 +105,11 @@ JStrategyBase::CloseOppositeOrders(int res)
    if(m_orders.Total()==0) return;
    if(m_position_reverse)
      {
+      CloseOrders(res);
+     }
+/*
+   if(m_position_reverse)
+     {
       JOrder *order=m_orders.At(m_orders.Total()-1);
       ENUM_ORDER_TYPE type=order.OrderType();
       if((res==CMD_LONG && IsOrderTypeShort(type)) || (res==CMD_SHORT && IsOrderTypeLong(type)) || res==CMD_VOID)
@@ -114,6 +119,51 @@ JStrategyBase::CloseOppositeOrders(int res)
             m_trade.PositionClose(m_symbol.Name());
             ArchiveOrders();
             m_orders.Clear();
+           }
+        }
+     }
+   */
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JStrategy::CloseOrders(int res)
+  {
+   int total= m_orders.Total();
+   for(int i=total-1;i>=0;i--)
+     {
+      JOrder *order=m_orders.At(i);
+      if((IsSignalTypeLong((ENUM_CMD) res) && IsOrderTypeLong(order.OrderType()))
+         || (IsSignalTypeShort((ENUM_CMD)res) && IsOrderTypeShort(order.OrderType()))
+         || (res=CMD_VOID))
+         CloseOrder(order,i);
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JStrategy::CloseOrder(JOrder *order,int index)
+  {
+   bool closed=false;
+   COrderInfo ord;
+   CHistoryOrderInfo h_ord;
+   if(CheckPointer(order))
+     {
+      if (ord.Select(order.Ticket())
+         closed=m_trade.OrderDelete(order.Ticket());
+      else
+      {
+         if (IsOrderTypeLong(order.OrderType()))
+            closed=m_trade.Sell(order.Volume(),0,0,0);
+         else if (IsOrderTypeShort(order.OrderType()))
+            closed=m_trade.Buy(order.Volume(),0,0,0);
+      }            
+      if(closed)
+        {
+         if(order.CloseStops())
+           {
+            if(ArchiveOrder(m_orders.Detach(index)))
+               order.IsClosed(true);
            }
         }
      }
