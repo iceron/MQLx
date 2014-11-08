@@ -13,11 +13,11 @@ class JStrategy : public JStrategyBase
 public:
                      JStrategy(void);
                     ~JStrategy(void);
-   virtual void      CloseOppositeOrders(int res);
+   virtual void      CloseOppositeOrders(const int res);
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void);
-   virtual bool      TradeOpen(int res);
-   virtual void      CloseOrders(int res);
+   virtual bool      TradeOpen(const int res);
+   virtual void      CloseOrders(const int res);
    virtual void      CloseOrder(JOrder *order,int index);
   };
 //+------------------------------------------------------------------+
@@ -35,7 +35,7 @@ JStrategy::~JStrategy(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::CloseOppositeOrders(int res)
+JStrategy::CloseOppositeOrders(const int res)
   {
    if(m_orders.Total()==0) return;
    if(m_position_reverse)
@@ -62,16 +62,18 @@ JStrategy::CloseOppositeOrders(int res)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::CloseOrders(int res)
+JStrategy::CloseOrders(const int res)
   {
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
      {
       JOrder *order=m_orders.At(i);
-      if((IsSignalTypeLong((ENUM_CMD) res) && IsOrderTypeLong(order.OrderType()))
-         || (IsSignalTypeShort((ENUM_CMD)res) && IsOrderTypeShort(order.OrderType()))
-         || (res=CMD_VOID))
-         CloseOrder(order,i);
+      if((IsSignalTypeShort((ENUM_CMD) res) && IsOrderTypeLong(order.OrderType()))
+         || (IsSignalTypeLong((ENUM_CMD)res) && IsOrderTypeShort(order.OrderType()))
+         || (res==CMD_VOID))
+         {
+            CloseOrder(order,i);
+         }
      }
   }
 //+------------------------------------------------------------------+
@@ -82,19 +84,16 @@ JStrategy::CloseOrder(JOrder *order,int index)
    bool closed=false;
    if(CheckPointer(order))
      {
-      if(CheckPointer(order))
+      if(order.OrderType()<=1)
+         closed=m_trade.OrderClose(order.Ticket());
+      else
+         closed=m_trade.OrderDelete(order.Ticket());
+      if(closed)
         {
-         if(order.OrderType()<=1)
-            closed=m_trade.OrderClose(order.Ticket());
-         else
-            closed=m_trade.OrderDelete(order.Ticket());
-         if(closed)
+         if(order.CloseStops())
            {
-            if(order.CloseStops())
-              {
-               if(ArchiveOrder(m_orders.Detach(index)))
-                  order.IsClosed(true);
-              }
+            if(ArchiveOrder(m_orders.Detach(index)))
+               order.IsClosed(true);
            }
         }
      }
@@ -150,7 +149,7 @@ void JStrategy::OnTradeTransaction(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::TradeOpen(int res)
+bool JStrategy::TradeOpen(const int res)
   {
    if(res<=0) return(false);
    bool ret=false;

@@ -104,7 +104,7 @@ int JSignalsBase::CheckSignals(void)
       res=SignalReverse(res);
    if(m_new_signal)
       if(res==m_last_signal)
-         res=CMD_VOID;
+         res=CMD_VOID;  
    if(res>0)
       m_last_signal=res;
    return(res);
