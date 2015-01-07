@@ -13,10 +13,10 @@ class JStrategy : public JStrategyBase
 public:
                      JStrategy(void);
                     ~JStrategy(void);
-   virtual void      CloseOppositeOrders(const int res);
+   virtual void      CloseOppositeOrders(int res);
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void);
-   virtual bool      TradeOpen(const int res);
+   virtual bool      TradeOpen(int res);
    virtual void      CloseOrders(const int res);
    virtual void      CloseOrder(JOrder *order,int index);
   };
