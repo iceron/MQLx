@@ -76,6 +76,10 @@ public:
    virtual int       Type(void) {return(CLASS_TYPE_STRATEGY);}
    //--- initialization
    virtual bool      Add(CObject *object);
+   virtual bool      AddMoneys(JMoneys *moneys);
+   virtual bool      AddSignals(JSignals *signals);
+   virtual bool      AddStops(JStops *stops);
+   virtual bool      AddTimes(JTimes *times);   
    virtual bool      Init(string symbol,ENUM_TIMEFRAMES period,bool every_tick,int magic,bool one_trade_per_candle,bool position_reverse);
    virtual bool      InitAccount(CAccountInfo *account=NULL);
    virtual bool      InitTrade(JTrade *trade=NULL);
@@ -309,34 +313,82 @@ bool JStrategyBase::InitEvent(JEvent *event)
 //+------------------------------------------------------------------+
 bool JStrategyBase::Add(CObject *object)
   {
-   if(object==NULL) return(false);
+   bool result=false;
    switch(object.Type())
      {
       case CLASS_TYPE_SIGNALS:
         {
-         m_signals=object;
+         result=AddSignals(object);
          break;
         }
       case CLASS_TYPE_MONEYS:
         {
-         m_moneys=object;
+         result=AddMoneys(object);
          break;
         }
       case CLASS_TYPE_STOPS:
         {
-         m_stops=object;
-         m_main_stop=m_stops.Main();
+         result=AddStops(object);
          break;
         }
       case CLASS_TYPE_TIMES:
         {
-         m_times=object;
+         result=AddTimes(object);
          break;
         }
       default:
         {
-         Print("unknown object");
+         Print(__FUNCTION__+": unknown object: "+object.Type());
         }
+     }
+   return(result);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::AddSignals(JSignals *signals)
+  {
+   if(CheckPointer(signals)==POINTER_DYNAMIC)
+     {
+      m_signals=signals;
+      return(true);
+     }
+   return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::AddMoneys(JMoneys *moneys)
+  {
+   if(CheckPointer(moneys)==POINTER_DYNAMIC)
+     {
+      m_moneys=moneys;
+      return(true);
+     }
+   return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::AddStops(JStops *stops)
+  {
+   if(CheckPointer(stops)==POINTER_DYNAMIC)
+     {
+      m_stops=stops;
+      m_main_stop=m_stops.Main();
+      return(true);
+     }
+   return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::AddTimes(JTimes *times)
+  {
+   if(CheckPointer(times)==POINTER_DYNAMIC)
+     {
+      m_times=times;
+      return(true);
      }
    return(false);
   }

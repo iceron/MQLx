@@ -24,14 +24,14 @@ bool IsOrderTypeShort(ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 bool IsSignalTypeLong(ENUM_CMD type)
   {
-   return(type==CMD_BUY || type==CMD_BUYLIMIT || type==CMD_BUYSTOP);
+   return(type==CMD_LONG || type==CMD_BUY || type==CMD_BUYLIMIT || type==CMD_BUYSTOP);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool IsSignalTypeShort(ENUM_CMD type)
   {
-   return(type==CMD_SELL || type==CMD_SELLLIMIT || type==CMD_SELLSTOP);
+   return(type==CMD_SHORT || type==CMD_SELL || type==CMD_SELLLIMIT || type==CMD_SELLSTOP);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
