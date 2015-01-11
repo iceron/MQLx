@@ -22,8 +22,60 @@ bool IsOrderTypeShort(ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool IsOrderAgainstSignal(ENUM_ORDER_TYPE type, ENUM_CMD res)
+bool IsOrderAgainstSignal(ENUM_ORDER_TYPE type, ENUM_CMD res,bool exact=false)
   {
+   if (exact)
+   {
+      switch(type)
+      {
+         case ORDER_TYPE_BUY: 
+         {
+            if (res==CMD_BUY)
+               return(true);
+            else
+               return(false);
+         }   
+         case ORDER_TYPE_SELL: 
+         {
+            if (res==CMD_SELL)
+               return(true);
+            else
+               return(false);
+         }
+         case ORDER_TYPE_BUY_LIMIT: 
+         {
+            if (res==CMD_BUYLIMIT)
+               return(true);
+            else
+               return(false);
+         } 
+         case ORDER_TYPE_BUY_STOP: 
+         {
+            if (res==CMD_BUYSTOP)
+               return(true);
+            else
+               return(false);
+         } 
+         case ORDER_TYPE_SELL_LIMIT: 
+         {
+            if (res==CMD_SELLLIMIT)
+               return(true);
+            else
+               return(false);
+         } 
+         case ORDER_TYPE_SELL_STOP: 
+         {
+            if (res==CMD_SELLSTOP)
+               return(true);
+            else
+               return(false);
+         } 
+         default:
+         {
+            Print(__FUNCTION__+": unknown order type");
+         } 
+      }
+   }
    return((IsSignalTypeShort((ENUM_CMD) res) && IsOrderTypeLong(type))
          || (IsSignalTypeLong((ENUM_CMD)res) && IsOrderTypeShort(type))
          || (res==CMD_VOID));
