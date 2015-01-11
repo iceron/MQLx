@@ -49,8 +49,8 @@ JStrategy::CloseOrders(int res)
    int total= m_orders.Total(); 
    for(int i=total-1;i>=0;i--)
      {
-      JOrder *order=m_orders.At(i);    
-      if(IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.Type(),(ENUM_CMD) res))
+      JOrder *order=m_orders.At(i);         
+      if(IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) res))
             CloseOrder(order,i);
      }
   }
@@ -89,7 +89,7 @@ bool JStrategy::OnTick(void)
    CheckClosedOrders();
    if(IsNewBar())
      {
-      int signal=CheckSignals();
+      int signal=CheckSignals();      
       CloseOppositeOrders(signal);
       CheckClosedOrders();
       if(!IsTradeProcessed())
@@ -136,7 +136,7 @@ bool JStrategy::TradeOpen(const int res)
    double sl=0,tp=0;
    double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();
-   int orders_total = OrdersTotal();
+   int orders_total = OrdersTotal();   
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       m_trade.SetSymbol(m_symbol);
