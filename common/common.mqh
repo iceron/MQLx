@@ -22,6 +22,15 @@ bool IsOrderTypeShort(ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool IsOrderAgainstSignal(ENUM_ORDER_TYPE type, ENUM_CMD res)
+  {
+   return((IsSignalTypeShort((ENUM_CMD) res) && IsOrderTypeLong(type))
+         || (IsSignalTypeLong((ENUM_CMD)res) && IsOrderTypeShort(type))
+         || (res==CMD_VOID));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool IsSignalTypeLong(ENUM_CMD type)
   {
    return(type==CMD_LONG || type==CMD_BUY || type==CMD_BUYLIMIT || type==CMD_BUYSTOP);
@@ -42,7 +51,9 @@ bool DeleteObject(CObject *object)
    object=NULL;
    return(object==NULL);
   }
-  
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 int SignalReverse(int s)
   {
    switch(s)

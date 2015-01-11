@@ -39,25 +39,7 @@ JStrategy::CloseOppositeOrders(int res)
   {   
    if(m_orders.Total()==0) return;
    if(m_position_reverse)
-     {
       CloseOrders(res);
-     }
-/*
-   if(m_position_reverse)
-     {
-      JOrder *order=m_orders.At(m_orders.Total()-1);
-      ENUM_ORDER_TYPE type=order.OrderType();
-      if((res==CMD_LONG && IsOrderTypeShort(type)) || (res==CMD_SHORT && IsOrderTypeLong(type)) || res==CMD_VOID)
-        {
-         if(CloseStops())
-           {
-            m_trade.OrderCloseAll(GetPointer(m_other_magic));
-            ArchiveOrders();
-            m_orders.Clear();
-           }
-        }
-     }
-   */
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -68,12 +50,8 @@ JStrategy::CloseOrders(int res)
    for(int i=total-1;i>=0;i--)
      {
       JOrder *order=m_orders.At(i);    
-      if((IsSignalTypeShort((ENUM_CMD) res) && IsOrderTypeLong(order.OrderType()))
-         || (IsSignalTypeLong((ENUM_CMD)res) && IsOrderTypeShort(order.OrderType()))
-         || (res==CMD_VOID))
-         {
+      if(IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.Type(),(ENUM_CMD) res))
             CloseOrder(order,i);
-         }
      }
   }
 //+------------------------------------------------------------------+
@@ -82,7 +60,7 @@ JStrategy::CloseOrders(int res)
 bool JStrategy::CloseOrder(JOrder *order,int index)
   {
    bool closed=false;
-   if(CheckPointer(order))
+   if(CheckPointer(order)==POINTER_DYNAMIC)
      {
       if(order.OrderType()==ORDER_TYPE_BUY || order.OrderType()==ORDER_TYPE_SELL)
          closed=m_trade.OrderClose(order.Ticket());

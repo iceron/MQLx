@@ -23,7 +23,7 @@ protected:
 public:
                      JSignalsBase(void);
                     ~JSignalsBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_SIGNALS);}
+   virtual int       Type(void) const {return(CLASS_TYPE_SIGNALS);}
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}

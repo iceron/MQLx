@@ -155,12 +155,12 @@ protected:
    virtual bool      ArchiveOrder(JOrder *order);
    virtual void      CheckClosedOrders(void);
    virtual bool      CloseStops(void);
-   virtual void      CloseOppositeOrders(int res);
+   virtual void      CloseOppositeOrders(int res) {}
    virtual bool      IsNewBar(void);
    virtual bool      IsTradeProcessed(void);
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
    virtual double    PriceCalculate(int res);
-   virtual double    PriceCalculateCustom(int res);
+   virtual double    PriceCalculateCustom(int res) {return(0);}
    virtual bool      Refresh(void);
    virtual double    StopLossCalculate(int res,double price);
    virtual double    TakeProfitCalculate(int res,double price);
@@ -338,7 +338,7 @@ bool JStrategyBase::Add(CObject *object)
         }
       default:
         {
-         Print(__FUNCTION__+": unknown object: "+object.Type());
+         Print(__FUNCTION__+": unknown object: "+DoubleToStr(object.Type(),0));
         }
      }
    return(result);
@@ -440,13 +440,6 @@ double JStrategyBase::PriceCalculate(int res)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStrategyBase::PriceCalculateCustom(int res)
-  {
-   return(0.0);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 double JStrategyBase::LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss)
   {
    if(CheckPointer(m_moneys))
@@ -495,9 +488,7 @@ void JStrategyBase::ArchiveOrders(void)
   {
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
-     {
       m_orders_history.InsertSort(m_orders.Detach(i));
-     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -520,29 +511,6 @@ void JStrategyBase::CheckClosedOrders(void)
          if(order.CloseStops())
             m_orders_history.InsertSort(m_orders.Detach(i));
      }
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JStrategyBase::CloseOppositeOrders(int res)
-  {
-/*
-   if(m_orders.Total()==0) return;
-   if(m_position_reverse)
-     {
-      JOrder *order=m_orders.At(m_orders.Total()-1);
-      ENUM_ORDER_TYPE type=order.OrderType();
-      if((res==CMD_LONG && IsOrderTypeShort(type)) || (res==CMD_SHORT && IsOrderTypeLong(type)) || res==CMD_VOID)
-        {
-         if(CloseStops())
-           {
-            m_trade.PositionClose(m_symbol.Name());
-            ArchiveOrders();
-            m_orders.Clear();
-           }
-        }
-     }
-   */
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -583,9 +551,7 @@ bool JStrategyBase::AddOtherMagic(int magic)
 void JStrategyBase::AddOtherMagicString(string &magics[])
   {
    for(int i=0;i<ArraySize(magics);i++)
-     {
       AddOtherMagic(StrToInteger(magics[i]));
-     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
