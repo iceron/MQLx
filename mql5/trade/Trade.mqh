@@ -19,6 +19,7 @@ protected:
 public:
                      JTrade(void);
                     ~JTrade(void);
+   virtual int Type() const {return(CLASS_TYPE_TRADE);}                   
    //--- activation and deactivation
    virtual bool      Activate(void) const {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}

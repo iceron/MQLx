@@ -19,7 +19,7 @@ protected:
 public:
                      JTrailsBase(void);
                     ~JTrailsBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_TRAILS);}   
+   virtual int       Type(void) const {return(CLASS_TYPE_TRAILS);}   
    //--- initialization
    virtual bool      Init(JStrategy *s,JStop *stop);
    virtual void      SetContainer(JStop *stop){m_stop=stop;}

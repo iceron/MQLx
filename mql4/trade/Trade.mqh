@@ -43,6 +43,7 @@ protected:
 public:
                      JTrade(void);
                     ~JTrade(void);
+   virtual int Type() const {return(CLASS_TYPE_TRADE);}
    //--- activation and deactivation
    virtual bool      Activate() const {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
@@ -189,50 +190,50 @@ int JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const
 //+------------------------------------------------------------------+
 bool JTrade::OrderClose(ulong ticket,double lotsize=0.0,double price=0.0)
   {
-   if (!OrderSelect((int)ticket,SELECT_BY_TICKET)) return(false);
-   if (OrderCloseTime()>0) return(true);
+   if(!OrderSelect((int)ticket,SELECT_BY_TICKET)) return(false);
+   if(OrderCloseTime()>0) return(true);
    double close_price=0.0;
-   int deviation = 0;
-   if (OrderSymbol()==m_symbol.Name() && price>0.0)
-   {
+   int deviation=0;
+   if(OrderSymbol()==m_symbol.Name() && price>0.0)
+     {
       close_price=NormalizeDouble(price,m_symbol.Digits());
       deviation=(int)(m_deviation*m_symbol.Point());
-   }
+     }
    else
-   {
+     {
       close_price=NormalizeDouble(OrderClosePrice(),(int)MarketInfo(OrderSymbol(),MODE_DIGITS));
       deviation=(int)(m_deviation*MarketInfo(OrderSymbol(),MODE_POINT));
-   }
-   if (lotsize==0.0) lotsize = OrderLots();
-   return(::OrderClose((int)ticket,lotsize,close_price,deviation,m_color_exit)); 
+     }
+   if(lotsize==0.0) lotsize=OrderLots();
+   return(::OrderClose((int)ticket,lotsize,close_price,deviation,m_color_exit));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderCloseAll(CArrayInt *other_magic, bool restrict_symbol=true)
+bool JTrade::OrderCloseAll(CArrayInt *other_magic,bool restrict_symbol=true)
   {
-   bool res=true;   
-   int total = OrdersTotal();
-   for (int i=total-1;i>=0;i--)
-   {
-      double bid=0.0, ask = 0.0;
-      if (!OrderSelect(i,SELECT_BY_POS)) continue;
-      if (OrderSymbol()!=m_symbol.Name() && restrict_symbol) continue;
-      if (OrderMagicNumber()!=m_magic && other_magic.Search(OrderMagicNumber())<0) continue;
+   bool res=true;
+   int total= OrdersTotal();
+   for(int i=total-1;i>=0;i--)
+     {
+      double bid=0.0,ask=0.0;
+      if(!OrderSelect(i,SELECT_BY_POS)) continue;
+      if(OrderSymbol()!=m_symbol.Name() && restrict_symbol) continue;
+      if(OrderMagicNumber()!=m_magic && other_magic.Search(OrderMagicNumber())<0) continue;
       m_symbol.RefreshRates();
       RefreshRates();
-      if (OrderSymbol()==m_symbol.Name())
-      {
+      if(OrderSymbol()==m_symbol.Name())
+        {
          bid = m_symbol.Bid();
          ask = m_symbol.Ask();
-      }
+        }
       else
-      {
+        {
          bid = MarketInfo(OrderSymbol(),MODE_BID);
          ask = MarketInfo(OrderSymbol(),MODE_ASK);
-      }
-      if (res) res = OrderClose(OrderTicket(),OrderLots(),OrderType()==ORDER_TYPE_BUY?bid:ask);
-   }
+        }
+      if(res) res=OrderClose(OrderTicket(),OrderLots(),OrderType()==ORDER_TYPE_BUY?bid:ask);
+     }
    return(res);
   }
 //+------------------------------------------------------------------+

@@ -21,7 +21,7 @@ protected:
 public:
                      JMoneysBase(void);
                     ~JMoneysBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_MONEYS);}
+   virtual int       Type(void) const {return(CLASS_TYPE_MONEYS);}
    virtual bool      Validate(void);
    //--- initialization
    virtual bool      Init(JStrategy *s);

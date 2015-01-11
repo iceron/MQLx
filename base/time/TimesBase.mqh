@@ -19,7 +19,7 @@ protected:
 public:
                      JTimesBase(void);
                     ~JTimesBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_TIMES);}
+   virtual int       Type(void) const {return(CLASS_TYPE_TIMES);}
    //-- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}

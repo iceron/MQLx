@@ -19,7 +19,7 @@ protected:
 public:
                      JOrderStopsBase(void);
                     ~JOrderStopsBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_ORDERSTOPS);}
+   virtual int       Type(void) const {return(CLASS_TYPE_ORDERSTOPS);}
    //--- initialization
    virtual void      SetContainer(JOrder *order){m_order=order;}
    //--- checking

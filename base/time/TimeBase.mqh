@@ -21,7 +21,7 @@ protected:
 public:
                      JTimeBase(void);
                     ~JTimeBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_TIME);}
+   virtual int       Type(void) const {return(CLASS_TYPE_TIME);}
    virtual bool      Validate() {return(true);}
    //--- initialization
    virtual bool      Init(JStrategy *s,JTimes *times);

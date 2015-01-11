@@ -62,7 +62,7 @@ protected:
 public:
                      JStopBase(void);
                     ~JStopBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_STOP);}
+   virtual int       Type(void) const {return(CLASS_TYPE_STOP);}
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);

@@ -30,7 +30,7 @@ protected:
 public:
                      JTrailBase(void);
                     ~JTrailBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_TRAIL);}
+   virtual int       Type(void) const {return(CLASS_TYPE_TRAIL);}
    //--- initialization                    
    virtual bool      Init(JStrategy *s,JTrails *t);
    virtual void      SetContainer(JTrails *trails){m_trails=trails;}

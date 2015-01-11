@@ -7,8 +7,8 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Object.mqh>
 #include <Arrays\ArrayDouble.mqh>
-#include <traderjet-cross\common\enum\ENUM_CMD.mqh>
-#include <traderjet-cross\common\common.mqh>
+#include "..\..\common\enum\ENUM_CMD.mqh"
+#include "..\..\common\common.mqh"
 #include "..\lib\AccountInfo.mqh"
 #include "..\lib\SymbolInfo.mqh"
 #include "..\event\EventBase.mqh"
@@ -47,7 +47,7 @@ protected:
 public:
                      JSignalBase(void);
                     ~JSignalBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_SIGNAL);}
+   virtual int       Type(void) const {return(CLASS_TYPE_SIGNAL);}
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}

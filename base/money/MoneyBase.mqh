@@ -33,7 +33,7 @@ protected:
 public:
                      JMoneyBase(void);
                     ~JMoneyBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_MONEY);}
+   virtual int       Type(void) const {return(CLASS_TYPE_MONEY);}
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual bool      InitAccount(CAccountInfo *account);

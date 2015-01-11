@@ -30,7 +30,7 @@ protected:
 public:
                      JOrderBase(void);
                     ~JOrderBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_ORDER);}
+   virtual int       Type(void) const {return(CLASS_TYPE_ORDER);}
    //--- initialization
    virtual void      SetContainer(JOrders *orders){m_orders=orders;}   
    //--- getters and setters       

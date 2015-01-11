@@ -27,7 +27,7 @@ protected:
 public:
                      JOrdersBase(void);
                     ~JOrdersBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_ORDERS);}
+   virtual int       Type(void) const {return(CLASS_TYPE_ORDERS);}
    //--- initialization
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    //--- getters and setters

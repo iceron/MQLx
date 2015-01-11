@@ -17,7 +17,7 @@ protected:
 public:
                      JExpertBase(void);
                     ~JExpertBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_EXPERT);}
+   virtual int       Type(void) const {return(CLASS_TYPE_EXPERT);}
    virtual bool      Validate(void);
    //--- events
    virtual void      OnTick(void);

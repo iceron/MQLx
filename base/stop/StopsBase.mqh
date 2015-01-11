@@ -19,7 +19,7 @@ protected:
 public:
                      JStopsBase(void);
                     ~JStopsBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_STOPS);}
+   virtual int       Type(void) const {return(CLASS_TYPE_STOPS);}
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}

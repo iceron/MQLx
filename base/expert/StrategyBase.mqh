@@ -73,7 +73,7 @@ protected:
 public:
                      JStrategyBase(void);
                     ~JStrategyBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_STRATEGY);}
+   virtual int       Type(void) const {return(CLASS_TYPE_STRATEGY);}
    //--- initialization
    virtual bool      Add(CObject *object);
    virtual bool      AddMoneys(JMoneys *moneys);
