@@ -15,12 +15,12 @@ public:
                     ~JOrderStop(void);
    virtual void      Check(double &volume);
    virtual bool      NewTicket(void);
-   virtual void      NewTicket(bool value);
+   virtual void      NewTicket(const bool value);
    virtual bool      Recreate(void);
-   virtual void      UpdateTicket(ulong ticket);
+   virtual void      UpdateTicket(const ulong ticket);
 protected:
-   virtual bool      ModifyOrderStop(double stoploss,double takeprofit);
-   virtual bool      UpdateOrderStop(double stoploss,double takeprofit);
+   virtual bool      ModifyOrderStop(const double stoploss,const double takeprofit);
+   virtual bool      UpdateOrderStop(const double stoploss,const double takeprofit);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -44,14 +44,14 @@ bool JOrderStop::NewTicket(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStop::NewTicket(bool value)
+void JOrderStop::NewTicket(const bool value)
   {
    m_order.NewTicket(value);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStop::UpdateTicket(ulong ticket)
+void JOrderStop::UpdateTicket(const ulong ticket)
   {
    m_order.Ticket(ticket);
   }
@@ -82,7 +82,7 @@ bool JOrderStop::Recreate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::ModifyOrderStop(double stoploss,double takeprofit)
+bool JOrderStop::ModifyOrderStop(const double stoploss,const double takeprofit)
   {
    bool modify=false;
    bool stoploss_modified=false,takeprofit_modified=false;
@@ -131,7 +131,7 @@ bool JOrderStop::ModifyOrderStop(double stoploss,double takeprofit)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::UpdateOrderStop(double stoploss,double takeprofit)
+bool JOrderStop::UpdateOrderStop(const double stoploss,const double takeprofit)
   {   
    bool modify_sl=false,modify_tp=false,stoploss_modified=false,takeprofit_modified=false;
    if (stoploss>0)

@@ -25,9 +25,9 @@ public:
    virtual void      SetContainer(JStop *stop){m_stop=stop;}
    //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}  
+   virtual void      Active(const bool activate) {m_activate=activate;}  
    //--- checking
-   virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
+   virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double stoploss,const double takeprofit);
 protected:
 
   };
@@ -60,7 +60,7 @@ bool JTrailsBase::Init(JStrategy *s,JStop *stop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailsBase::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
+double JTrailsBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,const double stoploss,const double takeprofit)
   {
    if(!Active()) return(0.0);
    double val=0.0,ret=0.0;

@@ -14,7 +14,7 @@ class JMoneyFixedMarginBase : public JMoney
 public:
                      JMoneyFixedMarginBase(void);
                     ~JMoneyFixedMarginBase(void);
-   virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
+   virtual void      UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl);
    virtual bool      Validate(void);
 
   };
@@ -45,7 +45,7 @@ bool JMoneyFixedMarginBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JMoneyFixedMarginBase::UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl)
+void JMoneyFixedMarginBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    if(m_symbol==NULL)
       return;

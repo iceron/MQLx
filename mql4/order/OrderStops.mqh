@@ -15,7 +15,7 @@ public:
                     ~JOrderStops(void);
    virtual bool      CheckNewTicket(JOrderStop *orderstop);
    virtual ulong     GetNewTicket(JOrderStop *orderstop);
-   virtual bool      UpdateStopsByTicket(ulong ticket);
+   virtual bool      UpdateStopsByTicket(const ulong ticket);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -41,7 +41,7 @@ bool JOrderStops::CheckNewTicket(JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStops::UpdateStopsByTicket(ulong ticket)
+bool JOrderStops::UpdateStopsByTicket(const ulong ticket)
   {
    bool res=true;
    JOrderStop *order_stop;

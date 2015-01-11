@@ -51,20 +51,20 @@ public:
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
-   virtual bool      Validate(void);
+   virtual bool      Validate(void) const;
    //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
+   virtual void      Active(const bool activate) {m_activate=activate;}
    virtual string    Name(void) const {return(m_name);}
-   virtual void      Name(string name) {m_name=name;}
+   virtual void      Name(const string name) {m_name=name;}
    virtual bool      Reverse(void) const {return(m_reverse);}
-   virtual void      Reverse(bool reverse) {m_reverse=reverse;}
+   virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
    virtual int       LastSignal(void) const {return(m_signal);}
    virtual int       LastValidSignal(void) const {return(m_signal_valid);}
    //--- signal methods
-   virtual void      AddEmptyValue(double);
+   virtual void      AddEmptyValue(const double val);
    virtual int       CheckSignal(void);
-   virtual bool      IsEmpty(double val);
+   virtual bool      IsEmpty(const double val);
    virtual ENUM_CMD  LongCondition(void) {return(0);}
    virtual ENUM_CMD  ShortCondition(void) {return(0);}
   };
@@ -89,7 +89,7 @@ JSignalBase::~JSignalBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::Validate(void)
+bool JSignalBase::Validate(void) const
   {
    return(true);
   }

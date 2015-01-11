@@ -11,21 +11,21 @@
 class JStop : public JStopBase
   {
 public:
-                     JStop(string name);
+                     JStop(const string name);
                     ~JStop(void);
    virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const;
    virtual bool      DeleteStopOrder(const ulong ticket) const;
    virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop);
    virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop);
-   virtual int       OpenStop(JOrder *order,JOrderStop *orderstop,double val);
-   virtual bool      CloseStop(JOrder *order,JOrderStop *orderstop,double price);
-   virtual bool      MoveStopLoss(ulong ticket,double stoploss);
-   virtual bool      MoveTakeProfit(ulong ticket,double stoploss);
+   virtual int       OpenStop(JOrder *order,JOrderStop *orderstop,const double val);
+   virtual bool      CloseStop(JOrder *order,JOrderStop *orderstop,const double price);
+   virtual bool      MoveStopLoss(const ulong ticket,const double stoploss);
+   virtual bool      MoveTakeProfit(const ulong ticket,const double stoploss);
 protected:
    virtual ulong     GetNewTicket(JOrder *order,JOrderStop *orderstop);
   };
 //+------------------------------------------------------------------+
-JStop::JStop(string name)
+JStop::JStop(const string name)
   {
    m_name=name;
   }
@@ -84,7 +84,7 @@ double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JStop::OpenStop(JOrder *order,JOrderStop *orderstop,double val)
+int JStop::OpenStop(JOrder *order,JOrderStop *orderstop,const double val)
   {
    int res=-1;
    double lotsize=LotSizeCalculate(order,orderstop);
@@ -101,7 +101,7 @@ int JStop::OpenStop(JOrder *order,JOrderStop *orderstop,double val)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::CloseStop(JOrder *order,JOrderStop *orderstop,double price)
+bool JStop::CloseStop(JOrder *order,JOrderStop *orderstop,const double price)
   {
    bool res=false;
    ENUM_ORDER_TYPE type=order.OrderType();
@@ -135,7 +135,7 @@ ulong JStop::GetNewTicket(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::MoveStopLoss(ulong ticket,double stoploss)
+bool JStop::MoveStopLoss(const ulong ticket,const double stoploss)
   {
    if(OrderSelect((int)ticket,SELECT_BY_TICKET))
      {
@@ -147,7 +147,7 @@ bool JStop::MoveStopLoss(ulong ticket,double stoploss)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::MoveTakeProfit(ulong ticket,double takeprofit)
+bool JStop::MoveTakeProfit(const ulong ticket,const double takeprofit)
   {
    if(OrderSelect((int)ticket,SELECT_BY_TICKET))
      {

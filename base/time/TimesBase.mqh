@@ -23,12 +23,12 @@ public:
    //-- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
-   virtual bool      Validate(void);
+   virtual bool      Validate(void) const;
    //--- activation and deactivation
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
+   virtual void      Active(const bool activate) {m_activate=activate;}
    //--- checking
-   virtual bool      Evaluate(void);
+   virtual bool      Evaluate(void) const;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -58,7 +58,7 @@ bool JTimesBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimesBase::Validate(void)
+bool JTimesBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {
@@ -71,7 +71,7 @@ bool JTimesBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimesBase::Evaluate(void)
+bool JTimesBase::Evaluate(void) const
   {
    if(!Active()) return(true);
    for(int i=0;i<Total();i++)

@@ -12,7 +12,7 @@ class JOrder : public JOrderBase
   {
 public:
                      JOrder(void);
-                     JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price);
+                     JOrder(const ulong ticket,const ENUM_ORDER_TYPE type,const double volume,const double price);
                     ~JOrder(void);
    virtual bool      IsClosed(void);
    virtual int       Compare(const CObject *node,const int mode=0) const;
@@ -26,7 +26,7 @@ JOrder::JOrder(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price)
+JOrder::JOrder(const ulong ticket,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
    m_ticket=ticket;
    m_type=type;

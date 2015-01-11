@@ -24,24 +24,24 @@ protected:
 public:
                      JTimeFilterBase(void);
                     ~JTimeFilterBase(void);
-   virtual bool      Validate(void);
-   virtual bool      Evaluate(void);
-   virtual bool      Init(int gmt,int starthour,int endhour,int startminute=0,int endminute=0,int startseconds=0,int endseconds=0);
-   virtual void      SetDays(bool sun,bool mon,bool tue,bool wed,bool thu,bool fri,bool sat);
-   virtual bool      Sunday(void) const {return(m_mon);}
-   virtual void      Sunday(bool mon) {m_mon=mon;}
+   virtual bool      Validate(void) const;
+   virtual bool      Evaluate(void) const;
+   virtual bool      Init(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0);
+   virtual void      SetDays(const bool sun,const bool mon,const bool tue,const bool wed,const bool thu,const bool fri,const bool sat);
+   virtual bool      Sunday(void) const {return(m_sun);}
+   virtual void      Sunday(const bool t) {m_sun=t;}
    virtual bool      Monday(void) const {return(m_mon);}
-   virtual void      Monday(bool mon) {m_mon=mon;}
-   virtual bool      Tuesday(void) const {return(m_mon);}
-   virtual void      Tuesday(bool mon) {m_mon=mon;}
-   virtual bool      Wednesday(void) const {return(m_mon);}
-   virtual void      Wednesday(bool mon) {m_mon=mon;}
-   virtual bool      Thursday(void) const {return(m_mon);}
-   virtual void      Thursday(bool mon) {m_mon=mon;}
-   virtual bool      Friday(void) const {return(m_mon);}
-   virtual void      Friday(bool mon) {m_mon=mon;}
-   virtual bool      Saturday(void) const {return(m_mon);}
-   virtual void      Saturday(bool mon) {m_mon=mon;}
+   virtual void      Monday(const bool t) {m_mon=t;}
+   virtual bool      Tuesday(void) const {return(m_tue);}
+   virtual void      Tuesday(const bool t) {m_tue=t;}
+   virtual bool      Wednesday(void) const {return(m_wed);}
+   virtual void      Wednesday(const bool t) {m_wed=t;}
+   virtual bool      Thursday(void) const {return(m_thu);}
+   virtual void      Thursday(const bool t) {m_thu=t;}
+   virtual bool      Friday(void) const {return(m_fri);}
+   virtual void      Friday(const bool t) {m_fri=t;}
+   virtual bool      Saturday(void) const {return(m_sat);}
+   virtual void      Saturday(const bool t) {m_sat=t;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -64,7 +64,7 @@ JTimeFilterBase::~JTimeFilterBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeFilterBase::Validate(void)
+bool JTimeFilterBase::Validate(void) const
   {
    start=StructToTime(m_filter_start);
    end=StructToTime(m_filter_end);
@@ -78,7 +78,7 @@ bool JTimeFilterBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeFilterBase::Init(int gmt,int starthour,int endhour,int startminute=0,int endminute=0,int startseconds=0,int endseconds=0)
+bool JTimeFilterBase::Init(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0)
   {
    m_filter_start.hour=starthour+gmt;
    m_filter_start.min=startminute;
@@ -91,10 +91,7 @@ bool JTimeFilterBase::Init(int gmt,int starthour,int endhour,int startminute=0,i
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JTimeFilterBase::Evaluate(void)
+bool JTimeFilterBase::Evaluate(void) const
   {
    if(!Active()) return(true);
    bool result=true;
@@ -164,7 +161,7 @@ bool JTimeFilterBase::Evaluate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JTimeFilterBase::SetDays(bool sun=false,bool mon=true,bool tue=true,bool wed=true,bool thu=true,bool fri=true,bool sat=false)
+void JTimeFilterBase::SetDays(const bool sun=false,const bool mon=true,const bool tue=true,const bool wed=true,const bool thu=true,const bool fri=true,const bool sat=false)
   {
    m_sun = sun;
    m_mon = mon;

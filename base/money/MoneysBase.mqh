@@ -22,17 +22,17 @@ public:
                      JMoneysBase(void);
                     ~JMoneysBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_MONEYS);}
-   virtual bool      Validate(void);
+   virtual bool      Validate(void) const;
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s) {m_strategy=s;}
    //--- setters and getters
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
+   virtual void      Active(const bool activate) {m_activate=activate;}
    virtual int       Selected(void) const {return(m_selected);}
-   virtual void      Selected(bool select) {m_selected=select;}
+   virtual void      Selected(const bool select) {m_selected=select;}
    //--- volume calculation
-   virtual double    Volume(double price,ENUM_ORDER_TYPE type,double sl);
+   virtual double    Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -62,7 +62,7 @@ bool JMoneysBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneysBase::Validate(void)
+bool JMoneysBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {
@@ -76,7 +76,7 @@ bool JMoneysBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JMoneysBase::Volume(double price,ENUM_ORDER_TYPE type,double sl)
+double JMoneysBase::Volume(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    JMoney *money=m_data[m_selected];
    return(money==NULL?0:money.Volume(price,type,sl));

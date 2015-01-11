@@ -32,7 +32,7 @@ public:
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    //--- getters and setters
    virtual bool      Activate(void) const {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual void      Activate(const bool activate) {m_activate=activate;}
    //--- events                  
    virtual void      OnTick(void);
    //--- archiving

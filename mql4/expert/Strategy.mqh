@@ -13,12 +13,12 @@ class JStrategy : public JStrategyBase
 public:
                      JStrategy(void);
                     ~JStrategy(void);
-   virtual void      CloseOppositeOrders(int res);
+   virtual void      CloseOppositeOrders(const int res);
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void);
-   virtual bool      TradeOpen(int res);
-   virtual void      CloseOrders(int res);
-   virtual bool      CloseOrder(JOrder *order,int index);
+   virtual bool      TradeOpen(const int res);
+   virtual void      CloseOrders(const int res);
+   virtual bool      CloseOrder(JOrder *order,const int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -35,7 +35,7 @@ JStrategy::~JStrategy(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::CloseOppositeOrders(int res)
+JStrategy::CloseOppositeOrders(const int res)
   {   
    if(m_orders.Total()==0) return;
    if(m_position_reverse)
@@ -44,7 +44,7 @@ JStrategy::CloseOppositeOrders(int res)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::CloseOrders(int res)
+JStrategy::CloseOrders(const int res)
   {   
    int total= m_orders.Total(); 
    for(int i=total-1;i>=0;i--)
@@ -57,7 +57,7 @@ JStrategy::CloseOrders(int res)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::CloseOrder(JOrder *order,int index)
+bool JStrategy::CloseOrder(JOrder *order,const int index)
   {
    bool closed=false;
    if(CheckPointer(order)==POINTER_DYNAMIC)

@@ -46,22 +46,22 @@ public:
    virtual int Type() const {return(CLASS_TYPE_TRADE);}
    //--- activation and deactivation
    virtual bool      Activate() const {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   virtual void      Activate(const bool activate) {m_activate=activate;}
    //--- setters and getters
-   virtual color     ArrowColor(ENUM_ORDER_TYPE type);
+   virtual color     ArrowColor(const ENUM_ORDER_TYPE type);
    virtual void      SetAsyncMode(const bool mode) {m_async_mode=mode;}
-   virtual void      SetExpertMagicNumber(int magic) {m_magic=magic;}
-   virtual void      SetDeviationInPoints(ulong deviation) {m_deviation=deviation;}
-   virtual void      SetOrderExpiration(datetime expire) {m_order_expiration=expire;}
+   virtual void      SetExpertMagicNumber(const int magic) {m_magic=magic;}
+   virtual void      SetDeviationInPoints(const ulong deviation) {m_deviation=deviation;}
+   virtual void      SetOrderExpiration(const datetime expire) {m_order_expiration=expire;}
    virtual bool      SetSymbol(CSymbolInfo *symbol);
    //-- trade methods   
-   virtual int       Buy(double volume,double price,double sl,double tp,const string comment="");
-   virtual int       Sell(double volume,double price,double sl,double tp,const string comment="");
-   virtual bool      OrderDelete(ulong ticket);
-   virtual bool      OrderClose(ulong ticket,double lotsize=0,double price=0);
-   virtual bool      OrderCloseAll(CArrayInt *other_magic,bool restrict_symbol=true);
+   virtual int       Buy(const double volume,const double price,const double sl,const double tp,const string comment="");
+   virtual int       Sell(const double volume,const double price,const double sl,const double tp,const string comment="");
+   virtual bool      OrderDelete(const ulong ticket);
+   virtual bool      OrderClose(const ulong ticket,const double lotsize=0,const double price=0);
+   virtual bool      OrderCloseAll(CArrayInt *other_magic,const bool restrict_symbol=true);
    virtual bool      OrderModify(const ulong ticket,const double price,const double sl,const double tp,const ENUM_ORDER_TYPE_TIME type_time,const datetime expiration,const double stoplimit=0.0);
-   virtual int       OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,const double limit_price,const double price,const double sl,const double tp,ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,const string comment="");
+   virtual int       OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,const double limit_price,const double price,const double sl,const double tp,const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,const string comment="");
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -111,14 +111,14 @@ bool JTrade::OrderModify(const ulong ticket,const double price,const double sl,c
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderDelete(ulong ticket)
+bool JTrade::OrderDelete(const ulong ticket)
   {
    return(::OrderDelete((int)ticket));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JTrade::Buy(double volume,double price,double sl,double tp,const string comment="")
+int JTrade::Buy(const double volume,const double price,const double sl,const double tp,const string comment="")
   {
    if(m_symbol==NULL)
       return(false);
@@ -139,7 +139,7 @@ int JTrade::Buy(double volume,double price,double sl,double tp,const string comm
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JTrade::Sell(double volume,double price,double sl,double tp,const string comment="")
+int JTrade::Sell(const double volume,const double price,const double sl,const double tp,const string comment="")
   {
    if(m_symbol==NULL)
       return(false);
@@ -162,7 +162,7 @@ int JTrade::Sell(double volume,double price,double sl,double tp,const string com
 //+------------------------------------------------------------------+
 int JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,
                       const double limit_price,const double price,const double sl,const double tp,
-                      ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,
+                      const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,
                       const string comment="")
   {
    bool res;
@@ -188,7 +188,7 @@ int JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderClose(ulong ticket,double lotsize=0.0,double price=0.0)
+bool JTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const double price=0.0)
   {
    if(!OrderSelect((int)ticket,SELECT_BY_TICKET)) return(false);
    if(OrderCloseTime()>0) return(true);
@@ -204,13 +204,13 @@ bool JTrade::OrderClose(ulong ticket,double lotsize=0.0,double price=0.0)
       close_price=NormalizeDouble(OrderClosePrice(),(int)MarketInfo(OrderSymbol(),MODE_DIGITS));
       deviation=(int)(m_deviation*MarketInfo(OrderSymbol(),MODE_POINT));
      }
-   if(lotsize==0.0) lotsize=OrderLots();
-   return(::OrderClose((int)ticket,lotsize,close_price,deviation,m_color_exit));
+   double lots = (lotsize>0.0)?lotsize:OrderLots();
+   return(::OrderClose((int)ticket,lots,close_price,deviation,m_color_exit));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderCloseAll(CArrayInt *other_magic,bool restrict_symbol=true)
+bool JTrade::OrderCloseAll(CArrayInt *other_magic,const bool restrict_symbol=true)
   {
    bool res=true;
    int total= OrdersTotal();
@@ -239,7 +239,7 @@ bool JTrade::OrderCloseAll(CArrayInt *other_magic,bool restrict_symbol=true)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-color JTrade::ArrowColor(ENUM_ORDER_TYPE type)
+color JTrade::ArrowColor(const ENUM_ORDER_TYPE type)
   {
    switch(type)
      {

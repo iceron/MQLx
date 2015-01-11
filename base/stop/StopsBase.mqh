@@ -23,10 +23,10 @@ public:
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
-   virtual bool      Validate(void);
+   virtual bool      Validate(void) const;
    //--- setters and getters
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
+   virtual void      Active(const bool activate) {m_activate=activate;}
    virtual JStop    *Main();
   };
 //+------------------------------------------------------------------+
@@ -57,7 +57,7 @@ bool JStopsBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopsBase::Validate(void)
+bool JStopsBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {

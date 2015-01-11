@@ -27,17 +27,17 @@ public:
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
-   virtual bool      Validate();
+   virtual bool      Validate() const;
    //--- checking   
    virtual bool      Active(void) const{return(m_activate);}
-   virtual void      Active(bool active) {m_activate=active;}
+   virtual void      Active(const bool active) {m_activate=active;}
    virtual int       CheckSignals(void);
    virtual int       NewSignal(void) const {return(m_new_signal);}
-   virtual void      NewSignal(int signal) {m_new_signal=signal;}
+   virtual void      NewSignal(const int signal) {m_new_signal=signal;}
    virtual int       LastSignal(void) const {return(m_last_signal);}
-   virtual void      LastSignal(int signal) {m_last_signal=signal;}
+   virtual void      LastSignal(const int signal) {m_last_signal=signal;}
    virtual bool      Reverse(void) const{return(m_reverse);}
-   virtual void      Reverse(bool reverse) {m_reverse=reverse;}
+   virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
 
   };
 //+------------------------------------------------------------------+
@@ -71,7 +71,7 @@ bool JSignalsBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalsBase::Validate(void)
+bool JSignalsBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {

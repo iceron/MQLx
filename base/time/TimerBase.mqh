@@ -29,25 +29,25 @@ public:
                      JTimerBase(void);
                     ~JTimerBase(void);
    //--- initialization
-   virtual bool      Init(uint years,uint months,uint days,uint hours,uint minutes,uint seconds);
-   virtual bool      Validate(void);
+   virtual bool      Init(const uint years,const uint months,const uint days,const uint hours,const uint minutes,const uint seconds);
+   virtual bool      Validate(void) const;
    //--- getters and setters
    virtual uint      Year(void) const {return(m_years);}
-   virtual void      Year(uint years) {m_years=years;}
+   virtual void      Year(const uint years) {m_years=years;}
    virtual uint      Month(void) const {return(m_months);}
-   virtual void      Month(uint months) {m_months=months;}
+   virtual void      Month(const uint months) {m_months=months;}
    virtual uint      Days(void) const {return(m_days);}
-   virtual void      Days(uint days) {m_days=days;}
+   virtual void      Days(const uint days) {m_days=days;}
    virtual uint      Hours(void) const {return(m_hours);}
-   virtual void      Hours(uint hours) {m_hours=hours;}
+   virtual void      Hours(const uint hours) {m_hours=hours;}
    virtual uint      Minutes(void) const {return(m_minutes);}
-   virtual void      Minutes(uint minutes) {m_minutes=minutes;}
+   virtual void      Minutes(const uint minutes) {m_minutes=minutes;}
    virtual uint      Seconds(void) const {return(m_seconds);}
-   virtual void      Seconds(uint seconds) {m_seconds=seconds;}
+   virtual void      Seconds(const uint seconds) {m_seconds=seconds;}
    virtual bool      Total(void) const {return(m_total);}
    //--- evaluation   
    virtual bool      Elapsed(void) const {return(m_elapsed);}
-   virtual bool      Evaluate(void);
+   virtual bool      Evaluate(void) const;
    virtual void      RecalculateTotal(void);
   };
 //+------------------------------------------------------------------+
@@ -71,7 +71,7 @@ JTimerBase::~JTimerBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimerBase::Init(uint years,uint months,uint days,uint hours,uint minutes,uint seconds)
+bool JTimerBase::Init(const uint years,const uint months,const uint days,const uint hours,const uint minutes,const uint seconds)
   {
    m_years=years;
    m_months=months;
@@ -85,7 +85,7 @@ bool JTimerBase::Init(uint years,uint months,uint days,uint hours,uint minutes,u
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimerBase::Validate(void)
+bool JTimerBase::Validate(void) const
   {
    if(m_total<=0)
      {
@@ -104,7 +104,7 @@ void JTimerBase::RecalculateTotal(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimerBase::Evaluate(void)
+bool JTimerBase::Evaluate(void) const
   {
    if(!Active()) return(true);
    bool result=true;

@@ -35,22 +35,22 @@ public:
    virtual void      SetContainer(JOrders *orders){m_orders=orders;}   
    //--- getters and setters       
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}           
+   virtual void      Active(const bool activate) {m_activate=activate;}           
    virtual void      CreateStops(JStops *stops);
    virtual void      CheckStops(void);
-   virtual void      IsClosed(bool closed) {m_closed=closed;}
+   virtual void      IsClosed(const bool closed) {m_closed=closed;}
    virtual bool      IsClosed(void) const {return(false);}
-   virtual void      Magic(int magic){m_magic=magic;}
+   virtual void      Magic(const int magic){m_magic=magic;}
    virtual int       Magic(void) const {return(m_magic);}
-   virtual void      Price(double price){m_price=price;}
+   virtual void      Price(const double price){m_price=price;}
    virtual double    Price(void) const {return(m_price);}
-   virtual void      OrderType(ENUM_ORDER_TYPE type){m_type=type;}
+   virtual void      OrderType(const ENUM_ORDER_TYPE type){m_type=type;}
    virtual ENUM_ORDER_TYPE OrderType(void) const {return(m_type);}
-   virtual void      Ticket(ulong ticket) {m_ticket=ticket;}
+   virtual void      Ticket(const ulong ticket) {m_ticket=ticket;}
    virtual ulong     Ticket(void) const {return(m_ticket);}
-   virtual void      Volume(double volume){m_volume=volume;}
+   virtual void      Volume(const double volume){m_volume=volume;}
    virtual double    Volume(void) const {return(m_volume);}
-   virtual void      VolumeInitial(double volume){m_volume_initial=volume;}
+   virtual void      VolumeInitial(const double volume){m_volume_initial=volume;}
    virtual double    VolumeInitial(void) const {return(m_volume_initial);}
    //--- archiving
    virtual bool      CloseStops(void);

@@ -34,34 +34,34 @@ public:
    //--- initialization                    
    virtual bool      Init(JStrategy *s,JTrails *t);
    virtual void      SetContainer(JTrails *trails){m_trails=trails;}
-   virtual bool      Validate(void);
+   virtual bool      Validate(void) const;
    //--- getters and setters    
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
+   virtual void      Active(const bool activate) {m_activate=activate;}
    virtual int       DigitsAdjust(void) const {return(m_digits_adjust);}
-   virtual void      DigitsAdjust(int adjust) {m_digits_adjust=adjust;}
+   virtual void      DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    virtual double    End(void) const {return(m_end);}
-   virtual void      End(double end) {m_end=end;}
+   virtual void      End(const double end) {m_end=end;}
    virtual double    PointsAdjust(void) const {return(m_points_adjust);}
-   virtual void      PointsAdjust(double adjust) {m_points_adjust=adjust;}
-   virtual void      Set(double trail,double start,double step=1,double end=0);
+   virtual void      PointsAdjust(const double adjust) {m_points_adjust=adjust;}
+   virtual void      Set(const double trail,const double st,const double step=1,const double end=0);
    virtual double    Start(void) const {return(m_start);}
-   virtual void      Start(double start) {m_start=start;}
+   virtual void      Start(const double st) {m_start=st;}
    virtual double    Step(void) const {return(m_step);}
-   virtual void      Step(double step) {m_step=step;}
+   virtual void      Step(const double step) {m_step=step;}
    virtual double    Trail(void) const {return(m_trail);}
-   virtual void      Trail(double trail) {m_trail=trail;}
+   virtual void      Trail(const double trail) {m_trail=trail;}
    virtual int       TrailMode(void) const {return(m_mode);}
-   virtual void      TrailMode(ENUM_TRAIL_MODE mode) {m_mode=mode;}
+   virtual void      TrailMode(const ENUM_TRAIL_MODE mode) {m_mode=mode;}
    virtual int       TrailTarget(void) const {return(m_target);}
-   virtual void      TrailTarget(ENUM_TRAIL_TARGET target) {m_target=target;}
+   virtual void      TrailTarget(const ENUM_TRAIL_TARGET target) {m_target=target;}
    //--- checking
-   virtual double    Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit);
+   virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double stoploss,const double takeprofit);
 protected:
    //--- price calculation
-   virtual double    ActivationPrice(ENUM_ORDER_TYPE type,double entry_price);
-   virtual double    DeactivationPrice(ENUM_ORDER_TYPE type,double entry_price);
-   virtual double    Price(ENUM_ORDER_TYPE type);
+   virtual double    ActivationPrice(const ENUM_ORDER_TYPE type,const double entry_price);
+   virtual double    DeactivationPrice(const ENUM_ORDER_TYPE type,const double entry_price);
+   virtual double    Price(const ENUM_ORDER_TYPE type);
    //--- deinitialization
    virtual bool      Deinit(void);
   };
@@ -89,7 +89,7 @@ JTrailBase::~JTrailBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrailBase::Validate(void)
+bool JTrailBase::Validate(void) const
   {
    return(true);
   }
@@ -116,17 +116,17 @@ bool JTrailBase::Deinit(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JTrailBase::Set(double trail,double start,double step=1,double end=0)
+void JTrailBase::Set(const double trail,const double st,const double step=1,const double end=0)
   {
    m_trail=trail;
-   m_start=start;
+   m_start=st;
    m_end=end;
    m_step=step;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailBase::ActivationPrice(ENUM_ORDER_TYPE type,double entry_price)
+double JTrailBase::ActivationPrice(const ENUM_ORDER_TYPE type,const double entry_price)
   {
    if(type==ORDER_TYPE_BUY)
       return(entry_price+m_start*m_points_adjust);
@@ -137,7 +137,7 @@ double JTrailBase::ActivationPrice(ENUM_ORDER_TYPE type,double entry_price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailBase::DeactivationPrice(ENUM_ORDER_TYPE type,double entry_price)
+double JTrailBase::DeactivationPrice(const ENUM_ORDER_TYPE type,const double entry_price)
   {
    if(type==ORDER_TYPE_BUY)
       return(m_end==0?0:entry_price+m_end*m_points_adjust);
@@ -148,7 +148,7 @@ double JTrailBase::DeactivationPrice(ENUM_ORDER_TYPE type,double entry_price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailBase::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss,double takeprofit)
+double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,const double stoploss,const double takeprofit)
   {
    if(!Active()) return(0.0);
    if (m_start==0 || m_trail==0) return(0.0);
@@ -185,7 +185,7 @@ double JTrailBase::Check(ENUM_ORDER_TYPE type,double entry_price,double stoploss
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailBase::Price(ENUM_ORDER_TYPE type)
+double JTrailBase::Price(const ENUM_ORDER_TYPE type)
   {
    if(type==ORDER_TYPE_BUY)
      {

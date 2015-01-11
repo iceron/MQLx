@@ -39,32 +39,32 @@ public:
    virtual bool      InitAccount(CAccountInfo *account);
    virtual bool      InitSymbol(CSymbolInfo *symbol);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
-   virtual bool      Validate(void);
+   virtual bool      Validate(void) const;
    //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
-   virtual void      Balance(double balance) {m_balance=balance;}
+   virtual void      Active(const bool activate) {m_activate=activate;}
+   virtual void      Balance(const double balance) {m_balance=balance;}
    virtual double    Balance(void) const {return(m_balance);}
-   virtual void      BalanceIncrement(double balance) {m_balance_inc=balance;}
+   virtual void      BalanceIncrement(const double balance) {m_balance_inc=balance;}
    virtual double    BalanceIncrement(void) const {return(m_balance_inc);}
-   virtual void      Equity(bool equity) {m_equity=equity;}
+   virtual void      Equity(const bool equity) {m_equity=equity;}
    virtual bool      Equity(void) const {return(m_equity);}
-   virtual void      LastUpdate(datetime update) {m_last_update=update;}
+   virtual void      LastUpdate(const datetime update) {m_last_update=update;}
    virtual datetime  LastUpdate(void) const {return(m_last_update);}
-   virtual void      Percent(double percent) {m_percent=percent;}
+   virtual void      Percent(const double percent) {m_percent=percent;}
    virtual double    Percent(void) const {return(m_percent);}
-   virtual void      Period(int period) {m_period=period;}
+   virtual void      Period(const int period) {m_period=period;}
    virtual int       Period(void) const {return(m_period);}
-   virtual void      UpdateType(ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
-   virtual double    Volume(double price,ENUM_ORDER_TYPE type,double sl);
-   virtual void      VolumeCurrent(double volume) {m_volume=volume;}
+   virtual void      UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
+   virtual double    Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
+   virtual void      VolumeCurrent(const double volume) {m_volume=volume;}
    virtual double    VolumeCurrent(void) const {return(m_volume);}
-   virtual void      VolumeBase(double volume_base) {m_volume_base=volume_base;}
+   virtual void      VolumeBase(const double volume_base) {m_volume_base=volume_base;}
    virtual double    VolumeBase(void) const {return(m_volume_base);}
 protected:
    virtual bool      UpdateByMargin(void);
    virtual bool      UpdateByPeriod(void);
-   virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
+   virtual void      UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -100,7 +100,7 @@ bool JMoneyBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyBase::Validate(void)
+bool JMoneyBase::Validate(void) const
   {
    if (m_volume_base>0)
    {
@@ -136,7 +136,7 @@ bool JMoneyBase::InitAccount(CAccountInfo *account)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JMoneyBase::Volume(double price,ENUM_ORDER_TYPE type,double sl)
+double JMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    if(!Active()) return(0.0);
    if(m_volume==0.0) UpdateLotSize(price,type,sl);
@@ -164,7 +164,7 @@ double JMoneyBase::Volume(double price,ENUM_ORDER_TYPE type,double sl)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JMoneyBase::UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl)
+void JMoneyBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    double balance=m_equity==false?m_account.Margin():m_account.Equity();
    m_volume=m_volume_base+((int)(balance/m_balance_inc))*m_volume_inc;

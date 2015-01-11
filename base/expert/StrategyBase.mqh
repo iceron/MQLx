@@ -79,8 +79,8 @@ public:
    virtual bool      AddMoneys(JMoneys *moneys);
    virtual bool      AddSignals(JSignals *signals);
    virtual bool      AddStops(JStops *stops);
-   virtual bool      AddTimes(JTimes *times);   
-   virtual bool      Init(string symbol,ENUM_TIMEFRAMES period,bool every_tick,int magic,bool one_trade_per_candle,bool position_reverse);
+   virtual bool      AddTimes(JTimes *times);
+   virtual bool      Init(const string symbol,const ENUM_TIMEFRAMES period,const bool every_tick,const int magic,const bool one_trade_per_candle,const bool position_reverse);
    virtual bool      InitAccount(CAccountInfo *account=NULL);
    virtual bool      InitTrade(JTrade *trade=NULL);
    virtual bool      InitEvent(JEvent *event);
@@ -89,82 +89,84 @@ public:
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
    virtual bool      InitStops(void);
+   virtual bool      Validate(void) const;
+   //container
+   virtual JExpert  *GetContainer() const {return(GetPointer(m_expert));}
    virtual void      SetContainer(JExpert *e){m_expert=e;}
-   virtual bool      Validate(void);
    //--- activation and deactivation
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(bool activate) {m_activate=activate;}
+   virtual void      Active(const bool activate) {m_activate=activate;}
    //--- setters and getters   
    virtual CAccountInfo *AccountInfo(void) const {return(m_account);}
-   virtual JEvent    *Event(void) const {return(m_event);}
-   virtual JStop     *MainStop(void) const {return(m_main_stop);}
-   virtual JMoneys   *Moneys(void) const {return(m_moneys);}
-   virtual JOrders   *Orders() const {return(GetPointer(m_orders));}
-   virtual JOrders   *OrdersHistory() const {return(GetPointer(m_orders_history));}
+   virtual JEvent   *Event(void) const {return(m_event);}
+   virtual JStop    *MainStop(void) const {return(m_main_stop);}
+   virtual JMoneys  *Moneys(void) const {return(m_moneys);}
+   virtual JOrders  *Orders() const {return(GetPointer(m_orders));}
+   virtual JOrders  *OrdersHistory() const {return(GetPointer(m_orders_history));}
    virtual CArrayInt *OtherMagic() const {return(GetPointer(m_other_magic));}
-   virtual JSignals  *Signals(void) const {return(m_signals);}
-   virtual JStops    *Stops(void) const {return(m_stops);}
+   virtual JSignals *Signals(void) const {return(m_signals);}
+   virtual JStops   *Stops(void) const {return(m_stops);}
    virtual CSymbolInfo *SymbolInfo(void) const {return(m_symbol);}
-   virtual JTimes    *Times(void) const {return(m_times);}
-   virtual void      AsyncMode(bool async) {m_trade.SetAsyncMode(async);}
+   virtual JTimes   *Times(void) const {return(m_times);}
+   virtual void      AsyncMode(const bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
-   virtual void      Comment(string comment){m_comment=comment;}
+   virtual void      Comment(const string comment){m_comment=comment;}
    virtual int       DigitsAdjust(void) const {return(m_digits_adjust);}
-   virtual void      DigitsAdjust(int adjust) {m_digits_adjust=adjust;}
+   virtual void      DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    virtual datetime  Expiration(void) const {return(m_expiration);}
-   virtual void      Expiration(datetime expiration) {m_expiration=expiration;}
+   virtual void      Expiration(const datetime expiration) {m_expiration=expiration;}
    virtual datetime  LastTradeTime(void) const {return(m_last_trade_time);}
-   virtual void      LastTradeTime(datetime tradetime) {m_last_trade_time=tradetime;}
+   virtual void      LastTradeTime(const datetime tradetime) {m_last_trade_time=tradetime;}
    virtual datetime  LastTickTime(void) const {return(m_last_tick_time);}
-   virtual void      LastTickTime(datetime ticktime) {m_last_tick_time=ticktime;}
+   virtual void      LastTickTime(const datetime ticktime) {m_last_tick_time=ticktime;}
    virtual double    LotSize(void) const {return(m_lotsize);}
-   virtual void      LotSize(double lotsize){m_lotsize=lotsize;}
+   virtual void      LotSize(const double lotsize){m_lotsize=lotsize;}
    virtual int       Magic(void) const {return m_magic;}
-   virtual void      Magic(int magic) {m_magic=magic;}
+   virtual void      Magic(const int magic) {m_magic=magic;}
    virtual int       OrdersTotal(void) const {return(m_orders.Total());}
    virtual int       OrdersHistoryTotal(void) const {return(m_orders_history.Total());}
    virtual double    PointsAdjust(void) const {return(m_points_adjust);}
-   virtual void      PointsAdjust(double adjust) {m_points_adjust=adjust;}
+   virtual void      PointsAdjust(const double adjust) {m_points_adjust=adjust;}
    virtual ENUM_TRADE_MODE TradeMode(void) const {return(m_trade_mode);}
-   virtual void      TradeMode(ENUM_TRADE_MODE mode){m_trade_mode=mode;}
+   virtual void      TradeMode(const ENUM_TRADE_MODE mode){m_trade_mode=mode;}
    virtual int       TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total());}
-   virtual ENUM_EXECUTION_MODE ExecutionMode(void) {return(m_exec_mode);}
-   virtual void      ExecutionMode(ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
+   virtual ENUM_EXECUTION_MODE ExecutionMode(void) const {return(m_exec_mode);}
+   virtual void      ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
    //--- signal parameters
    virtual int       Period(void) const {return(PeriodSeconds(m_period));}
-   virtual void      Period(ENUM_TIMEFRAMES period) {m_period=period;}
+   virtual void      Period(const ENUM_TIMEFRAMES period) {m_period=period;}
    virtual bool      EveryTick(void) const {return(m_every_tick);}
-   virtual void      EveryTick(bool every_tick) {m_every_tick=every_tick;}
+   virtual void      EveryTick(const bool every_tick) {m_every_tick=every_tick;}
    virtual bool      OneTradePerCandle(void) const {return(m_one_trade_per_candle);}
-   virtual void      OneTradePerCandle(bool one_trade_per_candle){m_one_trade_per_candle=one_trade_per_candle;}
+   virtual void      OneTradePerCandle(const bool one_trade_per_candle){m_one_trade_per_candle=one_trade_per_candle;}
    virtual bool      PositionReverse(void) const {return(m_position_reverse);}
-   virtual void      PositionReverse(bool position_reverse){m_position_reverse=position_reverse;}
-   virtual bool      AddOtherMagic(int magic);
-   virtual void      AddOtherMagicString(string &magics[]);
+   virtual void      PositionReverse(const bool position_reverse){m_position_reverse=position_reverse;}
+   virtual bool      AddOtherMagic(const int magic);
+   virtual void      AddOtherMagicString(const string &magics[]);
    virtual uint      MaxTrades(void) const {return(m_max_trades);}
-   virtual void      MaxTrades(int max_trades){m_max_trades=max_trades;}
+   virtual void      MaxTrades(const int max_trades){m_max_trades=max_trades;}
    virtual int       MaxOrders(void) const {return(m_max_orders);}
-   virtual void      MaxOrders(int maxorders) {m_max_orders=maxorders;}
+   virtual void      MaxOrders(const int maxorders) {m_max_orders=maxorders;}
    //--- deinitialization
    virtual void      Deinit(const int reason=0);
 protected:
    //--- signal processing
-   virtual int       CheckSignals(void);
+   virtual int       CheckSignals(void) const;
    //--- order processing   
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(JOrder *order);
    virtual void      CheckClosedOrders(void);
    virtual bool      CloseStops(void);
-   virtual void      CloseOppositeOrders(int res) {}
-   virtual bool      IsNewBar(void);
-   virtual bool      IsTradeProcessed(void);
+   virtual void      CloseOppositeOrders(const int res) {}
+   virtual bool      IsNewBar(void) const;
+   virtual bool      IsTradeProcessed(void) const;
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
-   virtual double    PriceCalculate(int res);
-   virtual double    PriceCalculateCustom(int res) {return(0);}
+   virtual double    PriceCalculate(const int res);
+   virtual double    PriceCalculateCustom(const int res) {return(0);}
    virtual bool      Refresh(void);
-   virtual double    StopLossCalculate(int res,double price);
-   virtual double    TakeProfitCalculate(int res,double price);
-   virtual bool      TradeOpen(int res) {return(true);}
+   virtual double    StopLossCalculate(const int res,const double price);
+   virtual double    TakeProfitCalculate(const int res,const double price);
+   virtual bool      TradeOpen(const int res) {return(true);}
    //--- deinitialization
    virtual void      DeinitAccount(void);
    virtual void      DeinitMoneys(void);
@@ -395,7 +397,7 @@ bool JStrategyBase::AddTimes(JTimes *times)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategyBase::Validate(void)
+bool JStrategyBase::Validate(void) const
   {
    if(CheckPointer(m_signals)==POINTER_DYNAMIC)
      {
@@ -422,7 +424,7 @@ bool JStrategyBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStrategyBase::PriceCalculate(int res)
+double JStrategyBase::PriceCalculate(const int res)
   {
    if(m_trade_mode==TRADE_MODE_MARKET)
      {
@@ -440,7 +442,7 @@ double JStrategyBase::PriceCalculate(int res)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStrategyBase::LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss)
+double JStrategyBase::LotSizeCalculate(const double price,const ENUM_ORDER_TYPE type,const double stoploss)
   {
    if(CheckPointer(m_moneys))
       return(m_moneys.Volume(price,type,stoploss));
@@ -449,7 +451,7 @@ double JStrategyBase::LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double 
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStrategyBase::StopLossCalculate(int res,double price)
+double JStrategyBase::StopLossCalculate(const int res,const double price)
   {
    if(CheckPointer(m_main_stop))
      {
@@ -463,7 +465,7 @@ double JStrategyBase::StopLossCalculate(int res,double price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStrategyBase::TakeProfitCalculate(int res,double price)
+double JStrategyBase::TakeProfitCalculate(const int res,const double price)
   {
    if(CheckPointer(m_main_stop))
      {
@@ -515,7 +517,7 @@ void JStrategyBase::CheckClosedOrders(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JStrategyBase::CheckSignals(void)
+int JStrategyBase::CheckSignals(void) const
   {
    if(CheckPointer(m_signals)==POINTER_DYNAMIC)
       return(m_signals.CheckSignals());
@@ -534,7 +536,7 @@ bool JStrategyBase::Refresh(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategyBase::AddOtherMagic(int magic)
+bool JStrategyBase::AddOtherMagic(const int magic)
   {
    if(m_other_magic.Search(magic)>=0)
       return(true);
@@ -548,7 +550,7 @@ bool JStrategyBase::AddOtherMagic(int magic)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategyBase::AddOtherMagicString(string &magics[])
+void JStrategyBase::AddOtherMagicString(const string &magics[])
   {
    for(int i=0;i<ArraySize(magics);i++)
       AddOtherMagic(StrToInteger(magics[i]));
@@ -556,7 +558,7 @@ void JStrategyBase::AddOtherMagicString(string &magics[])
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategyBase::IsTradeProcessed(void)
+bool JStrategyBase::IsTradeProcessed(void) const
   {
    if(!m_one_trade_per_candle) return(false);
    datetime arr[];
@@ -569,7 +571,7 @@ bool JStrategyBase::IsTradeProcessed(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategyBase::IsNewBar(void)
+bool JStrategyBase::IsNewBar(void) const
   {
    if(m_every_tick) return(true);
    datetime arr[];

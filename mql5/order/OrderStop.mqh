@@ -15,7 +15,7 @@ public:
                     ~JOrderStop(void);
    virtual void      Check(double &volume);
 protected:
-   virtual bool      ModifyOrderStop(double stoploss,double takeprofit);
+   virtual bool      ModifyOrderStop(const double stoploss,const double takeprofit);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -32,7 +32,7 @@ JOrderStop::~JOrderStop(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::ModifyOrderStop(double stoploss,double takeprofit)
+bool JOrderStop::ModifyOrderStop(const double stoploss,const double takeprofit)
   {
    bool modify=false;
    bool stoploss_modified=false,takeprofit_modified=false;

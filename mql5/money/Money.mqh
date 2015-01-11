@@ -1,7 +1,12 @@
 //+------------------------------------------------------------------+
-//|                                                      ProjectName |
-//|                                      Copyright 2012, CompanyName |
-//|                                       http://www.companyname.net |
+//|                                                        Money.mqh |
+//|                                                   Enrico Lambino |
+//|                                   http://www.cyberforexworks.com |
+//+------------------------------------------------------------------+
+#property copyright "Enrico Lambino"
+#property link      "http://www.cyberforexworks.com"
+//+------------------------------------------------------------------+
+//|                                                                  |
 //+------------------------------------------------------------------+
 class JMoney : public JMoneyBase
   {

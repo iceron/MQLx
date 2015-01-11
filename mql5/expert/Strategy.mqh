@@ -107,22 +107,6 @@ JStrategyBase::CloseOppositeOrders(const int res)
      {
       CloseOrders(res);
      }
-/*
-   if(m_position_reverse)
-     {
-      JOrder *order=m_orders.At(m_orders.Total()-1);
-      ENUM_ORDER_TYPE type=order.OrderType();
-      if((res==CMD_LONG && IsOrderTypeShort(type)) || (res==CMD_SHORT && IsOrderTypeLong(type)) || res==CMD_VOID)
-        {
-         if(CloseStops())
-           {
-            m_trade.PositionClose(m_symbol.Name());
-            ArchiveOrders();
-            m_orders.Clear();
-           }
-        }
-     }
-   */
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -142,12 +126,12 @@ JStrategy::CloseOrders(const int res)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::CloseOrder(JOrder *order,int index)
+JStrategy::CloseOrder(JOrder *order,const int index)
   {
    bool closed=false;
    COrderInfo ord;
    CHistoryOrderInfo h_ord;
-   if(CheckPointer(order))
+   if(CheckPointer(order)==POINTER_DYNAMIC)
      {
       if (ord.Select(order.Ticket())
          closed=m_trade.OrderDelete(order.Ticket());

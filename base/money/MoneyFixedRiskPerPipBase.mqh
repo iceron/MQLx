@@ -14,8 +14,8 @@ class JMoneyFixedRiskPerPipBase : public JMoney
 public:
                      JMoneyFixedRiskPerPipBase(void);
                     ~JMoneyFixedRiskPerPipBase(void);
-   virtual void      UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl);
-   virtual bool      Validate(void);
+   virtual void      UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl);
+   virtual bool      Validate(void) const ;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -32,7 +32,7 @@ JMoneyFixedRiskPerPipBase::~JMoneyFixedRiskPerPipBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyFixedRiskPerPipBase::Validate(void)
+bool JMoneyFixedRiskPerPipBase::Validate(void) const
   {
    if (m_percent<=0)
    {
@@ -44,7 +44,7 @@ bool JMoneyFixedRiskPerPipBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JMoneyFixedRiskPerPipBase::UpdateLotSize(double price,ENUM_ORDER_TYPE type,double sl)
+void JMoneyFixedRiskPerPipBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    if(m_symbol==NULL)
       return;

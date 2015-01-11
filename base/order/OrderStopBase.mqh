@@ -54,27 +54,27 @@ public:
    virtual ulong     MainTicket(void) const {return(m_order.Ticket());}
    virtual double    MainTicketPrice() const {return(m_order.Price());}
    virtual ENUM_ORDER_TYPE MainTicketType(void) const {return(m_order.OrderType());}
-   virtual void      StopLoss(double stoploss) {m_stoploss=stoploss;}
+   virtual void      StopLoss(const double stoploss) {m_stoploss=stoploss;}
    virtual double    StopLoss(void) const {return(m_stoploss);}
    virtual string    StopLossName(void) const {return(m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket());}
-   virtual void      StopLossTicket(ulong ticket) {m_stoploss_ticket=ticket;}
+   virtual void      StopLossTicket(const ulong ticket) {m_stoploss_ticket=ticket;}
    virtual ulong     StopLossTicket(void) const {return(m_stoploss_ticket);}
-   virtual void      TakeProfit(double takeprofit) {m_takeprofit=takeprofit;}
+   virtual void      TakeProfit(const double takeprofit) {m_takeprofit=takeprofit;}
    virtual double    TakeProfit(void) const {return(m_takeprofit);}
    virtual string    TakeProfitName(void) const {return(m_stop.Name()+m_stop.TakeProfitName()+(string)m_order.Ticket());}
-   virtual void      TakeProfitTicket(ulong ticket) {m_takeprofit_ticket=ticket;}
+   virtual void      TakeProfitTicket(const ulong ticket) {m_takeprofit_ticket=ticket;}
    virtual ulong     TakeProfitTicket(void) const {return(m_takeprofit_ticket);}
-   virtual void      Volume(double volume) {m_volume=volume;}
+   virtual void      Volume(const double volume) {m_volume=volume;}
    virtual double    Volume(void) const {return(m_volume);}
-   virtual void      VolumeFixed(double volume) {m_volume_fixed=volume;}
+   virtual void      VolumeFixed(const double volume) {m_volume_fixed=volume;}
    virtual double    VolumeFixed(void) const {return(m_volume_fixed);}
-   virtual void      VolumePercent(double volume) {m_volume_percent=volume;}
+   virtual void      VolumePercent(const double volume) {m_volume_percent=volume;}
    virtual double    VolumePercent(void) const {return(m_volume_percent);}
    //--- checking   
    virtual void      Check(double &volume) {}
    virtual bool      Close(void);
    virtual bool      CheckTrailing(void);
-   virtual bool      DeleteChartObject(string name);
+   virtual bool      DeleteChartObject(const string name);
    virtual bool      DeleteEntry(void);
    virtual bool      DeleteStopLines(void);
    virtual bool      DeleteStopLoss(void);
@@ -84,8 +84,8 @@ public:
    //--- deinitialization 
    virtual bool      Deinit(void);
 protected:
-   virtual bool      ModifyOrderStop(double stoploss,double takeprofit) {return(true);}
-   virtual bool      UpdateOrderStop(double stoploss,double takeprofit) {return(true);}
+   virtual bool      ModifyOrderStop(const double stoploss,const double takeprofit) {return(true);}
+   virtual bool      UpdateOrderStop(const double stoploss,const double takeprofit) {return(true);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

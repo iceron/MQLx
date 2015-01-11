@@ -15,12 +15,12 @@ protected:
    bool              m_ticket_updated;
 public:
                      JOrder(void);
-                     JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price);
+                     JOrder(const ulong ticket,const ENUM_ORDER_TYPE type,const double volume,const double price);
                     ~JOrder(void);
    virtual bool      IsClosed(void);
-   virtual void      Ticket(ulong ticket) {m_ticket_current=ticket;}
+   virtual void      Ticket(const ulong ticket) {m_ticket_current=ticket;}
    virtual ulong     Ticket(void) const {return(MathMax(m_ticket_current,m_ticket));}
-   virtual void      NewTicket(bool n) {m_ticket_updated=n;}
+   virtual void      NewTicket(const bool updated) {m_ticket_updated=updated;}
    virtual bool      NewTicket(void) const {return(m_ticket_updated);}
    virtual int       Compare(const CObject *node,const int mode=0) const;
   };
@@ -34,7 +34,7 @@ JOrder::JOrder(void): m_ticket_current(0),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder(ulong ticket,ENUM_ORDER_TYPE type,double volume,double price)
+JOrder::JOrder(const ulong ticket,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
    m_ticket=ticket;
    m_ticket_current=ticket;
