@@ -27,7 +27,7 @@ public:
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(const bool activate) {m_activate=activate;}  
    //--- checking
-   virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double stoploss,const double takeprofit);
+   virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
 protected:
 
   };
@@ -60,7 +60,7 @@ bool JTrailsBase::Init(JStrategy *s,JStop *stop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailsBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,const double stoploss,const double takeprofit)
+double JTrailsBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
    if(!Active()) return(0.0);
    double val=0.0,ret=0.0;
@@ -69,7 +69,8 @@ double JTrailsBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,co
       JTrail *trail=At(i);
       if(!CheckPointer(trail)) continue;
       int trail_target=trail.TrailTarget();
-      val=trail.Check(type,entry_price,stoploss,takeprofit);
+      if (mode!=trail_target) continue;
+      val=trail.Check(type,entry_price,price,mode);
       if((type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_TAKEPROFIT))
         {
          if(val>ret || ret==0.0) ret=val;

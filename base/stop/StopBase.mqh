@@ -135,7 +135,7 @@ public:
    virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE type,const double price) {return(m_takeprofit);}
    //--- trailing   
    virtual bool      Add(JTrails *trails);
-   virtual double    CheckTrailing(const ENUM_ORDER_TYPE type,const double entry_price,const double stoploss,const double takeprofit);
+   virtual double    CheckTrailing(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
 protected:
    //--- object creation
    virtual JStopLine *CreateObject(const long id,const string name,const int window,const double price);
@@ -485,11 +485,11 @@ bool JStopBase::Add(JTrails *trails)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStopBase::CheckTrailing(const ENUM_ORDER_TYPE type,const double entry_price,const double stoploss,const double takeprofit)
+double JStopBase::CheckTrailing(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
    if(!CheckPointer(m_trails)) return(0);
    if(!Refresh()) return(0);
-   return(m_trails.Check(type,entry_price,stoploss,takeprofit));
+   return(m_trails.Check(type,entry_price,price,mode));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

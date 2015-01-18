@@ -163,8 +163,8 @@ bool JOrderStopBase::CheckTrailing(void)
       return(false);
      }
    double stoploss=0,takeprofit=0;
-   if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,m_takeprofit);
-//if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,m_takeprofit);
+   if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,TRAIL_TARGET_STOPLOSS);
+   if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_takeprofit,TRAIL_TARGET_TAKEPROFIT);
    return(ModifyOrderStop(stoploss,takeprofit));
   }
 //+------------------------------------------------------------------+

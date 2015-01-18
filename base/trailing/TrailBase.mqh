@@ -56,7 +56,7 @@ public:
    virtual int       TrailTarget(void) const {return(m_target);}
    virtual void      TrailTarget(const ENUM_TRAIL_TARGET target) {m_target=target;}
    //--- checking
-   virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double stoploss,const double takeprofit);
+   virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
 protected:
    //--- price calculation
    virtual double    ActivationPrice(const ENUM_ORDER_TYPE type,const double entry_price);
@@ -148,7 +148,7 @@ double JTrailBase::DeactivationPrice(const ENUM_ORDER_TYPE type,const double ent
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,const double stoploss,const double takeprofit)
+double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
    if(!Active()) return(0.0);
    if (m_start==0 || m_trail==0) return(0.0);
@@ -158,9 +158,9 @@ double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,con
    new_price=Price(type);
    if((type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
-      if(stoploss>=activation-m_trail*m_points_adjust || activation==0.0)
+      if(price>=activation-m_trail*m_points_adjust || activation==0.0)
         {
-         if(new_price>stoploss+m_step*m_points_adjust)
+         if(new_price>price+m_step*m_points_adjust)
             next_stop=new_price-m_trail*m_points_adjust;
         }
       else next_stop=activation-m_trail*m_points_adjust;
@@ -170,9 +170,9 @@ double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,con
      }
    if((type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
-      if(stoploss<=activation+m_trail*m_points_adjust || activation==0.0)
+      if(price<=activation+m_trail*m_points_adjust || activation==0.0)
         {
-         if(new_price<stoploss-m_step*m_points_adjust)
+         if(new_price<price-m_step*m_points_adjust)
             next_stop=new_price+m_trail*m_points_adjust;
         }
       else next_stop=activation+m_trail*m_points_adjust;
