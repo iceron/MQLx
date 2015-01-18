@@ -35,6 +35,7 @@ protected:
    double            m_lotsize;
    int               m_sleep_success;
    int               m_sleep_error;
+   int               m_max_orders_history;
    //--- signal parameters
    bool              m_every_tick;
    ENUM_EXECUTION_MODE m_exec_mode;
@@ -123,6 +124,8 @@ public:
    virtual void      LotSize(const double lotsize){m_lotsize=lotsize;}
    virtual int       Magic(void) const {return m_magic;}
    virtual void      Magic(const int magic) {m_magic=magic;}
+   virtual int       MaxOrdersHistory(void) const {return m_max_orders_history;}
+   virtual void      MaxOrdersHistory(const int max) {m_max_orders_history=max;}
    virtual int       OrdersTotal(void) const {return(m_orders.Total());}
    virtual int       OrdersHistoryTotal(void) const {return(m_orders_history.Total());}
    virtual double    PointsAdjust(void) const {return(m_points_adjust);}
@@ -153,7 +156,7 @@ public:
    virtual void      Deinit(const int reason=0);
 protected:
    //--- signal processing
-   virtual bool       CheckSignals(int &entry,int &exit) const;
+   virtual bool      CheckSignals(int &entry,int &exit) const;
    //--- order processing   
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(JOrder *order);
@@ -187,6 +190,7 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_lotsize(1.0),
                                      m_sleep_success(500),
                                      m_sleep_error(500),
+                                     m_max_orders_history(100),
                                      m_every_tick(true),
                                      m_exec_mode(MODE_TRADE),
                                      m_max_orders(1),
@@ -437,14 +441,14 @@ bool JStrategyBase::OnTick(void)
    if(IsNewBar())
      {
       int entry=0,exit=0;
-      CheckSignals(entry,exit);      
+      CheckSignals(entry,exit);
       CloseOppositeOrders(entry);
       CheckClosedOrders();
       if(!IsTradeProcessed())
-        {         
+        {
          ret=TradeOpen(entry);
          if(ret) m_last_trade_time=m_last_tick_time;
-        }      
+        }
      }
    return(ret);
   }
@@ -524,6 +528,11 @@ void JStrategyBase::ArchiveOrders(void)
 //+------------------------------------------------------------------+
 bool JStrategyBase::ArchiveOrder(JOrder *order)
   {
+   int total_history = m_orders_history.Total();
+   if (total_history<=0)
+      return(true);
+   if (total_history>m_max_orders_history)
+      m_orders_history.Delete(0);
    return(m_orders_history.InsertSort(order));
   }
 //+------------------------------------------------------------------+
