@@ -82,24 +82,8 @@ bool JStrategy::CloseOrder(JOrder *order,const int index)
 //+------------------------------------------------------------------+
 bool JStrategy::OnTick(void)
   {
-   if(!Active()) return(false);
-   bool ret=false;
-   if(!Refresh()) return(ret);
-   m_orders.OnTick();
-   CheckClosedOrders();
-   if(IsNewBar())
-     {
-      int signal=CheckSignals();      
-      CloseOppositeOrders(signal);
-      CheckClosedOrders();
-      if(!IsTradeProcessed())
-        {         
-         ret=TradeOpen(signal);
-         if(ret) m_last_trade_time=m_symbol.Time();
-        }
-      OnTradeTransaction();
-     }
-   m_last_tick_time=m_symbol.Time();
+   bool ret = JStrategyBase::OnTick();
+   if (ret) OnTradeTransaction();
    return(ret);
   }
 //+------------------------------------------------------------------+

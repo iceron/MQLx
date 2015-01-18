@@ -35,22 +35,7 @@ JStrategy::~JStrategy(void)
 //+------------------------------------------------------------------+
 bool JStrategy::OnTick(void)
   {
-   if(!Active()) return(false);
-   bool ret=false;
-   if(!Refresh()) return(ret);
-   m_orders.OnTick();
-   CheckClosedOrders();
-   if(IsNewBar())
-     {
-      int signal=CheckSignals();
-      CloseOppositeOrders(signal);
-      if(!IsTradeProcessed())
-        {
-         ret=TradeOpen(signal);
-         if(ret) m_last_trade_time=m_symbol.Time();
-        }
-     }
-   m_last_tick_time=m_symbol.Time();
+   bool ret = JStrategyBase::OnTick();
    return(ret);
   }
 //+------------------------------------------------------------------+
