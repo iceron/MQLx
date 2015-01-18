@@ -24,7 +24,6 @@ class JStopBase : public CObject
 protected:
    //--- stop order parameters   
    bool              m_activate;
-   //bool              m_convert_stop_type;
    bool              m_main;
    string            m_name;
    bool              m_oco;
@@ -155,7 +154,6 @@ protected:
 //|                                                                  |
 //+------------------------------------------------------------------+
 JStopBase::JStopBase(void) : m_activate(true),
-                             //m_convert_stop_type(true),
                              m_magic(INT_MAX),
                              m_main(false),
                              m_oco(true),
