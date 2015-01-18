@@ -153,7 +153,7 @@ public:
    virtual void      Deinit(const int reason=0);
 protected:
    //--- signal processing
-   virtual int       CheckSignals(void) const;
+   virtual bool       CheckSignals(int &entry,int &exit) const;
    //--- order processing   
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(JOrder *order);
@@ -436,12 +436,13 @@ bool JStrategyBase::OnTick(void)
    CheckClosedOrders();
    if(IsNewBar())
      {
-      int signal=CheckSignals();      
-      CloseOppositeOrders(signal);
+      int entry=0,exit=0;
+      CheckSignals(entry,exit);      
+      CloseOppositeOrders(entry);
       CheckClosedOrders();
       if(!IsTradeProcessed())
         {         
-         ret=TradeOpen(signal);
+         ret=TradeOpen(entry);
          if(ret) m_last_trade_time=m_last_tick_time;
         }      
      }
@@ -543,11 +544,11 @@ void JStrategyBase::CheckClosedOrders(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JStrategyBase::CheckSignals(void) const
+bool JStrategyBase::CheckSignals(int &entry,int &exit) const
   {
    if(CheckPointer(m_signals)==POINTER_DYNAMIC)
-      return(m_signals.CheckSignals());
-   return(CMD_NEUTRAL);
+      return(m_signals.CheckSignals(entry,exit));
+   return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

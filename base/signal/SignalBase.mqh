@@ -31,6 +31,7 @@ protected:
    int               m_signal;
    int               m_signal_valid;
    bool              m_reverse;
+   bool              m_exit;
    JStrategy        *m_strategy;
    CArrayDouble      m_empty_value;
    CAccountInfo     *m_account;
@@ -55,11 +56,13 @@ public:
    //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(const bool activate) {m_activate=activate;}
+   virtual bool      ExitSignal(void) const{return(m_exit);}
+   virtual void      ExitSignal(const bool exit) {m_exit=exit;}
    virtual string    Name(void) const {return(m_name);}
    virtual void      Name(const string name) {m_name=name;}
    virtual bool      Reverse(void) const {return(m_reverse);}
    virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
-   virtual int       LastSignal(void) const {return(m_signal);}
+   virtual int       LastEntry(void) const {return(m_signal);}
    virtual int       LastValidSignal(void) const {return(m_signal_valid);}
    //--- signal methods
    virtual void      AddEmptyValue(const double val);
@@ -75,7 +78,8 @@ JSignalBase::JSignalBase(void) : m_activate(true),
                                  m_name(NULL),
                                  m_signal(CMD_NEUTRAL),
                                  m_signal_valid(CMD_VOID),
-                                 m_reverse(false)
+                                 m_reverse(false),
+                                 m_exit(false)
 
   {
    AddEmptyValue(0.0);
