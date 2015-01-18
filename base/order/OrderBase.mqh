@@ -18,6 +18,7 @@ class JOrderBase : public CObject
 protected:
    bool              m_activate;
    bool              m_closed;
+   bool              m_clean;
    int               m_magic;
    double            m_price;
    ulong             m_ticket;
@@ -32,10 +33,12 @@ public:
                     ~JOrderBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_ORDER);}
    //--- initialization
-   virtual void      SetContainer(JOrders *orders){m_orders=orders;}   
+   virtual void      SetContainer(JOrders *orders){m_orders=orders;}
    //--- getters and setters       
    virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(const bool activate) {m_activate=activate;}           
+   virtual void      Active(const bool activate) {m_activate=activate;}
+   virtual bool      Clean(void) const {return(m_clean);}
+   virtual void      Clean(const bool clean) {m_clean=clean;} 
    virtual void      CreateStops(JStops *stops);
    virtual void      CheckStops(void);
    virtual void      IsClosed(const bool closed) {m_closed=closed;}
@@ -61,6 +64,7 @@ public:
 //+------------------------------------------------------------------+
 JOrderBase::JOrderBase(void) : m_activate(true),
                                m_closed(false),
+                               m_clean(false),
                                m_magic(0),
                                m_price(0.0),
                                m_ticket(0),
@@ -80,7 +84,7 @@ JOrderBase::~JOrderBase(void)
 //+------------------------------------------------------------------+
 void JOrderBase::CreateStops(JStops *stops)
   {
-   if (!CheckPointer(stops)) return;
+   if(!CheckPointer(stops)) return;
    int total= stops.Total();
    for(int i=0;i<total;i++)
      {

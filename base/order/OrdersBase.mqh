@@ -23,6 +23,7 @@ class JOrdersBase : public CArrayObj
   {
 protected:
    bool              m_activate;
+   bool              m_clean;
    JStrategy        *m_strategy;
 public:
                      JOrdersBase(void);
@@ -33,6 +34,8 @@ public:
    //--- getters and setters
    virtual bool      Activate(void) const {return(m_activate);}
    virtual void      Activate(const bool activate) {m_activate=activate;}
+   virtual bool      Clean(void) const {return(m_clean);}
+   virtual void      Clean(const bool clean) {m_clean=clean;} 
    //--- events                  
    virtual void      OnTick(void);
    //--- archiving
@@ -41,7 +44,8 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrdersBase::JOrdersBase(void) : m_activate(true)
+JOrdersBase::JOrdersBase(void) : m_activate(true),
+                                 m_clean(false)
   {
    m_sort_mode=SORT_MODE_ASCENDING;
   }

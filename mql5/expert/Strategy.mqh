@@ -35,7 +35,7 @@ JStrategy::~JStrategy(void)
 //+------------------------------------------------------------------+
 bool JStrategy::OnTick(void)
   {
-   bool ret = JStrategyBase::OnTick();
+   bool ret=JStrategyBase::OnTick();
    return(ret);
   }
 //+------------------------------------------------------------------+
@@ -115,25 +115,21 @@ JStrategy::CloseOrder(JOrder *order,const int index)
   {
    bool closed=false;
    COrderInfo ord;
-   CHistoryOrderInfo h_ord;
    if(CheckPointer(order)==POINTER_DYNAMIC)
      {
-      if (ord.Select(order.Ticket())
+      if(ord.Select(order.Ticket()))
          closed=m_trade.OrderDelete(order.Ticket());
       else
-      {
-         if (IsOrderTypeLong(order.OrderType()))
+        {
+         if(IsOrderTypeLong(order.OrderType()))
             closed=m_trade.Sell(order.Volume(),0,0,0);
-         else if (IsOrderTypeShort(order.OrderType()))
+         else if(IsOrderTypeShort(order.OrderType()))
             closed=m_trade.Buy(order.Volume(),0,0,0);
-      }            
+        }
       if(closed)
         {
-         if(order.CloseStops())
-           {
-            if(ArchiveOrder(m_orders.Detach(index)))
-               order.IsClosed(true);
-           }
+         if(ArchiveOrder(m_orders.Detach(index)))
+            order.IsClosed(true);
         }
      }
   }

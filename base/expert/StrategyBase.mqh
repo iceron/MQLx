@@ -161,6 +161,7 @@ protected:
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(JOrder *order);
    virtual void      CheckClosedOrders(void);
+   virtual void      CheckOldStops(void);
    virtual bool      CloseStops(void);
    virtual void      CloseOppositeOrders(const int res) {}
    virtual bool      IsNewBar(void) const;
@@ -443,7 +444,7 @@ bool JStrategyBase::OnTick(void)
       int entry=0,exit=0;
       CheckSignals(entry,exit);
       CloseOppositeOrders(entry);
-      CheckClosedOrders();
+      CheckOldStops();
       if(!IsTradeProcessed())
         {
          ret=TradeOpen(entry);
@@ -521,17 +522,17 @@ void JStrategyBase::ArchiveOrders(void)
   {
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
-      m_orders_history.InsertSort(m_orders.Detach(i));
+      ArchiveOrder(m_orders.Detach(i));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::ArchiveOrder(JOrder *order)
   {
-   int total_history = m_orders_history.Total();
-   if (total_history<=0)
+   int total_history= m_orders_history.Total();
+   if(total_history<=0)
       return(true);
-   if (total_history>m_max_orders_history)
+   if(total_history>m_max_orders_history)
       m_orders_history.Delete(0);
    return(m_orders_history.InsertSort(order));
   }
@@ -546,9 +547,32 @@ void JStrategyBase::CheckClosedOrders(void)
       JOrder *order=m_orders.At(i);
       ulong ticket = order.Ticket();
       if(order.IsClosed())
-         if(order.CloseStops())
-            m_orders_history.InsertSort(m_orders.Detach(i));
+         ArchiveOrder(m_orders.Detach(i));
      }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::CheckOldStops(void)
+  {
+   if (m_orders_history.Clean()) 
+      return;
+   bool status = true;
+   int total= m_orders_history.Total();
+   for(int i=m_orders_history.Total()-1;i>=0;i--)
+     {
+      JOrder *order=m_orders_history.At(i);
+      if (order.Clean())
+         continue;
+      if (order.CloseStops())
+         order.Clean(true);
+      else
+      {
+         if (status) 
+            status = false;
+      }
+     }
+   m_orders_history.Clean(status);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

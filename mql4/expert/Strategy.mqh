@@ -36,7 +36,7 @@ JStrategy::~JStrategy(void)
 //|                                                                  |
 //+------------------------------------------------------------------+
 JStrategy::CloseOppositeOrders(const int res)
-  {   
+  {
    if(m_orders.Total()==0) return;
    if(m_position_reverse)
       CloseOrders(res);
@@ -45,13 +45,13 @@ JStrategy::CloseOppositeOrders(const int res)
 //|                                                                  |
 //+------------------------------------------------------------------+
 JStrategy::CloseOrders(const int res)
-  {   
-   int total= m_orders.Total(); 
+  {
+   int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
      {
-      JOrder *order=m_orders.At(i);         
+      JOrder *order=m_orders.At(i);
       if(IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) res))
-            CloseOrder(order,i);
+         CloseOrder(order,i);
      }
   }
 //+------------------------------------------------------------------+
@@ -68,11 +68,8 @@ bool JStrategy::CloseOrder(JOrder *order,const int index)
          closed=m_trade.OrderDelete(order.Ticket());
       if(closed)
         {
-         if(order.CloseStops())
-           {
-            if(ArchiveOrder(m_orders.Detach(index)))
-               order.IsClosed(true);
-           }
+         if(ArchiveOrder(m_orders.Detach(index)))
+            order.IsClosed(true);
         }
      }
    return(closed);
@@ -82,8 +79,8 @@ bool JStrategy::CloseOrder(JOrder *order,const int index)
 //+------------------------------------------------------------------+
 bool JStrategy::OnTick(void)
   {
-   bool ret = JStrategyBase::OnTick();
-   if (ret) OnTradeTransaction();
+   bool ret=JStrategyBase::OnTick();
+   if(ret) OnTradeTransaction();
    return(ret);
   }
 //+------------------------------------------------------------------+
@@ -120,7 +117,7 @@ bool JStrategy::TradeOpen(const int res)
    double sl=0,tp=0;
    double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();
-   int orders_total = OrdersTotal();   
+   int orders_total = OrdersTotal();
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       m_trade.SetSymbol(m_symbol);
