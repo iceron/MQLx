@@ -14,9 +14,9 @@ class JiACBase : public JIndicator
 public:
                      JiACBase(const string name);
                     ~JiACBase();
-   virtual bool      Create(const string symbol,const ENUM_TIMEFRAMES period);
-   virtual double    Main(const int index) const;
    virtual int       Type(void) const { return(IND_AC); }
+   virtual bool      Create(const string symbol,const ENUM_TIMEFRAMES period);
+   virtual double    Main(const int index) const;   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

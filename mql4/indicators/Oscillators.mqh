@@ -366,7 +366,6 @@ public:
                     ~JiMomentum();
    virtual bool      Create(const string symbol,const ENUM_TIMEFRAMES period,const int ma_period,const int applied);
    virtual double    Main(const int index) const;
-   virtual double    Signal(const int index) const;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

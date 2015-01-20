@@ -12,7 +12,7 @@
 class JiADBase : public JIndicator
   {
 protected:
-   ENUM_APPLIED_VOLUME m_applied;
+   int m_applied;
 
 public:
                      JiADBase(const string name);
@@ -21,7 +21,7 @@ public:
    virtual bool      Create(const string symbol,const ENUM_TIMEFRAMES period,
                             const ENUM_APPLIED_VOLUME applied);
    virtual double    Main(const int index) const;
-   ENUM_APPLIED_VOLUME Applied(void) const { return(m_applied);   }
+   int Applied(void) const { return(m_applied);   }
 
   };
 //+------------------------------------------------------------------+
@@ -78,7 +78,7 @@ public:
                      JiOBVBase(const string name);
                     ~JiOBVBase(void);
    virtual int       Type(void) const { return(IND_OBV); }
-   virtual bool      Create(const string symbol,const ENUM_TIMEFRAMES period,const ENUM_APPLIED_VOLUME applied);
+   virtual bool      Create(const string symbol,const ENUM_TIMEFRAMES period,const int applied);
    virtual double    Main(const int index) const;
    int               Applied(void) const { return(m_applied); }
 

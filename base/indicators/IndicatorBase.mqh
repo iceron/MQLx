@@ -18,6 +18,9 @@ protected:
 public:
                      JIndicatorBase(const string name);
                     ~JIndicatorBase(void);
+   string            Name(void) const {return(m_name);}
+   string            Symbol(void) const {return(m_symbol);}
+   ENUM_TIMEFRAMES   TimeFrame(void) const {return(m_timeframe);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

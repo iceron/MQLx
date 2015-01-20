@@ -673,7 +673,7 @@ bool JiVIDyA::Create(const string symbol,const ENUM_TIMEFRAMES period,
 //+------------------------------------------------------------------+
 double JiVIDyA::Main(const int index) const
   {
-   return(true);
+   return(0);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
