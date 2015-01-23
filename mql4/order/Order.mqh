@@ -5,21 +5,22 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
+#include <Arrays\ArrayInt.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 class JOrder : public JOrderBase
   {
 protected:
-   ulong             m_ticket_current;
+   CArrayInt         m_ticket_current;
    bool              m_ticket_updated;
 public:
                      JOrder(void);
                      JOrder(const ulong ticket,const ENUM_ORDER_TYPE type,const double volume,const double price);
                     ~JOrder(void);
    virtual bool      IsClosed(void);
-   virtual void      Ticket(const ulong ticket) {m_ticket_current=ticket;}
-   virtual ulong     Ticket(void) const {return(MathMax(m_ticket_current,m_ticket));}
+   virtual void      Ticket(const ulong ticket) {m_ticket_current.InsertSort((int)ticket);}
+   virtual ulong     Ticket(void) const {return(MathMax(m_ticket_current.At(m_ticket_current.Total()-1),m_ticket));}
    virtual void      NewTicket(const bool updated) {m_ticket_updated=updated;}
    virtual bool      NewTicket(void) const {return(m_ticket_updated);}
    virtual int       Compare(const CObject *node,const int mode=0) const;
@@ -27,8 +28,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder(void): m_ticket_current(0),
-                      m_ticket_updated(false)
+JOrder::JOrder(void): m_ticket_updated(false)
   {
   }
 //+------------------------------------------------------------------+
@@ -37,7 +37,7 @@ JOrder::JOrder(void): m_ticket_current(0),
 JOrder::JOrder(const ulong ticket,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
    m_ticket=ticket;
-   m_ticket_current=ticket;
+   m_ticket_current.InsertSort((int)ticket);
    m_type=type;
    m_volume_initial=volume;
    m_volume= m_volume_initial;
@@ -77,14 +77,15 @@ bool JOrder::IsClosed(void)
 int JOrder::Compare(const CObject *node,const int mode=0) const
   {
    int result=0;
-   const JOrder *ticket = node;
-   if(m_ticket_current>0)
+   const JOrder *ticket=node;
+   if(m_ticket_current.Total()>1)
      {
-      if(m_ticket_current>ticket.Ticket())
+      int ticket_current = m_ticket_current.At(m_ticket_current.Total()-1);
+      if((ulong)ticket_current>ticket.Ticket())
          result=1;
-      else if(m_ticket_current<ticket.Ticket())
+      else if((ulong)ticket_current<ticket.Ticket())
          result=-1;
-      else result = 0;  
+      else result=0;
      }
    if(m_ticket>0)
      {
@@ -92,8 +93,8 @@ int JOrder::Compare(const CObject *node,const int mode=0) const
          result=1;
       else if(m_ticket<ticket.Ticket())
          result=-1;
-      else result = 0;   
-     }   
+      else result=0;
+     }
    return(result);
   }
 //+------------------------------------------------------------------+
