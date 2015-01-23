@@ -34,16 +34,7 @@ protected:
    bool              m_exit;
    JStrategy        *m_strategy;
    CArrayDouble      m_empty_value;
-   CAccountInfo     *m_account;
    JSignals         *m_signals;
-   CSymbolInfo      *m_symbol;
-   JStops           *m_stops;
-   JStop            *m_main_stop;
-   JOrders          *m_orders;
-   JOrders          *m_orders_history;
-   CArrayInt        *m_other_magic;
-   JMoneys          *m_moneys;
-   JTimes           *m_times;
    JEvent           *m_event;
 public:
                      JSignalBase(void);
@@ -103,16 +94,7 @@ bool JSignalBase::Validate(void) const
 bool JSignalBase::Init(JStrategy *s)
   {
    m_strategy=s;
-   m_account = m_strategy.AccountInfo();
-   m_symbol= m_strategy.SymbolInfo();
-   m_stops = m_strategy.Stops();
-   m_main_stop=m_strategy.MainStop();
-   m_orders=m_strategy.Orders();
-   m_orders_history=m_strategy.OrdersHistory();
-   m_other_magic=m_strategy.OtherMagic();
-   m_moneys= m_strategy.Moneys();
-   m_times = m_strategy.Times();
-   m_event = m_strategy.Event();
+
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -120,7 +102,7 @@ bool JSignalBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 void JSignalBase::AddEmptyValue(double val)
   {
-   if(m_empty_value.Add(val)) m_empty_value.Sort();
+   m_empty_value.InsertSort(val);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
