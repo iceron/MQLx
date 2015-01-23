@@ -63,9 +63,9 @@ bool JStrategy::CloseOrder(JOrder *order,const int index)
    if(CheckPointer(order)==POINTER_DYNAMIC)
      {
       if(order.OrderType()==ORDER_TYPE_BUY || order.OrderType()==ORDER_TYPE_SELL)
-         closed=m_trade.OrderClose(order.Ticket());
+         closed=m_trade.OrderClose((ulong)order.Ticket());
       else
-         closed=m_trade.OrderDelete(order.Ticket());
+         closed=m_trade.OrderDelete((ulong)order.Ticket());  
       if(closed)
         {
          if(ArchiveOrder(m_orders.Detach(index)))

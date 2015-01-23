@@ -105,9 +105,9 @@ bool JSignalsBase::CheckSignals(int &entry,int &exit)
       if(entry==m_last_entry)
          entry=CMD_NEUTRAL;
    if(entry>0)
-      m_last_entry=entry;
-   if(entry==SignalReverse(exit))
-     {
+      m_last_entry=entry;      
+   if(entry>0 && entry==SignalReverse(exit))
+     {      
       entry= CMD_VOID;
       exit = CMD_VOID;
      }
@@ -123,7 +123,7 @@ int JSignalsBase::CheckEntry() const
      {
       JSignal *signal=At(i);
       if(signal==NULL) continue;
-      if(!signal.ExitSignal()) continue;
+      if(signal.ExitSignal()) continue;
       int ret=signal.CheckSignal();
       if(ret==CMD_VOID)
         {
@@ -147,7 +147,27 @@ int JSignalsBase::CheckEntry() const
 int JSignalsBase::CheckExit() const
   {
    int res=CMD_NEUTRAL;
-   return(true);
+   for(int i=0;i<Total();i++)
+     {
+      JSignal *signal=At(i);
+      if(signal==NULL) continue;
+      if(!signal.ExitSignal()) continue;
+      int ret=signal.CheckSignal();
+      if(ret==CMD_VOID)
+        {
+         return(CMD_VOID);
+        }
+      if(ret==CMD_ALL)
+        {
+         return(CMD_ALL);
+        }
+      if(res>0 && ret!=res)
+        {
+         return (CMD_VOID);
+        }
+      if(ret>0) res=ret;
+     }
+   return(res);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

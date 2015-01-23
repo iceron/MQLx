@@ -127,7 +127,7 @@ int JSignalBase::CheckSignal(void)
       else if(short_cond) res=CMD_SHORT;
      }
    if(m_reverse) res=SignalReverse(res);
-   if(res!=CMD_NEUTRAL) m_signal_valid=res;
+   if(res>CMD_NEUTRAL) m_signal_valid=res;
    m_signal=res;
    return(res);
   }

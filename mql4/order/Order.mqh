@@ -20,7 +20,7 @@ public:
                     ~JOrder(void);
    virtual bool      IsClosed(void);
    virtual void      Ticket(const ulong ticket) {m_ticket_current.InsertSort((int)ticket);}
-   virtual ulong     Ticket(void) const {return(MathMax(m_ticket_current.At(m_ticket_current.Total()-1),m_ticket));}
+   virtual ulong     Ticket(void) const {return(m_ticket_current.At(m_ticket_current.Total()-1));}
    virtual void      NewTicket(const bool updated) {m_ticket_updated=updated;}
    virtual bool      NewTicket(void) const {return(m_ticket_updated);}
    virtual int       Compare(const CObject *node,const int mode=0) const;
@@ -37,7 +37,7 @@ JOrder::JOrder(void): m_ticket_updated(false)
 JOrder::JOrder(const ulong ticket,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
    m_ticket=ticket;
-   m_ticket_current.InsertSort((int)ticket);
+   bool res = m_ticket_current.Add((int)ticket);
    m_type=type;
    m_volume_initial=volume;
    m_volume= m_volume_initial;

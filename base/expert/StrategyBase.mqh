@@ -445,7 +445,8 @@ bool JStrategyBase::OnTick(void)
      {
       int entry=0,exit=0;
       CheckSignals(entry,exit);
-      CloseOppositeOrders(entry);
+      CloseOppositeOrders(entry);      
+      CheckClosedOrders();
       CheckOldStops();
       if(!IsTradeProcessed())
         {
@@ -539,7 +540,7 @@ bool JStrategyBase::ArchiveOrder(JOrder *order)
      }
    if(total_history>m_max_orders_history)
       m_orders_history.Delete(0);
-   return(m_orders_history.InsertSort(order));
+   return(m_orders_history.Add(order));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

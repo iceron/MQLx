@@ -190,8 +190,10 @@ int JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const
 //+------------------------------------------------------------------+
 bool JTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const double price=0.0)
   {
-   if(!OrderSelect((int)ticket,SELECT_BY_TICKET)) return(false);
-   if(OrderCloseTime()>0) return(true);
+   if(!OrderSelect((int)ticket,SELECT_BY_TICKET)) 
+      return(false);
+   if(OrderCloseTime()>0) 
+      return(true);
    double close_price=0.0;
    int deviation=0;
    if(OrderSymbol()==m_symbol.Name() && price>0.0)
@@ -204,7 +206,7 @@ bool JTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const double
       close_price=NormalizeDouble(OrderClosePrice(),(int)MarketInfo(OrderSymbol(),MODE_DIGITS));
       deviation=(int)(m_deviation*MarketInfo(OrderSymbol(),MODE_POINT));
      }
-   double lots = (lotsize>0.0)?lotsize:OrderLots();
+   double lots = (lotsize>0.0)?lotsize:OrderLots(); 
    return(::OrderClose((int)ticket,lots,close_price,deviation,m_color_exit));
   }
 //+------------------------------------------------------------------+
