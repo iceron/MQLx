@@ -36,6 +36,7 @@ protected:
    int               m_sleep_success;
    int               m_sleep_error;
    int               m_max_orders_history;
+   int               m_history_count;
    //--- signal parameters
    bool              m_every_tick;
    ENUM_EXECUTION_MODE m_exec_mode;
@@ -132,7 +133,7 @@ public:
    virtual void      PointsAdjust(const double adjust) {m_points_adjust=adjust;}
    virtual ENUM_TRADE_MODE TradeMode(void) const {return(m_trade_mode);}
    virtual void      TradeMode(const ENUM_TRADE_MODE mode){m_trade_mode=mode;}
-   virtual int       TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total());}
+   virtual int       TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total()+m_history_count);}
    virtual ENUM_EXECUTION_MODE ExecutionMode(void) const {return(m_exec_mode);}
    virtual void      ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
    //-- tick
@@ -192,6 +193,7 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_sleep_success(500),
                                      m_sleep_error(500),
                                      m_max_orders_history(100),
+                                     m_history_count(0),
                                      m_every_tick(true),
                                      m_exec_mode(MODE_TRADE),
                                      m_max_orders(1),
@@ -529,9 +531,12 @@ void JStrategyBase::ArchiveOrders(void)
 //+------------------------------------------------------------------+
 bool JStrategyBase::ArchiveOrder(JOrder *order)
   {
-   int total_history= m_orders_history.Total();
-   if(total_history<=0)
+   int total_history=m_orders_history.Total();
+   if(m_max_orders_history<=0)
+     {
+      m_history_count++;
       return(true);
+     }
    if(total_history>m_max_orders_history)
       m_orders_history.Delete(0);
    return(m_orders_history.InsertSort(order));
@@ -555,22 +560,22 @@ void JStrategyBase::CheckClosedOrders(void)
 //+------------------------------------------------------------------+
 void JStrategyBase::CheckOldStops(void)
   {
-   if (m_orders_history.Clean()) 
+   if(m_orders_history.Clean())
       return;
-   bool status = true;
+   bool status=true;
    int total= m_orders_history.Total();
    for(int i=m_orders_history.Total()-1;i>=0;i--)
      {
       JOrder *order=m_orders_history.At(i);
-      if (order.Clean())
+      if(order.Clean())
          continue;
-      if (order.CloseStops())
+      if(order.CloseStops())
          order.Clean(true);
       else
-      {
-         if (status) 
-            status = false;
-      }
+        {
+         if(status)
+            status=false;
+        }
      }
    m_orders_history.Clean(status);
   }
