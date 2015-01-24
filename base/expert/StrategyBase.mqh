@@ -168,6 +168,7 @@ protected:
    virtual bool      IsNewBar(void) const;
    virtual bool      IsTradeProcessed(void) const;
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
+   virtual void      ManageOrders(void);
    virtual double    PriceCalculate(const int res);
    virtual double    PriceCalculateCustom(const int res) {return(0);}
    virtual bool      Refresh(void);
@@ -440,14 +441,13 @@ bool JStrategyBase::OnTick(void)
    bool ret=false;
    if(!Refresh()) return(ret);
    m_orders.OnTick();
-   CheckClosedOrders();
+   ManageOrders();
    if(IsNewBar())
      {
       int entry=0,exit=0;
       CheckSignals(entry,exit);
-      CloseOppositeOrders(entry);      
-      CheckClosedOrders();
-      CheckOldStops();
+      CloseOppositeOrders(entry);
+      ManageOrders();
       if(!IsTradeProcessed())
         {
          ret=TradeOpen(entry);
@@ -455,6 +455,14 @@ bool JStrategyBase::OnTick(void)
         }
      }
    return(ret);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::ManageOrders(void)
+  {
+   CheckClosedOrders();
+   CheckOldStops();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
