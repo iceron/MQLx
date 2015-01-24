@@ -43,6 +43,8 @@ bool JStrategy::OnTick(void)
 //+------------------------------------------------------------------+
 void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
+   if (!m_orders.IsSorted()) 
+      m_orders.Sort();
    if(request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0)
      {
       JOrder *order=new JOrder(result.order,request.type,result.volume,result.price);
@@ -129,7 +131,10 @@ JStrategy::CloseOrder(JOrder *order,const int index)
       if(closed)
         {
          if(ArchiveOrder(m_orders.Detach(index)))
+         {
             order.IsClosed(true);
+            m_orders_history.Clean(false);
+         }   
         }
      }
   }

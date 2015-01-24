@@ -69,7 +69,10 @@ bool JStrategy::CloseOrder(JOrder *order,const int index)
       if(closed)
         {
          if(ArchiveOrder(m_orders.Detach(index)))
+         {
             order.IsClosed(true);
+            m_orders_history.Clean(false);
+         }   
         }
      }
    return(closed);

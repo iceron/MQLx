@@ -17,7 +17,7 @@ public:
    virtual bool      DeleteStopOrder(const ulong ticket) const;
    virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop);
    virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop);
-   virtual int       OpenStop(JOrder *order,JOrderStop *orderstop,const double val);
+   virtual ulong     OpenStop(JOrder *order,JOrderStop *orderstop,const double val);
    virtual bool      CloseStop(JOrder *order,JOrderStop *orderstop,const double price);
    virtual bool      MoveStopLoss(const ulong ticket,const double stoploss);
    virtual bool      MoveTakeProfit(const ulong ticket,const double stoploss);
@@ -68,7 +68,7 @@ double JStop::TakeProfitPrice(JOrder *order,JOrderStop *orderstop)
   {
    double val=m_takeprofit>0?TakeProfitCalculate(order.OrderType(),order.Price()):TakeProfitCustom(order.OrderType(),order.Price());
    if(m_stop_type==STOP_TYPE_PENDING && val>0.0)
-      orderstop.StopLossTicket(OpenStop(order,orderstop,val));
+      orderstop.TakeProfitTicket(OpenStop(order,orderstop,val));
    return(NormalizeDouble(val,m_symbol.Digits()));
   }
 //+------------------------------------------------------------------+
@@ -78,15 +78,15 @@ double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
   {
    double val=m_stoploss>0?StopLossCalculate(order.OrderType(),order.Price()):StopLossCustom(order.OrderType(),order.Price());
    if(m_stop_type==STOP_TYPE_PENDING && val>0.0)
-      orderstop.StopLossTicket(OpenStop(order,orderstop,val));
+      orderstop.StopLossTicket(OpenStop(order,orderstop,val));   
    return(NormalizeDouble(val,m_symbol.Digits()));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JStop::OpenStop(JOrder *order,JOrderStop *orderstop,const double val)
+ulong JStop::OpenStop(JOrder *order,JOrderStop *orderstop,const double val)
   {
-   int res=-1;
+   ulong res=0;
    double lotsize=LotSizeCalculate(order,orderstop);
    ENUM_ORDER_TYPE type=order.OrderType();
    if(m_stop_type==STOP_TYPE_PENDING && !m_main)

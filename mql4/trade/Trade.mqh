@@ -55,13 +55,13 @@ public:
    virtual void      SetOrderExpiration(const datetime expire) {m_order_expiration=expire;}
    virtual bool      SetSymbol(CSymbolInfo *symbol);
    //-- trade methods   
-   virtual int       Buy(const double volume,const double price,const double sl,const double tp,const string comment="");
-   virtual int       Sell(const double volume,const double price,const double sl,const double tp,const string comment="");
+   virtual ulong     Buy(const double volume,const double price,const double sl,const double tp,const string comment="");
+   virtual ulong     Sell(const double volume,const double price,const double sl,const double tp,const string comment="");
    virtual bool      OrderDelete(const ulong ticket);
    virtual bool      OrderClose(const ulong ticket,const double lotsize=0,const double price=0);
    virtual bool      OrderCloseAll(CArrayInt *other_magic,const bool restrict_symbol=true);
    virtual bool      OrderModify(const ulong ticket,const double price,const double sl,const double tp,const ENUM_ORDER_TYPE_TIME type_time,const datetime expiration,const double stoplimit=0.0);
-   virtual int       OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,const double limit_price,const double price,const double sl,const double tp,const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,const string comment="");
+   virtual ulong     OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,const double limit_price,const double price,const double sl,const double tp,const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,const string comment="");
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -118,7 +118,7 @@ bool JTrade::OrderDelete(const ulong ticket)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JTrade::Buy(const double volume,const double price,const double sl,const double tp,const string comment="")
+ulong JTrade::Buy(const double volume,const double price,const double sl,const double tp,const string comment="")
   {
    if(m_symbol==NULL)
       return(false);
@@ -126,7 +126,7 @@ int JTrade::Buy(const double volume,const double price,const double sl,const dou
    double stops_level=m_symbol.StopsLevel()*m_symbol.Point();
    double ask=m_symbol.Ask();
    if(symbol=="")
-      return(false);
+      return(0);
    if(price!=0)
      {
       if(price>ask+stops_level)
@@ -139,7 +139,7 @@ int JTrade::Buy(const double volume,const double price,const double sl,const dou
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JTrade::Sell(const double volume,const double price,const double sl,const double tp,const string comment="")
+ulong JTrade::Sell(const double volume,const double price,const double sl,const double tp,const string comment="")
   {
    if(m_symbol==NULL)
       return(false);
@@ -147,7 +147,7 @@ int JTrade::Sell(const double volume,const double price,const double sl,const do
    double stops_level=m_symbol.StopsLevel()*m_symbol.Point();
    double bid=m_symbol.Bid();
    if(symbol=="")
-      return(false);
+      return(0);
    if(price!=0)
      {
       if(price>bid+stops_level)
@@ -160,13 +160,13 @@ int JTrade::Sell(const double volume,const double price,const double sl,const do
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,
+ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,
                       const double limit_price,const double price,const double sl,const double tp,
                       const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,
                       const string comment="")
   {
    bool res;
-   int ticket;
+   ulong ticket;
    color arrowcolor=ArrowColor(order_type);
    datetime expire=0;
    if(order_type>1 && expiration>0) expire=expiration*1000+TimeCurrent();
@@ -178,7 +178,7 @@ int JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const
       Sleep(500);
       if(ticket>0)
          if(sl>0 || tp>0)
-            res=::OrderModify(ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
+            res=::OrderModify((int)ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
      }
    else ticket=::OrderSend(symbol,order_type,volume,price,(int)m_deviation,sl,tp,comment,m_magic,expire,arrowcolor);
    if(ticket>0)

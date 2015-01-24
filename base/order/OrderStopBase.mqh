@@ -132,7 +132,7 @@ void JOrderStopBase::Init(JOrder *order,JStop *stop)
    if(m_takeprofit_initial>0)
       m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,m_takeprofit);
    if(m_takeprofit_initial>0 || m_stoploss_initial>0)
-      m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
+      m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -173,7 +173,7 @@ bool JOrderStopBase::CheckTrailing(void)
 bool JOrderStopBase::Close(void)
   {
    bool res1=false,res2=false;
-   if(m_stoploss_closed || m_stoploss==0)
+   if(m_stoploss_closed || m_stoploss==0 || m_stoploss_ticket==0)
      {
       res1=true;
      }
@@ -182,7 +182,7 @@ bool JOrderStopBase::Close(void)
       if(m_stop.DeleteStopOrder(m_stoploss_ticket))
          res1=DeleteStopLoss();
      }
-   if(m_takeprofit_closed || m_takeprofit==0)
+   if(m_takeprofit_closed || m_takeprofit==0 || m_takeprofit_ticket==0)
      {
       res2=true;
      }
@@ -191,9 +191,8 @@ bool JOrderStopBase::Close(void)
       if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
          res2=DeleteTakeProfit();
      }
-
    if(res1 && res2)
-      return(DeleteEntry());
+      return(DeleteEntry()&&DeleteStopLoss()&&DeleteTakeProfit());
    return(false);
   }
 //+------------------------------------------------------------------+
