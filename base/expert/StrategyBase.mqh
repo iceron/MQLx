@@ -612,14 +612,11 @@ bool JStrategyBase::Refresh(void)
 //+------------------------------------------------------------------+
 bool JStrategyBase::AddOtherMagic(const int magic)
   {
+   if (!m_other_magic.IsSorted()) 
+      m_other_magic.Sort();
    if(m_other_magic.Search(magic)>=0)
       return(true);
-   if(m_other_magic.Add(magic))
-     {
-      m_other_magic.Sort();
-      return(true);
-     }
-   return(false);
+   return(m_other_magic.InsertSort(magic));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

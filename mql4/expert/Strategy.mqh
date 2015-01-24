@@ -88,6 +88,8 @@ bool JStrategy::OnTick(void)
 //+------------------------------------------------------------------+
 void JStrategy::OnTradeTransaction(void)
   {
+   if (!m_orders.IsSorted()) 
+      m_orders.Sort();
    JOrder *temp=new JOrder();
    int total= ::OrdersTotal();
    for(int i=0;i<total;i++)

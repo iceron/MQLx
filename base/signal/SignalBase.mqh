@@ -102,6 +102,8 @@ bool JSignalBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 void JSignalBase::AddEmptyValue(double val)
   {
+   if (!m_empty_value.IsSorted()) 
+      m_empty_value.Sort();
    m_empty_value.InsertSort(val);
   }
 //+------------------------------------------------------------------+
