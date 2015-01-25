@@ -139,9 +139,21 @@ void JOrderStopBase::Init(JOrder *order,JStop *stop)
 //+------------------------------------------------------------------+
 bool JOrderStopBase::Deinit(void)
   {
-   if(m_objentry!=NULL) delete m_objentry;
-   if(m_objsl!=NULL) delete m_objsl;
-   if(m_objtp!=NULL) delete m_objtp;
+   if(m_objentry!=NULL) 
+   {
+      delete m_objentry;
+      m_objentry = NULL;
+    }  
+   if(m_objsl!=NULL) 
+   {
+      delete m_objsl;
+      m_objsl = NULL;
+   }   
+   if(m_objtp!=NULL) 
+   {
+      delete m_objtp;
+      m_objtp = NULL;
+   }   
    return(true);
   }
 //+------------------------------------------------------------------+

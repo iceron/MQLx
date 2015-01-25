@@ -169,6 +169,7 @@ protected:
    virtual bool      IsTradeProcessed(void) const;
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
    virtual void      ManageOrders(void);
+   virtual void      ManageOrdersHistory(void);
    virtual double    PriceCalculate(const int res);
    virtual double    PriceCalculateCustom(const int res) {return(0);}
    virtual bool      Refresh(void);
@@ -208,7 +209,7 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_last_tick_time(0),
                                      m_last_trade_time(0)
   {
-   if (!m_other_magic.IsSorted()) 
+   if(!m_other_magic.IsSorted())
       m_other_magic.Sort();
   }
 //+------------------------------------------------------------------+
@@ -456,6 +457,7 @@ bool JStrategyBase::OnTick(void)
          if(ret) m_last_trade_time=m_last_tick_time;
         }
      }
+   ManageOrdersHistory();
    return(ret);
   }
 //+------------------------------------------------------------------+
@@ -533,24 +535,20 @@ bool JStrategyBase::CloseStops(void)
 //+------------------------------------------------------------------+
 void JStrategyBase::ArchiveOrders(void)
   {
+   bool result = false;
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
-      ArchiveOrder(m_orders.Detach(i));
+      ArchiveOrder(m_orders.Detach(i));           
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::ArchiveOrder(JOrder *order)
   {
-   int total_history=m_orders_history.Total();
-   if(m_max_orders_history<=0)
-     {
-      m_history_count++;
-      return(true);
-     }
-   if(total_history>m_max_orders_history)
-      m_orders_history.Delete(0);
-   return(m_orders_history.Add(order));
+   bool result = m_orders_history.Add(order);
+   if (result)
+      m_orders_history.Clean(false);
+   return(result);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -593,6 +591,18 @@ void JStrategyBase::CheckOldStops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+void JStrategyBase::ManageOrdersHistory(void)
+  {
+   if(m_orders_history.Clean())
+     {
+      int excess=m_orders_history.Total()-m_max_orders_history;
+      if(excess>0)
+         m_orders_history.DeleteRange(0,excess-1);
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategyBase::CheckSignals(int &entry,int &exit) const
   {
    if(CheckPointer(m_signals)==POINTER_DYNAMIC)
@@ -613,7 +623,7 @@ bool JStrategyBase::Refresh(void)
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::AddOtherMagic(const int magic)
-  {   
+  {
    if(m_other_magic.Search(magic)>=0)
       return(true);
    return(m_other_magic.InsertSort(magic));

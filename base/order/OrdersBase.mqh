@@ -39,7 +39,8 @@ public:
 JOrdersBase::JOrdersBase(void) : m_activate(true),
                                  m_clean(false)
   {
-   if (!IsSorted()) Sort();
+   if (!IsSorted()) 
+      Sort();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

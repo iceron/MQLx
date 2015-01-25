@@ -25,7 +25,7 @@ protected:
    ENUM_ORDER_TYPE   m_type;
    double            m_volume;
    double            m_volume_initial;
-   JOrderStops       m_order_stops;
+   JOrderStops      *m_order_stops;
    JOrderStop       *m_main_stop;
    JOrders          *m_orders;
 public:
@@ -78,13 +78,21 @@ JOrderBase::JOrderBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 JOrderBase::~JOrderBase(void)
   {
+   if (m_order_stops!=NULL)
+   {
+      delete m_order_stops; 
+      m_order_stops = NULL;
+   }   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JOrderBase::CreateStops(JStops *stops)
   {
-   if(!CheckPointer(stops)) return;
+   if(CheckPointer(stops)==POINTER_INVALID) 
+      return;
+   if (CheckPointer(m_order_stops)==POINTER_INVALID)
+      m_order_stops = new JOrderStops();   
    int total= stops.Total();
    for(int i=0;i<total;i++)
      {

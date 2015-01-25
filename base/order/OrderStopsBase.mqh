@@ -22,6 +22,7 @@ public:
    virtual int       Type(void) const {return(CLASS_TYPE_ORDERSTOPS);}
    //--- initialization
    virtual void      SetContainer(JOrder *order){m_order=order;}
+   virtual void      Deinit();
    //--- checking
    virtual void      Check(double &volume);
    virtual bool      CheckNewTicket(JOrderStop *orderstop) {return(true);}
@@ -38,6 +39,19 @@ JOrderStopsBase::JOrderStopsBase(void)
 //+------------------------------------------------------------------+
 JOrderStopsBase::~JOrderStopsBase(void)
   {
+   Deinit();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JOrderStopsBase::Deinit(void)
+  {
+   for(int i=Total()-1;i>=0;i--)
+     {
+      JOrderStop *orderstop=At(i);
+      orderstop.Deinit();
+     }
+   Clear();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
