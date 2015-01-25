@@ -1,21 +1,12 @@
 //+------------------------------------------------------------------+
-//|                                                 Trade.mqh |
+//|                                                        Trade.mqh |
 //|                                                   Enrico Lambino |
 //|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include <Object.mqh>
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-enum ENUM_ORDER_TYPE_TIME
-  {
-   ORDER_TIME_GTC,
-   ORDER_TIME_DAY,
-   ORDER_TIME_SPECIFIED,
-   ORDER_TIME_SPECIFIED_DAY
-  };
+#include "..\..\common\enum\ENUM_ORDER_TYPE_TIME.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -161,9 +152,9 @@ ulong JTrade::Sell(const double volume,const double price,const double sl,const 
 //|                                                                  |
 //+------------------------------------------------------------------+
 ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,
-                      const double limit_price,const double price,const double sl,const double tp,
-                      const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,
-                      const string comment="")
+                        const double limit_price,const double price,const double sl,const double tp,
+                        const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,
+                        const string comment="")
   {
    bool res;
    ulong ticket;
@@ -190,9 +181,9 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
 //+------------------------------------------------------------------+
 bool JTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const double price=0.0)
   {
-   if(!OrderSelect((int)ticket,SELECT_BY_TICKET)) 
+   if(!OrderSelect((int)ticket,SELECT_BY_TICKET))
       return(false);
-   if(OrderCloseTime()>0) 
+   if(OrderCloseTime()>0)
       return(true);
    double close_price=0.0;
    int deviation=0;
@@ -206,7 +197,7 @@ bool JTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const double
       close_price=NormalizeDouble(OrderClosePrice(),(int)MarketInfo(OrderSymbol(),MODE_DIGITS));
       deviation=(int)(m_deviation*MarketInfo(OrderSymbol(),MODE_POINT));
      }
-   double lots = (lotsize>0.0)?lotsize:OrderLots(); 
+   double lots=(lotsize>0.0)?lotsize:OrderLots();
    return(::OrderClose((int)ticket,lots,close_price,deviation,m_color_exit));
   }
 //+------------------------------------------------------------------+
