@@ -5,20 +5,10 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include <Object.mqh>
 #include <Arrays\ArrayDouble.mqh>
 #include "..\..\common\enum\ENUM_CMD.mqh"
 #include "..\..\common\common.mqh"
-#include "..\lib\AccountInfo.mqh"
-#include "..\lib\SymbolInfo.mqh"
-#include "..\event\EventBase.mqh"
-#include "..\signal\SignalsBase.mqh"
-#include "..\trade\TradeBase.mqh"
-#include "..\order\OrdersBase.mqh"
-#include "..\stop\StopsBase.mqh"
-#include "..\money\MoneysBase.mqh"
-#include "..\time\TimesBase.mqh"
-#include "..\event\EventBase.mqh"
+class JStrategy;
 class JSignals;
 //+------------------------------------------------------------------+
 //|                                                                  |
