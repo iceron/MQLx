@@ -162,8 +162,7 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
    datetime expire=0;
    if(order_type>1 && expiration>0) expire=expiration*1000+TimeCurrent();
    double stops_level=m_symbol.StopsLevel();
-
-   if(stops_level>0 && order_type<=1)
+   if(stops_level==0 && order_type<=1)
      {
       ticket=::OrderSend(symbol,order_type,volume,price,(int)(m_deviation*m_symbol.Point()),0,0,comment,m_magic,expire,arrowcolor);
       Sleep(500);
