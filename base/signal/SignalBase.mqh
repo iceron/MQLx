@@ -73,6 +73,8 @@ JSignalBase::JSignalBase(void) : m_activate(true),
                                  m_exit(false)
 
   {
+   if (!m_empty_value.IsSorted()) 
+      m_empty_value.Sort();
    AddEmptyValue(0.0);
   }
 //+------------------------------------------------------------------+
@@ -101,9 +103,7 @@ bool JSignalBase::Init(JStrategy *s)
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JSignalBase::AddEmptyValue(double val)
-  {
-   if (!m_empty_value.IsSorted()) 
-      m_empty_value.Sort();
+  {   
    m_empty_value.InsertSort(val);
   }
 //+------------------------------------------------------------------+

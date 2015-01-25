@@ -7,14 +7,6 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
 #include "OrderBase.mqh"
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-enum ENUM_SORT_MODE
-  {
-   SORT_MODE_ASCENDING,
-   SORT_MODE_DESCENDING
-  };
 class JStrategy;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -47,7 +39,7 @@ public:
 JOrdersBase::JOrdersBase(void) : m_activate(true),
                                  m_clean(false)
   {
-   m_sort_mode=SORT_MODE_ASCENDING;
+   if (!IsSorted()) Sort();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

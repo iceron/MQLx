@@ -208,6 +208,8 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_last_tick_time(0),
                                      m_last_trade_time(0)
   {
+   if (!m_other_magic.IsSorted()) 
+      m_other_magic.Sort();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -611,9 +613,7 @@ bool JStrategyBase::Refresh(void)
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::AddOtherMagic(const int magic)
-  {
-   if (!m_other_magic.IsSorted()) 
-      m_other_magic.Sort();
+  {   
    if(m_other_magic.Search(magic)>=0)
       return(true);
    return(m_other_magic.InsertSort(magic));
