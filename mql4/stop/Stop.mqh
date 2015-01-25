@@ -40,6 +40,8 @@ JStop::~JStop(void)
 //+------------------------------------------------------------------+
 bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
   {
+   if (ticket<=0)
+      return(false);
    if(!OrderSelect((int)ticket,SELECT_BY_TICKET))
       return(false);
    if(OrderType()<=1)

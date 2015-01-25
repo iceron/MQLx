@@ -22,7 +22,7 @@ public:
    virtual double    GetPrice(const int point=0);
    virtual bool      Move(const double price);
    virtual bool      SetStyle(const ENUM_LINE_STYLE style);
-   virtual bool      SetColor(const color clr);
+   virtual bool      SetColor(const color clr);     
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -64,7 +64,6 @@ bool JStopLineBase::SetStyle(const ENUM_LINE_STYLE style)
   {
    return(ObjectSetInteger(0,m_name,OBJPROP_STYLE,style));
   }
-
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
 #include "..\..\mql5\stop\StopLine.mqh"
