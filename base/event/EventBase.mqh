@@ -5,10 +5,11 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include <Object.mqh>
 #include "..\..\common\enum\ENUM_ALERT_MODE.mqh"
 #include "..\..\common\enum\ENUM_EVENT_TYPE.mqh"
-class JStrategy;
+#include "..\..\common\enum\ENUM_EVENT_CLASS.mqh"
+#include <Object.mqh>
+class JEvents;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -16,34 +17,36 @@ class JEventBase : public CObject
   {
 protected:
    bool              m_activate;
-   ENUM_ALERT_MODE   m_order_sent;
-   ENUM_ALERT_MODE   m_order_entry;
-   ENUM_ALERT_MODE   m_order_modify;
-   ENUM_ALERT_MODE   m_order_exit;
-   ENUM_ALERT_MODE   m_order_reverse;
-   ENUM_ALERT_MODE   m_error;
-   JStrategy        *m_strategy;
+   int               m_id;
+   const CObject    *m_obj1;
+   const CObject    *m_obj2;
+   const CObject    *m_obj3;
+   JEvents          *m_events;
 public:
                      JEventBase(void);
+                     JEventBase(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL);
                     ~JEventBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_EVENT);}
-   virtual bool      Add(ENUM_EVENT_TYPE type,string func,string action,string info);
-   virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);
+   virtual void      SetContainer(JEvents *e){m_events=e;}
    virtual bool      Activate(void) const {return(m_activate);}
    virtual void      Activate(bool activate) {m_activate=activate;}
-
+   virtual int       ID(void) const {return(m_id);}
+   virtual void      ID(int id) {m_id=id;}
+   virtual void      Init(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventBase::JEventBase(void) : m_activate(true),
-                               m_order_sent(0),
-                               m_order_entry(0),
-                               m_order_modify(0),
-                               m_order_exit(0),
-                               m_order_reverse(0),
-                               m_error(0)
+JEventBase::JEventBase(void) : m_activate(true)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JEventBase::JEventBase(int id,const CObject *object1=NULL,const CObject *object2=NULL,
+                       const CObject *object3=NULL) : m_activate(true)
+  {
+   Init(id,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -54,79 +57,17 @@ JEventBase::~JEventBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JEventBase::Add(ENUM_EVENT_TYPE type,string func,string action,string info)
+JEventBase::Init(int id,const CObject *object1=NULL,const CObject *object2=NULL,
+                 const CObject *object3=NULL)
   {
-   if(!Activate()) return(true);
-   ENUM_ALERT_MODE mode=0;
-   switch(type)
-     {
-      case EVENT_TYPE_ORDER_SENT:
-        {
-         mode=m_order_sent;
-         break;
-        }
-      case EVENT_TYPE_ORDER_ENTRY:
-        {
-         mode=m_order_entry;
-         break;
-        }
-      case EVENT_TYPE_ORDER_MODIFY:
-        {
-         mode=m_order_modify;
-         break;
-        }
-      case EVENT_TYPE_ORDER_EXIT:
-        {
-         mode=m_order_exit;
-         break;
-        }
-      case EVENT_TYPE_ORDER_REVERSE:
-        {
-         mode=m_order_reverse;
-         break;
-        }
-      case EVENT_TYPE_ERROR:
-        {
-         mode=m_error;
-         break;
-        }
-     }
-   SendAlert(mode,func,action,info);
-   return(false);
+   m_id=id;
+   if(object1!=NULL)
+      m_obj1=object1;
+   if(object2!=NULL)
+      m_obj2=object2;
+   if(object3!=NULL)
+      m_obj3=object3;
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JEventBase::SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info)
-  {
-   if(!mode) return(true);
-   string message;
-   StringConcatenate(message,func,": ",action," [",info,"]");
-   if((bool)(mode  &ALERT_MODE_PRINT))
-     {
-      Print(message);
-      return(true);
-     }
-   if((bool)(mode  &ALERT_MODE_EMAIL))
-     {
-      return(SendMail(action,message));
-     }
-   if((bool)(mode  &ALERT_MODE_POPUP))
-     {
-      Alert(message);
-      return(true);
-     }
-   if((bool)(mode  &ALERT_MODE_PUSH))
-     {
-      return(SendNotification(message));
-     }
-   if((bool)(mode  &ALERT_MODE_FTP))
-     {
-      return(SendFTP(message));
-     }
-   return(false);
-  }
-
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
 #include "..\..\mql5\event\Event.mqh"

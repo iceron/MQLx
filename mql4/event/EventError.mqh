@@ -1,37 +1,42 @@
 //+------------------------------------------------------------------+
-//|                                                        Event.mqh |
+//|                                                   EventError.mqh |
 //|                                                   Enrico Lambino |
 //|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
+#include "..\..\common\enum\ENUM_ALERT_MODE.mqh"
+#include "..\..\common\enum\ENUM_EVENT_TYPE.mqh"
+#include "..\..\common\enum\ENUM_EVENT_CLASS.mqh"
+#include <Object.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JEvent : public JEventBase
+class JEventError : public JEventErrorBase
   {
 public:
-                     JEvent(void);
-                     JEvent(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL);
-                    ~JEvent(void);
+                     JEventError(void);
+                     JEventError(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL);
+                    ~JEventError(void);
+   virtual int       Type(void) {return(CLASS_TYPE_EVENT_ERROR);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEvent::JEvent(void)
+JEventError::JEventError(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEvent::JEvent(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL)
+JEventError::JEventError(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL)
   {
    Init(id,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEvent::~JEvent(void)
+JEventError::~JEventError(void)
   {
   }
 //+------------------------------------------------------------------+
