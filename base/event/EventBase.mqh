@@ -17,8 +17,8 @@ class JEventBase : public CObject
   {
 protected:
    bool              m_activate;
-   datetime          m_timestamp;
    int               m_id;
+   datetime          m_timestamp;
    const CObject    *m_obj1;
    const CObject    *m_obj2;
    const CObject    *m_obj3;
@@ -39,6 +39,7 @@ public:
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventBase::JEventBase(void) : m_activate(true),
+                               m_id(-1),
                                m_timestamp(TimeCurrent())
   {
   }
