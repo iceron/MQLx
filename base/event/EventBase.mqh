@@ -47,7 +47,10 @@ JEventBase::JEventBase(void) : m_activate(true),
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventBase::JEventBase(int id,const CObject *object1=NULL,const CObject *object2=NULL,
-                       const CObject *object3=NULL) : m_activate(true)
+                       const CObject *object3=NULL) :
+                       m_activate(true),
+                       m_id(-1),
+                       m_timestamp(TimeCurrent())
   {
    Init(id,object1,object2,object3);
   }
