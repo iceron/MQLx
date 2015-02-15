@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                              ENUM_EVENT_TYPE.mqh |
+//|                                                  ENUM_SWITCH.mqh |
 //|                                                   Enrico Lambino |
 //|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
@@ -8,14 +8,9 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-enum ENUM_EVENT_TYPE
+enum ENUM_SWITCH
   {
-   EVENT_TYPE_ORDER_SENT,
-   EVENT_TYPE_ORDER_ENTRY,
-   EVENT_TYPE_ORDER_MODIFY,
-   EVENT_TYPE_ORDER_EXIT,
-   EVENT_TYPE_ORDER_REVERSE,
-   EVENT_TYPE_ERROR,
-   EVENT_TYPE_CUSTOM
+   ON,
+   OFF
   };
 //+------------------------------------------------------------------+
