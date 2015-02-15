@@ -64,6 +64,8 @@ JEventsBase::JEventsBase(void) : m_activate(true),
    m_current=new CArrayObj();
    if(m_archive_max>0)
       m_archive=new CArrayObj();
+   m_current.FreeMode(false);
+   m_archive.FreeMode(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
