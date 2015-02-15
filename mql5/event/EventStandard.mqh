@@ -16,7 +16,7 @@ class JEventStandard : public JEventStandardBase
   {
 public:
                      JEventStandard(void);
-                     JEventStandard(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL);
+                     JEventStandard(const ENUM_ACTION id,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
                     ~JEventStandard(void);
   };
 //+------------------------------------------------------------------+
@@ -28,7 +28,7 @@ JEventStandard::JEventStandard(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventStandard::JEventStandard(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL)
+JEventStandard::JEventStandard(const ENUM_ACTION id,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
    Init(id,object1,object2,object3);
   }

@@ -12,7 +12,7 @@ class JEvent : public JEventBase
   {
 public:
                      JEvent(void);
-                     JEvent(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL);
+                     JEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
                     ~JEvent(void);
   };
 //+------------------------------------------------------------------+
@@ -24,9 +24,9 @@ JEvent::JEvent(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEvent::JEvent(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL)
+JEvent::JEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
-   Init(id,object1,object2,object3);
+   Init(action,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

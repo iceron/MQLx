@@ -5,44 +5,49 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include "..\..\common\enum\ENUM_ALERT_MODE.mqh"
-#include "..\..\common\enum\ENUM_EVENT_TYPE.mqh"
-#include "..\..\common\enum\ENUM_EVENT_CLASS.mqh"
-#include <Object.mqh>
+#include "EventBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class EventCustomBase : public JEvent
+class JEventCustomBase : public JEvent
   {
 public:
-                     EventCustomBase(void);
-                     EventCustomBase(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL);
-                    ~EventCustomBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_EVENT_ERROR);}
+                     JEventCustomBase(void);
+                     JEventCustomBase(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+                    ~JEventCustomBase(void);
+   virtual int       Type(void) {return(CLASS_TYPE_EVENT_CUSTOM);}
+   virtual bool      Run(JEventRegistry *registry);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-EventCustomBase::EventCustomBase(void)
+JEventCustomBase::JEventCustomBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-EventCustomBase::EventCustomBase(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL)
+JEventCustomBase::JEventCustomBase(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
-   Init(id,object1,object2,object3);
+   Init(action,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-EventCustomBase::~EventCustomBase(void)
+JEventCustomBase::~JEventCustomBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventCustomBase::Run(JEventRegistry *registry)
+  {
+   return(false);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\event\EventError.mqh"
+#include "..\..\mql5\event\EventCustom.mqh"
 #else
-#include "..\..\mql4\event\EventError.mqh"
+#include "..\..\mql4\event\EventCustom.mqh"
 #endif
 //+------------------------------------------------------------------+

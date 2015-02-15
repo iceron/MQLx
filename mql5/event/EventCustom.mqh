@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                                  EventCustom.mqh |
+//|                                                  JEventCustom.mqh |
 //|                                                   Enrico Lambino |
 //|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
@@ -12,31 +12,31 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class EventCustom : public EventCustomBase
+class JEventCustom : public EventCustomBase
   {
 public:
-                     EventCustom(void);
-                     EventCustom(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL);
-                    ~EventCustom(void);
+                     JEventCustom(void);
+                     JEventCustom(const int id,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+                    ~JEventCustom(void);
    virtual int       Type(void) {return(CLASS_TYPE_EVENT_ERROR);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-EventCustom::EventCustom(void)
+JEventCustom::JEventCustom(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-EventCustom::EventCustom(const int id,const CObject *object1=NULL,const CObject *object2=NULL,const CObject *object3=NULL)
+JEventCustom::JEventCustom(const int id,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
    Init(id,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-EventCustom::~EventCustom(void)
+JEventCustom::~JEventCustom(void)
   {
   }
 //+------------------------------------------------------------------+

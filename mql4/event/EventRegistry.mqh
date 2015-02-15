@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                                        Event.mqh |
+//|                                                JEventRegistry.mqh |
 //|                                                   Enrico Lambino |
 //|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
@@ -8,30 +8,22 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JEvent : public JEventBase
+class JEventRegistry : public JEventRegistryBase
   {
 public:
-                     JEvent(void);
-                     JEvent(const int id,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
-                    ~JEvent(void);
+                     JEventRegistry(void);
+                    ~JEventRegistry(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEvent::JEvent(void)
+JEventRegistry::JEventRegistry(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEvent::JEvent(const int id,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
-  {
-   Init(id,object1,object2,object3);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-JEvent::~JEvent(void)
+JEventRegistry::~JEventRegistry(void)
   {
   }
 //+------------------------------------------------------------------+

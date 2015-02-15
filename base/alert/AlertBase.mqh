@@ -1,37 +1,45 @@
 //+------------------------------------------------------------------+
-//|                                                        Event.mqh |
+//|                                                    AlertBase.mqh |
 //|                                                   Enrico Lambino |
 //|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
+#include <Arrays\ArrayInt.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JEvent : public JEventBase
+class JAlertBase : public CObject
   {
+protected:
+   CArrayInt        *m_print;
+   CArrayInt        *m_sound;
+   CArrayInt        *m_popup;
+   CArrayInt        *m_email;
+   CArrayInt        *m_push;
+   CArrayInt        *m_ftp;
 public:
-                     JEvent(void);
-                     JEvent(const int id,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
-                    ~JEvent(void);
+                     JAlertBase(void);
+                    ~JAlertBase(void);
+   virtual bool      Run(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEvent::JEvent(void)
+JAlertBase::JAlertBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEvent::JEvent(const int id,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
+JAlertBase::~JAlertBase(void)
   {
-   Init(id,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEvent::~JEvent(void)
+bool JAlertBase::Run(void)
   {
+   return(false);
   }
 //+------------------------------------------------------------------+
