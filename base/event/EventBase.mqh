@@ -48,6 +48,7 @@ JEventBase::JEventBase(void) : m_activate(true),
                                m_action(-1),
                                m_timestamp(TimeCurrent())
   {
+   FreeMode(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

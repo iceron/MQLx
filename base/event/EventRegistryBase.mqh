@@ -13,12 +13,12 @@
 class JEventRegistryBase : public CObject
   {
 protected:
-   CArrayInt        *m_print;
-   CArrayInt        *m_sound;
-   CArrayInt        *m_popup;
-   CArrayInt        *m_email;
-   CArrayInt        *m_push;
-   CArrayInt        *m_ftp;
+   CArrayInt         m_print;
+   CArrayInt         m_sound;
+   CArrayInt         m_popup;
+   CArrayInt         m_email;
+   CArrayInt         m_push;
+   CArrayInt         m_ftp;
 public:
                      JEventRegistryBase(void);
                     ~JEventRegistryBase(void);
@@ -26,6 +26,8 @@ public:
    virtual bool      IsAllowed(const ENUM_ALERT_MODE alert_mode,const int id);
    virtual void      Clear(const ENUM_ALERT_MODE alert_mode);
    virtual void      Clear();
+   virtual bool      Init(CArrayInt *print,CArrayInt *sound,CArrayInt *popup,CArrayInt *email,CArrayInt *push,CArrayInt *ftp);
+   virtual bool      Init(int &print[],int &sound[],int &popup[],int &email[],int &push[],int &ftp[]);
    bool              IsPrint(int id);
    bool              IsSound(int id);
    bool              IsPopup(int id);
@@ -44,6 +46,44 @@ JEventRegistryBase::JEventRegistryBase(void)
 //+------------------------------------------------------------------+
 JEventRegistryBase::~JEventRegistryBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventRegistryBase::Init(CArrayInt *print,CArrayInt *sound,CArrayInt *popup,CArrayInt *email,CArrayInt *push,CArrayInt *ftp)
+  {
+   if(print!=NULL)
+      m_print.AddArray(print);
+   if(sound!=NULL)
+      m_sound.AddArray(sound);
+   if(popup!=NULL)
+      m_popup.AddArray(popup);
+   if(email!=NULL)
+      m_email.AddArray(email);
+   if(push!=NULL)
+      m_push.AddArray(push);
+   if(ftp!=NULL)
+      m_ftp.AddArray(ftp);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventRegistryBase::Init(int &print[],int &sound[],int &popup[],int &email[],int &push[],int &ftp[])
+  {
+   if(ArraySize(print)>0)
+      m_print.AddArray(print);
+   if(ArraySize(sound)>0)
+      m_sound.AddArray(sound);
+   if(ArraySize(popup)>0)
+      m_popup.AddArray(popup);
+   if(ArraySize(email)>0)
+      m_email.AddArray(email);
+   if(ArraySize(push)>0)
+      m_push.AddArray(push);
+   if(ArraySize(ftp)>0)
+      m_ftp.AddArray(ftp);
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -96,32 +136,32 @@ JEventRegistryBase::Register(ENUM_ALERT_MODE alert_mode,int id)
      {
       case ALERT_MODE_PRINT:
         {
-         //m_print|=id;
+         m_print.Add(id);
          break;
         }
       case ALERT_MODE_SOUND:
         {
-         //m_sound|=id;
+         m_sound.Add(id);
          break;
         }
       case ALERT_MODE_POPUP:
         {
-         //m_popup|=id;
+         m_popup.Add(id);
          break;
         }
       case ALERT_MODE_EMAIL:
         {
-         //m_email|=id;
+         m_email.Add(id);
          break;
         }
       case ALERT_MODE_PUSH:
         {
-         //m_push|=id;
+         m_push.Add(id);
          break;
         }
       case ALERT_MODE_FTP:
         {
-         //m_ftp|=id;
+         m_ftp.Add(id);
          break;
         }
       default:
@@ -135,46 +175,43 @@ JEventRegistryBase::Register(ENUM_ALERT_MODE alert_mode,int id)
 //+------------------------------------------------------------------+
 bool JEventRegistryBase::IsAllowed(const ENUM_ALERT_MODE alert_mode,const int id)
   {
-//int value=0;
    switch(alert_mode)
      {
       case ALERT_MODE_PRINT:
         {
-         //value=m_print;
+         return(IsPrint(id));
          break;
         }
       case ALERT_MODE_SOUND:
         {
-         //value=m_sound;
+         return(IsSound(id));
          break;
         }
       case ALERT_MODE_POPUP:
         {
-         //value=m_popup;
+         return(IsPopup(id));
          break;
         }
       case ALERT_MODE_EMAIL:
         {
-         //value=m_email;
+         return(IsEmail(id));
          break;
         }
       case ALERT_MODE_PUSH:
         {
-         //value=m_push;
+         return(IsPush(id));
          break;
         }
       case ALERT_MODE_FTP:
         {
-         //value=m_ftp;
+         return(IsFTP(id));
          break;
         }
       default:
         {
          Print(__FUNCTION__+": unknown alert mode");
-         //return(value);
         }
      }
-//return((value&id)!=0);
    return(false);
   }
 //+------------------------------------------------------------------+
@@ -182,37 +219,36 @@ bool JEventRegistryBase::IsAllowed(const ENUM_ALERT_MODE alert_mode,const int id
 //+------------------------------------------------------------------+
 JEventRegistryBase::Clear(const ENUM_ALERT_MODE alert_mode)
   {
-/*
    switch(alert_mode)
      {
       case ALERT_MODE_PRINT:
         {
-         m_print=0;
+         m_print.Clear();
          break;
         }
       case ALERT_MODE_SOUND:
         {
-         m_sound=0;
+         m_sound.Clear();
          break;
         }
       case ALERT_MODE_POPUP:
         {
-         m_popup=0;
+         m_popup.Clear();
          break;
         }
       case ALERT_MODE_EMAIL:
         {
-         m_email=0;
+         m_email.Clear();
          break;
         }
       case ALERT_MODE_PUSH:
         {
-         m_push=0;
+         m_push.Clear();
          break;
         }
       case ALERT_MODE_FTP:
         {
-         m_ftp=0;
+         m_ftp.Clear();
          break;
         }
       default:
@@ -220,7 +256,6 @@ JEventRegistryBase::Clear(const ENUM_ALERT_MODE alert_mode)
          Print(__FUNCTION__+": unknown alert mode");
         }
      }
-     */
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
