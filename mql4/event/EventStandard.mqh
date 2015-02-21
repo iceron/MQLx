@@ -16,6 +16,7 @@ class JEventStandard : public JEventStandardBase
 public:
                      JEventStandard(void);
                      JEventStandard(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+                     JEventStandard(const ENUM_ACTION action,string message_add);
                     ~JEventStandard(void);
   };
 //+------------------------------------------------------------------+
@@ -30,6 +31,13 @@ JEventStandard::JEventStandard(void)
 JEventStandard::JEventStandard(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
    Init(action,object1,object2,object3);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JEventStandard::JEventStandard(const ENUM_ACTION action,string message_add)
+  {
+   Init(action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

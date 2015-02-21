@@ -51,7 +51,12 @@ JStrategy::CloseOrders(const int res)
      {
       JOrder *order=m_orders.At(i);
       if(IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) res))
-         CloseOrder(order,i);
+      {
+         if (CloseOrder(order,i))
+            CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_CLOSE_DONE,order);
+         else
+            CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_CLOSE);
+      }      
      }
   }
 //+------------------------------------------------------------------+
@@ -67,7 +72,7 @@ bool JStrategy::CloseOrder(JOrder *order,const int index)
       else
          closed=m_trade.OrderDelete((ulong)order.Ticket());  
       if(closed)
-        {
+        {         
          if(ArchiveOrder(m_orders.Detach(index)))
          {
             order.IsClosed(true);
@@ -103,9 +108,11 @@ void JStrategy::OnTradeTransaction(void)
       JOrder *order=new JOrder(OrderTicket(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
       if(m_orders.InsertSort(order))
         {
+         order.EventHandler(Events());
          order.Magic(m_magic);
          order.CreateStops(GetPointer(m_stops));
          order.SetContainer(GetPointer(m_orders));
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND_DONE,order);
         }
      }
    delete temp;
@@ -121,8 +128,9 @@ bool JStrategy::TradeOpen(const int res)
    double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();
    int orders_total = OrdersTotal();
+   ENUM_ORDER_TYPE type = SignalToOrderType(res);
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
-     {
+     {      
       m_trade.SetSymbol(m_symbol);
       price=PriceCalculate(res);
       if(res==CMD_LONG)
@@ -133,6 +141,7 @@ bool JStrategy::TradeOpen(const int res)
             tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(ORDER_TYPE_BUY,price):m_main_stop.TakeProfitCalculate(ORDER_TYPE_BUY,price);
            }
          lotsize=LotSizeCalculate(price,ORDER_TYPE_BUY,StopLossCalculate(res,price));
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND,EnumToString(type)+" "+DoubleToString(lotsize,2)+" "+DoubleToString(sl,5)+" "+DoubleToString(tp,5)+" "+m_comment+" "+DoubleToString(m_magic,0));
          ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
         }
       else if(res==CMD_SHORT)
@@ -142,10 +151,13 @@ bool JStrategy::TradeOpen(const int res)
             sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(ORDER_TYPE_SELL,price):m_main_stop.StopLossCalculate(ORDER_TYPE_SELL,price);
             tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(ORDER_TYPE_SELL,price):m_main_stop.TakeProfitCalculate(ORDER_TYPE_SELL,price);
            }
-         lotsize=LotSizeCalculate(price,ORDER_TYPE_SELL,StopLossCalculate(res,price));
+         lotsize=LotSizeCalculate(price,ORDER_TYPE_SELL,StopLossCalculate(res,price));     
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND,EnumToString(type)+" "+DoubleToString(lotsize,2)+" "+DoubleToString(sl,5)+" "+DoubleToString(tp,5)+" "+m_comment+" "+DoubleToString(m_magic,0));
          ret=m_trade.Sell(lotsize,price,sl,tp,m_comment);
         }
      }
+   if (!ret)
+      CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SEND);
    return(ret);
   }
 //+------------------------------------------------------------------+

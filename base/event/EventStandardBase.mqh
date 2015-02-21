@@ -16,6 +16,7 @@ class JEventStandardBase : public JEvent
 public:
                      JEventStandardBase(void);
                      JEventStandardBase(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+                     JEventStandardBase(const ENUM_ACTION action,string message_add);
                     ~JEventStandardBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_EVENT_STANDARD);}
    virtual void      OnProgramInit(void);
@@ -31,6 +32,8 @@ public:
    virtual void      OnTick(void);
    virtual void      OnOrderSend(void);
    virtual void      OnOrderSendDone(void);
+   virtual void      OnOrderModify(void);
+   virtual void      OnOrderModifyDone(void);
    virtual void      OnOrderEntryModify(void);
    virtual void      OnOrderEntryModifyDone(void);
    virtual void      OnOrderSLModify(void);
@@ -43,10 +46,12 @@ public:
    virtual void      OnOrderCloseDone(void);
    virtual void      OnOrderStopsClose(void);
    virtual void      OnOrderStopsCloseDone(void);
-   virtual void      OnOrderStopLossTrail(void);
-   virtual void      OnOrderStopLossTrailDone(void);
-   virtual void      OnOrderTakeProfitTrail(void);
-   virtual void      OnOrderTakeProfitTrailDone(void);
+   virtual void      OnOrderTrail(void);
+   virtual void      OnOrderTrailDone(void);
+   virtual void      OnOrderTrailSL(void);
+   virtual void      OnOrderTrailSLDone(void);
+   virtual void      OnOrderTrailTP(void);
+   virtual void      OnOrderTrailTPDone(void);
    virtual void      OnTradeEnabled(void);
    virtual void      OnTradeDisabled(void);
    virtual void      OnTradeTimeStart(void);
@@ -65,6 +70,13 @@ JEventStandardBase::JEventStandardBase(void)
 JEventStandardBase::JEventStandardBase(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
    Init(action,object1,object2,object3);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JEventStandardBase::JEventStandardBase(const ENUM_ACTION action,string message_add)
+  {
+   Init(action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -159,6 +171,16 @@ bool JEventStandardBase::Run(JEventRegistry *registry)
          OnOrderMEModifyDone();
          break;
         }
+      case ACTION_ORDER_MODIFY:
+        {
+         OnOrderModify();
+         break;
+        }
+      case ACTION_ORDER_MODIFY_DONE:
+        {
+         OnOrderModifyDone();
+         break;
+        }
       case ACTION_ORDER_CLOSE:
         {
          OnOrderClose();
@@ -174,24 +196,34 @@ bool JEventStandardBase::Run(JEventRegistry *registry)
          OnOrderStopsCloseDone();
          break;
         }
-      case ACTION_ORDER_STOPLOSS_TRAIL:
+      case ACTION_ORDER_TRAIL:
         {
-         OnOrderStopLossTrail();
+         OnOrderTrail();
          break;
         }
-      case ACTION_ORDER_STOPLOSS_TRAIL_DONE:
+      case ACTION_ORDER_TRAIL_DONE:
         {
-         OnOrderStopLossTrailDone();
+         OnOrderTrailDone();
          break;
         }
-      case ACTION_ORDER_TAKEPROFIT_TRAIL:
+      case ACTION_ORDER_TRAIL_SL:
         {
-         OnOrderTakeProfitTrail();
+         OnOrderTrailSL();
          break;
         }
-      case ACTION_ORDER_TAKEPROFIT_TRAIL_DONE:
+      case ACTION_ORDER_TRAIL_SL_DONE:
         {
-         OnOrderTakeProfitTrailDone();
+         OnOrderTrailSLDone();
+         break;
+        }
+      case ACTION_ORDER_TRAIL_TP:
+        {
+         OnOrderTrailTP();
+         break;
+        }
+      case ACTION_ORDER_TRAIL_TP_DONE:
+        {
+         OnOrderTrailTPDone();
          break;
         }
       case ACTION_TRADE_ENABLED:
@@ -223,200 +255,315 @@ bool JEventStandardBase::Run(JEventRegistry *registry)
 //+------------------------------------------------------------------+
 JEventStandardBase::OnProgramInit(void)
   {
+   m_subject="Program initializing";
+   m_message="Program initializing";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnProgramInitDone(void)
   {
+   m_subject="Program initialized";
+   m_message="Program initialized";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnProgramDeinitDone(void)
   {
+   m_subject="Program deinitialized";
+   m_message="Program deinitialized";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnClassCreate(void)
   {
+   m_subject="Creating class";
+   m_message="Creating class";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnClassCreateDone(void)
   {
+   m_subject="Class created";
+   m_message="Class created";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnClassDelete(void)
   {
+   m_subject="Deleting class";
+   m_message="Deleting class";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnClassDeleteDone(void)
   {
+   m_subject="Class deleted";
+   m_message="Class deleted";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnClassValidate(void)
   {
+   m_subject="Validating class";
+   m_message="Validating class";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnClassValidateDone(void)
   {
+   m_subject="Class validated";
+   m_message="Class validated";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnCandle(void)
   {
+   m_subject="New candle detected";
+   m_message="New candle detected";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnTick(void)
   {
+   m_subject = "New tick detected";
+   m_message = "New tick detected";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderSend(void)
   {
+   m_subject = "Sending order";
+   m_message = "Sending order";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderSendDone(void)
   {
+   m_subject = "Order sent";
+   m_message = "Order sent";
+   JOrder *order = GetObject(CLASS_TYPE_ORDER);
+   if (CheckPointer(order)==POINTER_DYNAMIC)
+      m_message_add = "#"+DoubleToString(order.Ticket(),0)+" "+EnumToString(order.OrderType());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderEntryModify(void)
   {
+   m_subject = "Modifying order entry";
+   m_message = "Modifying order entry";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderEntryModifyDone(void)
   {
+   m_subject = "Order entry modified";
+   m_message = "Order entry modified";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderSLModify(void)
   {
+   m_subject = "Modifying order SL";
+   m_message = "Modifying order SL";   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderSLModifyDone(void)
   {
+   m_subject = "Order SL modified";
+   m_message = "Order SL modified";
+   JOrderStop *orderstop = GetObject(CLASS_TYPE_ORDERSTOP);   
+   if (CheckPointer(orderstop)==POINTER_DYNAMIC)
+      m_message_add = orderstop.StopLossName()+" "+(string)orderstop.StopLossLast()+"->"+(string)orderstop.StopLoss(); 
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderTPModify(void)
   {
+   m_subject = "Modifying order TP";
+   m_message = "Modifying order TP";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderTPModifyDone(void)
   {
+   m_subject = "Order TP modified";
+   m_message = "Order TP modified";
+   JOrderStop *orderstop = GetObject(CLASS_TYPE_ORDERSTOP);   
+   if (CheckPointer(orderstop)==POINTER_DYNAMIC)
+      m_message_add = orderstop.TakeProfitName()+" "+(string)orderstop.TakeProfitLast()+"->"+(string)orderstop.TakeProfit(); 
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderMEModify(void)
   {
+   m_subject = "Modifying order (order by market execution)";
+   m_message = "Modifying order (order by market execution)";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderMEModifyDone(void)
   {
+   m_subject = "Order modified (order by market execution)";
+   m_message = "Order modified (order by market execution)";
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JEventStandardBase::OnOrderModify(void)
+  {
+   m_subject = "Modifying order";
+   m_message = "Modifying order";
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JEventStandardBase::OnOrderModifyDone(void)
+  {
+   m_subject = "Order modified";
+   m_message = "Order modified";
+   JOrderStop *orderstop = GetObject(CLASS_TYPE_ORDERSTOP);   
+   if (CheckPointer(orderstop)==POINTER_DYNAMIC)
+   {      
+      m_message_add = m_message_add = orderstop.StopLossName()+" "+(string)orderstop.StopLossLast()+"->"+(string)orderstop.StopLoss(); ;  
+      m_message_add += " "+orderstop.TakeProfitName()+" "+(string)orderstop.TakeProfitLast()+"->"+(string)orderstop.TakeProfit();  
+   }   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderClose(void)
   {
+   m_subject = "Closing order";
+   m_message = "Closing order";   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderCloseDone(void)
   {
+   m_subject = "Order closed";
+   m_message = "Order closed";
+   JOrder *order = GetObject(CLASS_TYPE_ORDER);
+   if (CheckPointer(order)==POINTER_DYNAMIC)
+      m_message_add = "#"+DoubleToString(order.Ticket(),0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderStopsClose(void)
   {
+   m_subject = "Closing order stop";
+   m_message = "Closing order stop";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnOrderStopsCloseDone(void)
   {
+   m_subject = "Order stop closed";
+   m_message = "Order stop closed";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventStandardBase::OnOrderStopLossTrail(void)
+JEventStandardBase::OnOrderTrail(void)
   {
+   m_subject = "Trailing order";
+   m_message = "Trailing order";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventStandardBase::OnOrderStopLossTrailDone(void)
+JEventStandardBase::OnOrderTrailDone(void)
   {
+   m_subject = "Order trailed";
+   m_message = "Order trailed";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventStandardBase::OnOrderTakeProfitTrail(void)
+JEventStandardBase::OnOrderTrailSL(void)
   {
+   m_subject = "Trailing order SL";
+   m_message = "Trailing order SL";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventStandardBase::OnOrderTakeProfitTrailDone(void)
+JEventStandardBase::OnOrderTrailSLDone(void)
   {
+   m_subject = "Order SL trailed";
+   m_message = "Order SL trailed";
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JEventStandardBase::OnOrderTrailTP(void)
+  {
+   m_subject = "Trailing order TP";
+   m_message = "Trailing order TP";
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JEventStandardBase::OnOrderTrailTPDone(void)
+  {
+   m_subject = "Order TP trailed";
+   m_message = "Order TP trailed";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnTradeEnabled(void)
   {
+   m_subject = "Trading is enabled";
+   m_message = "Trading is enabled";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnTradeDisabled(void)
   {
+   m_subject = "Trading is disabled";
+   m_message = "Trading is disabled";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnTradeTimeStart(void)
   {
+   m_subject = "Trading time start detected";
+   m_message = "Trading time start detected";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandardBase::OnTradeTimeEnd(void)
   {
+   m_subject = "Trading time end detected";
+   m_message = "Trading time end detected";
   }
-
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
 #include "..\..\mql5\event\EventStandard.mqh"

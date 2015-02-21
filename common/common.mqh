@@ -164,4 +164,36 @@ int SignalReverse(int s)
      }
    return(s);
   }
+ENUM_ORDER_TYPE SignalToOrderType(int s)
+  {
+   ENUM_ORDER_TYPE ret = ORDER_TYPE_BUY;
+   switch(s)
+     {
+      case CMD_BUY:
+        {
+         ret = ORDER_TYPE_BUY;
+        }
+      case CMD_SELL:
+        {
+         ret = ORDER_TYPE_SELL;
+        }
+      case CMD_BUYLIMIT:
+        {
+         ret = ORDER_TYPE_BUY_LIMIT;
+        }
+      case CMD_SELLLIMIT:
+        {
+         ret = ORDER_TYPE_SELL_LIMIT;
+        }
+      case CMD_BUYSTOP:
+        {
+         ret = ORDER_TYPE_BUY_STOP;
+        }
+      case CMD_SELLSTOP:
+        {
+         ret = ORDER_TYPE_SELL_STOP;
+        }
+     }
+     return(ret);
+  }
 //+------------------------------------------------------------------+

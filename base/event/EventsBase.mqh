@@ -28,9 +28,9 @@ protected:
    CArrayObj        *m_current;
    CArrayObj        *m_archive;
 
-   JEventRegistry   *m_standard;
-   JEventRegistry   *m_error;
-   JEventRegistry   *m_custom;
+   JEventRegistry    m_standard;
+   JEventRegistry    m_error;
+   JEventRegistry    m_custom;
 public:
                      JEventsBase(void);
                     ~JEventsBase(void);
@@ -41,17 +41,22 @@ public:
    virtual bool      Run(void);
    virtual void      Register(ENUM_EVENT_CLASS event_class,ENUM_ALERT_MODE alert_mode,int id);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
+   virtual void      DebugMode(bool debug=true);
+protected:
+   virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);
+   virtual bool      Deinit(void);
+   virtual void      Send();
+   virtual bool      IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION action);
+   virtual bool      IsEventStandardAllowed(const ENUM_ACTION action);
+   virtual bool      IsEventErrorAllowed(const ENUM_ACTION action);
+   virtual bool      IsEventCustomAllowed(const ENUM_ACTION action);
    virtual JEventStandard *CreateStandardEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual JEventError *CreateErrorEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual JEventCustom *CreateCustomEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
-protected:
-   virtual void      EventCustom(JEventCustom *event);
-   virtual void      EventError(JEventError *event);
-   virtual void      EventStandard(JEventStandard *event);
-   virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);
-   virtual bool      Execute(JEvent *event);
-   virtual bool      Deinit(void);
-   virtual void      Send();
+   virtual JEventStandard *CreateStandardEvent(const ENUM_ACTION action,string message_add);
+   virtual JEventError *CreateErrorEvent(const ENUM_ACTION action,string message_add);
+   virtual JEventCustom *CreateCustomEvent(const ENUM_ACTION action,string message_add);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -62,10 +67,7 @@ JEventsBase::JEventsBase(void) : m_activate(true),
                                  m_ftp_path(NULL)
   {
    m_current=new CArrayObj();
-   if(m_archive_max>0)
-      m_archive=new CArrayObj();
-   //m_current.FreeMode(false);
-   //m_archive.FreeMode(false);
+   m_archive=new CArrayObj();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -77,25 +79,67 @@ JEventsBase::~JEventsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool JEventsBase::IsEventStandardAllowed(const ENUM_ACTION action)
+  {
+   return(m_standard.IsAllowed(action));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventsBase::IsEventErrorAllowed(const ENUM_ACTION action)
+  {
+//return(m_error.IsAllowed(action));
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventsBase::IsEventCustomAllowed(const ENUM_ACTION action)
+  {
+   return(m_custom.IsAllowed(action));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventsBase::IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION action)
+  {
+   switch(type)
+     {
+      case EVENT_CLASS_STANDARD: return(IsEventStandardAllowed(action));
+      case EVENT_CLASS_ERROR:    return(IsEventErrorAllowed(action));
+      case EVENT_CLASS_CUSTOM:   return(IsEventCustomAllowed(action));
+     }
+   Print("unknown event");
+   return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
-   JEvent *event;
    switch(type)
      {
       case EVENT_CLASS_STANDARD:
         {
-         event=CreateStandardEvent(action,object1,object2,object3);
+         if(IsEventStandardAllowed(action))
+            m_current.Add(CreateStandardEvent(action,object1,object2,object3));
          break;
         }
       case EVENT_CLASS_ERROR:
         {
-         event=CreateErrorEvent(action,object1,object2,object3);
+         m_current.Add(CreateErrorEvent(action,object1,object2,object3));
          break;
         }
       case EVENT_CLASS_CUSTOM:
         {
-         event=CreateCustomEvent(action,object1,object2,object3);
+         if(IsEventStandardAllowed(action))
+            m_current.Add(CreateCustomEvent(action,object1,object2,object3));
          break;
+        }
+      default:
+        {
+         Print("unknown event");
+         return;
         }
      }
   }
@@ -123,191 +167,76 @@ JEventCustom *JEventsBase::CreateCustomEvent(const ENUM_ACTION action,CObject *o
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JEventsBase::SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info)
+JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
   {
-   if(!mode) return(true);
-   string message;
-   StringConcatenate(message,func,": ",action," [",info,"]");
-   if((bool)(mode  &ALERT_MODE_PRINT))
+   JEvent *event=NULL;
+   switch(type)
      {
-      Print(message);
-      return(true);
+      case EVENT_CLASS_STANDARD:
+        {
+         if(IsEventStandardAllowed(action))
+           {
+            event=CreateStandardEvent(action,message_add);
+            if(event.Instant())
+               event.Run(GetPointer(m_standard));
+           }
+         break;
+        }
+      case EVENT_CLASS_ERROR:
+        {
+         event=CreateErrorEvent(action,message_add);
+         if(CheckPointer(event)==POINTER_DYNAMIC)
+            if(event.Instant())
+               event.Run(GetPointer(m_error));
+         break;
+        }
+      case EVENT_CLASS_CUSTOM:
+        {
+         if(IsEventCustomAllowed(action))
+            event=CreateCustomEvent(action,message_add);
+         if(CheckPointer(event)==POINTER_DYNAMIC)
+            if(event.Instant())
+               event.Run(GetPointer(m_custom));
+         break;
+        }
+      default:
+        {
+         Print("unknown event");
+         break;
+        }
      }
-   if((bool)(mode  &ALERT_MODE_EMAIL))
-     {
-      return(SendMail(action,message));
-     }
-   if((bool)(mode  &ALERT_MODE_POPUP))
-     {
-      Alert(message);
-      return(true);
-     }
-   if((bool)(mode  &ALERT_MODE_PUSH))
-     {
-      return(SendNotification(message));
-     }
-   if((bool)(mode  &ALERT_MODE_FTP))
-     {
-      return(SendFTP(message));
-     }
-   return(false);
+   if(CheckPointer(event)==POINTER_DYNAMIC)
+      m_current.Add(event);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventsBase::EventCustom(JEventCustom *event)
+JEventStandard *JEventsBase::CreateStandardEvent(const ENUM_ACTION action,string message_add)
   {
+   return(new JEventStandard(action,message_add));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventsBase::EventError(JEventError *event)
+JEventError *JEventsBase::CreateErrorEvent(const ENUM_ACTION action,string message_add)
   {
+   return(new JEventError(action,message_add));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventsBase::EventStandard(JEventStandard *event)
+JEventCustom *JEventsBase::CreateCustomEvent(const ENUM_ACTION action,string message_add)
   {
-   int action=event.Action();
-   switch(action)
-     {
-      case ACTION_PROGRAM_INIT:
-        {
-
-         break;
-        }
-      case ACTION_PROGRAM_DEINIT:
-        {
-
-         break;
-        }
-      case ACTION_CLASS_VALIDATE:
-        {
-
-         break;
-        }
-      case ACTION_CLASS_VALIDATE_DONE:
-        {
-
-         break;
-        }
-      case ACTION_CANDLE:
-        {
-
-         break;
-        }
-      case ACTION_TICK:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_SEND:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_SEND_DONE:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_ENTRY_MODIFY:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_ENTRY_MODIFY_DONE:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_SL_MODIFY:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_SL_MODIFY_DONE:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_TP_MODIFY:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_TP_MODIFY_DONE:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_ME_MODIFY:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_ME_MODIFY_DONE:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_CLOSE:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_CLOSE_DONE:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_STOPS_CLOSE_DONE:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_STOPLOSS_TRAIL:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_STOPLOSS_TRAIL_DONE:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_TAKEPROFIT_TRAIL:
-        {
-
-         break;
-        }
-      case ACTION_ORDER_TAKEPROFIT_TRAIL_DONE:
-        {
-
-         break;
-        }
-      case ACTION_TRADE_ENABLED:
-        {
-
-         break;
-        }
-      case ACTION_TRADE_DISABLED:
-        {
-
-         break;
-        }
-      case ACTION_TRADE_TIME_START:
-        {
-
-         break;
-        }
-      case ACTION_TRADE_TIME_END:
-        {
-
-         break;
-        }
-     }
+   return(new JEventCustom(action,message_add));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JEventsBase::DebugMode(bool debug=true)
+  {
+   m_standard.DebugMode(debug);
+   m_error.DebugMode(debug);
+   m_custom.DebugMode(debug);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -317,61 +246,39 @@ bool JEventsBase::Run(void)
    for(int i=0;i<m_current.Total();i++)
      {
       JEvent *event=m_current.Detach(i);
-      switch(event.Type())
+      if(!event.Instant())
         {
-         case CLASS_TYPE_EVENT_STANDARD:
+         switch(event.Type())
            {
-            event.Run(GetPointer(m_standard));
-            break;
-           }
-         case CLASS_TYPE_EVENT_ERROR:
-           {
-            event.Run(GetPointer(m_error));
-            break;
-           }
-         case CLASS_TYPE_EVENT_CUSTOM:
-           {
-            event.Run(GetPointer(m_custom));
-            break;
+            case CLASS_TYPE_EVENT_STANDARD:
+              {
+               event.Run(GetPointer(m_standard));
+               break;
+              }
+            case CLASS_TYPE_EVENT_ERROR:
+              {
+               event.Run(GetPointer(m_error));
+               break;
+              }
+            case CLASS_TYPE_EVENT_CUSTOM:
+              {
+               event.Run(GetPointer(m_custom));
+               break;
+              }
            }
         }
       //event.Run();
       //Execute(event);
+/*
       if(m_archive_max>0)
         {
          m_archive.Add(event);
         }
       else delete event;
+      */
+      delete event;
      }
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JEventsBase::Execute(JEvent *event)
-  {
-   switch(event.Type())
-     {
-      case CLASS_TYPE_EVENT_STANDARD:
-        {
-         EventStandard(GetPointer(event));
-         break;
-        }
-      case CLASS_TYPE_EVENT_ERROR:
-        {
-         EventError(GetPointer(event));
-         break;
-        }
-      case CLASS_TYPE_EVENT_CUSTOM:
-        {
-         EventCustom(GetPointer(event));
-         break;
-        }
-      default:
-        {
-         Print("unknown event type");
-        }
-     }
+//m_current.Clear();
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -381,9 +288,9 @@ bool JEventsBase::Deinit()
   {
    DeleteObject(m_current);
    DeleteObject(m_archive);
-   DeleteObject(m_standard);
-   DeleteObject(m_error);
-   DeleteObject(m_custom);
+//DeleteObject(m_standard);
+//DeleteObject(m_error);
+//DeleteObject(m_custom);
    return(true);
   }
 //+------------------------------------------------------------------+

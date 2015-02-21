@@ -13,6 +13,7 @@ class JEvent : public JEventBase
 public:
                      JEvent(void);
                      JEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+                     JEvent(const ENUM_ACTION action,string message_add);
                     ~JEvent(void);
   };
 //+------------------------------------------------------------------+
@@ -27,6 +28,13 @@ JEvent::JEvent(void)
 JEvent::JEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
    Init(action,object1,object2,object3);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JEvent::JEvent(const ENUM_ACTION action,string message_add)
+  {
+   Init(action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

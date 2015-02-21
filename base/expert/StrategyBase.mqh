@@ -19,7 +19,7 @@
 #include "..\stop\StopsBase.mqh"
 #include "..\money\MoneysBase.mqh"
 #include "..\time\TimesBase.mqh"
-#include "..\event\EventBase.mqh"
+#include "..\event\EventsBase.mqh"
 class JExpert;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -69,7 +69,7 @@ protected:
    //--- trading time objects
    JTimes           *m_times;
    //--- events
-   JEvent           *m_event;
+   JEvents          *m_events;
    //--- container
    JExpert          *m_expert;
 public:
@@ -85,7 +85,7 @@ public:
    virtual bool      Init(const string symbol,const ENUM_TIMEFRAMES period,const bool every_tick,const int magic,const bool one_trade_per_candle,const bool position_reverse);
    virtual bool      InitAccount(CAccountInfo *account=NULL);
    virtual bool      InitTrade(JTrade *trade=NULL);
-   virtual bool      InitEvent(JEvent *event);
+   virtual bool      InitEvent(JEvents *events);
    virtual bool      InitComponents(void);
    virtual bool      InitMoneys(void);
    virtual bool      InitSignals(void);
@@ -100,7 +100,7 @@ public:
    virtual void      Active(const bool activate) {m_activate=activate;}
    //--- setters and getters   
    virtual CAccountInfo *AccountInfo(void) const {return(m_account);}
-   virtual JEvent   *Event(void) const {return(m_event);}
+   virtual JEvents  *Events(void) const {return(m_events);}
    virtual JStop    *MainStop(void) const {return(m_main_stop);}
    virtual JMoneys  *Moneys(void) const {return(m_moneys);}
    virtual JOrders  *Orders() const {return(GetPointer(m_orders));}
@@ -165,7 +165,9 @@ protected:
    virtual void      CheckOldStops(void);
    virtual bool      CloseStops(void);
    virtual void      CloseOppositeOrders(const int res) {}
-   virtual bool      IsNewBar(void) const;
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
+   virtual bool      IsNewBar(void);
    virtual bool      IsTradeProcessed(void) const;
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
    virtual void      ManageOrders(void);
@@ -178,6 +180,7 @@ protected:
    virtual bool      TradeOpen(const int res) {return(true);}
    //--- deinitialization
    virtual void      DeinitAccount(void);
+   virtual void      DeinitEvents(void);
    virtual void      DeinitMoneys(void);
    virtual void      DeinitSignals(void);
    virtual void      DeinitStops(void);
@@ -317,10 +320,14 @@ bool JStrategyBase::InitAccount(CAccountInfo *account=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategyBase::InitEvent(JEvent *event)
+bool JStrategyBase::InitEvent(JEvents *events=NULL)
   {
-   if(event==NULL) return(false);
-   m_event=event;
+   if(events==NULL)
+     {
+      m_events=new JEvents();
+     }
+   else
+      m_events=events;
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -439,13 +446,14 @@ bool JStrategyBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool JStrategyBase::OnTick(void)
   {
-   m_last_tick_time=m_symbol.Time();
    if(!Active()) return(false);
+   m_last_tick_time=m_symbol.Time();
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_TICK);
    bool ret=false;
    if(!Refresh()) return(ret);
    m_orders.OnTick();
    ManageOrders();
-   if(IsNewBar())
+   if(IsNewBar() || m_every_tick)
      {
       int entry=0,exit=0;
       CheckSignals(entry,exit);
@@ -454,10 +462,12 @@ bool JStrategyBase::OnTick(void)
       if(!IsTradeProcessed())
         {
          ret=TradeOpen(entry);
-         if(ret) m_last_trade_time=m_last_tick_time;
+         if(ret)           
+            m_last_trade_time=m_last_tick_time;
         }
      }
    ManageOrdersHistory();
+   m_events.Run();
    return(ret);
   }
 //+------------------------------------------------------------------+
@@ -535,18 +545,18 @@ bool JStrategyBase::CloseStops(void)
 //+------------------------------------------------------------------+
 void JStrategyBase::ArchiveOrders(void)
   {
-   bool result = false;
+   bool result=false;
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
-      ArchiveOrder(m_orders.Detach(i));           
+      ArchiveOrder(m_orders.Detach(i));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::ArchiveOrder(JOrder *order)
   {
-   bool result = m_orders_history.Add(order);
-   if (result)
+   bool result=m_orders_history.Add(order);
+   if(result)
       m_orders_history.Clean(false);
    return(result);
   }
@@ -652,15 +662,33 @@ bool JStrategyBase::IsTradeProcessed(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategyBase::IsNewBar(void) const
+bool JStrategyBase::IsNewBar(void)
   {
-   if(m_every_tick) return(true);
    datetime arr[];
    if(CopyTime(m_symbol.Name(),m_period,0,1,arr)==-1)
       return(false);
    if(m_last_tick_time>0 && m_last_tick_time<arr[0])
+     {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_CANDLE);
       return(true);
+     }
    return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
+  {
+   if(m_events!=NULL)
+      m_events.CreateEvent(type,action,object1,object2,object3);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
+  {
+   if(m_events!=NULL)
+      m_events.CreateEvent(type,action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -673,6 +701,7 @@ void JStrategyBase::Deinit(const int reason=0)
    DeinitSignals();
    DeinitMoneys();
    DeinitAccount();
+   DeinitEvents();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -741,6 +770,17 @@ void JStrategyBase::DeinitAccount(void)
      {
       delete m_account;
       m_account=NULL;
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::DeinitEvents(void)
+  {
+   if(m_events!=NULL)
+     {
+      delete m_events;
+      m_events=NULL;
      }
   }
 //+------------------------------------------------------------------+

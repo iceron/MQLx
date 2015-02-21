@@ -26,6 +26,8 @@ protected:
    double            m_volume_percent;
    double            m_stoploss;
    double            m_takeprofit;
+   double            m_stoploss_last;
+   double            m_takeprofit_last;
    double            m_stoploss_initial;
    double            m_takeprofit_initial;
    ulong             m_stoploss_ticket;
@@ -41,6 +43,7 @@ protected:
    JStopLine        *m_objsl;
    JStopLine        *m_objtp;
    JOrderStops      *m_order_stops;
+   JEvents          *m_events;
 public:
                      JOrderStopBase(void);
                     ~JOrderStopBase(void);
@@ -49,18 +52,25 @@ public:
    virtual void      Init(JOrder *order,JStop *stop);
    virtual void      SetContainer(JOrderStops *orderstops){m_order_stops=orderstops;}
    //--- getters and setters  
+
    virtual string    EntryName(void) const {return(m_stop.Name()+"."+(string)m_order.Ticket());}
+   virtual bool      EventHandler(JEvents *events);
    virtual ulong     MainMagic(void) const {return(m_order.Magic());}
    virtual ulong     MainTicket(void) const {return(m_order.Ticket());}
    virtual double    MainTicketPrice() const {return(m_order.Price());}
    virtual ENUM_ORDER_TYPE MainTicketType(void) const {return(m_order.OrderType());}
+   virtual JOrder   *Order() {return(GetPointer(m_order));}
    virtual void      StopLoss(const double stoploss) {m_stoploss=stoploss;}
    virtual double    StopLoss(void) const {return(m_stoploss);}
+   virtual void      StopLossLast(const double stoploss) {m_stoploss_last=stoploss;}
+   virtual double    StopLossLast(void) const {return(m_stoploss_last);}
    virtual string    StopLossName(void) const {return(m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket());}
    virtual void      StopLossTicket(const ulong ticket) {m_stoploss_ticket=ticket;}
    virtual ulong     StopLossTicket(void) const {return(m_stoploss_ticket);}
    virtual void      TakeProfit(const double takeprofit) {m_takeprofit=takeprofit;}
    virtual double    TakeProfit(void) const {return(m_takeprofit);}
+   virtual void      TakeProfitLast(const double takeprofit) {m_takeprofit_last=takeprofit;}
+   virtual double    TakeProfitLast(void) const {return(m_takeprofit_last);}
    virtual string    TakeProfitName(void) const {return(m_stop.Name()+m_stop.TakeProfitName()+(string)m_order.Ticket());}
    virtual void      TakeProfitTicket(const ulong ticket) {m_takeprofit_ticket=ticket;}
    virtual ulong     TakeProfitTicket(void) const {return(m_takeprofit_ticket);}
@@ -81,10 +91,13 @@ public:
    virtual bool      DeleteTakeProfit(void);
    virtual bool      IsClosed(void) const {return(CheckPointer(m_objentry)!=POINTER_DYNAMIC);}
    virtual bool      Update(void);
+   //--events
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    //--- deinitialization 
    virtual bool      Deinit(void);
 protected:
-   virtual bool      ModifyOrderStop(const double stoploss,const double takeprofit) {return(true);}
+   virtual int       ModifyOrderStop(const double stoploss,const double takeprofit) {return(true);}
    virtual bool      UpdateOrderStop(const double stoploss,const double takeprofit) {return(true);}
   };
 //+------------------------------------------------------------------+
@@ -95,6 +108,8 @@ JOrderStopBase::JOrderStopBase(void) : m_volume(0.0),
                                        m_volume_percent(0.0),
                                        m_stoploss(0.0),
                                        m_takeprofit(0.0),
+                                       m_stoploss_last(0.0),
+                                       m_takeprofit_last(0.0),
                                        m_stoploss_initial(0.0),
                                        m_takeprofit_initial(0.0),
                                        m_stoploss_ticket(0),
@@ -132,28 +147,28 @@ void JOrderStopBase::Init(JOrder *order,JStop *stop)
    if(m_takeprofit_initial>0)
       m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,m_takeprofit);
    if(m_takeprofit_initial>0 || m_stoploss_initial>0)
-      m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());   
+      m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JOrderStopBase::Deinit(void)
   {
-   if(m_objentry!=NULL) 
-   {
+   if(m_objentry!=NULL)
+     {
       delete m_objentry;
-      m_objentry = NULL;
-    }  
-   if(m_objsl!=NULL) 
-   {
+      m_objentry=NULL;
+     }
+   if(m_objsl!=NULL)
+     {
       delete m_objsl;
-      m_objsl = NULL;
-   }   
-   if(m_objtp!=NULL) 
-   {
+      m_objsl=NULL;
+     }
+   if(m_objtp!=NULL)
+     {
       delete m_objtp;
-      m_objtp = NULL;
-   }   
+      m_objtp=NULL;
+     }
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -176,7 +191,14 @@ bool JOrderStopBase::CheckTrailing(void)
    double stoploss=0,takeprofit=0;
    if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,TRAIL_TARGET_STOPLOSS);
    if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_takeprofit,TRAIL_TARGET_TAKEPROFIT);
-   return(ModifyOrderStop(stoploss,takeprofit));
+   bool result=ModifyOrderStop(stoploss,takeprofit);
+   if(result==1)
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_DONE,GetPointer(this));
+   else if(result==2)
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_SL_DONE,GetPointer(this));
+   else if(result==3)
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_TP_DONE,GetPointer(this));
+   return(result);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -291,6 +313,31 @@ bool JOrderStopBase::DeleteStopLines(void)
    if(DeleteStopLoss() && DeleteTakeProfit())
       return(DeleteEntry());
    return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopBase::EventHandler(JEvents *events)
+  {
+   if(events!=NULL)
+      m_events=events;
+   return(m_events!=NULL);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrderStopBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
+  {
+   if(m_events!=NULL)
+      m_events.CreateEvent(type,action,object1,object2,object3);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrderStopBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
+  {
+   if(m_events!=NULL)
+      m_events.CreateEvent(type,action,message_add);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

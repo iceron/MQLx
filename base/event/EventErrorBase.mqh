@@ -17,10 +17,11 @@ protected:
 public:
                      JEventErrorBase(void);
                      JEventErrorBase(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+                     JEventErrorBase(const ENUM_ACTION action,string message_add);
                     ~JEventErrorBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_EVENT_ERROR);}   
-   virtual bool      Run(JEventRegistry *registry);  
-   virtual bool      Execute(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);                 
+   virtual int       Type(void) {return(CLASS_TYPE_EVENT_ERROR);}
+   virtual bool      Run(JEventRegistry *registry);
+   virtual bool      Execute(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -35,6 +36,13 @@ JEventErrorBase::JEventErrorBase(void) : m_error(GetLastError())
 JEventErrorBase::JEventErrorBase(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
    Init(action,object1,object2,object3);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JEventErrorBase::JEventErrorBase(const ENUM_ACTION action,string message_add)
+  {
+   Init(action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -341,23 +349,26 @@ bool JEventErrorBase::Run(JEventRegistry *registry)
       break;
       default:   m_error_string="unknown error";
      }
-   m_subject = m_error_string;
+   m_subject=m_error_string;
    return(true);
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JEventErrorBase::Execute(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL)
   {
-   if (registry.IsPrint(m_error))
-      Print(m_message);
-   if (registry.IsSound(m_error))
+   if(registry.IsPrint(m_error))
+      Print(m_message+m_message_add);
+   if(registry.IsSound(m_error))
       PlaySound(sound_file);
-   if (registry.IsPopup(m_error))
-      Alert(m_message);
-   if (registry.IsEmail(m_error))
-      SendMail(m_subject,m_message);
-   if (registry.IsPush(m_error))
-      SendNotification(m_message);
-   if (registry.IsFTP(m_error))
-      SendFTP(file_name,ftp_path);     
+   if(registry.IsPopup(m_error))
+      Alert(m_message+m_message_add);
+   if(registry.IsEmail(m_error))
+      SendMail(m_subject,m_message+m_message_add);
+   if(registry.IsPush(m_error))
+      SendNotification(m_message+m_message_add);
+   if(registry.IsFTP(m_error))
+      SendFTP(file_name,ftp_path);
    return(false);
   }
 //+------------------------------------------------------------------+

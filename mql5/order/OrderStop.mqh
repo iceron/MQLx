@@ -15,7 +15,7 @@ public:
                     ~JOrderStop(void);
    virtual void      Check(double &volume);
 protected:
-   virtual bool      ModifyOrderStop(const double stoploss,const double takeprofit);
+   virtual int       ModifyOrderStop(const double stoploss,const double takeprofit);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -38,6 +38,7 @@ bool JOrderStop::ModifyOrderStop(const double stoploss,const double takeprofit)
    bool stoploss_modified=false,takeprofit_modified=false;
    if(stoploss>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && stoploss>m_stoploss) || (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<m_stoploss)))
      {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY);
       if(m_stop.Pending() || m_stop.Main())
         {
          modify=m_stop.OrderModify(m_stoploss_ticket,stoploss);
@@ -54,9 +55,11 @@ bool JOrderStop::ModifyOrderStop(const double stoploss,const double takeprofit)
               }
            }
         }
+      else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SL_MODIFY);
      }
    if(takeprofit>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && takeprofit<m_takeprofit) || (m_order.OrderType()==ORDER_TYPE_SELL && takeprofit>m_takeprofit)))
      {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY);
       if(m_stop.Pending() || m_stop.Main())
         {
          modify=m_stop.OrderModify(m_takeprofit_ticket,stoploss);
@@ -73,8 +76,25 @@ bool JOrderStop::ModifyOrderStop(const double stoploss,const double takeprofit)
               }
            }
         }
+      else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY);
      }
-   return(takeprofit_modified || stoploss_modified);
+   int ret=0;
+   if(takeprofit_modified && stoploss_modified)
+   {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY_DONE,GetPointer(this));
+      ret = 1;
+   }   
+   else if(takeprofit_modified && !stoploss_modified)
+   {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
+      ret = 2;
+   }   
+   else if(!takeprofit_modified && stoploss_modified)
+   {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
+      ret = 3;
+   }   
+   return(ret);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

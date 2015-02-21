@@ -13,6 +13,7 @@
 class JEventRegistryBase : public CObject
   {
 protected:
+   bool              m_debug;
    CArrayInt         m_print;
    CArrayInt         m_sound;
    CArrayInt         m_popup;
@@ -24,8 +25,10 @@ public:
                     ~JEventRegistryBase(void);
    virtual void      Register(const ENUM_ALERT_MODE alert_mode,const int id);
    virtual bool      IsAllowed(const ENUM_ALERT_MODE alert_mode,const int id);
+   virtual bool      IsAllowed(const int id);
    virtual void      Clear(const ENUM_ALERT_MODE alert_mode);
    virtual void      Clear();
+   virtual void      DebugMode(bool debug=true);
    virtual bool      Init(CArrayInt *print,CArrayInt *sound,CArrayInt *popup,CArrayInt *email,CArrayInt *push,CArrayInt *ftp);
    virtual bool      Init(int &print[],int &sound[],int &popup[],int &email[],int &push[],int &ftp[]);
    bool              IsPrint(int id);
@@ -38,8 +41,14 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventRegistryBase::JEventRegistryBase(void)
+JEventRegistryBase::JEventRegistryBase(void) : m_debug(false)
   {
+   m_print.Sort();
+   m_sound.Sort();
+   m_popup.Sort();
+   m_email.Sort();
+   m_push.Sort();
+   m_ftp.Sort();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -50,20 +59,45 @@ JEventRegistryBase::~JEventRegistryBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+JEventRegistryBase::DebugMode(bool debug=true)
+  {
+   m_debug=debug;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JEventRegistryBase::Init(CArrayInt *print,CArrayInt *sound,CArrayInt *popup,CArrayInt *email,CArrayInt *push,CArrayInt *ftp)
   {
    if(print!=NULL)
+   {
       m_print.AddArray(print);
+      m_print.Sort();
+   }   
    if(sound!=NULL)
+   {
       m_sound.AddArray(sound);
+      m_sound.Sort();
+   }   
    if(popup!=NULL)
+   {
       m_popup.AddArray(popup);
+      m_popup.Sort();
+   }   
    if(email!=NULL)
+   {
       m_email.AddArray(email);
+      m_email.Sort();
+   }   
    if(push!=NULL)
+   {
       m_push.AddArray(push);
+      m_push.Sort();
+   }   
    if(ftp!=NULL)
+   {
       m_ftp.AddArray(ftp);
+      m_ftp.Sort();
+   }   
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -72,17 +106,35 @@ bool JEventRegistryBase::Init(CArrayInt *print,CArrayInt *sound,CArrayInt *popup
 bool JEventRegistryBase::Init(int &print[],int &sound[],int &popup[],int &email[],int &push[],int &ftp[])
   {
    if(ArraySize(print)>0)
+   {
       m_print.AddArray(print);
+      m_print.Sort();
+   }  
    if(ArraySize(sound)>0)
+   {
       m_sound.AddArray(sound);
+      m_sound.Sort();
+   }   
    if(ArraySize(popup)>0)
+   {
       m_popup.AddArray(popup);
+      m_popup.Sort();
+   }   
    if(ArraySize(email)>0)
+   {
       m_email.AddArray(email);
+      m_email.Sort();
+   }   
    if(ArraySize(push)>0)
+   {
       m_push.AddArray(push);
+      m_push.Sort();
+   }   
    if(ArraySize(ftp)>0)
+   {
       m_ftp.AddArray(ftp);
+      m_ftp.Sort();
+   }   
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -90,7 +142,7 @@ bool JEventRegistryBase::Init(int &print[],int &sound[],int &popup[],int &email[
 //+------------------------------------------------------------------+
 bool JEventRegistryBase::IsPrint(int id)
   {
-   return(m_print.Search(id)>=0);
+   return(m_debug||m_print.Search(id)>=0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -136,32 +188,32 @@ JEventRegistryBase::Register(ENUM_ALERT_MODE alert_mode,int id)
      {
       case ALERT_MODE_PRINT:
         {
-         m_print.Add(id);
+         m_print.InsertSort(id);
          break;
         }
       case ALERT_MODE_SOUND:
         {
-         m_sound.Add(id);
+         m_sound.InsertSort(id);
          break;
         }
       case ALERT_MODE_POPUP:
         {
-         m_popup.Add(id);
+         m_popup.InsertSort(id);
          break;
         }
       case ALERT_MODE_EMAIL:
         {
-         m_email.Add(id);
+         m_email.InsertSort(id);
          break;
         }
       case ALERT_MODE_PUSH:
         {
-         m_push.Add(id);
+         m_push.InsertSort(id);
          break;
         }
       case ALERT_MODE_FTP:
         {
-         m_ftp.Add(id);
+         m_ftp.InsertSort(id);
          break;
         }
       default:
@@ -213,6 +265,13 @@ bool JEventRegistryBase::IsAllowed(const ENUM_ALERT_MODE alert_mode,const int id
         }
      }
    return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventRegistryBase::IsAllowed(const int id)
+  {
+   return(IsPrint(id)||IsSound(id)||IsPopup(id)||IsEmail(id)||IsPush(id)||IsFTP(id));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
