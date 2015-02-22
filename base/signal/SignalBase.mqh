@@ -7,7 +7,6 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayDouble.mqh>
 #include "..\..\common\enum\ENUM_CMD.mqh"
-#include "..\..\common\common.mqh"
 class JStrategy;
 class JSignals;
 //+------------------------------------------------------------------+
@@ -118,7 +117,7 @@ int JSignalBase::CheckSignal(void)
       if(long_cond) res=CMD_LONG;
       else if(short_cond) res=CMD_SHORT;
      }
-   if(m_reverse) res=SignalReverse(res);
+   if(m_reverse) res=SO::SignalReverse(res);
    if(res>CMD_NEUTRAL) m_signal_valid=res;
    m_signal=res;
    return(res);

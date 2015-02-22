@@ -6,7 +6,6 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
-#include "..\..\common\deleteobject.mqh"
 #include "..\..\common\enum\ENUM_ALERT_MODE.mqh"
 #include "EventBase.mqh"
 #include "EventStandardBase.mqh"

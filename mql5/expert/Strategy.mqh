@@ -68,7 +68,6 @@ bool JStrategy::TradeOpen(const int res)
    ENUM_ORDER_TYPE type=SignalToOrderType(res);
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
-      m_trade.SetSymbol(m_symbol);
       price=PriceCalculate(res);      
       double lotsize=LotSizeCalculate(price,ORDER_TYPE_BUY,StopLossCalculate(res,price));
       ret=SendOrder(type,lotsize,price,sl,tp);

@@ -98,15 +98,15 @@ bool JSignalsBase::CheckSignals(int &entry,int &exit)
    exit = CheckExit();
    if(m_reverse)
      {
-      SignalReverse(entry);
-      SignalReverse(exit);
+      SO::SignalReverse(entry);
+      SO::SignalReverse(exit);
      }
    if(m_new_signal)
       if(entry==m_last_entry)
          entry=CMD_NEUTRAL;
    if(entry>0)
       m_last_entry=entry;      
-   if(entry>0 && entry==SignalReverse(exit))
+   if(entry>0 && entry==SO::SignalReverse(exit))
      {      
       entry= CMD_VOID;
       exit = CMD_VOID;

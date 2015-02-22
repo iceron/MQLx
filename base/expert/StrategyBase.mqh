@@ -8,6 +8,7 @@
 #include "..\..\common\enum\ENUM_EXECUTION_MODE.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\class\ADT.mqh"
+#include "..\..\common\class\SO.mqh"
 #include <Object.mqh>
 #include <Arrays\ArrayInt.mqh>
 #include "..\lib\AccountInfo.mqh"
@@ -581,7 +582,7 @@ JStrategyBase::CloseOrders(const int res)
    for(int i=total-1;i>=0;i--)
      {
       JOrder *order=m_orders.At(i);
-      if(IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) res))
+      if(SO::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) res))
         {
          if(CloseOrder(order,i))
             CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_CLOSE_DONE,order);
