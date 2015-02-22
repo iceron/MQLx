@@ -47,7 +47,7 @@ public:
    virtual void      AddObject(CObject *object);
    virtual CObject *GetObject(ENUM_CLASS_TYPE type);
    virtual CObject *GetObject(ENUM_CLASS_TYPE type,int &idx);
-   virtual bool      Run(JEventRegistry *registry);
+   virtual bool      Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
    virtual bool      Execute(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
   };
 //+------------------------------------------------------------------+
@@ -146,7 +146,7 @@ JEventBase::AddObject(CObject *object)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JEventBase::Run(JEventRegistry *registry)
+bool JEventBase::Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL)
   {
    return(false);
   }

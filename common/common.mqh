@@ -22,63 +22,63 @@ bool IsOrderTypeShort(ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool IsOrderAgainstSignal(ENUM_ORDER_TYPE type, ENUM_CMD res,bool exact=false)
+bool IsOrderAgainstSignal(ENUM_ORDER_TYPE type,ENUM_CMD res,bool exact=false)
   {
-   if (exact)
-   {
+   if(exact)
+     {
       switch(type)
-      {
-         case ORDER_TYPE_BUY: 
-         {
-            if (res==CMD_BUY)
+        {
+         case ORDER_TYPE_BUY:
+           {
+            if(res==CMD_BUY)
                return(true);
             else
                return(false);
-         }   
-         case ORDER_TYPE_SELL: 
-         {
-            if (res==CMD_SELL)
+           }
+         case ORDER_TYPE_SELL:
+           {
+            if(res==CMD_SELL)
                return(true);
             else
                return(false);
-         }
-         case ORDER_TYPE_BUY_LIMIT: 
-         {
-            if (res==CMD_BUYLIMIT)
+           }
+         case ORDER_TYPE_BUY_LIMIT:
+           {
+            if(res==CMD_BUYLIMIT)
                return(true);
             else
                return(false);
-         } 
-         case ORDER_TYPE_BUY_STOP: 
-         {
-            if (res==CMD_BUYSTOP)
+           }
+         case ORDER_TYPE_BUY_STOP:
+           {
+            if(res==CMD_BUYSTOP)
                return(true);
             else
                return(false);
-         } 
-         case ORDER_TYPE_SELL_LIMIT: 
-         {
-            if (res==CMD_SELLLIMIT)
+           }
+         case ORDER_TYPE_SELL_LIMIT:
+           {
+            if(res==CMD_SELLLIMIT)
                return(true);
             else
                return(false);
-         } 
-         case ORDER_TYPE_SELL_STOP: 
-         {
-            if (res==CMD_SELLSTOP)
+           }
+         case ORDER_TYPE_SELL_STOP:
+           {
+            if(res==CMD_SELLSTOP)
                return(true);
             else
                return(false);
-         } 
+           }
          default:
-         {
+           {
             Print(__FUNCTION__+": unknown order type");
-         } 
-      }
-   }
+           }
+        }
+     }
    return((IsSignalTypeShort((ENUM_CMD) res) && IsOrderTypeLong(type))
-         || (IsSignalTypeLong((ENUM_CMD)res) && IsOrderTypeShort(type))
-         || (res==CMD_VOID));
+          || (IsSignalTypeLong((ENUM_CMD)res) && IsOrderTypeShort(type))
+          || (res==CMD_VOID));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -164,36 +164,39 @@ int SignalReverse(int s)
      }
    return(s);
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 ENUM_ORDER_TYPE SignalToOrderType(int s)
   {
-   ENUM_ORDER_TYPE ret = ORDER_TYPE_BUY;
+   ENUM_ORDER_TYPE ret=ORDER_TYPE_BUY;
    switch(s)
      {
       case CMD_BUY:
         {
-         ret = ORDER_TYPE_BUY;
+         ret=ORDER_TYPE_BUY;
         }
       case CMD_SELL:
         {
-         ret = ORDER_TYPE_SELL;
+         ret=ORDER_TYPE_SELL;
         }
       case CMD_BUYLIMIT:
         {
-         ret = ORDER_TYPE_BUY_LIMIT;
+         ret=ORDER_TYPE_BUY_LIMIT;
         }
       case CMD_SELLLIMIT:
         {
-         ret = ORDER_TYPE_SELL_LIMIT;
+         ret=ORDER_TYPE_SELL_LIMIT;
         }
       case CMD_BUYSTOP:
         {
-         ret = ORDER_TYPE_BUY_STOP;
+         ret=ORDER_TYPE_BUY_STOP;
         }
       case CMD_SELLSTOP:
         {
-         ret = ORDER_TYPE_SELL_STOP;
+         ret=ORDER_TYPE_SELL_STOP;
         }
      }
-     return(ret);
+   return(ret);
   }
 //+------------------------------------------------------------------+

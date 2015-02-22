@@ -22,6 +22,7 @@ class JEventsBase : public CObject
 protected:
    bool              m_activate;
    int               m_archive_max;
+   string            m_sound_file;
    string            m_ftp_file;
    string            m_ftp_path;
    JStrategy        *m_strategy;
@@ -63,6 +64,7 @@ protected:
 //+------------------------------------------------------------------+
 JEventsBase::JEventsBase(void) : m_activate(true),
                                  m_archive_max(0),
+                                 m_sound_file("alert.wav"),
                                  m_ftp_file(NULL),
                                  m_ftp_path(NULL)
   {
@@ -178,7 +180,7 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,st
            {
             event=CreateStandardEvent(action,message_add);
             if(event.Instant())
-               event.Run(GetPointer(m_standard));
+               event.Run(GetPointer(m_standard),m_sound_file,m_ftp_file,m_ftp_path);
            }
          break;
         }
@@ -187,7 +189,7 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,st
          event=CreateErrorEvent(action,message_add);
          if(CheckPointer(event)==POINTER_DYNAMIC)
             if(event.Instant())
-               event.Run(GetPointer(m_error));
+               event.Run(GetPointer(m_error),m_sound_file,m_ftp_file,m_ftp_path);
          break;
         }
       case EVENT_CLASS_CUSTOM:
@@ -196,7 +198,7 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,st
             event=CreateCustomEvent(action,message_add);
          if(CheckPointer(event)==POINTER_DYNAMIC)
             if(event.Instant())
-               event.Run(GetPointer(m_custom));
+               event.Run(GetPointer(m_custom),m_sound_file,m_ftp_file,m_ftp_path);
          break;
         }
       default:

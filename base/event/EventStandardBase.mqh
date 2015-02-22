@@ -56,7 +56,7 @@ public:
    virtual void      OnTradeDisabled(void);
    virtual void      OnTradeTimeStart(void);
    virtual void      OnTradeTimeEnd(void);
-   virtual bool      Run(JEventRegistry *registry);
+   virtual bool      Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -87,7 +87,7 @@ JEventStandardBase::~JEventStandardBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JEventStandardBase::Run(JEventRegistry *registry)
+bool JEventStandardBase::Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL)
   {
    switch(Action())
      {
@@ -247,7 +247,7 @@ bool JEventStandardBase::Run(JEventRegistry *registry)
          break;
         }
      }
-   Execute(registry);
+   Execute(registry,sound_file,file_name,ftp_path);
    return(true);
   }
 //+------------------------------------------------------------------+

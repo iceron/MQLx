@@ -20,7 +20,7 @@ public:
                      JEventErrorBase(const ENUM_ACTION action,string message_add);
                     ~JEventErrorBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_EVENT_ERROR);}
-   virtual bool      Run(JEventRegistry *registry);
+   virtual bool      Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
    virtual bool      Execute(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
   };
 //+------------------------------------------------------------------+
@@ -53,7 +53,7 @@ JEventErrorBase::~JEventErrorBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JEventErrorBase::Run(JEventRegistry *registry)
+bool JEventErrorBase::Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL)
   {
    switch(m_error)
      {
@@ -350,6 +350,7 @@ bool JEventErrorBase::Run(JEventRegistry *registry)
       default:   m_error_string="unknown error";
      }
    m_subject=m_error_string;
+   Execute(registry,sound_file,file_name,ftp_path);
    return(true);
   }
 //+------------------------------------------------------------------+

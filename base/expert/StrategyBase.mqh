@@ -7,7 +7,6 @@
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_EXECUTION_MODE.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
-#include "..\..\common\enum\ENUM_TRADE_MODE.mqh"
 #include <Object.mqh>
 #include <Arrays\ArrayInt.mqh>
 #include "..\lib\AccountInfo.mqh"
@@ -45,7 +44,7 @@ protected:
    bool              m_one_trade_per_candle;
    ENUM_TIMEFRAMES   m_period;
    bool              m_position_reverse;
-   ENUM_TRADE_MODE   m_trade_mode;
+   //ENUM_TRADE_MODE   m_trade_mode;
    //--- market parameters
    int               m_digits_adjust;
    double            m_points_adjust;
@@ -131,8 +130,8 @@ public:
    virtual int       OrdersHistoryTotal(void) const {return(m_orders_history.Total());}
    virtual double    PointsAdjust(void) const {return(m_points_adjust);}
    virtual void      PointsAdjust(const double adjust) {m_points_adjust=adjust;}
-   virtual ENUM_TRADE_MODE TradeMode(void) const {return(m_trade_mode);}
-   virtual void      TradeMode(const ENUM_TRADE_MODE mode){m_trade_mode=mode;}
+   //virtual ENUM_TRADE_MODE TradeMode(void) const {return(m_trade_mode);}
+   //virtual void      TradeMode(const ENUM_TRADE_MODE mode){m_trade_mode=mode;}
    virtual int       TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total()+m_history_count);}
    virtual ENUM_EXECUTION_MODE ExecutionMode(void) const {return(m_exec_mode);}
    virtual void      ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
@@ -163,6 +162,8 @@ protected:
    virtual bool      ArchiveOrder(JOrder *order);
    virtual void      CheckClosedOrders(void);
    virtual void      CheckOldStops(void);
+   virtual bool      CloseOrder(JOrder *order,const int index) {return(true);}
+   virtual void      CloseOrders(const int res);
    virtual bool      CloseStops(void);
    virtual void      CloseOppositeOrders(const int res) {}
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
@@ -172,9 +173,11 @@ protected:
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
    virtual void      ManageOrders(void);
    virtual void      ManageOrdersHistory(void);
-   virtual double    PriceCalculate(const int res);
+   virtual void      OnTradeTransaction(JOrder *order);
+   virtual double    PriceCalculate(ENUM_ORDER_TYPE type);
    virtual double    PriceCalculateCustom(const int res) {return(0);}
    virtual bool      Refresh(void);
+   virtual bool      SendOrder(ENUM_ORDER_TYPE type,const double lotsize,const double price,const double stoploss,const double takeprofit);
    virtual double    StopLossCalculate(const int res,const double price);
    virtual double    TakeProfitCalculate(const int res,const double price);
    virtual bool      TradeOpen(const int res) {return(true);}
@@ -206,7 +209,7 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_one_trade_per_candle(true),
                                      m_period(PERIOD_CURRENT),
                                      m_position_reverse(true),
-                                     m_trade_mode(TRADE_MODE_MARKET),
+                                     //m_trade_mode(TRADE_MODE_MARKET),
                                      m_digits_adjust(0),
                                      m_points_adjust(0.0),
                                      m_last_tick_time(0),
@@ -462,13 +465,20 @@ bool JStrategyBase::OnTick(void)
       if(!IsTradeProcessed())
         {
          ret=TradeOpen(entry);
-         if(ret)           
+         if(ret)
             m_last_trade_time=m_last_tick_time;
         }
      }
    ManageOrdersHistory();
    m_events.Run();
    return(ret);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::OnTradeTransaction(JOrder *order)
+  {
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND_DONE,order);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -481,20 +491,21 @@ void JStrategyBase::ManageOrders(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStrategyBase::PriceCalculate(const int res)
+double JStrategyBase::PriceCalculate(ENUM_ORDER_TYPE type)
   {
-   if(m_trade_mode==TRADE_MODE_MARKET)
+   double price=0;
+   switch(type)
      {
-      if(res==CMD_LONG)
-         return(m_symbol.Ask());
-      else if(res==CMD_SHORT)
-         return(m_symbol.Bid());
+      case ORDER_TYPE_BUY:
+         price=m_symbol.Ask();
+         break;
+      case ORDER_TYPE_SELL:
+         price=m_symbol.Bid();
+         break;
+      default:
+         price=PriceCalculateCustom(type);
      }
-   else if(m_trade_mode==TRADE_MODE_PENDING)
-     {
-      return(PriceCalculateCustom(res));
-     }
-   return(0.0);
+   return(price);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -504,6 +515,26 @@ double JStrategyBase::LotSizeCalculate(const double price,const ENUM_ORDER_TYPE 
    if(CheckPointer(m_moneys))
       return(m_moneys.Volume(price,type,stoploss));
    return(m_lotsize);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,const double price,const double sl,const double tp)
+  {
+   bool ret=false;
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND,EnumToString(type)+" "+DoubleToString(lotsize,2)+" "+DoubleToString(sl,5)+" "+DoubleToString(tp,5)+" "+m_comment+" "+DoubleToString(m_magic,0));
+   switch(type)
+     {
+      case ORDER_TYPE_BUY:
+         ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
+         break;
+      case ORDER_TYPE_SELL:
+         ret=m_trade.Sell(lotsize,price,sl,tp,m_comment);
+         break;
+     }
+   if(!ret)
+      CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SEND);
+   return(ret);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -539,6 +570,24 @@ double JStrategyBase::TakeProfitCalculate(const int res,const double price)
 bool JStrategyBase::CloseStops(void)
   {
    return(m_orders.CloseStops());
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JStrategyBase::CloseOrders(const int res)
+  {
+   int total= m_orders.Total();
+   for(int i=total-1;i>=0;i--)
+     {
+      JOrder *order=m_orders.At(i);
+      if(IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) res))
+        {
+         if(CloseOrder(order,i))
+            CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_CLOSE_DONE,order);
+         else
+            CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_CLOSE);
+        }
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -664,10 +713,10 @@ bool JStrategyBase::IsTradeProcessed(void) const
 //+------------------------------------------------------------------+
 bool JStrategyBase::IsNewBar(void)
   {
-   datetime arr[];
-   if(CopyTime(m_symbol.Name(),m_period,0,1,arr)==-1)
+   datetime time[];
+   if(CopyTime(m_symbol.Name(),m_period,0,1,time)==-1)
       return(false);
-   if(m_last_tick_time>0 && m_last_tick_time<arr[0])
+   if(m_last_tick_time>0 && m_last_tick_time<time[0])
      {
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_CANDLE);
       return(true);
