@@ -46,12 +46,6 @@ JOrderStopsBase::~JOrderStopsBase(void)
 //+------------------------------------------------------------------+
 JOrderStopsBase::Deinit(void)
   {
-   for(int i=Total()-1;i>=0;i--)
-     {
-      JOrderStop *orderstop=At(i);
-      orderstop.Deinit();
-     }
-   Clear();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

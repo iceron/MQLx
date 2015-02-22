@@ -83,11 +83,7 @@ JOrderBase::JOrderBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 JOrderBase::~JOrderBase(void)
   {
-   if(m_order_stops!=NULL)
-     {
-      delete m_order_stops;
-      m_order_stops=NULL;
-     }
+   ADT::Delete(m_order_stops);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -109,7 +109,7 @@ bool JStrategy::TradeOpen(const int res)
    int orders_total = OrdersTotal();   
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
-      m_trade.SetSymbol(m_symbol);
+      //m_trade.SetSymbol(m_symbol);
       ENUM_ORDER_TYPE type=SignalToOrderType(res); 
       double price=PriceCalculate(type);
       double sl=0,tp=0;                

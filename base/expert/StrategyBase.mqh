@@ -7,6 +7,7 @@
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_EXECUTION_MODE.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
+#include "..\..\common\class\ADT.mqh"
 #include <Object.mqh>
 #include <Arrays\ArrayInt.mqh>
 #include "..\lib\AccountInfo.mqh"
@@ -769,68 +770,42 @@ void JStrategyBase::DeinitSignals(void)
 //+------------------------------------------------------------------+
 void JStrategyBase::DeinitStops(void)
   {
-   if(m_stops!=NULL)
-     {
-      m_stops.Clear();
-      delete m_stops;
-      m_stops=NULL;
-     }
+   ADT::Delete(m_stops);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JStrategyBase::DeinitTrade(void)
   {
-   if(m_trade!=NULL)
-     {
-      delete m_trade;
-      m_trade=NULL;
-     }
+   ADT::Delete(m_trade);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JStrategyBase::DeinitMoneys(void)
   {
-   if(m_moneys!=NULL)
-     {
-      m_moneys.Clear();
-      delete m_moneys;
-      m_moneys=NULL;
-     }
+   ADT::Delete(m_moneys);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JStrategyBase::DeinitSymbol(void)
   {
-   if(m_symbol!=NULL)
-     {
-      delete m_symbol;
-      m_symbol=NULL;
-     }
+   ADT::Delete(m_symbol);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JStrategyBase::DeinitAccount(void)
   {
-   if(m_account!=NULL)
-     {
-      delete m_account;
-      m_account=NULL;
-     }
+   ADT::Delete(m_account);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JStrategyBase::DeinitEvents(void)
   {
-   if(m_events!=NULL)
-     {
-      delete m_events;
-      m_events=NULL;
-     }
+   ADT::Delete(m_events);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -434,34 +434,21 @@ void JStopBase::Deinit(void)
 //+------------------------------------------------------------------+
 void JStopBase::DeinitSymbol(void)
   {
-   if(m_symbol!=NULL)
-     {
-      delete m_symbol;
-      m_symbol=NULL;
-     }
+   ADT::Delete(m_symbol);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JStopBase::DeinitTrade(void)
   {
-   if(m_trade!=NULL)
-     {
-      delete m_trade;
-      m_trade=NULL;
-     }
+   ADT::Delete(m_trade);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JStopBase::DeinitTrails(void)
   {
-   if(m_trails!=NULL)
-     {
-      m_trails.Clear();
-      delete m_trails;
-      m_trails=NULL;
-     }
+   ADT::Delete(m_trails);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

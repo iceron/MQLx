@@ -288,11 +288,8 @@ bool JEventsBase::Run(void)
 //+------------------------------------------------------------------+
 bool JEventsBase::Deinit()
   {
-   DeleteObject(m_current);
-   DeleteObject(m_archive);
-//DeleteObject(m_standard);
-//DeleteObject(m_error);
-//DeleteObject(m_custom);
+   ADT::Delete(m_current);
+   ADT::Delete(m_archive);
    return(true);
   }
 //+------------------------------------------------------------------+

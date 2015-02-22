@@ -94,11 +94,7 @@ JEventBase::JEventBase(const ENUM_ACTION action,string message_add) : m_activate
 //+------------------------------------------------------------------+
 JEventBase::~JEventBase(void)
   {
-   if(m_objects!=NULL)
-     {
-      delete m_objects;
-      m_objects=NULL;
-     }
+   ADT::Delete(m_objects);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
