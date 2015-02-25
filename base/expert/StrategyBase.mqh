@@ -8,7 +8,6 @@
 #include "..\..\common\enum\ENUM_EXECUTION_MODE.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\class\ADT.mqh"
-#include "..\..\common\class\SO.mqh"
 #include <Object.mqh>
 #include <Arrays\ArrayInt.mqh>
 #include "..\lib\AccountInfo.mqh"
@@ -525,9 +524,9 @@ bool JStrategyBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,co
   {
    bool ret=false;
    CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND,EnumToString(type)+" "+DoubleToString(lotsize,2)+" "+DoubleToString(sl,5)+" "+DoubleToString(tp,5)+" "+m_comment+" "+DoubleToString(m_magic,0));
-   if(SO::IsOrderTypeLong(type))
+   if(JOrder::IsOrderTypeLong(type))
       ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
-   if(SO::IsOrderTypeShort(type))
+   if(JOrder::IsOrderTypeShort(type))
       ret=m_trade.Sell(lotsize,price,sl,tp,m_comment);
    if(!ret)
       CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SEND);
@@ -577,7 +576,7 @@ JStrategyBase::CloseOrders(const int res)
    for(int i=total-1;i>=0;i--)
      {
       JOrder *order=m_orders.At(i);
-      if(SO::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) res))
+      if(JSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) res))
         {
          if(CloseOrder(order,i))
             CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_CLOSE_DONE,order);

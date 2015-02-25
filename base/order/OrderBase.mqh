@@ -63,6 +63,9 @@ public:
    //--- archiving
    virtual bool      CloseStops(void);
    virtual int       Compare(const CObject *node,const int mode=0) const {return(0);}
+   //--- static methods
+   static bool       IsOrderTypeLong(const ENUM_ORDER_TYPE type);
+   static bool       IsOrderTypeShort(const ENUM_ORDER_TYPE type);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -146,6 +149,20 @@ void JOrderBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION actio
   {
    if(m_events!=NULL)
       m_events.CreateEvent(type,action,message_add);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderBase::IsOrderTypeLong(const ENUM_ORDER_TYPE type)
+  {
+   return(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_LIMIT || type==ORDER_TYPE_BUY_STOP);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
+  {
+   return(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_LIMIT || type==ORDER_TYPE_SELL_STOP);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
