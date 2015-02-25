@@ -212,10 +212,10 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_period(PERIOD_CURRENT),
                                      m_position_reverse(true),
                                      //m_trade_mode(TRADE_MODE_MARKET),
-                                     m_digits_adjust(0),
-                                     m_points_adjust(0.0),
-                                     m_last_tick_time(0),
-                                     m_last_trade_time(0)
+m_digits_adjust(0),
+m_points_adjust(0.0),
+m_last_tick_time(0),
+m_last_trade_time(0)
   {
    if(!m_other_magic.IsSorted())
       m_other_magic.Sort();
@@ -525,15 +525,10 @@ bool JStrategyBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,co
   {
    bool ret=false;
    CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND,EnumToString(type)+" "+DoubleToString(lotsize,2)+" "+DoubleToString(sl,5)+" "+DoubleToString(tp,5)+" "+m_comment+" "+DoubleToString(m_magic,0));
-   switch(type)
-     {
-      case ORDER_TYPE_BUY:
-         ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
-         break;
-      case ORDER_TYPE_SELL:
-         ret=m_trade.Sell(lotsize,price,sl,tp,m_comment);
-         break;
-     }
+   if(SO::IsOrderTypeLong(type))
+      ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
+   if(SO::IsOrderTypeShort(type))
+      ret=m_trade.Sell(lotsize,price,sl,tp,m_comment);
    if(!ret)
       CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SEND);
    return(ret);

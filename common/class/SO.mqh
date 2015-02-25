@@ -14,13 +14,13 @@ class SO
 public:
                      SO();
                     ~SO();
-   static bool       IsOrderTypeLong(ENUM_ORDER_TYPE type);
-   static bool       IsOrderTypeShort(ENUM_ORDER_TYPE type);
-   static bool       IsOrderAgainstSignal(ENUM_ORDER_TYPE type,ENUM_CMD res,bool exact=false);
-   static bool       IsSignalTypeLong(ENUM_CMD type);
-   static bool       IsSignalTypeShort(ENUM_CMD type);
-   static int        SignalReverse(int s);
-   static ENUM_ORDER_TYPE SignalToOrderType(int s);
+   static bool       IsOrderTypeLong(const ENUM_ORDER_TYPE type);
+   static bool       IsOrderTypeShort(const ENUM_ORDER_TYPE type);
+   static bool       IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD res,const bool exact=false);
+   static bool       IsSignalTypeLong(const ENUM_CMD type);
+   static bool       IsSignalTypeShort(const ENUM_CMD type);
+   static int        SignalReverse(const int s);
+   static ENUM_ORDER_TYPE SignalToOrderType(const int s);
   };
 //+------------------------------------------------------------------+
 SO::SO()
@@ -35,21 +35,21 @@ SO::~SO()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool SO::IsOrderTypeLong(ENUM_ORDER_TYPE type)
+bool SO::IsOrderTypeLong(const ENUM_ORDER_TYPE type)
   {
    return(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_LIMIT || type==ORDER_TYPE_BUY_STOP);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool SO::IsOrderTypeShort(ENUM_ORDER_TYPE type)
+bool SO::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
   {
    return(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_LIMIT || type==ORDER_TYPE_SELL_STOP);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool SO::IsOrderAgainstSignal(ENUM_ORDER_TYPE type,ENUM_CMD res,bool exact=false)
+bool SO::IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD res,const bool exact=false)
   {
    if(exact)
      {
@@ -110,21 +110,21 @@ bool SO::IsOrderAgainstSignal(ENUM_ORDER_TYPE type,ENUM_CMD res,bool exact=false
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool SO::IsSignalTypeLong(ENUM_CMD type)
+bool SO::IsSignalTypeLong(const ENUM_CMD type)
   {
    return(type==CMD_LONG || type==CMD_BUY || type==CMD_BUYLIMIT || type==CMD_BUYSTOP);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool SO::IsSignalTypeShort(ENUM_CMD type)
+bool SO::IsSignalTypeShort(const ENUM_CMD type)
   {
    return(type==CMD_SHORT || type==CMD_SELL || type==CMD_SELLLIMIT || type==CMD_SELLSTOP);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int SO::SignalReverse(int s)
+int SO::SignalReverse(const int s)
   {
    switch(s)
      {
@@ -194,35 +194,29 @@ int SO::SignalReverse(int s)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-ENUM_ORDER_TYPE SO::SignalToOrderType(int s)
+ENUM_ORDER_TYPE SO::SignalToOrderType(const int s)
   {
    ENUM_ORDER_TYPE ret=ORDER_TYPE_BUY;
    switch(s)
      {
       case CMD_BUY:
-        {
          ret=ORDER_TYPE_BUY;
-        }
+         break;
       case CMD_SELL:
-        {
          ret=ORDER_TYPE_SELL;
-        }
+         break;
       case CMD_BUYLIMIT:
-        {
          ret=ORDER_TYPE_BUY_LIMIT;
-        }
+         break;
       case CMD_SELLLIMIT:
-        {
          ret=ORDER_TYPE_SELL_LIMIT;
-        }
+         break;
       case CMD_BUYSTOP:
-        {
          ret=ORDER_TYPE_BUY_STOP;
-        }
+         break;
       case CMD_SELLSTOP:
-        {
          ret=ORDER_TYPE_SELL_STOP;
-        }
+         break;
      }
    return(ret);
   }
