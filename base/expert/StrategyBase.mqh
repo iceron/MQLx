@@ -70,6 +70,8 @@ protected:
    JTimes           *m_times;
    //--- events
    JEvents          *m_events;
+   //--- comments
+   JComments        *m_comments;
    //--- container
    JExpert          *m_expert;
 public:
