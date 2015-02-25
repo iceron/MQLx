@@ -16,6 +16,7 @@ public:
                      JCommentsBase(void);
                     ~JCommentsBase(void);
    virtual void      Display(void);
+   virtual void      Concatenate(string &str,string comment);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -34,14 +35,22 @@ JCommentsBase::~JCommentsBase(void)
 //+------------------------------------------------------------------+
 JCommentsBase::Display(void)
   {
-   string str = "";
-   JComment *comment = GetFirstNode();
+   Comment("");
+   string str="";
+   JComment *comment=GetFirstNode();
    while(CheckPointer(comment)==POINTER_DYNAMIC)
-   {
-      str = StringConcatenate(str,comment.Text(),"\n");
-      comment = GetNextNode();
-   }
+     {
+      Concatenate(str,comment.Text());
+      comment=GetNextNode();
+     }
    Comment(str);
+   Clear();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JCommentsBase::Concatenate(string &str,string comment)
+  {
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

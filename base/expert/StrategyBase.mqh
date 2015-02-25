@@ -19,6 +19,7 @@
 #include "..\stop\StopsBase.mqh"
 #include "..\money\MoneysBase.mqh"
 #include "..\time\TimesBase.mqh"
+#include "..\comment\CommentsBase.mqh"
 #include "..\event\EventsBase.mqh"
 class JExpert;
 //+------------------------------------------------------------------+

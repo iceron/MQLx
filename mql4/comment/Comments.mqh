@@ -13,7 +13,7 @@ class JComments : public JCommentsBase
 public:
                      JComments();
                     ~JComments(void);
-   virtual void      Display(void);
+   virtual void      Concatenate(string &str,string comment);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -30,15 +30,8 @@ JComments::~JComments(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JComments::Display(void)
+JComments::Concatenate(string &str,string comment)
   {
-   string str="";
-   JComment *comment=GetFirstNode();
-   while(CheckPointer(comment)==POINTER_DYNAMIC)
-     {
-      str=StringConcatenate(str,comment.Text(),"\n");
-      comment=GetNextNode();
-     }
-   Comment(str);
+   str=StringConcatenate(str,comment,"\n");
   }
 //+------------------------------------------------------------------+
