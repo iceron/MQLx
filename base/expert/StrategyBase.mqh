@@ -118,6 +118,9 @@ public:
    virtual void      AsyncMode(const bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
    virtual void      Comment(const string comment){m_comment=comment;}
+   virtual void      ChartComment(const bool enable=true);
+   virtual void      AddComment(const string comment);
+   virtual void      DisplayComment(void);
    virtual int       DigitsAdjust(void) const {return(m_digits_adjust);}
    virtual void      DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    virtual datetime  Expiration(void) const {return(m_expiration);}
@@ -192,6 +195,7 @@ protected:
    //--- deinitialization
    virtual void      DeinitAccount(void);
    virtual void      DeinitEvents(void);
+   virtual void      DeinitComments(void);
    virtual void      DeinitMoneys(void);
    virtual void      DeinitSignals(void);
    virtual void      DeinitStops(void);
@@ -344,6 +348,30 @@ bool JStrategyBase::InitEvent(JEvents *events=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+void JStrategyBase::ChartComment(const bool enable=true)
+  {
+   if(enable)
+      m_comments=new JComments();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::AddComment(const string comment)
+  {
+   if(CheckPointer(m_comments)==POINTER_DYNAMIC)
+      m_comments.Add(new JComment(comment));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::DisplayComment(void)
+  {
+   if(CheckPointer(m_comments)==POINTER_DYNAMIC)
+      m_comments.Display();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategyBase::Add(CObject *object)
   {
    bool result=false;
@@ -468,6 +496,8 @@ bool JStrategyBase::OnTick(void)
      {
       int entry=0,exit=0;
       CheckSignals(entry,exit);
+      AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
+      AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
       CloseOppositeOrders(entry);
       ManageOrders();
       if(!IsTradeProcessed())
@@ -478,7 +508,9 @@ bool JStrategyBase::OnTick(void)
         }
      }
    ManageOrdersHistory();
-   m_events.Run();
+   if (CheckPointer(m_events)==POINTER_DYNAMIC)
+      m_events.Run();
+   DisplayComment();
    return(ret);
   }
 //+------------------------------------------------------------------+
@@ -724,7 +756,7 @@ bool JStrategyBase::IsNewBar(void)
       return(false);
    if(m_last_tick_time>0 && m_last_tick_time<time[0] && m_last_tick_volume!=rates[0].tick_volume)
      {
-      m_last_tick_volume = rates[0].tick_volume;
+      m_last_tick_volume=rates[0].tick_volume;
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_CANDLE);
       return(true);
      }
@@ -758,6 +790,7 @@ void JStrategyBase::Deinit(const int reason=0)
    DeinitMoneys();
    DeinitAccount();
    DeinitEvents();
+   DeinitComments();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -812,6 +845,13 @@ void JStrategyBase::DeinitAccount(void)
 void JStrategyBase::DeinitEvents(void)
   {
    ADT::Delete(m_events);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::DeinitComments(void)
+  {
+   ADT::Delete(m_comments);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
