@@ -16,17 +16,22 @@ class JOrderStopsBase : public CArrayObj
   {
 protected:
    JOrder           *m_order;
+   JEvents          *m_events;
 public:
                      JOrderStopsBase(void);
                     ~JOrderStopsBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_ORDERSTOPS);}
    //--- initialization
    virtual void      SetContainer(JOrder *order){m_order=order;}
+   virtual bool      EventHandler(JEvents *events);
    virtual void      Deinit();
    //--- checking
    virtual void      Check(double &volume);
    virtual bool      CheckNewTicket(JOrderStop *orderstop) {return(true);}
    virtual bool      Close(void);
+   //--events
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -52,16 +57,22 @@ JOrderStopsBase::Deinit(void)
 //+------------------------------------------------------------------+
 JOrderStopsBase::Check(double &volume)
   {
-   for(int i=0;i<Total();i++)
+   int total=Total();
+   if(total>0)
      {
-      JOrderStop *order_stop=At(i);
-      if(CheckPointer(order_stop))
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CHECK,GetPointer(this));
+      for(int i=0;i<Total();i++)
         {
-         order_stop.CheckTrailing();
-         order_stop.Update();
-         order_stop.Check(volume);
-         if(!CheckNewTicket(order_stop)) return;
+         JOrderStop *order_stop=At(i);
+         if(CheckPointer(order_stop))
+           {
+            order_stop.CheckTrailing();
+            order_stop.Update();
+            order_stop.Check(volume);
+            if(!CheckNewTicket(order_stop)) return;
+           }
         }
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CHECK_DONE,GetPointer(this));
      }
   }
 //+------------------------------------------------------------------+
@@ -70,16 +81,47 @@ JOrderStopsBase::Check(double &volume)
 bool JOrderStopsBase::Close(void)
   {
    bool res=true;
-   for(int i=0;i<Total();i++)
+   int total=Total();
+   if(total>0)
      {
-      JOrderStop *order_stop=At(i);
-      if(CheckPointer(order_stop))
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CLOSE,GetPointer(this));
+      for(int i=0;i<total;i++)
         {
-         if(!order_stop.Close())
-            res=false;
+         JOrderStop *order_stop=At(i);
+         if(CheckPointer(order_stop))
+           {
+            if(!order_stop.Close())
+               res=false;
+           }
         }
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CLOSE_DONE,GetPointer(this));
      }
    return(res);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopsBase::EventHandler(JEvents *events)
+  {
+   if(events!=NULL)
+      m_events=events;
+   return(m_events!=NULL);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrderStopsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
+  {
+   if(m_events!=NULL)
+      m_events.CreateEvent(type,action,object1,object2,object3);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrderStopsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
+  {
+   if(m_events!=NULL)
+      m_events.CreateEvent(type,action,message_add);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

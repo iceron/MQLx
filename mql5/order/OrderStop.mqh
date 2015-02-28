@@ -15,7 +15,9 @@ public:
                     ~JOrderStop(void);
    virtual void      Check(double &volume);
 protected:
-   virtual int       ModifyOrderStop(const double stoploss,const double takeprofit);
+   virtual bool      ModifyStops(const double stoploss,const double takeprofit)
+   virtual bool      ModifyStopLoss(const double stoploss)
+   virtual bool      ModifyTakeProfit(const double takeprofit)
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -32,76 +34,10 @@ JOrderStop::~JOrderStop(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::ModifyOrderStop(const double stoploss,const double takeprofit)
-  {
-   bool modify=false;
-   bool stoploss_modified=false,takeprofit_modified=false;
-   if(stoploss>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && stoploss>m_stoploss) || (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<m_stoploss)))
-     {
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY);
-      if(m_stop.Pending() || m_stop.Main())
-        {
-         modify=m_stop.OrderModify(m_stoploss_ticket,stoploss);
-        }
-      else modify=true;
-      if(modify)
-        {
-         if(CheckPointer(m_objsl))
-           {
-            if(m_objsl.Move(stoploss))
-              {
-               m_stoploss=stoploss;
-               stoploss_modified=true;
-              }
-           }
-        }
-      else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SL_MODIFY);
-     }
-   if(takeprofit>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && takeprofit<m_takeprofit) || (m_order.OrderType()==ORDER_TYPE_SELL && takeprofit>m_takeprofit)))
-     {
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY);
-      if(m_stop.Pending() || m_stop.Main())
-        {
-         modify=m_stop.OrderModify(m_takeprofit_ticket,stoploss);
-        }
-      else modify=true;
-      if(modify)
-        {
-         if(CheckPointer(m_objtp))
-           {
-            if(m_objtp.Move(takeprofit))
-              {
-               m_takeprofit=takeprofit;
-               takeprofit_modified=true;
-              }
-           }
-        }
-      else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY);
-     }
-   int ret=0;
-   if(takeprofit_modified && stoploss_modified)
-   {
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY_DONE,GetPointer(this));
-      ret = 1;
-   }   
-   else if(takeprofit_modified && !stoploss_modified)
-   {
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
-      ret = 2;
-   }   
-   else if(!takeprofit_modified && stoploss_modified)
-   {
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
-      ret = 3;
-   }   
-   return(ret);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 void JOrderStop::Check(double &volume)
   {
    if(m_stop==NULL) return;
+   CheckInit();
    if(m_order.IsClosed())
      {
       bool delete_sl=false,delete_tp=false;
@@ -192,5 +128,54 @@ void JOrderStop::Check(double &volume)
       if(m_stop.Main())
          m_order.IsClosed(true);
      }
+   CheckDeinit();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStop::ModifyStops(const double stoploss,const double takeprofit)
+  {
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY,GetPointer(this));
+   return(ModifyStopLoss(stoploss) && ModifyTakeProfit(takeprofit));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStop::ModifyStopLoss(const double stoploss)
+  {
+   bool modify=false;
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY,GetPointer(this));
+   if(m_stop.Pending() || m_stop.Main())
+     {
+      modify=m_stop.OrderModify(m_stoploss_ticket,stoploss);
+     }
+   else modify=true;
+   if(modify)
+     {
+      MoveStopLoss(stoploss);
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
+     }
+   else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SL_MODIFY,GetPointer(this));
+   return(modify);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStop::ModifyTakeProfit(const double takeprofit)
+  {
+   bool modify=false;
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY,GetPointer(this));
+   if(m_stop.Pending() || m_stop.Main())
+     {
+      modify=m_stop.OrderModify(m_takeprofit_ticket,stoploss);
+     }
+   else modify=true;
+   if(modify)
+     {
+      MoveTakeProfit(takeprofit);
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
+     }
+   else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY,GetPointer(this));
+   return(modify);
   }
 //+------------------------------------------------------------------+

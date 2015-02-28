@@ -97,19 +97,25 @@ void JOrderBase::CreateStops(JStops *stops)
       return;
    if(CheckPointer(m_order_stops)==POINTER_INVALID)
       m_order_stops=new JOrderStops();
-   int total= stops.Total();
-   for(int i=0;i<total;i++)
+   int total=stops.Total();
+   if(total>0)
      {
-      JStop *stop=stops.At(i);
-      if(!CheckPointer(stop)) continue;
-      JOrderStop *order_stop=new JOrderStop();
-      order_stop.Init(GetPointer(this),stop);
-      order_stop.EventHandler(m_events);
-      order_stop.SetContainer(GetPointer(m_order_stops));
-      if(stop.Main())
-         m_main_stop=order_stop;
-      m_order_stops.Add(order_stop);
-     }
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE,GetPointer(this),stops);
+      for(int i=0;i<total;i++)
+        {
+         JStop *stop=stops.At(i);
+         if(!CheckPointer(stop)==POINTER_INVALID)
+            continue;
+         JOrderStop *order_stop=new JOrderStop();
+         order_stop.Init(GetPointer(this),stop);
+         order_stop.EventHandler(m_events);
+         order_stop.SetContainer(GetPointer(m_order_stops));
+         if(stop.Main())
+            m_main_stop=order_stop;
+         m_order_stops.Add(order_stop);
+        }
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE_DONE,GetPointer(this),m_order_stops);
+     }   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

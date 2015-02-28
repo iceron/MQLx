@@ -141,8 +141,6 @@ public:
    virtual int       OrdersHistoryTotal(void) const {return(m_orders_history.Total());}
    virtual double    PointsAdjust(void) const {return(m_points_adjust);}
    virtual void      PointsAdjust(const double adjust) {m_points_adjust=adjust;}
-   //virtual ENUM_TRADE_MODE TradeMode(void) const {return(m_trade_mode);}
-   //virtual void      TradeMode(const ENUM_TRADE_MODE mode){m_trade_mode=mode;}
    virtual int       TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total()+m_history_count);}
    virtual ENUM_EXECUTION_MODE ExecutionMode(void) const {return(m_exec_mode);}
    virtual void      ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}

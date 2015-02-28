@@ -19,6 +19,7 @@ public:
    virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop);
    virtual ulong     OpenStop(JOrder *order,JOrderStop *orderstop,const double val);
    virtual bool      CloseStop(JOrder *order,JOrderStop *orderstop,const double price);
+   virtual bool      Move(const ulong ticket,const double stoploss,const double takeprofit);
    virtual bool      MoveStopLoss(const ulong ticket,const double stoploss);
    virtual bool      MoveTakeProfit(const ulong ticket,const double stoploss);
 protected:
@@ -40,7 +41,7 @@ JStop::~JStop(void)
 //+------------------------------------------------------------------+
 bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
   {
-   if (ticket<=0)
+   if(ticket<=0)
       return(false);
    if(!OrderSelect((int)ticket,SELECT_BY_TICKET))
       return(false);
@@ -80,7 +81,7 @@ double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
   {
    double val=m_stoploss>0?StopLossCalculate(order.OrderType(),order.Price()):StopLossCustom(order.OrderType(),order.Price());
    if(m_stop_type==STOP_TYPE_PENDING && val>0.0)
-      orderstop.StopLossTicket(OpenStop(order,orderstop,val));   
+      orderstop.StopLossTicket(OpenStop(order,orderstop,val));
    return(NormalizeDouble(val,m_symbol.Digits()));
   }
 //+------------------------------------------------------------------+
@@ -133,6 +134,19 @@ ulong JStop::GetNewTicket(JOrder *order,JOrderStop *orderstop)
       if(OrderMagicNumber()==order.Magic()) return(OrderTicket());
      }
    return(0);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStop::Move(const ulong ticket,const double stoploss,const double takeprofit)
+  {
+   if(OrderSelect((int)ticket,SELECT_BY_TICKET))
+     {
+      if(MathAbs(stoploss-OrderStopLoss())<m_symbol.TickSize()) return(false);
+      if(MathAbs(takeprofit-OrderStopLoss())<m_symbol.TickSize()) return(false);
+      return(m_trade.OrderModify(ticket,OrderOpenPrice(),stoploss,takeprofit,0,OrderExpiration()));
+     }
+   return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

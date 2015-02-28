@@ -82,6 +82,8 @@ public:
    virtual double    VolumePercent(void) const {return(m_volume_percent);}
    //--- checking   
    virtual void      Check(double &volume) {}
+   virtual void      CheckInit();
+   virtual void      CheckDeinit();
    virtual bool      Close(void);
    virtual bool      CheckTrailing(void);
    virtual bool      DeleteChartObject(const string name);
@@ -91,14 +93,22 @@ public:
    virtual bool      DeleteTakeProfit(void);
    virtual bool      IsClosed(void) const {return(CheckPointer(m_objentry)!=POINTER_DYNAMIC);}
    virtual bool      Update(void);
-   //--events
-   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
-   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    //--- deinitialization 
    virtual bool      Deinit(void);
 protected:
-   virtual int       ModifyOrderStop(const double stoploss,const double takeprofit) {return(true);}
+   virtual bool      IsStopLossValid(const double stoploss) const;
+   virtual bool      IsTakeProfitValid(const double takeprofit) const;
+   virtual bool      ModifyOrderStop(const double stoploss,const double takeprofit);
+   virtual bool      ModifyStops(const double stoploss,const double takeprofit) {return(true);}
+   virtual bool      ModifyStopLoss(const double stoploss) {return(true);}
+   virtual bool      ModifyTakeProfit(const double takeprofit) {return(true);}
    virtual bool      UpdateOrderStop(const double stoploss,const double takeprofit) {return(true);}
+   //--- events
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
+   //--- objects
+   virtual void      MoveStopLoss(const double stoploss);
+   virtual void      MoveTakeProfit(const double takeprofit);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -156,36 +166,59 @@ bool JOrderStopBase::Deinit(void)
   {
    ADT::Delete(m_objentry);
    ADT::Delete(m_objsl);
-   ADT::Delete(m_objtp);   
+   ADT::Delete(m_objtp);
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopBase::IsStopLossValid(const double stoploss) const
+  {
+   return (stoploss>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && stoploss>m_stoploss) || (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<m_stoploss)));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopBase::IsTakeProfitValid(const double takeprofit) const
+  {
+   return (takeprofit>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && takeprofit<m_takeprofit) || (m_order.OrderType()==ORDER_TYPE_SELL && takeprofit>m_takeprofit)));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JOrderStopBase::CheckTrailing(void)
   {
-   if(m_stop==NULL)
-     {
+   if(m_stop==NULL || m_order.IsClosed() || (m_stoploss_closed && m_takeprofit_closed))
       return(false);
-     }
-   if(m_order.IsClosed())
-     {
-      return(false);
-     }
-   if(m_stoploss_closed && m_takeprofit_closed)
-     {
-      return(false);
-     }
+   bool result=false;
    double stoploss=0,takeprofit=0;
    if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,TRAIL_TARGET_STOPLOSS);
    if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_takeprofit,TRAIL_TARGET_TAKEPROFIT);
-   bool result=ModifyOrderStop(stoploss,takeprofit);
-   if(result==1)
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_DONE,GetPointer(this));
-   else if(result==2)
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_SL_DONE,GetPointer(this));
-   else if(result==3)
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_TP_DONE,GetPointer(this));
+   if(!IsStopLossValid(stoploss))
+      stoploss=0;
+   if(!IsTakeProfitValid(takeprofit))
+      takeprofit=0;
+   if(stoploss>0 && takeprofit>0)
+     {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL,GetPointer(this));
+      result=ModifyOrderStop(stoploss,takeprofit);
+      if(result)
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_DONE,GetPointer(this));
+     }
+   else if(stoploss>0 && takeprofit==0)
+     {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_SL,GetPointer(this));
+      result=ModifyOrderStop(stoploss,takeprofit);
+      if(result)
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_SL_DONE,GetPointer(this));
+     }
+   else if(takeprofit>0 && stoploss==0)
+     {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_TP,GetPointer(this));
+      result=ModifyOrderStop(stoploss,takeprofit);
+      if(result)
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_TP_DONE,GetPointer(this));
+     }
    return(result);
   }
 //+------------------------------------------------------------------+
@@ -193,7 +226,8 @@ bool JOrderStopBase::CheckTrailing(void)
 //+------------------------------------------------------------------+
 bool JOrderStopBase::Close(void)
   {
-   bool res1=false,res2=false;
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CLOSE,GetPointer(this));
+   bool res1=false,res2=false,result=false;
    if(m_stoploss_closed || m_stoploss==0 || m_stoploss_ticket==0)
      {
       res1=true;
@@ -213,8 +247,9 @@ bool JOrderStopBase::Close(void)
          res2=DeleteTakeProfit();
      }
    if(res1 && res2)
-      return(DeleteEntry()&&DeleteStopLoss()&&DeleteTakeProfit());
-   return(false);
+      result=DeleteEntry() && DeleteStopLoss() && DeleteTakeProfit();
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CLOSE,GetPointer(this));
+   return(result);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -224,6 +259,7 @@ bool JOrderStopBase::Update(void)
    if(m_stop==NULL) return(true);
    if(m_order.IsClosed()) return(false);
    double stoploss=0.0,takeprofit=0.0;
+   bool result=false;
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
      {
       double tp_line=m_objtp.GetPrice();
@@ -236,7 +272,24 @@ bool JOrderStopBase::Update(void)
       if(sl_line!=m_stoploss)
          stoploss=sl_line;
      }
-   return(UpdateOrderStop(stoploss,takeprofit));
+   result=UpdateOrderStop(stoploss,takeprofit);
+   if(result)
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_UPDATE_DONE,GetPointer(this));
+   return(result);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrderStopBase::CheckInit()
+  {
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK,GetPointer(this));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrderStopBase::CheckDeinit()
+  {
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK_DONE,GetPointer(this));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -326,6 +379,61 @@ void JOrderStopBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION a
   {
    if(m_events!=NULL)
       m_events.CreateEvent(type,action,message_add);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrderStopBase::MoveStopLoss(const double stoploss)
+  {
+   if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
+      if(m_objsl.Move(stoploss))
+         m_stoploss=stoploss;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JOrderStopBase::MoveTakeProfit(const double takeprofit)
+  {
+   if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
+      if(m_objtp.Move(takeprofit))
+         m_takeprofit=takeprofit;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopBase::ModifyOrderStop(const double stoploss,const double takeprofit)
+  {
+   bool stoploss_modified=false,takeprofit_modified=false;
+   double oldsl=m_stoploss,oldtp=m_takeprofit;
+   if(stoploss>0 && takeprofit>0)
+     {
+      if(ModifyStops(stoploss,takeprofit))
+        {
+         stoploss_modified=true;
+         takeprofit_modified=true;
+        }
+     }
+   else if(stoploss>0 && takeprofit==0)
+      stoploss_modified=ModifyStopLoss(stoploss);
+   else if(takeprofit>0 && stoploss==0)
+      takeprofit_modified=ModifyTakeProfit(takeprofit);
+   if(takeprofit_modified && stoploss_modified)
+     {
+      m_stoploss_last=oldsl;
+      m_takeprofit_last=oldtp;
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY_DONE,GetPointer(this));
+     }
+   else if(takeprofit_modified && !stoploss_modified)
+     {
+      m_takeprofit_last=oldtp;
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
+     }
+   else if(!takeprofit_modified && stoploss_modified)
+     {
+      m_stoploss_last=oldsl;
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
+     }
+   return(stoploss_modified || takeprofit_modified);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
