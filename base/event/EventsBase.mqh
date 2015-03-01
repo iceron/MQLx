@@ -20,14 +20,11 @@ class JEventsBase : public CObject
   {
 protected:
    bool              m_activate;
-   int               m_archive_max;
    string            m_sound_file;
    string            m_ftp_file;
    string            m_ftp_path;
    JStrategy        *m_strategy;
    CArrayObj        *m_current;
-   CArrayObj        *m_archive;
-
    JEventRegistry    m_standard;
    JEventRegistry    m_error;
    JEventRegistry    m_custom;
@@ -62,13 +59,11 @@ protected:
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventsBase::JEventsBase(void) : m_activate(true),
-                                 m_archive_max(0),
                                  m_sound_file("alert.wav"),
                                  m_ftp_file(NULL),
                                  m_ftp_path(NULL)
   {
    m_current=new CArrayObj();
-   m_archive=new CArrayObj();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -268,18 +263,8 @@ bool JEventsBase::Run(void)
               }
            }
         }
-      //event.Run();
-      //Execute(event);
-/*
-      if(m_archive_max>0)
-        {
-         m_archive.Add(event);
-        }
-      else delete event;
-      */
       delete event;
      }
-//m_current.Clear();
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -288,7 +273,6 @@ bool JEventsBase::Run(void)
 bool JEventsBase::Deinit()
   {
    ADT::Delete(m_current);
-   ADT::Delete(m_archive);
    return(true);
   }
 //+------------------------------------------------------------------+
