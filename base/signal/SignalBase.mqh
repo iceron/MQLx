@@ -5,8 +5,9 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include <Arrays\ArrayDouble.mqh>
 #include "..\..\common\enum\ENUM_CMD.mqh"
+#include <Arrays\ArrayDouble.mqh>
+#include "..\indicators\IndicatorsBase.mqh"
 class JStrategy;
 class JSignals;
 //+------------------------------------------------------------------+
@@ -21,6 +22,7 @@ protected:
    int               m_signal_valid;
    bool              m_reverse;
    bool              m_exit;
+   JIndicators      *m_indicators;
    JStrategy        *m_strategy;
    CArrayDouble      m_empty_value;
    JSignals         *m_signals;
@@ -44,6 +46,9 @@ public:
    virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
    virtual int       LastEntry(void) const {return(m_signal);}
    virtual int       LastValidSignal(void) const {return(m_signal_valid);}
+   //--- indicators
+   JIndicator       *IndicatorAt(const int idx) const;
+   void              AddIndicator(JIndicator *indicator);
    //--- signal methods
    virtual void      AddEmptyValue(const double val);
    virtual int       CheckSignal(void);
@@ -93,6 +98,20 @@ bool JSignalBase::Init(JStrategy *s)
    m_strategy=s;
 
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JSignalBase::AddIndicator(JIndicator *indicator)
+  {
+   m_indicators.Add(indicator);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JIndicator *JSignalBase::IndicatorAt(const int idx) const
+  {
+   return(m_indicators.At(idx));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -186,7 +205,7 @@ bool JSignalBase::IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD
         }
      }
    return((IsSignalTypeShort((ENUM_CMD) res) && JOrder::IsOrderTypeLong(type))
-          || (IsSignalTypeLong((ENUM_CMD)res) && JOrder::IsOrderTypeShort(type))
+          ||(IsSignalTypeLong((ENUM_CMD)res) && JOrder::IsOrderTypeShort(type))
           || (res==CMD_VOID));
   }
 //+------------------------------------------------------------------+
