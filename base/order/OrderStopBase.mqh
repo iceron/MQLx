@@ -98,7 +98,7 @@ public:
 protected:
    virtual bool      IsStopLossValid(const double stoploss) const;
    virtual bool      IsTakeProfitValid(const double takeprofit) const;
-   virtual bool      ModifyOrderStop(const double stoploss,const double takeprofit);
+   virtual bool      Modify(const double stoploss,const double takeprofit);
    virtual bool      ModifyStops(const double stoploss,const double takeprofit) {return(true);}
    virtual bool      ModifyStopLoss(const double stoploss) {return(true);}
    virtual bool      ModifyTakeProfit(const double takeprofit) {return(true);}
@@ -191,6 +191,7 @@ bool JOrderStopBase::CheckTrailing(void)
    if(m_stop==NULL || m_order.IsClosed() || (m_stoploss_closed && m_takeprofit_closed))
       return(false);
    bool result=false;
+   int action=-1;
    double stoploss=0,takeprofit=0;
    if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_stoploss,TRAIL_TARGET_STOPLOSS);
    if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.OrderType(),m_order.Price(),m_takeprofit,TRAIL_TARGET_TAKEPROFIT);
@@ -199,25 +200,30 @@ bool JOrderStopBase::CheckTrailing(void)
    if(!IsTakeProfitValid(takeprofit))
       takeprofit=0;
    if(stoploss>0 && takeprofit>0)
-     {
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL,GetPointer(this));
-      result=ModifyOrderStop(stoploss,takeprofit);
-      if(result)
-         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_DONE,GetPointer(this));
-     }
+      action=ACTION_ORDER_TRAIL;
    else if(stoploss>0 && takeprofit==0)
-     {
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_SL,GetPointer(this));
-      result=ModifyOrderStop(stoploss,takeprofit);
-      if(result)
-         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_SL_DONE,GetPointer(this));
-     }
+      action=ACTION_ORDER_TRAIL_SL;
    else if(takeprofit>0 && stoploss==0)
+      action=ACTION_ORDER_TRAIL_TP;
+   if(action!=-1)
      {
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_TP,GetPointer(this));
-      result=ModifyOrderStop(stoploss,takeprofit);
+      CreateEvent(EVENT_CLASS_STANDARD,(ENUM_ACTION)action,GetPointer(this));
+      result=Modify(stoploss,takeprofit);
       if(result)
-         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_TP_DONE,GetPointer(this));
+        {
+         switch(action)
+           {
+            case ACTION_ORDER_TRAIL:
+               CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_DONE,GetPointer(this));
+               break;
+            case ACTION_ORDER_TRAIL_SL:
+               CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_SL_DONE,GetPointer(this));
+               break;
+            case ACTION_ORDER_TRAIL_TP:
+               CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TRAIL_TP_DONE,GetPointer(this));
+               break;
+           }
+        }
      }
    return(result);
   }
@@ -401,37 +407,36 @@ void JOrderStopBase::MoveTakeProfit(const double takeprofit)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::ModifyOrderStop(const double stoploss,const double takeprofit)
+bool JOrderStopBase::Modify(const double stoploss,const double takeprofit)
   {
    bool stoploss_modified=false,takeprofit_modified=false;
    double oldsl=m_stoploss,oldtp=m_takeprofit;
    if(stoploss>0 && takeprofit>0)
      {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY,GetPointer(this));
       if(ModifyStops(stoploss,takeprofit))
         {
          stoploss_modified=true;
          takeprofit_modified=true;
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY_DONE,GetPointer(this));
         }
+      else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_MODIFY,GetPointer(this));
      }
    else if(stoploss>0 && takeprofit==0)
+     {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY,GetPointer(this));
       stoploss_modified=ModifyStopLoss(stoploss);
+      if(stoploss_modified)
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
+      else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SL_MODIFY,GetPointer(this));
+     }
    else if(takeprofit>0 && stoploss==0)
+     {
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY,GetPointer(this));
       takeprofit_modified=ModifyTakeProfit(takeprofit);
-   if(takeprofit_modified && stoploss_modified)
-     {
-      m_stoploss_last=oldsl;
-      m_takeprofit_last=oldtp;
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY_DONE,GetPointer(this));
-     }
-   else if(takeprofit_modified && !stoploss_modified)
-     {
-      m_takeprofit_last=oldtp;
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
-     }
-   else if(!takeprofit_modified && stoploss_modified)
-     {
-      m_stoploss_last=oldsl;
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
+      if(takeprofit_modified)
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
+      else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY,GetPointer(this));
      }
    return(stoploss_modified || takeprofit_modified);
   }

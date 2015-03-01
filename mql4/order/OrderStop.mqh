@@ -199,18 +199,13 @@ void JOrderStop::Check(double &volume)
 bool JOrderStop::ModifyStopLoss(const double stoploss)
   {
    bool modify=false;
-   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY,GetPointer(this));
    if(m_stop.Pending())
       modify=m_stop.OrderModify(m_stoploss_ticket,stoploss);
    else if(m_stop.Main() && !m_stop.Virtual())
       modify=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
    else modify=true;
    if(modify)
-   {
       MoveStopLoss(stoploss);
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
-   }   
-   else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SL_MODIFY,GetPointer(this));
    return(modify);
   }
 //+------------------------------------------------------------------+
@@ -219,18 +214,13 @@ bool JOrderStop::ModifyStopLoss(const double stoploss)
 bool JOrderStop::ModifyTakeProfit(const double takeprofit)
   {
    bool modify=false;
-   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY,GetPointer(this));
    if(m_stop.Pending())
       modify=m_stop.OrderModify(m_takeprofit_ticket,takeprofit);
    else if(m_stop.Main() && !m_stop.Virtual())
       modify=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
    else modify=true;
    if(modify)
-   {  
       MoveTakeProfit(takeprofit);
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
-   }   
-   else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY,GetPointer(this));
    return(modify);
   }
 //+------------------------------------------------------------------+
@@ -239,7 +229,6 @@ bool JOrderStop::ModifyTakeProfit(const double takeprofit)
 bool JOrderStop::ModifyStops(const double stoploss,const double takeprofit)
   {
    bool modify=false;
-   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY,GetPointer(this));
    if(m_stop.Main() && !m_stop.Virtual())
       modify=m_stop.Move(m_order.Ticket(),stoploss,takeprofit);
    else
@@ -248,9 +237,7 @@ bool JOrderStop::ModifyStops(const double stoploss,const double takeprofit)
      {
       MoveStopLoss(stoploss);
       MoveTakeProfit(takeprofit);
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY_DONE,GetPointer(this));
      }
-   else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_MODIFY,GetPointer(this));   
    return(modify);
   }
 //+------------------------------------------------------------------+
