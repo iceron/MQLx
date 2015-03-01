@@ -15,9 +15,9 @@ public:
                     ~JOrderStop(void);
    virtual void      Check(double &volume);
 protected:
-   virtual bool      ModifyStops(const double stoploss,const double takeprofit)
-   virtual bool      ModifyStopLoss(const double stoploss)
-   virtual bool      ModifyTakeProfit(const double takeprofit)
+   virtual bool      ModifyStops(const double stoploss,const double takeprofit);
+   virtual bool      ModifyStopLoss(const double stoploss);
+   virtual bool      ModifyTakeProfit(const double takeprofit);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -157,7 +157,7 @@ bool JOrderStop::ModifyTakeProfit(const double takeprofit)
   {
    bool modify=false;
    if(m_stop.Pending() || m_stop.Main())
-      modify=m_stop.OrderModify(m_takeprofit_ticket,stoploss);
+      modify=m_stop.OrderModify(m_takeprofit_ticket,takeprofit);
    else modify=true;
    if(modify)
       MoveTakeProfit(takeprofit);

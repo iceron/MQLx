@@ -67,9 +67,10 @@ bool JOrder::IsClosed(void)
 //+------------------------------------------------------------------+
 int JOrder::Compare(const CObject *node,const int mode=0)  const
   {
-   if (Ticket()>node.Ticket())
+   const JOrder *order=node;
+   if (Ticket()>order.Ticket())
       return(1);
-   if (Ticket()<node.Ticket())
+   if (Ticket()<order.Ticket())
       return(-1);
    return(0);
   }

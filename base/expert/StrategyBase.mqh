@@ -131,7 +131,7 @@ public:
    virtual void      LastTradeTime(const datetime tradetime) {m_last_trade_time=tradetime;}
    virtual datetime  LastTickTime(void) const {return(m_last_tick_time);}
    virtual void      LastTickTime(const datetime ticktime) {m_last_tick_time=ticktime;}
-   virtual datetime  LastTickVolume(void) const {return(m_last_tick_volume);}
+   virtual long      LastTickVolume(void) const {return(m_last_tick_volume);}
    virtual void      LastTickVolume(const long tick_volume) {m_last_tick_volume=tick_volume;}
    virtual double    LotSize(void) const {return(m_lotsize);}
    virtual void      LotSize(const double lotsize){m_lotsize=lotsize;}
@@ -413,7 +413,7 @@ bool JStrategyBase::Add(CObject *object)
         }
       default:
         {
-         Print(__FUNCTION__+": unknown object: "+DoubleToStr(object.Type(),0));
+         Print(__FUNCTION__+": unknown object: "+DoubleToString(object.Type(),0));
         }
      }
    return(result);
@@ -742,7 +742,7 @@ bool JStrategyBase::AddOtherMagic(const int magic)
 void JStrategyBase::AddOtherMagicString(const string &magics[])
   {
    for(int i=0;i<ArraySize(magics);i++)
-      AddOtherMagic(StrToInteger(magics[i]));
+      AddOtherMagic((int)magics[i]);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

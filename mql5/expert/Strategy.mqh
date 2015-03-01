@@ -14,6 +14,7 @@ public:
                      JStrategy(void);
                     ~JStrategy(void);
    virtual void      CloseOppositeOrders(const int res);
+   virtual bool      CloseOrder(JOrder *order,const int index);
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
    virtual bool      TradeOpen(const int res);
@@ -44,7 +45,7 @@ bool JStrategy::OnTick(void)
 void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    if(request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0)
-      m_orders.NewOrder(result.order,request.type,result.volume,result.price);
+      m_orders.NewOrder((int)result.order,request.type,result.volume,result.price);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -56,19 +57,19 @@ bool JStrategy::TradeOpen(const int res)
    double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();
    int orders_total = OrdersTotal();
-   ENUM_ORDER_TYPE type=SignalToOrderType(res);
+   ENUM_ORDER_TYPE type=JSignal::SignalToOrderType(res);
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
-      price=PriceCalculate(res);      
-      double lotsize=LotSizeCalculate(price,ORDER_TYPE_BUY,StopLossCalculate(res,price));
-      ret=SendOrder(type,lotsize,price,sl,tp);
+      price=PriceCalculate(type);
+      lotsize=LotSizeCalculate(price,ORDER_TYPE_BUY,StopLossCalculate(res,price));
+      ret=SendOrder(type,lotsize,price,0,0);
      }
    return(ret);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategyBase::CloseOppositeOrders(const int res)
+JStrategy::CloseOppositeOrders(const int res)
   {
    if(m_orders.Total()==0) return;
    if(m_position_reverse)
@@ -79,7 +80,7 @@ JStrategyBase::CloseOppositeOrders(const int res)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::CloseOrder(JOrder *order,const int index)
+bool JStrategy::CloseOrder(JOrder *order,const int index)
   {
    bool closed=false;
    COrderInfo ord;
@@ -89,9 +90,9 @@ JStrategy::CloseOrder(JOrder *order,const int index)
          closed=m_trade.OrderDelete(order.Ticket());
       else
         {
-         if(IsOrderTypeLong(order.OrderType()))
+         if(JOrder::IsOrderTypeLong(order.OrderType()))
             closed=m_trade.Sell(order.Volume(),0,0,0);
-         else if(IsOrderTypeShort(order.OrderType()))
+         else if(JOrder::IsOrderTypeShort(order.OrderType()))
             closed=m_trade.Buy(order.Volume(),0,0,0);
         }
       if(closed)
@@ -103,5 +104,6 @@ JStrategy::CloseOrder(JOrder *order,const int index)
            }
         }
      }
+   return(closed);
   }
 //+------------------------------------------------------------------+
