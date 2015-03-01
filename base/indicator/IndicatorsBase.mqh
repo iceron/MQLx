@@ -1,45 +1,37 @@
 //+------------------------------------------------------------------+
-//|                                                IndicatorBase.mqh |
+//|                                               IndicatorsBase.mqh |
 //|                                                   Enrico Lambino |
 //|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include <Object.mqh>
+#include <Arrays\ArrayObj.mqh>
+#include "IndicatorBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JIndicatorBase : public CObject
+class JIndicatorsBase : public CArrayObj
   {
-protected:
-   string            m_name;
-   string            m_symbol;
-   ENUM_TIMEFRAMES   m_timeframe;
 public:
-                     JIndicatorBase(const string name);
-                    ~JIndicatorBase(void);
-   string            Name(void) const {return(m_name);}
-   string            Symbol(void) const {return(m_symbol);}
-   ENUM_TIMEFRAMES   TimeFrame(void) const {return(m_timeframe);}
+                     JIndicatorsBase(void);
+                    ~JIndicatorsBase(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JIndicatorBase::JIndicatorBase(const string name) : m_name(name),
-                                                    m_symbol(NULL),
-                                                    m_timeframe(0)
+JIndicatorsBase::JIndicatorsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JIndicatorBase::~JIndicatorBase(void)
+JIndicatorsBase::~JIndicatorsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\indicators\Indicator.mqh"
+#include "..\..\mql5\indicator\Indicators.mqh"
 #else
-#include "..\..\mql4\indicators\Indicator.mqh"
+#include "..\..\mql4\indicator\Indicators.mqh"
 #endif
 //+------------------------------------------------------------------+

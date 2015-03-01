@@ -7,7 +7,7 @@
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_CMD.mqh"
 #include <Arrays\ArrayDouble.mqh>
-#include "..\indicators\IndicatorsBase.mqh"
+#include "..\indicator\IndicatorsBase.mqh"
 class JStrategy;
 class JSignals;
 //+------------------------------------------------------------------+
