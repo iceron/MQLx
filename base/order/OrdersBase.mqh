@@ -16,6 +16,8 @@ class JOrdersBase : public CArrayObj
 protected:
    bool              m_activate;
    bool              m_clean;
+   int               m_magic;
+   JStops           *m_stops;
    JEvents          *m_events;
    JStrategy        *m_strategy;
 public:
@@ -23,15 +25,20 @@ public:
                     ~JOrdersBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_ORDERS);}
    //--- initialization
-   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   virtual bool      Init(const int magic,JStrategy *s,JEvents *events);
+   virtual void      SetContainer(JStrategy *s);
    //--- getters and setters
    virtual bool      Activate(void) const {return(m_activate);}
    virtual void      Activate(const bool activate) {m_activate=activate;}
    virtual bool      Clean(void) const {return(m_clean);}
    virtual void      Clean(const bool clean) {m_clean=clean;}
    virtual bool      EventHandler(JEvents *events);
+   virtual void      Magic(int magic) {m_magic=magic;}
+   virtual int       Magic() {return(m_magic);}
    //--- events                  
    virtual void      OnTick(void);
+   //--- order creation
+   virtual bool      NewOrder(const int ticket,const ENUM_ORDER_TYPE type,const double volume,const double price);
    //--- archiving
    virtual bool      CloseStops(void);
    //--- events
@@ -42,7 +49,8 @@ public:
 //|                                                                  |
 //+------------------------------------------------------------------+
 JOrdersBase::JOrdersBase(void) : m_activate(true),
-                                 m_clean(false)
+                                 m_clean(false),
+                                 m_magic(0)
   {
    if(!IsSorted())
       Sort();
@@ -52,6 +60,44 @@ JOrdersBase::JOrdersBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 JOrdersBase::~JOrdersBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrdersBase::Init(const int magic,JStrategy *s,JEvents *events)
+  {
+   m_magic=magic;
+   SetContainer(s);
+   EventHandler(events);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JOrdersBase::SetContainer(JStrategy *s)
+  {
+   if(s!=NULL)
+      m_strategy=s;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrdersBase::EventHandler(JEvents *events)
+  {
+   if(events!=NULL)
+      m_events=events;
+   return(m_events!=NULL);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrdersBase::NewOrder(const int ticket,const ENUM_ORDER_TYPE type,const double volume,const double price)
+  {
+   JOrder *order=new JOrder(ticket,type,volume,price);
+   if(CheckPointer(order)==POINTER_DYNAMIC)
+      if(InsertSort(GetPointer(order)))
+         return(order.Init(m_magic,GetPointer(this),m_events,m_stops));
+   return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -79,15 +125,6 @@ bool JOrdersBase::CloseStops(void)
             res=false;
      }
    return(res);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrdersBase::EventHandler(JEvents *events)
-  {
-   if(events!=NULL)
-      m_events=events;
-   return(m_events!=NULL);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

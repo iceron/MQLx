@@ -44,16 +44,7 @@ bool JStrategy::OnTick(void)
 void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    if(request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0)
-     {
-      JOrder *order=new JOrder(result.order,request.type,result.volume,result.price);
-      if(m_orders.InsertSort(order))
-        {
-         order.Magic(m_magic);
-         order.CreateStops(GetPointer(m_stops));
-         order.SetContainer(GetPointer(m_orders));
-         OnTradeTransaction();
-        }
-     }
+      m_orders.NewOrder(result.order,request.type,result.volume,result.price);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

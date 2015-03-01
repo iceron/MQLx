@@ -93,6 +93,8 @@ public:
    virtual bool      InitEvent(JEvents *events);
    virtual bool      InitComponents(void);
    virtual bool      InitMoneys(void);
+   virtual bool      InitOrders(void);
+   virtual bool      InitOrdersHistory(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
    virtual bool      InitStops(void);
@@ -262,7 +264,21 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitComponents(void)
   {
-   return(InitSignals()&&InitStops()&&InitMoneys()&&InitTimes()&&InitAccount());
+   return(InitOrders()&&InitOrdersHistory()&&InitSignals()&&InitStops()&&InitMoneys()&&InitTimes()&&InitAccount());
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::InitOrders(void)
+  {
+   return(m_orders.Init(m_magic,GetPointer(this),m_events));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::InitOrdersHistory(void)
+  {
+   return(m_orders_history.Init(m_magic,GetPointer(this),m_events));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -506,7 +522,7 @@ bool JStrategyBase::OnTick(void)
         }
      }
    ManageOrdersHistory();
-   if (CheckPointer(m_events)==POINTER_DYNAMIC)
+   if(CheckPointer(m_events)==POINTER_DYNAMIC)
       m_events.Run();
    DisplayComment();
    return(ret);
@@ -516,7 +532,6 @@ bool JStrategyBase::OnTick(void)
 //+------------------------------------------------------------------+
 void JStrategyBase::OnTradeTransaction(JOrder *order)
   {
-   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND_DONE,order);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -615,6 +630,7 @@ JStrategyBase::CloseOrders(const int res)
       JOrder *order=m_orders.At(i);
       if(JSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) res))
         {
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_CLOSE,order);
          if(CloseOrder(order,i))
             CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_CLOSE_DONE,order);
          else

@@ -86,15 +86,7 @@ void JStrategy::OnTradeTransaction(void)
       if(m_symbol.Name()!=OrderSymbol()) continue;
       temp.Ticket(OrderTicket());
       if(m_orders.Search(temp)>=0) continue;
-      JOrder *order=new JOrder(OrderTicket(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
-      if(m_orders.InsertSort(order))
-        {
-         order.EventHandler(Events());
-         order.Magic(m_magic);
-         order.CreateStops(GetPointer(m_stops));
-         order.SetContainer(GetPointer(m_orders));
-         OnTradeTransaction(GetPointer(order));
-        }
+      m_orders.NewOrder(OrderTicket(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
      }
    delete temp;
   }

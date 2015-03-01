@@ -43,6 +43,7 @@ public:
    virtual void      CreateStops(JStops *stops);
    virtual void      CheckStops(void);
    virtual bool      EventHandler(JEvents *events);
+   virtual bool      Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops);
    virtual void      IsClosed(const bool closed) {m_closed=closed;}
    virtual bool      IsClosed(void) const {return(false);}
    virtual void      Magic(const int magic){m_magic=magic;}
@@ -79,7 +80,7 @@ JOrderBase::JOrderBase(void) : m_activate(true),
                                m_type(0),
                                m_volume(0.0),
                                m_volume_initial(0.0)
-  {
+  {   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -87,6 +88,18 @@ JOrderBase::JOrderBase(void) : m_activate(true),
 JOrderBase::~JOrderBase(void)
   {
    ADT::Delete(m_order_stops);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops)
+  {
+   m_magic=magic;
+   SetContainer(GetPointer(orders));
+   EventHandler(GetPointer(events));
+   CreateStops(GetPointer(m_stops));
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND_DONE,GetPointer(this));
+   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -115,21 +128,24 @@ void JOrderBase::CreateStops(JStops *stops)
          m_order_stops.Add(order_stop);
         }
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE_DONE,GetPointer(this),m_order_stops);
-     }   
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JOrderBase::CheckStops(void)
   {
-   m_order_stops.Check(m_volume);
+   if (m_order_stops!=NULL)
+      m_order_stops.Check(m_volume);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JOrderBase::CloseStops(void)
   {
-   return(m_order_stops.Close());
+   if (m_order_stops!=NULL)
+      return(m_order_stops.Close());
+   return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
