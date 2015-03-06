@@ -49,7 +49,7 @@ public:
                     ~JOrderStopBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_ORDERSTOP);}
    //--- initialization
-   virtual void      Init(JOrder *order,JStop *stop);
+   virtual void      Init(JOrder *order,JStop *stop,JOrderStops* order_stops,JEvents *events=NULL);
    virtual void      SetContainer(JOrderStops *orderstops){m_order_stops=orderstops;}
    //--- getters and setters  
 
@@ -139,10 +139,12 @@ JOrderStopBase::~JOrderStopBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStopBase::Init(JOrder *order,JStop *stop)
+void JOrderStopBase::Init(JOrder *order,JStop *stop,JOrderStops* order_stops,JEvents *events=NULL)
   {
-   if(stop==NULL || order==NULL) return;
+   if(stop==NULL || order==NULL) return;   
    if(!stop.Active()) return;
+   SetContainer(m_order_stops);
+   EventHandler(events);
    m_order=order;
    m_stop=stop;
    m_stop.Volume(GetPointer(this),m_volume_fixed,m_volume_percent);
@@ -158,6 +160,8 @@ void JOrderStopBase::Init(JOrder *order,JStop *stop)
       m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,m_takeprofit);
    if(m_takeprofit_initial>0 || m_stoploss_initial>0)
       m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
+   if(stop.Main())
+      order.MainStop(GetPointer(this));      
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

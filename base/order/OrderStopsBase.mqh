@@ -24,6 +24,7 @@ public:
    //--- initialization
    virtual void      SetContainer(JOrder *order){m_order=order;}
    virtual bool      EventHandler(JEvents *events);
+   virtual bool      NewOrderStop(JOrder *order,JStop *stop,JOrderStops *order_stops,JEvents *events=NULL);
    virtual void      Deinit();
    //--- checking
    virtual void      Check(double &volume);
@@ -51,6 +52,15 @@ JOrderStopsBase::~JOrderStopsBase(void)
 //+------------------------------------------------------------------+
 JOrderStopsBase::Deinit(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopsBase::NewOrderStop(JOrder *order,JStop *stop,JOrderStops *order_stops,JEvents *events=NULL)
+  {
+   JOrderStop *order_stop=new JOrderStop();
+   order_stop.Init(order,stop,order_stops,events);
+   return(Add(order_stop));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

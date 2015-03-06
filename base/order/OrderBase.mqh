@@ -48,6 +48,8 @@ public:
    virtual bool      IsClosed(void) const {return(false);}
    virtual void      Magic(const int magic){m_magic=magic;}
    virtual int       Magic(void) const {return(m_magic);}
+   virtual void      MainStop(JOrderStop *order_stop){m_main_stop=order_stop;}
+   virtual JOrderStop *MainStop(void) const {return(m_main_stop);}
    virtual void      Price(const double price){m_price=price;}
    virtual double    Price(void) const {return(m_price);}
    virtual void      OrderType(const ENUM_ORDER_TYPE type){m_type=type;}
@@ -119,13 +121,7 @@ void JOrderBase::CreateStops(JStops *stops)
          JStop *stop=stops.At(i);
          if(CheckPointer(stop)==POINTER_INVALID)
             continue;
-         JOrderStop *order_stop=new JOrderStop();
-         order_stop.Init(GetPointer(this),stop);
-         order_stop.EventHandler(m_events);
-         order_stop.SetContainer(GetPointer(m_order_stops));
-         if(stop.Main())
-            m_main_stop=order_stop;
-         m_order_stops.Add(order_stop);
+         m_order_stops.NewOrderStop(GetPointer(this),stop,m_order_stops,m_events);
         }
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE_DONE,GetPointer(this),m_order_stops);
      }
