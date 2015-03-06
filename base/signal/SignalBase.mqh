@@ -96,7 +96,6 @@ bool JSignalBase::Validate(void) const
 bool JSignalBase::Init(JStrategy *s)
   {
    m_strategy=s;
-
    return(true);
   }
 //+------------------------------------------------------------------+
