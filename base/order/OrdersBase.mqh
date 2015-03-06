@@ -25,8 +25,9 @@ public:
                     ~JOrdersBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_ORDERS);}
    //--- initialization
-   virtual bool      Init(const int magic,JStrategy *s,JEvents *events);
+   virtual bool      Init(const int magic=0,JStrategy *s=NULL,JStops *stops=NULL,JEvents *events=NULL);
    virtual void      SetContainer(JStrategy *s);
+   virtual void      SetStops(JStops *stops);
    //--- getters and setters
    virtual bool      Activate(void) const {return(m_activate);}
    virtual void      Activate(const bool activate) {m_activate=activate;}
@@ -64,10 +65,11 @@ JOrdersBase::~JOrdersBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::Init(const int magic,JStrategy *s,JEvents *events)
+bool JOrdersBase::Init(const int magic=0,JStrategy *s=NULL,JStops *stops=NULL,JEvents *events=NULL)
   {
    m_magic=magic;
    SetContainer(s);
+   SetStops(stops);
    EventHandler(events);
    return(true);
   }
@@ -78,6 +80,14 @@ JOrdersBase::SetContainer(JStrategy *s)
   {
    if(s!=NULL)
       m_strategy=s;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JOrdersBase::SetStops(JStops *stops)
+  {
+   if(stops!=NULL)
+      m_stops=stops;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

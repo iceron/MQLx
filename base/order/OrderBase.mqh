@@ -107,17 +107,17 @@ bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops)
 void JOrderBase::CreateStops(JStops *stops)
   {
    if(CheckPointer(stops)==POINTER_INVALID)
-      return;
-   if(CheckPointer(m_order_stops)==POINTER_INVALID)
-      m_order_stops=new JOrderStops();
+      return;   
    int total=stops.Total();
    if(total>0)
-     {
+     {      
+      if(CheckPointer(m_order_stops)==POINTER_INVALID)
+         m_order_stops = new JOrderStops();
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE,GetPointer(this),stops);
       for(int i=0;i<total;i++)
         {
          JStop *stop=stops.At(i);
-         if(!CheckPointer(stop)==POINTER_INVALID)
+         if(CheckPointer(stop)==POINTER_INVALID)
             continue;
          JOrderStop *order_stop=new JOrderStop();
          order_stop.Init(GetPointer(this),stop);

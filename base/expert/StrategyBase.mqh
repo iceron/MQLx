@@ -271,14 +271,14 @@ bool JStrategyBase::InitComponents(void)
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitOrders(void)
   {
-   return(m_orders.Init(m_magic,GetPointer(this),m_events));
+   return(m_orders.Init(m_magic,GetPointer(this),m_stops,m_events));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitOrdersHistory(void)
   {
-   return(m_orders_history.Init(m_magic,GetPointer(this),m_events));
+   return(m_orders_history.Init(m_magic,GetPointer(this),m_stops,m_events));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
