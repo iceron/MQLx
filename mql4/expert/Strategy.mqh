@@ -13,7 +13,6 @@ class JStrategy : public JStrategyBase
 public:
                      JStrategy(void);
                     ~JStrategy(void);
-   virtual void      CloseOppositeOrders(const int res);
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void);
    virtual bool      TradeOpen(const int res);
@@ -30,15 +29,6 @@ JStrategy::JStrategy(void)
 //+------------------------------------------------------------------+
 JStrategy::~JStrategy(void)
   {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-JStrategy::CloseOppositeOrders(const int res)
-  {
-   if(m_orders.Total()==0) return;
-   if(m_position_reverse)
-      CloseOrders(res);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -176,7 +176,7 @@ protected:
    virtual bool      CloseOrder(JOrder *order,const int index) {return(true);}
    virtual void      CloseOrders(const int res);
    virtual bool      CloseStops(void);
-   virtual void      CloseOppositeOrders(const int res) {}
+   virtual void      CloseOppositeOrders(const int res);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    virtual bool      IsNewBar(void);
@@ -618,6 +618,15 @@ double JStrategyBase::TakeProfitCalculate(const int res,const double price)
 bool JStrategyBase::CloseStops(void)
   {
    return(m_orders.CloseStops());
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JStrategyBase::CloseOppositeOrders(const int res)
+  {
+   if(m_orders.Total()==0) return;
+   if(m_position_reverse)
+      CloseOrders(res);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
