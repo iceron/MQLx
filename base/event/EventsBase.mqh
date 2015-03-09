@@ -84,7 +84,6 @@ bool JEventsBase::IsEventStandardAllowed(const ENUM_ACTION action)
 //+------------------------------------------------------------------+
 bool JEventsBase::IsEventErrorAllowed(const ENUM_ACTION action)
   {
-//return(m_error.IsAllowed(action));
    return(true);
   }
 //+------------------------------------------------------------------+

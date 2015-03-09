@@ -101,6 +101,16 @@ bool JEventStandardBase::Run(JEventRegistry *registry,string sound_file=NULL,str
          OnProgramInitDone();
          break;
         }
+      case ACTION_CLASS_CREATE:
+        {
+         OnClassCreate();
+         break;
+        }
+      case ACTION_CLASS_CREATE_DONE:
+        {
+         OnClassCreateDone();
+         break;
+        }
       case ACTION_CLASS_VALIDATE:
         {
          OnClassValidate();
@@ -109,6 +119,16 @@ bool JEventStandardBase::Run(JEventRegistry *registry,string sound_file=NULL,str
       case ACTION_CLASS_VALIDATE_DONE:
         {
          OnClassValidateDone();
+         break;
+        }
+      case ACTION_CLASS_DELETE:
+        {
+         OnClassDelete();
+         break;
+        }
+      case ACTION_CLASS_DELETE_DONE:
+        {
+         OnClassDeleteDone();
          break;
         }
       case ACTION_CANDLE:
@@ -129,6 +149,16 @@ bool JEventStandardBase::Run(JEventRegistry *registry,string sound_file=NULL,str
       case ACTION_ORDER_SEND_DONE:
         {
          OnOrderSendDone();
+         break;
+        }
+      case ACTION_ORDER_MODIFY:
+        {
+         OnOrderModify();
+         break;
+        }
+      case ACTION_ORDER_MODIFY_DONE:
+        {
+         OnOrderModifyDone();
          break;
         }
       case ACTION_ORDER_ENTRY_MODIFY:
@@ -170,17 +200,7 @@ bool JEventStandardBase::Run(JEventRegistry *registry,string sound_file=NULL,str
         {
          OnOrderMEModifyDone();
          break;
-        }
-      case ACTION_ORDER_MODIFY:
-        {
-         OnOrderModify();
-         break;
-        }
-      case ACTION_ORDER_MODIFY_DONE:
-        {
-         OnOrderModifyDone();
-         break;
-        }
+        }      
       case ACTION_ORDER_CLOSE:
         {
          OnOrderClose();
@@ -189,11 +209,6 @@ bool JEventStandardBase::Run(JEventRegistry *registry,string sound_file=NULL,str
       case ACTION_ORDER_CLOSE_DONE:
         {
          OnOrderCloseDone();
-         break;
-        }
-      case ACTION_ORDER_STOPS_CLOSE_DONE:
-        {
-         OnOrderStopsCloseDone();
          break;
         }
       case ACTION_ORDER_TRAIL:
@@ -206,6 +221,11 @@ bool JEventStandardBase::Run(JEventRegistry *registry,string sound_file=NULL,str
          OnOrderTrailDone();
          break;
         }
+      case ACTION_ORDER_STOPS_CLOSE_DONE:
+        {
+         OnOrderStopsCloseDone();
+         break;
+        }      
       case ACTION_ORDER_TRAIL_SL:
         {
          OnOrderTrailSL();
@@ -247,7 +267,8 @@ bool JEventStandardBase::Run(JEventRegistry *registry,string sound_file=NULL,str
          break;
         }
      }
-   Execute(registry,sound_file,file_name,ftp_path);
+   if (m_message!=NULL)
+      Execute(registry,sound_file,file_name,ftp_path);
    return(true);
   }
 //+------------------------------------------------------------------+
