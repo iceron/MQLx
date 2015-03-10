@@ -112,23 +112,34 @@ bool JEventsBase::IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION a
 //+------------------------------------------------------------------+
 JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
+   JEvent *event=NULL;
    switch(type)
      {
       case EVENT_CLASS_STANDARD:
-        {
+        {         
          if(IsEventStandardAllowed(action))
-            m_current.Add(CreateStandardEvent(action,object1,object2,object3));
+         {
+            event=CreateStandardEvent(action,object1,object2,object3);
+            if(event.Instant())
+               event.Run(GetPointer(m_standard),m_sound_file,m_ftp_file,m_ftp_path);
+         }   
          break;
         }
       case EVENT_CLASS_ERROR:
         {
-         m_current.Add(CreateErrorEvent(action,object1,object2,object3));
+         event = CreateErrorEvent(action,object1,object2,object3);
+         if(event.Instant())
+               event.Run(GetPointer(m_error),m_sound_file,m_ftp_file,m_ftp_path);
          break;
         }
       case EVENT_CLASS_CUSTOM:
         {
-         if(IsEventStandardAllowed(action))
-            m_current.Add(CreateCustomEvent(action,object1,object2,object3));
+         if(IsEventCustomAllowed(action))
+         {
+            event = CreateCustomEvent(action,object1,object2,object3);
+            if(event.Instant())
+               event.Run(GetPointer(m_custom),m_sound_file,m_ftp_file,m_ftp_path);
+         }   
          break;
         }
       default:
@@ -137,6 +148,8 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CO
          return;
         }
      }
+   if(CheckPointer(event)==POINTER_DYNAMIC)
+      m_current.Add(event);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

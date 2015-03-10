@@ -14,6 +14,7 @@
 #include "..\lib\SymbolInfo.mqh"
 #include "..\event\EventBase.mqh"
 #include "..\tick\TickBase.mqh"
+#include "..\candle\CandleBase.mqh"
 #include "..\signal\SignalsBase.mqh"
 #include "..\trade\TradeBase.mqh"
 #include "..\order\OrdersBase.mqh"
@@ -54,8 +55,6 @@ protected:
    //--- datetime parameters
    datetime          m_last_tick_time;
    datetime          m_last_trade_time;
-   //--- tick parameters
-   long              m_last_tick_volume;
    //--- signal objects
    JSignals         *m_signals;
    //--- trade objects   
@@ -78,6 +77,8 @@ protected:
    JComments        *m_comments;
    //--- tick
    JTick             m_tick;
+   //--- candle
+   JCandle           m_candle;
    //--- container
    JExpert          *m_expert;
 public:
@@ -134,8 +135,6 @@ public:
    virtual void      LastTradeTime(const datetime tradetime) {m_last_trade_time=tradetime;}
    virtual datetime  LastTickTime(void) const {return(m_last_tick_time);}
    virtual void      LastTickTime(const datetime ticktime) {m_last_tick_time=ticktime;}
-   virtual long      LastTickVolume(void) const {return(m_last_tick_volume);}
-   virtual void      LastTickVolume(const long tick_volume) {m_last_tick_volume=tick_volume;}
    virtual double    LotSize(void) const {return(m_lotsize);}
    virtual void      LotSize(const double lotsize){m_lotsize=lotsize;}
    virtual int       Magic(void) const {return m_magic;}
@@ -227,8 +226,7 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_digits_adjust(0),
                                      m_points_adjust(0.0),
                                      m_last_tick_time(0),
-                                     m_last_trade_time(0),
-                                     m_last_tick_volume(0)
+                                     m_last_trade_time(0)
   {
    if(!m_other_magic.IsSorted())
       m_other_magic.Sort();
@@ -774,15 +772,8 @@ bool JStrategyBase::IsTradeProcessed(void) const
 //+------------------------------------------------------------------+
 bool JStrategyBase::IsNewBar(void)
   {
-   datetime time[];
-   MqlRates rates[];
-   if(CopyTime(m_symbol.Name(),m_period,0,1,time)==-1)
-      return(false);
-   if(CopyRates(m_symbol.Name(),m_period,0,1,rates)==-1)
-      return(false);
-   if(m_last_tick_time>0 && m_last_tick_time<time[0] && m_last_tick_volume!=rates[0].tick_volume)
+   if(m_candle.IsNewCandle(m_symbol,m_period))
      {
-      m_last_tick_volume=rates[0].tick_volume;
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_CANDLE);
       return(true);
      }
