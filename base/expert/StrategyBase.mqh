@@ -522,16 +522,17 @@ void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &d
 //+------------------------------------------------------------------+
 bool JStrategyBase::OnTick(void)
   {
-   if(!Active()) return(false);
-   m_last_tick_time=m_symbol.Time();
+   if(!Active()) return(false);   
+   if(!Refresh()) return(false);
    CreateEvent(EVENT_CLASS_STANDARD,ACTION_TICK);
+   m_last_tick_time=m_symbol.Time();
    bool ret=false;
-   if(!Refresh()) return(ret);
    m_orders.OnTick();
    ManageOrders();
    
    int entry=0,exit=0;
    CheckSignals(entry,exit);
+   AddComment(TimeToStr(m_last_tick_time,TIME_DATE|TIME_MINUTES|TIME_SECONDS));
    AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
    AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
    if(IsNewBar() || (m_every_tick && m_tick.IsNewTick(m_symbol)))
@@ -542,7 +543,10 @@ bool JStrategyBase::OnTick(void)
         {
          ret=TradeOpen(entry);
          if(ret)
+         {
             m_last_trade_time=m_last_tick_time;
+            Print("trade time is set: "+TimeToStr(m_last_trade_time));
+         }   
         }
      }
    ManageOrdersHistory();
@@ -783,11 +787,9 @@ void JStrategyBase::AddOtherMagicString(const string &magics[])
 bool JStrategyBase::IsTradeProcessed(void) const
   {
    if(!m_one_trade_per_candle) return(false);
-   datetime arr[];
-   if(CopyTime(m_symbol.Name(),m_period,0,1,arr)==-1)
-      return(false);
-   if(m_last_trade_time>0 && m_last_trade_time>=arr[0])
-      return(true);
+   if(m_last_trade_time>0 && m_last_trade_time>=m_candle.LastTime())
+      return(true);   
+   Print("trade is not yet processed: "+TimeToStr(m_last_trade_time)+" "+TimeToStr(m_candle.LastTime()));
    return(false);
   }
 //+------------------------------------------------------------------+

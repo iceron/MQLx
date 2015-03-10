@@ -18,8 +18,13 @@ protected:
 public:
                      JCandleBase(void);
                     ~JCandleBase(void);
+   virtual double    LastTime() const {return(m_last.time);}
+   virtual double    LastOpen() const {return(m_last.open);}
+   virtual double    LastHigh() const {return(m_last.high);}
+   virtual double    LastLow() const {return(m_last.low);}
+   virtual double    LastClose() const {return(m_last.close);}
    virtual bool      IsNewCandle(CSymbolInfo *symbol,const ENUM_TIMEFRAMES period);
-   virtual bool      Compare(MqlRates &rates);
+   virtual bool      Compare(MqlRates &rates) const;
   };
 //+------------------------------------------------------------------+
 JCandleBase::JCandleBase(void) : m_wait_for_new(false)
@@ -49,7 +54,7 @@ bool JCandleBase::IsNewCandle(CSymbolInfo *symbol,const ENUM_TIMEFRAMES period)
    if(CopyRates(symbol.Name(),period,0,1,rates)==-1)
       return(false);
    bool result=false;
-   rates[0].open /= symbol.TickSize();
+   rates[0].open/=symbol.TickSize();
    if(m_wait_for_new && m_last.time==0)
       m_last=rates[0];
    else if(Compare(rates[0]))
@@ -62,7 +67,7 @@ bool JCandleBase::IsNewCandle(CSymbolInfo *symbol,const ENUM_TIMEFRAMES period)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JCandleBase::Compare(MqlRates &rates)
+bool JCandleBase::Compare(MqlRates &rates) const
   {
    return(m_last.time==0 || m_last.time!=rates.time || m_last.open!=rates.open);
   }
