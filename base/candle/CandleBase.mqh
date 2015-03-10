@@ -64,7 +64,7 @@ bool JCandleBase::IsNewCandle(CSymbolInfo *symbol,const ENUM_TIMEFRAMES period)
 //+------------------------------------------------------------------+
 bool JCandleBase::Compare(MqlRates &rates)
   {
-   return(m_last.time==0 || (m_last.time!=rates.time && m_last.open!=rates.open));
+   return(m_last.time==0 || m_last.time!=rates.time || m_last.open!=rates.open);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
