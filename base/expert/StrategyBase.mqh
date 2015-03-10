@@ -13,6 +13,7 @@
 #include "..\lib\AccountInfo.mqh"
 #include "..\lib\SymbolInfo.mqh"
 #include "..\event\EventBase.mqh"
+#include "..\tick\TickBase.mqh"
 #include "..\signal\SignalsBase.mqh"
 #include "..\trade\TradeBase.mqh"
 #include "..\order\OrdersBase.mqh"
@@ -75,6 +76,8 @@ protected:
    JEvents          *m_events;
    //--- comments
    JComments        *m_comments;
+   //--- tick
+   JTick             m_tick;
    //--- container
    JExpert          *m_expert;
 public:
@@ -506,7 +509,7 @@ bool JStrategyBase::OnTick(void)
    if(!Refresh()) return(ret);
    m_orders.OnTick();
    ManageOrders();
-   if(IsNewBar() || m_every_tick)
+   if(IsNewBar() || (m_every_tick && m_tick.IsNewTick(m_symbol)))
      {
       int entry=0,exit=0;
       CheckSignals(entry,exit);
