@@ -148,8 +148,9 @@ public:
    virtual int       TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total()+m_history_count);}
    virtual ENUM_EXECUTION_MODE ExecutionMode(void) const {return(m_exec_mode);}
    virtual void      ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
-   //-- tick
+   //-- events
    virtual bool      OnTick(void);
+   virtual void      OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam);
    //--- signal parameters
    virtual int       Period(void) const {return(PeriodSeconds(m_period));}
    virtual void      Period(const ENUM_TIMEFRAMES period) {m_period=period;}
@@ -494,6 +495,13 @@ bool JStrategyBase::Validate(void) const
          return(false);
      }
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
+  {
+   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

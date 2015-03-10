@@ -21,6 +21,7 @@ public:
    virtual bool      Validate(void) const;
    //--- events
    virtual void      OnTick(void);
+   virtual void      OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam);
    //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(const bool activate) {m_activate=activate;}
@@ -77,7 +78,19 @@ void JExpertBase::OnTick(void)
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=At(i);
-      bool res=strat.OnTick();
+      strat.OnTick();
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JExpertBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
+  {
+   if(!Active()) return;
+   for(int i=0;i<Total();i++)
+     {
+      JStrategy *strat=At(i);
+      strat.OnChartEvent(id,lparam,dparam,sparam);
      }
   }
 //+------------------------------------------------------------------+
