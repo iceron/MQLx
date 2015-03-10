@@ -7,6 +7,7 @@
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_EXECUTION_MODE.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
+#include "..\..\common\enum\ENUM_CHARTEVENT_CUSTOM.mqh"
 #include "..\..\common\class\ADT.mqh"
 #include <Object.mqh>
 #include <Arrays\ArrayInt.mqh>
@@ -48,7 +49,8 @@ protected:
    bool              m_one_trade_per_candle;
    ENUM_TIMEFRAMES   m_period;
    bool              m_position_reverse;
-   //ENUM_TRADE_MODE   m_trade_mode;
+   bool              m_offline_mode;
+   int               m_offline_mode_delay; 
    //--- market parameters
    int               m_digits_adjust;
    double            m_points_adjust;
@@ -141,6 +143,8 @@ public:
    virtual void      Magic(const int magic) {m_magic=magic;}
    virtual int       MaxOrdersHistory(void) const {return m_max_orders_history;}
    virtual void      MaxOrdersHistory(const int max) {m_max_orders_history=max;}
+   virtual bool      OfflineMode(void) const {return(m_offline_mode);}
+   virtual void      OfflineMode(const bool mode) {m_offline_mode=mode;}
    virtual int       OrdersTotal(void) const {return(m_orders.Total());}
    virtual int       OrdersHistoryTotal(void) const {return(m_orders_history.Total());}
    virtual double    PointsAdjust(void) const {return(m_points_adjust);}
@@ -224,6 +228,8 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_one_trade_per_candle(true),
                                      m_period(PERIOD_CURRENT),
                                      m_position_reverse(true),
+                                     m_offline_mode(false),
+                                     m_offline_mode_delay(500),
                                      m_digits_adjust(0),
                                      m_points_adjust(0.0),
                                      m_last_tick_time(0),
@@ -266,7 +272,10 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitComponents(void)
   {
-   return(InitOrders()&&InitOrdersHistory()&&InitSignals()&&InitStops()&&InitMoneys()&&InitTimes()&&InitAccount());
+   bool result = InitOrders()&&InitOrdersHistory()&&InitSignals()&&InitStops()&&InitMoneys()&&InitTimes()&&InitAccount();
+   if (OfflineMode())
+      EventChartCustom(0,OFFLINE_TICK,0,0,"");
+   return(result);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -500,8 +509,13 @@ bool JStrategyBase::Validate(void) const
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
-  {
-   
+  {   
+   if (id==CHARTEVENT_CUSTOM+OFFLINE_TICK)
+   {
+      OnTick();
+      Sleep(m_offline_mode_delay);
+      EventChartCustom(0,OFFLINE_TICK,0,0,"");
+   }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -515,12 +529,13 @@ bool JStrategyBase::OnTick(void)
    if(!Refresh()) return(ret);
    m_orders.OnTick();
    ManageOrders();
+   
+   int entry=0,exit=0;
+   CheckSignals(entry,exit);
+   AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
+   AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
    if(IsNewBar() || (m_every_tick && m_tick.IsNewTick(m_symbol)))
-     {
-      int entry=0,exit=0;
-      CheckSignals(entry,exit);
-      AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
-      AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
+     {      
       CloseOppositeOrders(entry);
       ManageOrders();
       if(!IsTradeProcessed())
