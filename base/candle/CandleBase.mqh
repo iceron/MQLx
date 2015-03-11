@@ -50,7 +50,6 @@ JCandleBase::~JCandleBase(void)
 bool JCandleBase::IsNewCandle(CSymbolInfo *symbol,const ENUM_TIMEFRAMES period)
   {
    MqlRates rates[];
-   ResetLastError();
    if(CopyRates(symbol.Name(),period,0,1,rates)==-1)
       return(false);
    bool result=false;

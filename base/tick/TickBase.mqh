@@ -17,6 +17,12 @@ protected:
 public:
                      JTickBase(void);
                     ~JTickBase(void);
+   MqlTick           LastTick() const {return(m_last);}
+   datetime          Time() const {return(m_last.time);}
+   datetime          Bid() const {return(m_last.bid);}
+   datetime          Ask() const {return(m_last.ask);}
+   datetime          Last() const {return(m_last.last);}
+   datetime          Volume() const {return(m_last.volume);}
    virtual bool      IsNewTick(CSymbolInfo *symbol);
 protected:
    virtual bool      Compare(MqlTick &current);
@@ -48,11 +54,9 @@ bool JTickBase::IsNewTick(CSymbolInfo *symbol)
       MqlTick current;
       if(SymbolInfoTick(symbol.Name(),current))
         {
-         current.bid /= symbol.TickSize();
-         current.ask /= symbol.TickSize();
          if(Compare(current))
            {
-            m_last = current;
+            m_last=current;
             return(true);
            }
         }
@@ -64,8 +68,7 @@ bool JTickBase::IsNewTick(CSymbolInfo *symbol)
 //+------------------------------------------------------------------+
 bool JTickBase::Compare(MqlTick &current)
   {
-   return(m_last.time==0 || (m_last.time==current.time &&
-          m_last.bid==current.bid && m_last.ask==current.ask));
+   return(m_last.time==0 || m_last.time<current.time);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

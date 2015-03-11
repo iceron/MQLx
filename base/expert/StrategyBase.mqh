@@ -54,9 +54,8 @@ protected:
    //--- market parameters
    int               m_digits_adjust;
    double            m_points_adjust;
-   //--- datetime parameters
-   datetime          m_last_tick_time;
-   datetime          m_last_trade_time;
+   //--- tick parameters
+   MqlTick           m_last_trade_data;
    //--- signal objects
    JSignals         *m_signals;
    //--- trade objects   
@@ -133,10 +132,17 @@ public:
    virtual void      DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    virtual datetime  Expiration(void) const {return(m_expiration);}
    virtual void      Expiration(const datetime expiration) {m_expiration=expiration;}
-   virtual datetime  LastTradeTime(void) const {return(m_last_trade_time);}
-   virtual void      LastTradeTime(const datetime tradetime) {m_last_trade_time=tradetime;}
-   virtual datetime  LastTickTime(void) const {return(m_last_tick_time);}
-   virtual void      LastTickTime(const datetime ticktime) {m_last_tick_time=ticktime;}
+   virtual void      LastTradeRates(MqlTick &tick) {m_last_trade_data = tick;}
+   virtual datetime  LastTradeTime(void) const {return(m_last_trade_data.time);}
+   virtual datetime  LastTradeBid(void) const {return(m_last_trade_data.bid);}
+   virtual datetime  LastTradeAsk(void) const {return(m_last_trade_data.ask);}
+   virtual datetime  LastTradeLast(void) const {return(m_last_trade_data.last);}
+   virtual datetime  LastTradeVolume(void) const {return(m_last_trade_data.volume);}
+   virtual datetime  LastTickTime(void) const {return(m_tick.Time());}
+   virtual datetime  LastTickBid(void) const {return(m_tick.Bid());}
+   virtual datetime  LastTickAsk(void) const {return(m_tick.Ask());}
+   virtual datetime  LastTickLast(void) const {return(m_tick.Last());}
+   virtual datetime  LastTickVolume(void) const {return(m_tick.Volume());}
    virtual double    LotSize(void) const {return(m_lotsize);}
    virtual void      LotSize(const double lotsize){m_lotsize=lotsize;}
    virtual int       Magic(void) const {return m_magic;}
@@ -231,9 +237,7 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_offline_mode(false),
                                      m_offline_mode_delay(500),
                                      m_digits_adjust(0),
-                                     m_points_adjust(0.0),
-                                     m_last_tick_time(0),
-                                     m_last_trade_time(0)
+                                     m_points_adjust(0.0)
   {
    if(!m_other_magic.IsSorted())
       m_other_magic.Sort();
@@ -262,7 +266,6 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
    m_magic=magic;
    m_position_reverse=position_reverse;
    m_one_trade_per_candle=one_trade_per_candle;
-   m_last_trade_time=0;
    m_digits_adjust=(m_symbol.Digits()==3 || m_symbol.Digits()==5)?10:1;
    m_points_adjust=m_symbol.Point()*m_digits_adjust;
    return(false);
@@ -525,17 +528,18 @@ bool JStrategyBase::OnTick(void)
    if(!Active()) return(false);   
    if(!Refresh()) return(false);
    CreateEvent(EVENT_CLASS_STANDARD,ACTION_TICK);
-   m_last_tick_time=m_symbol.Time();
    bool ret=false;
+   bool newtick = m_tick.IsNewTick(m_symbol);
+   bool newbar = IsNewBar();      
    m_orders.OnTick();
-   ManageOrders();
-   
+   ManageOrders();   
    int entry=0,exit=0;
    CheckSignals(entry,exit);
-   AddComment(TimeToStr(m_last_tick_time,TIME_DATE|TIME_MINUTES|TIME_SECONDS));
+   AddComment(TimeToStr(LastTickTime(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
+   AddComment("Last Trade: "+TimeToStr(LastTradeTime(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
    AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
    AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
-   if(IsNewBar() || (m_every_tick && m_tick.IsNewTick(m_symbol)))
+   if(IsNewBar() || (m_every_tick && newtick))
      {      
       CloseOppositeOrders(entry);
       ManageOrders();
@@ -543,12 +547,10 @@ bool JStrategyBase::OnTick(void)
         {
          ret=TradeOpen(entry);
          if(ret)
-         {
-            m_last_trade_time=m_last_tick_time;
-            Print("trade time is set: "+TimeToStr(m_last_trade_time));
-         }   
+            m_last_trade_data=m_tick.LastTick();
         }
      }
+   
    ManageOrdersHistory();
    if(CheckPointer(m_events)==POINTER_DYNAMIC)
       m_events.Run();
@@ -787,9 +789,8 @@ void JStrategyBase::AddOtherMagicString(const string &magics[])
 bool JStrategyBase::IsTradeProcessed(void) const
   {
    if(!m_one_trade_per_candle) return(false);
-   if(m_last_trade_time>0 && m_last_trade_time>=m_candle.LastTime())
+   if(LastTradeTime()>0 && LastTradeTime()>=m_candle.LastTime())
       return(true);   
-   Print("trade is not yet processed: "+TimeToStr(m_last_trade_time)+" "+TimeToStr(m_candle.LastTime()));
    return(false);
   }
 //+------------------------------------------------------------------+
