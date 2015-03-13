@@ -14,6 +14,7 @@ class JTickBase : public CObject
   {
 protected:
    MqlTick           m_last;
+   CSymbolInfo      *m_symbol;
 public:
                      JTickBase(void);
                     ~JTickBase(void);
@@ -51,6 +52,8 @@ bool JTickBase::IsNewTick(CSymbolInfo *symbol)
   {
    if(symbol!=NULL)
      {
+      if (CheckPointer(m_symbol)==POINTER_INVALID)
+         m_symbol = symbol;
       MqlTick current;
       if(SymbolInfoTick(symbol.Name(),current))
         {

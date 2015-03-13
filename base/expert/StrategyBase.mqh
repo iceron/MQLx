@@ -193,7 +193,6 @@ protected:
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    virtual bool      IsNewBar(void);
-   virtual bool      IsTradeProcessed(void) const;
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
    virtual void      ManageOrders(void);
    virtual void      ManageOrdersHistory(void);
@@ -222,7 +221,7 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_comment(NULL),
                                      m_expiration(0),
                                      m_magic(0),
-                                     m_lotsize(1.0),
+                                     m_lotsize(0.1),
                                      m_sleep_success(500),
                                      m_sleep_error(500),
                                      m_max_orders_history(100),
@@ -537,17 +536,24 @@ bool JStrategyBase::OnTick(void)
    CheckSignals(entry,exit);
    AddComment(TimeToStr(LastTickTime(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
    AddComment("Last Trade: "+TimeToStr(LastTradeTime(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
+   AddComment("Last Time: "+TimeToStr(m_candle.LastTime(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
+   AddComment("Last Open: "+m_candle.LastOpen());
+   AddComment("Last Close: "+m_candle.LastClose());
+   AddComment("Total Orders: "+OrdersTotal());
    AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
    AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
-   if(IsNewBar() || (m_every_tick && newtick))
+   if(newbar || (m_every_tick && newtick))
      {      
       CloseOppositeOrders(entry);
       ManageOrders();
-      if(!IsTradeProcessed())
+      if(!m_candle.TradeProcessed())
         {
          ret=TradeOpen(entry);
          if(ret)
+         {
             m_last_trade_data=m_tick.LastTick();
+            m_candle.TradeProcessed(true);
+         }   
         }
      }
    
@@ -782,16 +788,6 @@ void JStrategyBase::AddOtherMagicString(const string &magics[])
   {
    for(int i=0;i<ArraySize(magics);i++)
       AddOtherMagic((int)magics[i]);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStrategyBase::IsTradeProcessed(void) const
-  {
-   if(!m_one_trade_per_candle) return(false);
-   if(LastTradeTime()>0 && LastTradeTime()>=m_candle.LastTime())
-      return(true);   
-   return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

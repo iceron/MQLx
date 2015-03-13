@@ -23,13 +23,14 @@ public:
    virtual ulong     Ticket(void) const {return(m_ticket_current.At(m_ticket_current.Total()-1));}
    virtual void      NewTicket(const bool updated) {m_ticket_updated=updated;}
    virtual bool      NewTicket(void) const {return(m_ticket_updated);}
-   virtual int       Compare(const CObject *node,const int mode=0) const;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JOrder::JOrder(void): m_ticket_updated(false)
-  {   
+  {  
+   if (!m_ticket_current.IsSorted()) 
+      m_ticket_current.Sort(); 
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -72,31 +73,5 @@ bool JOrder::IsClosed(void)
            }
      }
    return(false);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-int JOrder::Compare(const CObject *node,const int mode=0) const
-  {
-   int result=0;
-   const JOrder *ticket=node;
-   if(m_ticket_current.Total()>1)
-     {
-      int ticket_current = m_ticket_current.At(m_ticket_current.Total()-1);
-      if((ulong)ticket_current>ticket.Ticket())
-         result=1;
-      else if((ulong)ticket_current<ticket.Ticket())
-         result=-1;
-      else result=0;
-     }
-   if(m_ticket>0)
-     {
-      if(m_ticket>ticket.Ticket())
-         result=1;
-      else if(m_ticket<ticket.Ticket())
-         result=-1;
-      else result=0;
-     }
-   return(result);
   }
 //+------------------------------------------------------------------+

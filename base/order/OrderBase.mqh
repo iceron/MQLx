@@ -65,7 +65,7 @@ public:
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    //--- archiving
    virtual bool      CloseStops(void);
-   virtual int       Compare(const CObject *node,const int mode=0) const {return(0);}
+   virtual int       Compare(const CObject *node,const int mode=0) const;
    //--- static methods
    static bool       IsOrderTypeLong(const ENUM_ORDER_TYPE type);
    static bool       IsOrderTypeShort(const ENUM_ORDER_TYPE type);
@@ -142,6 +142,18 @@ bool JOrderBase::CloseStops(void)
    if (m_order_stops!=NULL)
       return(m_order_stops.Close());
    return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int JOrderBase::Compare(const CObject *node,const int mode=0)  const
+  {
+   const JOrder *order=node;
+   if (Ticket()>order.Ticket())
+      return(1);
+   if (Ticket()<order.Ticket())
+      return(-1);
+   return(0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

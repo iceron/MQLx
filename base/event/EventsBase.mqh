@@ -116,30 +116,30 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CO
    switch(type)
      {
       case EVENT_CLASS_STANDARD:
-        {         
+        {
          if(IsEventStandardAllowed(action))
-         {
+           {
             event=CreateStandardEvent(action,object1,object2,object3);
             if(event.Instant())
                event.Run(GetPointer(m_standard),m_sound_file,m_ftp_file,m_ftp_path);
-         }   
+           }
          break;
         }
       case EVENT_CLASS_ERROR:
         {
-         event = CreateErrorEvent(action,object1,object2,object3);
+         event=CreateErrorEvent(action,object1,object2,object3);
          if(event.Instant())
-               event.Run(GetPointer(m_error),m_sound_file,m_ftp_file,m_ftp_path);
+            event.Run(GetPointer(m_error),m_sound_file,m_ftp_file,m_ftp_path);
          break;
         }
       case EVENT_CLASS_CUSTOM:
         {
          if(IsEventCustomAllowed(action))
-         {
-            event = CreateCustomEvent(action,object1,object2,object3);
+           {
+            event=CreateCustomEvent(action,object1,object2,object3);
             if(event.Instant())
                event.Run(GetPointer(m_custom),m_sound_file,m_ftp_file,m_ftp_path);
-         }   
+           }
          break;
         }
       default:
@@ -251,27 +251,31 @@ JEventsBase::DebugMode(bool debug=true)
 //+------------------------------------------------------------------+
 bool JEventsBase::Run(void)
   {
-   for(int i=0;i<m_current.Total();i++)
+   int total = m_current.Total();
+   for(int i=total-1;i>=0;i--)
      {
       JEvent *event=m_current.Detach(i);
-      if(!event.Instant())
+      if(event!=NULL)
         {
-         switch(event.Type())
+         if(!event.Instant())
            {
-            case CLASS_TYPE_EVENT_STANDARD:
+            switch(event.Type())
               {
-               event.Run(GetPointer(m_standard));
-               break;
-              }
-            case CLASS_TYPE_EVENT_ERROR:
-              {
-               event.Run(GetPointer(m_error));
-               break;
-              }
-            case CLASS_TYPE_EVENT_CUSTOM:
-              {
-               event.Run(GetPointer(m_custom));
-               break;
+               case CLASS_TYPE_EVENT_STANDARD:
+                 {
+                  event.Run(GetPointer(m_standard));
+                  break;
+                 }
+               case CLASS_TYPE_EVENT_ERROR:
+                 {
+                  event.Run(GetPointer(m_error));
+                  break;
+                 }
+               case CLASS_TYPE_EVENT_CUSTOM:
+                 {
+                  event.Run(GetPointer(m_custom));
+                  break;
+                 }
               }
            }
         }
