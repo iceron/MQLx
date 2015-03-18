@@ -59,6 +59,8 @@ public:
    virtual double    Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
    virtual void      VolumeCurrent(const double volume) {m_volume=volume;}
    virtual double    VolumeCurrent(void) const {return(m_volume);}
+   virtual void      VolumeIncrement(const double volume) {m_volume_inc=volume;}
+   virtual double    VolumeIncrement(void) const {return(m_volume_inc);}
    virtual void      VolumeBase(const double volume_base) {m_volume_base=volume_base;}
    virtual double    VolumeBase(void) const {return(m_volume_base);}
 protected:
@@ -123,8 +125,6 @@ bool JMoneyBase::InitSymbol(CSymbolInfo *symbol)
 //+------------------------------------------------------------------+
 bool JMoneyBase::InitAccount(CAccountInfo *account)
   {
-   if(m_account!=NULL)
-      delete m_account;
    if(account==NULL)
      {
       if((m_account=new CAccountInfo)==NULL)
@@ -166,7 +166,7 @@ double JMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const do
 //+------------------------------------------------------------------+
 void JMoneyBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
-   double balance=m_equity==false?m_account.Margin():m_account.Equity();
+   double balance=m_equity==false?m_account.Balance():m_account.Equity();
    m_volume=m_volume_base+((int)(balance/m_balance_inc))*m_volume_inc;
    m_balance=balance;
    m_last_update=TimeCurrent();
@@ -176,7 +176,7 @@ void JMoneyBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,con
 //+------------------------------------------------------------------+
 bool JMoneyBase::UpdateByMargin(void)
   {
-   double balance=m_equity==false?m_account.Margin():m_account.Equity();
+   double balance=m_equity==false?m_account.Balance():m_account.Equity();
    if(balance>=m_balance+m_balance_inc || balance<=m_balance-m_balance_inc)
       return(true);
    return(false);

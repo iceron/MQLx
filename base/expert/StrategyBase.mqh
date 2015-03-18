@@ -111,7 +111,7 @@ public:
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(const bool activate) {m_activate=activate;}
    //--- setters and getters   
-   virtual CAccountInfo *AccountInfo(void) const {return(m_account);}
+   virtual CAccountInfo *AccountInfo(void) const {return(GetPointer(m_account));}
    virtual JEvents  *Events(void) const {return(m_events);}
    virtual JStop    *MainStop(void) const {return(m_main_stop);}
    virtual JMoneys  *Moneys(void) const {return(m_moneys);}
@@ -274,7 +274,7 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitComponents(void)
   {
-   bool result = InitOrders()&&InitOrdersHistory()&&InitSignals()&&InitStops()&&InitMoneys()&&InitTimes()&&InitAccount();
+   bool result = InitOrders()&&InitOrdersHistory()&&InitSignals()&&InitStops()&&InitAccount()&&InitMoneys()&&InitTimes();
    if (OfflineMode())
       EventChartCustom(0,OFFLINE_TICK,0,0,"");
    return(result);

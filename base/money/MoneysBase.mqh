@@ -54,7 +54,7 @@ bool JMoneysBase::Init(JStrategy *s)
    for(int i=0;i<Total();i++)
      {
       JMoney *money=At(i);
-      money.Init(s);
+      money.Init(GetPointer(s));
      }
    SetContainer(s);
    return(true);
