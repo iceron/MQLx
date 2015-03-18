@@ -50,7 +50,7 @@ protected:
    ENUM_TIMEFRAMES   m_period;
    bool              m_position_reverse;
    bool              m_offline_mode;
-   int               m_offline_mode_delay; 
+   int               m_offline_mode_delay;
    //--- market parameters
    int               m_digits_adjust;
    double            m_points_adjust;
@@ -112,16 +112,19 @@ public:
    virtual void      Active(const bool activate) {m_activate=activate;}
    //--- setters and getters   
    virtual CAccountInfo *AccountInfo(void) const {return(GetPointer(m_account));}
+   virtual JCandle   *Candle(void) const {return(GetPointer(m_candle));}
+   virtual JComments *Comments() {return(GetPointer(m_comments));}
    virtual JEvents  *Events(void) const {return(m_events);}
    virtual JStop    *MainStop(void) const {return(m_main_stop);}
    virtual JMoneys  *Moneys(void) const {return(m_moneys);}
    virtual JOrders  *Orders() const {return(GetPointer(m_orders));}
    virtual JOrders  *OrdersHistory() const {return(GetPointer(m_orders_history));}
    virtual CArrayInt *OtherMagic() const {return(GetPointer(m_other_magic));}
-   virtual JSignals *Signals(void) const {return(m_signals);}
-   virtual JStops   *Stops(void) const {return(m_stops);}
-   virtual CSymbolInfo *SymbolInfo(void) const {return(m_symbol);}
-   virtual JTimes   *Times(void) const {return(m_times);}
+   virtual JSignals *Signals(void) const {return(GetPointer(m_signals));}
+   virtual JStops   *Stops(void) const {return(GetPointer(m_stops));}
+   virtual CSymbolInfo *SymbolInfo(void) const {return(GetPointer(m_symbol));}
+   virtual JTick    *Tick(void) const {return(GetPointer(m_tick));}
+   virtual JTimes   *Times(void) const {return(GetPointer(m_times));}
    virtual void      AsyncMode(const bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
    virtual void      Comment(const string comment){m_comment=comment;}
@@ -132,7 +135,7 @@ public:
    virtual void      DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    virtual datetime  Expiration(void) const {return(m_expiration);}
    virtual void      Expiration(const datetime expiration) {m_expiration=expiration;}
-   virtual void      LastTradeRates(MqlTick &tick) {m_last_trade_data = tick;}
+   virtual void      LastTradeRates(MqlTick &tick) {m_last_trade_data=tick;}
    virtual datetime  LastTradeTime(void) const {return(m_last_trade_data.time);}
    virtual datetime  LastTradeBid(void) const {return(m_last_trade_data.bid);}
    virtual datetime  LastTradeAsk(void) const {return(m_last_trade_data.ask);}
@@ -274,8 +277,8 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitComponents(void)
   {
-   bool result = InitOrders()&&InitOrdersHistory()&&InitSignals()&&InitStops()&&InitAccount()&&InitMoneys()&&InitTimes();
-   if (OfflineMode())
+   bool result=InitOrders() && InitOrdersHistory() && InitSignals() && InitStops() && InitAccount() && InitMoneys() && InitTimes();
+   if(OfflineMode())
       EventChartCustom(0,OFFLINE_TICK,0,0,"");
    return(result);
   }
@@ -511,27 +514,27 @@ bool JStrategyBase::Validate(void) const
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
-  {   
-   if (id==CHARTEVENT_CUSTOM+OFFLINE_TICK)
-   {
+  {
+   if(id==CHARTEVENT_CUSTOM+OFFLINE_TICK)
+     {
       OnTick();
       Sleep(m_offline_mode_delay);
       EventChartCustom(0,OFFLINE_TICK,0,0,"");
-   }
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::OnTick(void)
   {
-   if(!Active()) return(false);   
+   if(!Active()) return(false);
    if(!Refresh()) return(false);
    CreateEvent(EVENT_CLASS_STANDARD,ACTION_TICK);
    bool ret=false;
-   bool newtick = m_tick.IsNewTick(m_symbol);
-   bool newbar = IsNewBar();      
+   bool newtick= m_tick.IsNewTick(m_symbol);
+   bool newbar = IsNewBar();
    m_orders.OnTick();
-   ManageOrders();   
+   ManageOrders();
    int entry=0,exit=0;
    CheckSignals(entry,exit);
    AddComment(TimeToStr(LastTickTime(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
@@ -543,20 +546,20 @@ bool JStrategyBase::OnTick(void)
    AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
    AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
    if(newbar || (m_every_tick && newtick))
-     {      
+     {
       CloseOppositeOrders(entry);
       ManageOrders();
       if(!m_candle.TradeProcessed())
         {
          ret=TradeOpen(entry);
          if(ret)
-         {
+           {
             m_last_trade_data=m_tick.LastTick();
             m_candle.TradeProcessed(true);
-         }   
+           }
         }
      }
-   
+
    ManageOrdersHistory();
    if(CheckPointer(m_events)==POINTER_DYNAMIC)
       m_events.Run();
