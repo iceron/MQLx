@@ -631,8 +631,8 @@ double JStrategyBase::StopLossCalculate(const int res,const double price)
    if(CheckPointer(m_main_stop))
      {
       ENUM_ORDER_TYPE type;
-      if(res==CMD_LONG) type=ORDER_TYPE_BUY;
-      else if(res==CMD_SHORT) type=ORDER_TYPE_SELL;
+      if(res==CMD_BUY) type=ORDER_TYPE_BUY;
+      else if(res==CMD_SELL) type=ORDER_TYPE_SELL;
       return(m_main_stop.StopLossTicks(type,price));
      }
    return(0);
@@ -645,8 +645,8 @@ double JStrategyBase::TakeProfitCalculate(const int res,const double price)
    if(CheckPointer(m_main_stop))
      {
       ENUM_ORDER_TYPE type;
-      if(res==CMD_LONG) type=ORDER_TYPE_BUY;
-      else if(res==CMD_SHORT) type=ORDER_TYPE_SELL;
+      if(res==CMD_BUY) type=ORDER_TYPE_BUY;
+      else if(res==CMD_SELL) type=ORDER_TYPE_SELL;
       return(m_main_stop.TakeProfitTicks(type,price));
      }
    return(0);
