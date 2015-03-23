@@ -199,7 +199,7 @@ void JOrderStop::Check(double &volume)
 bool JOrderStop::ModifyStopLoss(const double stoploss)
   {
    bool modify=false;
-   if(m_stop.Pending())
+   if(m_stop.Pending() && !m_stop.Main())
       modify=m_stop.OrderModify(m_stoploss_ticket,stoploss);
    else if(m_stop.Main() && !m_stop.Virtual())
       modify=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
