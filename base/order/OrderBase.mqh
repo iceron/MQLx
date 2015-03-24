@@ -67,7 +67,7 @@ public:
    virtual bool      CloseStops(void);
    virtual int       Compare(const CObject *node,const int mode=0) const;
    //--- output
-   virtual string    OrderTypeToString();
+   virtual string    OrderTypeToString() const;
    //--- static methods
    static bool       IsOrderTypeLong(const ENUM_ORDER_TYPE type);
    static bool       IsOrderTypeShort(const ENUM_ORDER_TYPE type);
@@ -185,7 +185,7 @@ void JOrderBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION actio
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-string JOrderBase::OrderTypeToString(void)
+string JOrderBase::OrderTypeToString(void) const
   {
    switch(OrderType())
      {
