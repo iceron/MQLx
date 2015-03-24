@@ -73,7 +73,7 @@ int JExpertBase::OrdersTotal(void) const
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JExpertBase::OnTick(void)
-  {
+  {   
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {

@@ -125,17 +125,13 @@ int JSignalsBase::CheckEntry() const
       if(signal==NULL) continue;
       if(signal.ExitSignal()) continue;
       int ret=signal.CheckSignal();
-      if(ret==CMD_VOID)
+      if(ret==CMD_VOID || ret==CMD_ALL || ret==CMD_NEUTRAL)
         {
-         return(CMD_VOID);
-        }
-      if(ret==CMD_ALL)
-        {
-         return(CMD_ALL);
+         return(ret);
         }
       if(res>0 && ret!=res)
         {
-         return (CMD_VOID);
+         return(CMD_NEUTRAL);
         }
       if(ret>0) res=ret;
      }
@@ -153,17 +149,13 @@ int JSignalsBase::CheckExit() const
       if(signal==NULL) continue;
       if(!signal.ExitSignal()) continue;
       int ret=signal.CheckSignal();
-      if(ret==CMD_VOID)
+      if(ret==CMD_VOID || ret==CMD_ALL || ret==CMD_NEUTRAL)
         {
-         return(CMD_VOID);
-        }
-      if(ret==CMD_ALL)
-        {
-         return(CMD_ALL);
+         return(ret);
         }
       if(res>0 && ret!=res)
         {
-         return (CMD_VOID);
+         return (CMD_NEUTRAL);
         }
       if(ret>0) res=ret;
      }
