@@ -190,9 +190,9 @@ protected:
    virtual void      CheckClosedOrders(void);
    virtual void      CheckOldStops(void);
    virtual bool      CloseOrder(JOrder *order,const int index) {return(true);}
-   virtual void      CloseOrders(const int res);
+   virtual void      CloseOrders(const int entry,const int exit);
    virtual bool      CloseStops(void);
-   virtual void      CloseOppositeOrders(const int res);
+   virtual void      CloseOppositeOrders(const int entry,const int exit);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    virtual bool      IsNewBar(void);
@@ -547,7 +547,7 @@ bool JStrategyBase::OnTick(void)
    AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
    if(newbar || (m_every_tick && newtick))
      {
-      CloseOppositeOrders(entry);
+      CloseOppositeOrders(entry,exit);
       ManageOrders();
       if(!m_candle.TradeProcessed())
         {
@@ -661,22 +661,23 @@ bool JStrategyBase::CloseStops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategyBase::CloseOppositeOrders(const int res)
+JStrategyBase::CloseOppositeOrders(const int entry,const int exit)
   {
    if(m_orders.Total()==0) return;
    if(m_position_reverse)
-      CloseOrders(res);
+      CloseOrders(entry,exit);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategyBase::CloseOrders(const int res)
+JStrategyBase::CloseOrders(const int entry,const int exit)
   {
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
      {
       JOrder *order=m_orders.At(i);
-      if(JSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) res))
+      if((JSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) entry) && m_position_reverse) ||
+         (JSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) exit)))
         {
          CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_CLOSE,order);
          if(CloseOrder(order,i))

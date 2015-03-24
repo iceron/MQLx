@@ -98,8 +98,8 @@ bool JSignalsBase::CheckSignals(int &entry,int &exit)
    exit = CheckExit();
    if(m_reverse)
      {
-      JSignal::SignalReverse(entry);
-      JSignal::SignalReverse(exit);
+      entry = JSignal::SignalReverse(entry);
+      exit = JSignal::SignalReverse(exit);
      }
    if(m_new_signal)
       if(entry==m_last_entry)
@@ -125,7 +125,8 @@ int JSignalsBase::CheckEntry() const
       if(signal==NULL) continue;
       if(signal.ExitSignal()) continue;
       int ret=signal.CheckSignal();
-      if(ret==CMD_VOID || ret==CMD_ALL || ret==CMD_NEUTRAL)
+      if (ret==CMD_ALL) continue;
+      if(ret==CMD_VOID || ret==CMD_NEUTRAL)
         {
          return(ret);
         }
@@ -149,7 +150,8 @@ int JSignalsBase::CheckExit() const
       if(signal==NULL) continue;
       if(!signal.ExitSignal()) continue;
       int ret=signal.CheckSignal();
-      if(ret==CMD_VOID || ret==CMD_ALL || ret==CMD_NEUTRAL)
+      if (ret==CMD_ALL) continue;
+      if(ret==CMD_VOID || ret==CMD_NEUTRAL)
         {
          return(ret);
         }
