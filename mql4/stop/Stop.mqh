@@ -111,7 +111,7 @@ bool JStop::CloseStop(JOrder *order,JOrderStop *orderstop,const double price)
    int ticket=(int) order.Ticket();
    if(m_stop_type==STOP_TYPE_VIRTUAL)
      {
-      double lotsize=LotSizeCalculate(order,orderstop);
+      double lotsize=MathMin(order.Volume(),LotSizeCalculate(order,orderstop));
       res=m_trade.OrderClose(ticket,lotsize,price);
       if(res)
         {
