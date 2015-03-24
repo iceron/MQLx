@@ -66,6 +66,8 @@ public:
    //--- archiving
    virtual bool      CloseStops(void);
    virtual int       Compare(const CObject *node,const int mode=0) const;
+   //--- output
+   virtual string    OrderTypeToString();
    //--- static methods
    static bool       IsOrderTypeLong(const ENUM_ORDER_TYPE type);
    static bool       IsOrderTypeShort(const ENUM_ORDER_TYPE type);
@@ -82,7 +84,7 @@ JOrderBase::JOrderBase(void) : m_activate(true),
                                m_type(0),
                                m_volume(0.0),
                                m_volume_initial(0.0)
-  {   
+  {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -109,12 +111,12 @@ bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops)
 void JOrderBase::CreateStops(JStops *stops)
   {
    if(CheckPointer(stops)==POINTER_INVALID)
-      return;   
+      return;
    int total=stops.Total();
    if(total>0)
-     {      
+     {
       if(CheckPointer(m_order_stops)==POINTER_INVALID)
-         m_order_stops = new JOrderStops();
+         m_order_stops=new JOrderStops();
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE,GetPointer(this),stops);
       for(int i=0;i<total;i++)
         {
@@ -131,7 +133,7 @@ void JOrderBase::CreateStops(JStops *stops)
 //+------------------------------------------------------------------+
 void JOrderBase::CheckStops(void)
   {
-   if (m_order_stops!=NULL)
+   if(m_order_stops!=NULL)
       m_order_stops.Check(m_volume);
   }
 //+------------------------------------------------------------------+
@@ -139,19 +141,19 @@ void JOrderBase::CheckStops(void)
 //+------------------------------------------------------------------+
 bool JOrderBase::CloseStops(void)
   {
-   if (m_order_stops!=NULL)
+   if(m_order_stops!=NULL)
       return(m_order_stops.Close());
    return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JOrderBase::Compare(const CObject *node,const int mode=0)  const
+int JOrderBase::Compare(const CObject *node,const int mode=0) const
   {
    const JOrder *order=node;
-   if (Ticket()>order.Ticket())
+   if(Ticket()>order.Ticket())
       return(1);
-   if (Ticket()<order.Ticket())
+   if(Ticket()<order.Ticket())
       return(-1);
    return(0);
   }
@@ -179,6 +181,22 @@ void JOrderBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION actio
   {
    if(m_events!=NULL)
       m_events.CreateEvent(type,action,message_add);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string JOrderBase::OrderTypeToString(void)
+  {
+   switch(OrderType())
+     {
+      case ORDER_TYPE_BUY: return("BUY");
+      case ORDER_TYPE_SELL: return("SELL");
+      case ORDER_TYPE_BUY_LIMIT: return("BUY LIMIT");
+      case ORDER_TYPE_BUY_STOP: return("BUY STOP");
+      case ORDER_TYPE_SELL_LIMIT: return("SELL LIMIT");
+      case ORDER_TYPE_SELL_STOP: return("SELL STOP");
+     }
+   return(NULL);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
