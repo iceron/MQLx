@@ -279,7 +279,7 @@ bool JStrategyBase::InitComponents(void)
   {
    bool result=InitOrders() && InitOrdersHistory() && InitSignals() && InitStops() && InitAccount() && InitMoneys() && InitTimes();
    if(OfflineMode())
-      EventChartCustom(0,OFFLINE_TICK,0,0,"");
+      EventChartCustom(0,OFFLINE_TICK,0,0,m_symbol.Name());
    return(result);
   }
 //+------------------------------------------------------------------+
@@ -515,11 +515,11 @@ bool JStrategyBase::Validate(void) const
 //+------------------------------------------------------------------+
 void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
   {
-   if(id==CHARTEVENT_CUSTOM+OFFLINE_TICK)
+   if(id==CHARTEVENT_CUSTOM+OFFLINE_TICK && StringCompare(sparam,m_symbol.Name())==0)
      {
       OnTick();
       Sleep(m_offline_mode_delay);
-      EventChartCustom(0,OFFLINE_TICK,0,0,"");
+      EventChartCustom(0,OFFLINE_TICK,0,0,m_symbol.Name());
      }
   }
 //+------------------------------------------------------------------+
