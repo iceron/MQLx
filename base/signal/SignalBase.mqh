@@ -28,7 +28,7 @@ protected:
    JSignals         *m_signals;
    JEvent           *m_event;
 public:
-                     JSignalBase(void);
+                     JSignalBase(const bool enable=false,const bool exit=false);
                     ~JSignalBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_SIGNAL);}
    //--- initialization
@@ -66,7 +66,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignalBase::JSignalBase(void) : m_activate(true),
+JSignalBase::JSignalBase(const bool enable=false,const bool exit=false) : m_activate(true),
                                  m_name(NULL),
                                  m_signal(CMD_NEUTRAL),
                                  m_signal_valid(CMD_VOID),
@@ -77,6 +77,8 @@ JSignalBase::JSignalBase(void) : m_activate(true),
    if(!m_empty_value.IsSorted())
       m_empty_value.Sort();
    AddEmptyValue(0.0);
+   Active(enable);
+   ExitSignal(exit);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
