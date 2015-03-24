@@ -72,7 +72,7 @@ protected:
 //|                                                                  |
 //+------------------------------------------------------------------+
 JMoneyBase::JMoneyBase(void) : m_activate(true),
-                               m_update(MONEY_UPDATE_NONE),
+                               m_update(MONEY_UPDATE_ALWAYS),
                                m_volume(0.2),
                                m_percent(0.0),
                                m_volume_base(0.0),
@@ -144,7 +144,7 @@ double JMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const do
      {
       switch(m_update)
         {
-         case(MONEY_UPDATE_NONE):
+         case(MONEY_UPDATE_ALWAYS):
            {
             UpdateLotSize(price,type,sl);
             break;
@@ -155,7 +155,7 @@ double JMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const do
                UpdateLotSize(price,type,sl);
             break;
            }
-         case(MONEY_UPDATE_MARGIN):
+         case(MONEY_UPDATE_BALANCE):
            {
             if(UpdateByMargin())
                UpdateLotSize(price,type,sl);

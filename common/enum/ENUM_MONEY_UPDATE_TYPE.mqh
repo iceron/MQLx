@@ -10,8 +10,8 @@
 //+------------------------------------------------------------------+
 enum ENUM_MONEY_UPDATE_TYPE
   {
-   MONEY_UPDATE_NONE,
+   MONEY_UPDATE_ALWAYS,
    MONEY_UPDATE_PERIOD,
-   MONEY_UPDATE_MARGIN,
+   MONEY_UPDATE_BALANCE,
   };
 //+------------------------------------------------------------------+
