@@ -533,8 +533,7 @@ void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &d
 bool JStrategyBase::OnTick(void)
   {
    if(!Active()) return(false);
-   if(!Refresh()) return(false);
-   CreateEvent(EVENT_CLASS_STANDARD,ACTION_TICK);
+   if(!Refresh()) return(false);   
    bool ret=false;
    bool newtick= m_tick.IsNewTick(m_symbol);
    bool newbar = IsNewBar();

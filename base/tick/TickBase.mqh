@@ -15,6 +15,7 @@ class JTickBase : public CObject
 protected:
    MqlTick           m_last;
    CSymbolInfo      *m_symbol;
+   JEvents          *m_events;
 public:
                      JTickBase(void);
                     ~JTickBase(void);
@@ -27,6 +28,8 @@ public:
    virtual bool      IsNewTick(CSymbolInfo *symbol);
 protected:
    virtual bool      Compare(MqlTick &current);
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -52,14 +55,15 @@ bool JTickBase::IsNewTick(CSymbolInfo *symbol)
   {
    if(symbol!=NULL)
      {
-      if (CheckPointer(m_symbol)==POINTER_INVALID)
-         m_symbol = symbol;
+      if(CheckPointer(m_symbol)==POINTER_INVALID)
+         m_symbol=symbol;
       MqlTick current;
       if(SymbolInfoTick(symbol.Name(),current))
         {
          if(Compare(current))
            {
             m_last=current;
+            CreateEvent(EVENT_CLASS_STANDARD,ACTION_TICK);
             return(true);
            }
         }
@@ -72,6 +76,22 @@ bool JTickBase::IsNewTick(CSymbolInfo *symbol)
 bool JTickBase::Compare(MqlTick &current)
   {
    return(m_last.time==0 || m_last.time<current.time);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JTickBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
+  {
+   if(m_events!=NULL)
+      m_events.CreateEvent(type,action,object1,object2,object3);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JTickBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
+  {
+   if(m_events!=NULL)
+      m_events.CreateEvent(type,action,message_add);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
