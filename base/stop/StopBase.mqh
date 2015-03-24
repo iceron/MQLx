@@ -308,7 +308,7 @@ bool JStopBase::CloseStop(JOrder *order,JOrderStop *orderstop,const double price
    ENUM_ORDER_TYPE type=order.OrderType();
    if(m_stop_type==STOP_TYPE_VIRTUAL)
      {
-      double lotsize=LotSizeCalculate(order,orderstop);
+      double lotsize=MathMin(order.Volume(),LotSizeCalculate(order,orderstop));
       if(type==ORDER_TYPE_BUY)
          res=m_trade.Sell(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
       else if(type==ORDER_TYPE_SELL)
