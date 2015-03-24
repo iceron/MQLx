@@ -104,11 +104,11 @@ bool JMoneyBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 bool JMoneyBase::Validate(void) const
   {
-   if (m_volume_base>0)
-   {
+   if(m_volume_base>0)
+     {
       Print("invalid volume: "+(string)m_volume_base);
       return(false);
-   }   
+     }
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -116,7 +116,7 @@ bool JMoneyBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool JMoneyBase::InitSymbol(CSymbolInfo *symbol)
   {
-   if (symbol==NULL) return(false);
+   if(symbol==NULL) return(false);
    m_symbol=symbol;
    return(CheckPointer(m_symbol));
   }
@@ -140,23 +140,27 @@ double JMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const do
   {
    if(!Active()) return(0.0);
    if(m_volume==0.0) UpdateLotSize(price,type,sl);
-   switch(m_update)
+   else
      {
-      case(MONEY_UPDATE_NONE):
+      switch(m_update)
         {
-         break;
-        }
-      case(MONEY_UPDATE_PERIOD):
-        {
-         if(UpdateByPeriod())
+         case(MONEY_UPDATE_NONE):
+           {
             UpdateLotSize(price,type,sl);
-         break;
-        }
-      case(MONEY_UPDATE_MARGIN):
-        {
-         if(UpdateByMargin())
-            UpdateLotSize(price,type,sl);
-         break;
+            break;
+           }
+         case(MONEY_UPDATE_PERIOD):
+           {
+            if(UpdateByPeriod())
+               UpdateLotSize(price,type,sl);
+            break;
+           }
+         case(MONEY_UPDATE_MARGIN):
+           {
+            if(UpdateByMargin())
+               UpdateLotSize(price,type,sl);
+            break;
+           }
         }
      }
    return(m_volume);
