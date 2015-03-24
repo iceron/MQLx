@@ -111,7 +111,7 @@ public:
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(const bool activate) {m_activate=activate;}
    //--- setters and getters   
-   virtual CAccountInfo *AccountInfo(void) const {return(GetPointer(m_account));}
+   virtual CAccountInfo *AccountInfo(void) const {return(GetPointer(m_account));}   
    virtual JCandle   *Candle(void) const {return(GetPointer(m_candle));}
    virtual JComments *Comments() {return(GetPointer(m_comments));}
    virtual JEvents  *Events(void) const {return(m_events);}
@@ -119,7 +119,7 @@ public:
    virtual JMoneys  *Moneys(void) const {return(m_moneys);}
    virtual JOrders  *Orders() const {return(GetPointer(m_orders));}
    virtual JOrders  *OrdersHistory() const {return(GetPointer(m_orders_history));}
-   virtual CArrayInt *OtherMagic() const {return(GetPointer(m_other_magic));}
+   virtual CArrayInt *OtherMagic() const {return(GetPointer(m_other_magic));}   
    virtual JSignals *Signals(void) const {return(GetPointer(m_signals));}
    virtual JStops   *Stops(void) const {return(GetPointer(m_stops));}
    virtual CSymbolInfo *SymbolInfo(void) const {return(GetPointer(m_symbol));}
@@ -154,6 +154,8 @@ public:
    virtual void      MaxOrdersHistory(const int max) {m_max_orders_history=max;}
    virtual bool      OfflineMode(void) const {return(m_offline_mode);}
    virtual void      OfflineMode(const bool mode) {m_offline_mode=mode;}
+   virtual int       OfflineModeDelay() const {return(m_offline_mode_delay);}
+   virtual void      OfflineModeDelay(const int delay){m_offline_mode_delay=delay;}
    virtual int       OrdersTotal(void) const {return(m_orders.Total());}
    virtual int       OrdersHistoryTotal(void) const {return(m_orders_history.Total());}
    virtual double    PointsAdjust(void) const {return(m_points_adjust);}
@@ -517,8 +519,11 @@ void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &d
   {
    if(id==CHARTEVENT_CUSTOM+OFFLINE_TICK && StringCompare(sparam,m_symbol.Name())==0)
      {
-      OnTick();
-      Sleep(m_offline_mode_delay);
+      while(true && !IsStopped())
+        {
+         OnTick();
+         Sleep(m_offline_mode_delay);
+        }
       EventChartCustom(0,OFFLINE_TICK,0,0,m_symbol.Name());
      }
   }
