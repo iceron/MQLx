@@ -17,6 +17,7 @@ protected:
    bool              m_trade_processed;
    MqlRates          m_last;
    CSymbolInfo      *m_symbol;
+   JEvents          *m_events;
 public:
                      JCandleBase(void);
                     ~JCandleBase(void);
@@ -29,6 +30,9 @@ public:
    virtual void      TradeProcessed(bool processed) {m_trade_processed=processed;}
    virtual bool      IsNewCandle(CSymbolInfo *symbol,const ENUM_TIMEFRAMES period);
    virtual bool      Compare(MqlRates &rates) const;
+protected:
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
+   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
   };
 //+------------------------------------------------------------------+
 JCandleBase::JCandleBase(void) : m_wait_for_new(false),
@@ -65,10 +69,11 @@ bool JCandleBase::IsNewCandle(CSymbolInfo *symbol,const ENUM_TIMEFRAMES period)
       if(m_wait_for_new && m_last.time==0)
          m_last=rates[0];
       else if(Compare(rates[0]))
-        {         
+        {
          result=true;
          m_trade_processed=false;
          m_last=rates[0];
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_CANDLE);
         }
      }
    return(result);
@@ -81,6 +86,22 @@ bool JCandleBase::Compare(MqlRates &rates) const
    return(m_last.time==0 || m_last.time!=rates.time ||
           (m_last.close/m_symbol.TickSize())!=(rates.close/m_symbol.TickSize()) || 
           (m_last.open/m_symbol.TickSize())!=(rates.open/m_symbol.TickSize()));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JCandleBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
+  {
+   if(m_events!=NULL)
+      m_events.CreateEvent(type,action,object1,object2,object3);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JCandleBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
+  {
+   if(m_events!=NULL)
+      m_events.CreateEvent(type,action,message_add);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -803,12 +803,7 @@ void JStrategyBase::AddOtherMagicString(const string &magics[])
 //+------------------------------------------------------------------+
 bool JStrategyBase::IsNewBar(void)
   {
-   if(m_candle.IsNewCandle(m_symbol,m_period))
-     {
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_CANDLE);
-      return(true);
-     }
-   return(false);
+   return(m_candle.IsNewCandle(m_symbol,m_period));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
