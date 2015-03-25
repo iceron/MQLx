@@ -89,9 +89,11 @@ bool JStrategy::TradeOpen(const int res)
    bool ret=false;   
    int trades_total = TradesTotal();
    int orders_total = OrdersTotal();   
+   ENUM_ORDER_TYPE type=JSignal::SignalToOrderType(res); 
+   if (!IsPositionAllowed(type))
+      return(true);
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
-     {
-      ENUM_ORDER_TYPE type=JSignal::SignalToOrderType(res); 
+     {      
       double price=PriceCalculate(type);
       double sl=0,tp=0;                
       if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)

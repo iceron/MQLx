@@ -41,6 +41,8 @@ protected:
    int               m_sleep_error;
    int               m_max_orders_history;
    int               m_history_count;
+   bool              m_long_allowed;
+   bool              m_short_allowed;
    //--- signal parameters
    bool              m_every_tick;
    ENUM_EXECUTION_MODE m_exec_mode;
@@ -113,7 +115,7 @@ public:
    //--- setters and getters   
    virtual CAccountInfo *AccountInfo(void) const {return(GetPointer(m_account));}
    virtual JCandle   *Candle(void) const {return(GetPointer(m_candle));}
-   virtual JComments *Comments() {return(GetPointer(m_comments));}
+   virtual JComments *Comments() const {return(GetPointer(m_comments));}
    virtual JEvents  *Events(void) const {return(m_events);}
    virtual JStop    *MainStop(void) const {return(m_main_stop);}
    virtual JMoneys  *Moneys(void) const {return(m_moneys);}
@@ -130,12 +132,16 @@ public:
    virtual void      Comment(const string comment){m_comment=comment;}
    virtual void      ChartComment(const bool enable=true);
    virtual void      AddComment(const string comment);
-   virtual void      DisplayComment(void);
+   virtual void      DisplayComment(void) const;
    virtual int       DigitsAdjust(void) const {return(m_digits_adjust);}
    virtual void      DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    virtual datetime  Expiration(void) const {return(m_expiration);}
    virtual void      Expiration(const datetime expiration) {m_expiration=expiration;}
    virtual void      LastTradeRates(MqlTick &tick) {m_last_trade_data=tick;}
+   virtual bool      EnableLong(void) const {return(m_long_allowed);}
+   virtual void      EnableLong(bool allowed){m_long_allowed=allowed;}
+   virtual bool      EnableShort(void) const {return(m_short_allowed);}
+   virtual void      EnableShort(bool allowed){m_short_allowed=allowed;}
    virtual datetime  LastTradeTime(void) const {return(m_last_trade_data.time);}
    virtual datetime  LastTradeBid(void) const {return(m_last_trade_data.bid);}
    virtual datetime  LastTradeAsk(void) const {return(m_last_trade_data.ask);}
@@ -185,7 +191,7 @@ public:
    virtual void      Deinit(const int reason=0);
 protected:
    //--- signal processing
-   virtual bool      CheckSignals(int &entry,int &exit) const;
+   virtual bool      CheckSignals(int &entry,int &exit) const;   
    //--- order processing   
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(JOrder *order);
@@ -198,6 +204,7 @@ protected:
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    virtual bool      IsNewBar(void);
+   virtual bool      IsPositionAllowed(ENUM_ORDER_TYPE type) const;
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
    virtual void      ManageOrders(void);
    virtual void      ManageOrdersHistory(void);
@@ -231,6 +238,8 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_sleep_error(500),
                                      m_max_orders_history(100),
                                      m_history_count(0),
+                                     m_long_allowed(true),
+                                     m_short_allowed(true),
                                      m_every_tick(true),
                                      m_exec_mode(MODE_TRADE),
                                      m_max_orders(1),
@@ -394,7 +403,7 @@ void JStrategyBase::AddComment(const string comment)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategyBase::DisplayComment(void)
+void JStrategyBase::DisplayComment(void) const
   {
    if(CheckPointer(m_comments)==POINTER_DYNAMIC)
       m_comments.Display();
@@ -770,9 +779,17 @@ bool JStrategyBase::CheckSignals(int &entry,int &exit) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool JStrategyBase::IsPositionAllowed(ENUM_ORDER_TYPE type) const
+  {
+   return((JOrder::IsOrderTypeLong(type) && EnableLong()) ||
+          (JOrder::IsOrderTypeShort(type) && EnableShort()));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategyBase::Refresh(void)
   {
-   if(!CheckPointer(m_symbol)) 
+   if(!CheckPointer(m_symbol))
       return(false);
    if(!m_symbol.RefreshRates())
       return(false);
