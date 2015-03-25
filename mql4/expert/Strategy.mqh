@@ -87,7 +87,7 @@ bool JStrategy::TradeOpen(const int res)
   {
    if(res<=0) return(false);
    bool ret=false;   
-   int trades_total =TradesTotal();
+   int trades_total = TradesTotal();
    int orders_total = OrdersTotal();   
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
@@ -97,7 +97,7 @@ bool JStrategy::TradeOpen(const int res)
       if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
         {
           sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(type,price):m_main_stop.StopLossCalculate(type,price);
-         tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(type,price):m_main_stop.TakeProfitCalculate(type,price);
+          tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(type,price):m_main_stop.TakeProfitCalculate(type,price);
         }
       double lotsize=LotSizeCalculate(price,ORDER_TYPE_BUY,StopLossCalculate(res,price));
       ret=SendOrder(type,lotsize,price,sl,tp);

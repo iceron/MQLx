@@ -635,12 +635,7 @@ bool JStrategyBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,co
 double JStrategyBase::StopLossCalculate(const int res,const double price)
   {
    if(CheckPointer(m_main_stop))
-     {
-      ENUM_ORDER_TYPE type;
-      if(res==CMD_BUY) type=ORDER_TYPE_BUY;
-      else if(res==CMD_SELL) type=ORDER_TYPE_SELL;
-      return(m_main_stop.StopLossTicks(type,price));
-     }
+      return(m_main_stop.StopLossTicks(ORDER_TYPE_BUY,price));
    return(0);
   }
 //+------------------------------------------------------------------+
