@@ -111,7 +111,7 @@ public:
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(const bool activate) {m_activate=activate;}
    //--- setters and getters   
-   virtual CAccountInfo *AccountInfo(void) const {return(GetPointer(m_account));}   
+   virtual CAccountInfo *AccountInfo(void) const {return(GetPointer(m_account));}
    virtual JCandle   *Candle(void) const {return(GetPointer(m_candle));}
    virtual JComments *Comments() {return(GetPointer(m_comments));}
    virtual JEvents  *Events(void) const {return(m_events);}
@@ -119,7 +119,7 @@ public:
    virtual JMoneys  *Moneys(void) const {return(m_moneys);}
    virtual JOrders  *Orders() const {return(GetPointer(m_orders));}
    virtual JOrders  *OrdersHistory() const {return(GetPointer(m_orders_history));}
-   virtual CArrayInt *OtherMagic() const {return(GetPointer(m_other_magic));}   
+   virtual CArrayInt *OtherMagic() const {return(GetPointer(m_other_magic));}
    virtual JSignals *Signals(void) const {return(GetPointer(m_signals));}
    virtual JStops   *Stops(void) const {return(GetPointer(m_stops));}
    virtual CSymbolInfo *SymbolInfo(void) const {return(GetPointer(m_symbol));}
@@ -259,10 +259,8 @@ JStrategyBase::~JStrategyBase(void)
 bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,bool every_tick=true,int magic=0,bool one_trade_per_candle=true,bool position_reverse=true)
   {
    if(m_symbol==NULL)
-     {
       if((m_symbol=new CSymbolInfo)==NULL)
          return(false);
-     }
    if(!m_symbol.Name(symbol))
       return(false);
    m_period=period;
@@ -517,14 +515,18 @@ bool JStrategyBase::Validate(void) const
 //+------------------------------------------------------------------+
 void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
   {
-   if(id==CHARTEVENT_CUSTOM+OFFLINE_TICK && StringCompare(sparam,m_symbol.Name())==0)
+   if(id==CHARTEVENT_CUSTOM+OFFLINE_TICK)
      {
-      while(true && !IsStopped())
+      string name=CheckPointer(m_symbol)?m_symbol.Name():Symbol();
+      if(StringCompare(sparam,name)==0)
         {
-         OnTick();
-         Sleep(m_offline_mode_delay);
+         while(true && !IsStopped())
+           {
+            OnTick();
+            Sleep(m_offline_mode_delay);
+           }
+         EventChartCustom(0,OFFLINE_TICK,0,0,name);
         }
-      EventChartCustom(0,OFFLINE_TICK,0,0,m_symbol.Name());
      }
   }
 //+------------------------------------------------------------------+
@@ -533,7 +535,7 @@ void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &d
 bool JStrategyBase::OnTick(void)
   {
    if(!Active()) return(false);
-   if(!Refresh()) return(false);   
+   if(!Refresh()) return(false);
    bool ret=false;
    bool newtick= m_tick.IsNewTick(m_symbol);
    bool newbar = IsNewBar();
@@ -775,7 +777,8 @@ bool JStrategyBase::CheckSignals(int &entry,int &exit) const
 //+------------------------------------------------------------------+
 bool JStrategyBase::Refresh(void)
   {
-   if(m_symbol==NULL) return(false);
+   if(!CheckPointer(m_symbol)) 
+      return(false);
    if(!m_symbol.RefreshRates())
       return(false);
    return(true);

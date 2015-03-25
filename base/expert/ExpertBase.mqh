@@ -126,9 +126,11 @@ void JExpertBase::OnDeinit(const int reason=0)
   {
    for(int i=0;i<Total();i++)
      {
-      JStrategy *strat=At(i);
-      strat.Deinit(reason);
+      JStrategy *strat=Detach(i);
+      ADT::Delete(strat);
      }
+   if(m_data_max!=0)
+      Shutdown();
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
