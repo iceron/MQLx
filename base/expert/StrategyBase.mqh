@@ -41,6 +41,7 @@ protected:
    int               m_sleep_error;
    int               m_max_orders_history;
    int               m_history_count;
+   bool              m_trade_allowed;
    bool              m_long_allowed;
    bool              m_short_allowed;
    //--- signal parameters
@@ -138,6 +139,8 @@ public:
    virtual datetime  Expiration(void) const {return(m_expiration);}
    virtual void      Expiration(const datetime expiration) {m_expiration=expiration;}
    virtual void      LastTradeRates(MqlTick &tick) {m_last_trade_data=tick;}
+   virtual bool      EnableTrade(void) const {return(m_trade_allowed);}
+   virtual void      EnableTrade(bool allowed){m_trade_allowed=allowed;}
    virtual bool      EnableLong(void) const {return(m_long_allowed);}
    virtual void      EnableLong(bool allowed){m_long_allowed=allowed;}
    virtual bool      EnableShort(void) const {return(m_short_allowed);}
@@ -191,7 +194,7 @@ public:
    virtual void      Deinit(const int reason=0);
 protected:
    //--- signal processing
-   virtual bool      CheckSignals(int &entry,int &exit) const;   
+   virtual bool      CheckSignals(int &entry,int &exit) const;
    //--- order processing   
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(JOrder *order);
@@ -238,6 +241,7 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_sleep_error(500),
                                      m_max_orders_history(100),
                                      m_history_count(0),
+                                     m_trade_allowed(true),
                                      m_long_allowed(true),
                                      m_short_allowed(true),
                                      m_every_tick(true),
@@ -781,8 +785,8 @@ bool JStrategyBase::CheckSignals(int &entry,int &exit) const
 //+------------------------------------------------------------------+
 bool JStrategyBase::IsPositionAllowed(ENUM_ORDER_TYPE type) const
   {
-   return((JOrder::IsOrderTypeLong(type) && EnableLong()) ||
-          (JOrder::IsOrderTypeShort(type) && EnableShort()));
+   return(EnableTrade() && ((JOrder::IsOrderTypeLong(type) && EnableLong())
+          || (JOrder::IsOrderTypeShort(type) && EnableShort())));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
