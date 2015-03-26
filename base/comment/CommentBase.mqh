@@ -5,7 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include <Object.mqh>
+#include <Files\FileBin.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -18,6 +18,8 @@ public:
                     ~JCommentBase(void);
    virtual void      Init(string &comment);
    string            Text();
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -44,6 +46,22 @@ JCommentBase::Init(string &comment)
 string JCommentBase::Text(void)
   {
    return(m_comment);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JCommentBase::Backup(CFileBin *file)
+  {
+   file.WriteString(m_comment);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JCommentBase::Restore(CFileBin *file)
+  {
+   file.ReadString(m_comment);
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

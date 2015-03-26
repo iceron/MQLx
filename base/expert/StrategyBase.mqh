@@ -11,6 +11,7 @@
 #include "..\..\common\class\ADT.mqh"
 #include <Object.mqh>
 #include <Arrays\ArrayInt.mqh>
+#include <Files\FileBin.mqh>
 #include "..\lib\AccountInfo.mqh"
 #include "..\lib\SymbolInfo.mqh"
 #include "..\event\EventBase.mqh"
@@ -106,6 +107,7 @@ public:
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
    virtual bool      InitStops(void);
+   virtual bool      InitCandle(void);
    virtual bool      Validate(void) const;
    //container
    virtual JExpert  *GetContainer() const {return(GetPointer(m_expert));}
@@ -228,6 +230,9 @@ protected:
    virtual void      DeinitStops(void);
    virtual void      DeinitSymbol(void);
    virtual void      DeinitTrade(void);
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -290,7 +295,8 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitComponents(void)
   {
-   bool result=InitOrders() && InitOrdersHistory() && InitSignals() && InitStops() && InitAccount() && InitMoneys() && InitTimes();
+   bool result=InitOrders() && InitOrdersHistory() && InitSignals() && InitStops() && 
+   InitAccount() && InitMoneys() && InitTimes() && InitCandle();
    if(OfflineMode())
       EventChartCustom(0,OFFLINE_TICK,0,0,m_symbol.Name());
    return(result);
@@ -324,6 +330,14 @@ bool JStrategyBase::InitStops(void)
   {
    if(m_stops==NULL) return(true);
    return(m_stops.Init(GetPointer(this)));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::InitCandle(void)
+  {
+   return(m_candle.Init(GetPointer(m_symbol),
+          CheckPointer(m_events)?GetPointer(m_events):NULL));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -821,7 +835,7 @@ void JStrategyBase::AddOtherMagicString(const string &magics[])
 //+------------------------------------------------------------------+
 bool JStrategyBase::IsNewBar(void)
   {
-   return(m_candle.IsNewCandle(m_symbol,m_period));
+   return(m_candle.IsNewCandle(m_period));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -913,6 +927,101 @@ void JStrategyBase::DeinitEvents(void)
 void JStrategyBase::DeinitComments(void)
   {
    ADT::Delete(m_comments);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_activate);
+   file.WriteString(m_comment);
+   file.WriteLong(m_expiration);
+   file.WriteInteger(m_magic);
+   file.WriteDouble(m_lotsize);
+   file.WriteInteger(m_sleep_success);
+   file.WriteInteger(m_sleep_error);
+   file.WriteInteger(m_max_orders_history);
+   file.WriteInteger(m_history_count);
+   file.WriteChar(m_trade_allowed);
+   file.WriteChar(m_long_allowed);
+   file.WriteChar(m_short_allowed);
+   file.WriteChar(m_every_tick);
+   file.WriteInteger(m_exec_mode);
+   file.WriteInteger(m_max_orders);
+   file.WriteInteger(m_max_trades);
+   file.WriteChar(m_one_trade_per_candle);
+   file.WriteInteger(m_period);
+   file.WriteChar(m_position_reverse);
+   file.WriteChar(m_offline_mode);
+   file.WriteInteger(m_offline_mode_delay);
+   file.WriteInteger(m_digits_adjust);
+   file.WriteDouble(m_points_adjust);
+   file.WriteStruct(m_last_trade_data);
+   file.WriteObject(GetPointer(m_signals));
+   file.WriteObject(GetPointer(m_account));
+   file.WriteObject(GetPointer(m_symbol));
+   file.WriteObject(GetPointer(m_trade));
+   file.WriteObject(GetPointer(m_stops));
+   file.WriteObject(GetPointer(m_main_stop));
+   file.WriteObject(GetPointer(m_orders));
+   file.WriteObject(GetPointer(m_orders_history));
+   file.WriteObject(GetPointer(m_other_magic));
+   file.WriteObject(GetPointer(m_moneys));
+   file.WriteObject(GetPointer(m_times));
+   file.WriteObject(GetPointer(m_events));
+   file.WriteObject(GetPointer(m_comments));
+   file.WriteObject(GetPointer(m_tick));
+   file.WriteObject(GetPointer(m_candle));
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::Restore(CFileBin *file)
+  {
+   int temp_enum=0;
+   file.ReadChar(m_activate);
+   file.ReadString(m_comment);
+   file.ReadLong(m_expiration);
+   file.ReadInteger(m_magic);
+   file.ReadDouble(m_lotsize);
+   file.ReadInteger(m_sleep_success);
+   file.ReadInteger(m_sleep_error);
+   file.ReadInteger(m_max_orders_history);
+   file.ReadInteger(m_history_count);
+   file.ReadChar(m_trade_allowed);
+   file.ReadChar(m_long_allowed);
+   file.ReadChar(m_short_allowed);
+   file.ReadChar(m_every_tick);
+   file.ReadInteger(temp_enum);
+   m_exec_mode=(ENUM_EXECUTION_MODE) temp_enum;
+   file.ReadInteger(m_max_orders);
+   file.ReadInteger(m_max_trades);
+   file.ReadChar(m_one_trade_per_candle);
+   file.ReadInteger(temp_enum);
+   m_period=(ENUM_TIMEFRAMES) temp_enum;
+   file.ReadChar(m_position_reverse);
+   file.ReadChar(m_offline_mode);
+   file.ReadInteger(m_offline_mode_delay);
+   file.ReadInteger(m_digits_adjust);
+   file.ReadDouble(m_points_adjust);
+   file.ReadStruct(m_last_trade_data);
+   file.ReadObject(GetPointer(m_signals));
+   file.ReadObject(GetPointer(m_account));
+   file.ReadObject(GetPointer(m_symbol));
+   file.ReadObject(GetPointer(m_trade));
+   file.ReadObject(GetPointer(m_stops));
+   file.ReadObject(GetPointer(m_main_stop));
+   file.ReadObject(GetPointer(m_orders));
+   file.ReadObject(GetPointer(m_orders_history));
+   file.ReadObject(GetPointer(m_other_magic));
+   file.ReadObject(GetPointer(m_moneys));
+   file.ReadObject(GetPointer(m_times));
+   file.ReadObject(GetPointer(m_events));
+   file.ReadObject(GetPointer(m_comments));
+   file.ReadObject(GetPointer(m_tick));
+   file.ReadObject(GetPointer(m_candle));
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

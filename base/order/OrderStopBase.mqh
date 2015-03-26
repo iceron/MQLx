@@ -95,6 +95,9 @@ public:
    virtual bool      Update(void);
    //--- deinitialization 
    virtual bool      Deinit(void);
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
 protected:
    virtual bool      IsStopLossValid(const double stoploss) const;
    virtual bool      IsTakeProfitValid(const double takeprofit) const;
@@ -443,6 +446,58 @@ bool JOrderStopBase::Modify(const double stoploss,const double takeprofit)
       else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY,GetPointer(this));
      }
    return(stoploss_modified || takeprofit_modified);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopBase::Backup(CFileBin *file)
+  {  
+   file.WriteDouble(m_volume);
+   file.WriteDouble(m_volume_fixed);
+   file.WriteDouble(m_volume_percent);
+   file.WriteDouble(m_stoploss);
+   file.WriteDouble(m_takeprofit);
+   file.WriteDouble(m_stoploss_last);
+   file.WriteDouble(m_takeprofit_last);
+   file.WriteDouble(m_stoploss_initial);
+   file.WriteDouble(m_takeprofit_initial);
+   file.WriteLong(m_stoploss_ticket);
+   file.WriteLong(m_takeprofit_ticket);
+   file.WriteChar(m_stoploss_closed);
+   file.WriteChar(m_takeprofit_closed);
+   file.WriteInteger(m_stop_type);  
+   file.WriteObject(GetPointer(m_stop));
+   file.WriteObject(GetPointer(m_objentry));
+   file.WriteObject(GetPointer(m_objsl));
+   file.WriteObject(GetPointer(m_objtp));
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopBase::Restore(CFileBin *file)
+  {
+   int temp_int = 0;
+   file.ReadDouble(m_volume);
+   file.ReadDouble(m_volume_fixed);
+   file.ReadDouble(m_volume_percent);
+   file.ReadDouble(m_stoploss);
+   file.ReadDouble(m_takeprofit);
+   file.ReadDouble(m_stoploss_last);
+   file.ReadDouble(m_takeprofit_last);
+   file.ReadDouble(m_stoploss_initial);
+   file.ReadDouble(m_takeprofit_initial);
+   file.ReadLong(m_stoploss_ticket);
+   file.ReadLong(m_takeprofit_ticket);
+   file.ReadChar(m_stoploss_closed);
+   file.ReadChar(m_takeprofit_closed);
+   file.ReadInteger(temp_int);  
+   m_stop_type = (ENUM_STOP_TYPE)temp_int;
+   file.ReadObject(GetPointer(m_stop));
+   file.ReadObject(GetPointer(m_objentry));
+   file.ReadObject(GetPointer(m_objsl));
+   file.ReadObject(GetPointer(m_objtp));
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

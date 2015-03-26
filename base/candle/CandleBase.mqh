@@ -5,7 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include <Object.mqh>
+#include <Files\FileBin.mqh>
 #include "..\lib\SymbolInfo.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -21,6 +21,7 @@ protected:
 public:
                      JCandleBase(void);
                     ~JCandleBase(void);
+   virtual bool      Init(CSymbolInfo *symbol,JEvents *events);
    virtual double    LastTime() const {return(m_last.time);}
    virtual double    LastOpen() const {return(m_last.open);}
    virtual double    LastHigh() const {return(m_last.high);}
@@ -28,8 +29,10 @@ public:
    virtual double    LastClose() const {return(m_last.close);}
    virtual bool      TradeProcessed() const {return(m_trade_processed);}
    virtual void      TradeProcessed(bool processed) {m_trade_processed=processed;}
-   virtual bool      IsNewCandle(CSymbolInfo *symbol,const ENUM_TIMEFRAMES period);
+   virtual bool      IsNewCandle(const ENUM_TIMEFRAMES period);
    virtual bool      Compare(MqlRates &rates) const;
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
 protected:
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
@@ -56,15 +59,22 @@ JCandleBase::~JCandleBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JCandleBase::IsNewCandle(CSymbolInfo *symbol,const ENUM_TIMEFRAMES period)
+bool JCandleBase::Init(CSymbolInfo *symbol,JEvents *events)
+  {
+   m_symbol = symbol;
+   m_events = events;
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JCandleBase::IsNewCandle(const ENUM_TIMEFRAMES period)
   {
    bool result=false;
-   if(symbol!=NULL)
+   if(m_symbol!=NULL)
      {
-      if(CheckPointer(m_symbol)==POINTER_INVALID)
-         m_symbol=symbol;
       MqlRates rates[];
-      if(CopyRates(symbol.Name(),period,1,1,rates)==-1)
+      if(CopyRates(m_symbol.Name(),period,1,1,rates)==-1)
          return(false);
       if(m_wait_for_new && m_last.time==0)
          m_last=rates[0];
@@ -102,6 +112,26 @@ void JCandleBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION acti
   {
    if(m_events!=NULL)
       m_events.CreateEvent(type,action,message_add);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JCandleBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_wait_for_new);
+   file.WriteChar(m_trade_processed);
+   file.WriteStruct(m_last);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JCandleBase::Restore(CFileBin *file)
+  {
+   file.ReadChar(m_wait_for_new);
+   file.ReadChar(m_trade_processed);
+   file.ReadStruct(m_last);
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

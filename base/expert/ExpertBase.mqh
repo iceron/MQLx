@@ -6,6 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
+#include <Files\FileBin.mqh>
 #include "StrategyBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -30,6 +31,9 @@ public:
    virtual int       TradesTotal(void) const;
    //--- deinitialization
    virtual void      OnDeinit(const int reason=0);
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -73,7 +77,7 @@ int JExpertBase::OrdersTotal(void) const
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JExpertBase::OnTick(void)
-  {   
+  {
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
@@ -131,6 +135,24 @@ void JExpertBase::OnDeinit(const int reason=0)
      }
    if(m_data_max!=0)
       Shutdown();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JExpertBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_activate);
+   CArrayObj::Save(file.Handle());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JExpertBase::Restore(CFileBin *file)
+  {
+   file.ReadChar(m_activate);
+   CArrayObj::Load(file.Handle());
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

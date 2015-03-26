@@ -6,6 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include <ChartObjects\ChartObjectsLines.mqh>
+#include <Files\FileBin.mqh>
 class JStop;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -22,7 +23,9 @@ public:
    virtual double    GetPrice(const int point=0);
    virtual bool      Move(const double price);
    virtual bool      SetStyle(const ENUM_LINE_STYLE style);
-   virtual bool      SetColor(const color clr);     
+   virtual bool      SetColor(const color clr);   
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);  
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -63,6 +66,22 @@ bool JStopLineBase::SetColor(const color clr)
 bool JStopLineBase::SetStyle(const ENUM_LINE_STYLE style)
   {
    return(ObjectSetInteger(0,m_name,OBJPROP_STYLE,style));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStopLineBase::Backup(CFileBin *file)
+  {
+   CChartObjectHLine::Save(file.Handle());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStopLineBase::Restore(CFileBin *file)
+  {
+   CChartObjectHLine::Load(file.Handle());
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

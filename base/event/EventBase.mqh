@@ -49,6 +49,8 @@ public:
    virtual CObject *GetObject(ENUM_CLASS_TYPE type,int &idx);
    virtual bool      Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
    virtual bool      Execute(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -200,7 +202,20 @@ CObject *JEventBase::GetObject(ENUM_CLASS_TYPE type,int &idx)
      }
    return(NULL);
   }
-
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventBase::Backup(CFileBin *file)
+  {
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventBase::Restore(CFileBin *file)
+  {
+   return(true);
+  }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
 #include "..\..\mql5\event\Event.mqh"

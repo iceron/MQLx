@@ -7,6 +7,7 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
 #include <Arrays\ArrayInt.mqh>
+#include <Files\FileBin.mqh>
 #include "SignalBase.mqh"
 class JStrategy;
 //+------------------------------------------------------------------+
@@ -44,7 +45,9 @@ public:
    virtual int       LastValidEntry(void) const {return(m_last_entry);}
    virtual bool      Reverse(void) const{return(m_reverse);}
    virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
-
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -162,6 +165,32 @@ int JSignalsBase::CheckExit() const
       if(ret>0) res=ret;
      }
    return(res);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalsBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_activate);
+   file.WriteInteger(m_last_entry);
+   file.WriteInteger(m_last_exit);
+   file.WriteChar(m_new_signal);
+   file.WriteChar(m_reverse);
+   CArrayObj::Save(file.Handle());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalsBase::Restore(CFileBin *file)
+  {
+   file.ReadChar(m_activate);
+   file.ReadInteger(m_last_entry);
+   file.ReadInteger(m_last_exit);
+   file.ReadChar(m_new_signal);
+   file.ReadChar(m_reverse);
+   CArrayObj::Load(file.Handle());
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

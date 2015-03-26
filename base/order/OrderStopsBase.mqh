@@ -33,6 +33,9 @@ public:
    //--events
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -132,6 +135,20 @@ void JOrderStopsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION 
   {
    if(m_events!=NULL)
       m_events.CreateEvent(type,action,message_add);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopsBase::Backup(CFileBin *file)
+  {
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopsBase::Restore(CFileBin *file)
+  {
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

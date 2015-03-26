@@ -7,6 +7,7 @@
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_CMD.mqh"
 #include <Arrays\ArrayDouble.mqh>
+#include <Files\FileBin.mqh>
 #include "..\indicator\IndicatorsBase.mqh"
 class JStrategy;
 class JSignals;
@@ -62,6 +63,9 @@ public:
    static bool       IsSignalTypeShort(const ENUM_CMD type);
    static int        SignalReverse(const int signal);
    static ENUM_ORDER_TYPE SignalToOrderType(const int signal);
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -288,6 +292,36 @@ ENUM_ORDER_TYPE JSignalBase::SignalToOrderType(const int signal)
       case CMD_SELLSTOP:   return(ORDER_TYPE_SELL_STOP);
      }
    return(NULL);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_activate);
+   file.WriteString(m_name);
+   file.WriteInteger(m_signal);
+   file.WriteInteger(m_signal_valid);
+   file.WriteChar(m_reverse);
+   file.WriteChar(m_exit);
+   file.WriteObject(GetPointer(m_indicators));
+   file.WriteObject(GetPointer(m_empty_value));
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalBase::Restore(CFileBin *file)
+  {
+   file.ReadChar(m_activate);
+   file.ReadString(m_name);
+   file.ReadInteger(m_signal);
+   file.ReadInteger(m_signal_valid);
+   file.ReadChar(m_reverse);
+   file.ReadChar(m_exit);
+   file.ReadObject(GetPointer(m_indicators));
+   file.ReadObject(GetPointer(m_empty_value));
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
