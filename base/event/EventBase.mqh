@@ -207,6 +207,14 @@ CObject *JEventBase::GetObject(ENUM_CLASS_TYPE type,int &idx)
 //+------------------------------------------------------------------+
 bool JEventBase::Backup(CFileBin *file)
   {
+   file.WriteChar(m_activate);
+   file.WriteChar(m_instant);
+   file.WriteInteger(m_action);
+   file.WriteInteger(m_timestamp);
+   file.WriteString(m_subject);
+   file.WriteString(m_message);
+   file.WriteString(m_message_add);
+   file.WriteObject(GetPointer(m_objects));
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -214,6 +222,16 @@ bool JEventBase::Backup(CFileBin *file)
 //+------------------------------------------------------------------+
 bool JEventBase::Restore(CFileBin *file)
   {
+   int temp_datetime = 0;
+   file.ReadChar(m_activate);
+   file.ReadChar(m_instant);
+   file.ReadInteger(m_action);
+   file.ReadInteger(temp_datetime);
+   m_timestamp = (datetime) temp_datetime;
+   file.ReadString(m_subject);
+   file.ReadString(m_message);
+   file.ReadString(m_message_add);
+   file.ReadObject(GetPointer(m_objects));
    return(true);
   }
 //+------------------------------------------------------------------+

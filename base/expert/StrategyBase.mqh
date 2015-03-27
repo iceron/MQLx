@@ -1021,6 +1021,14 @@ bool JStrategyBase::Restore(CFileBin *file)
    file.ReadObject(GetPointer(m_comments));
    file.ReadObject(GetPointer(m_tick));
    file.ReadObject(GetPointer(m_candle));
+   
+   m_signals.SetContainer(GetPointer(this));
+   m_stops.SetContainer(GetPointer(this));
+   m_orders.SetContainer(GetPointer(this));
+   m_orders_history.SetContainer(GetPointer(this));
+   m_moneys.SetContainer(GetPointer(this));
+   m_times.SetContainer(GetPointer(this));
+   m_events.SetContainer(GetPointer(this));
    return(true);
   }
 //+------------------------------------------------------------------+

@@ -48,6 +48,7 @@ public:
    //--- recovery
    virtual bool      Backup(CFileBin *file);
    virtual bool      Restore(CFileBin *file);
+   virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -191,6 +192,15 @@ bool JSignalsBase::Restore(CFileBin *file)
    file.ReadChar(m_reverse);
    CArrayObj::Load(file.Handle());
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalsBase::CreateElement(const int index)
+  {
+   JSignal * signal = new JSignal();
+   signal.SetContainer(GetPointer(this));
+   return(Insert(GetPointer(signal),index));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

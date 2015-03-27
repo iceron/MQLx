@@ -12,16 +12,22 @@
 //+------------------------------------------------------------------+
 class JCommentsBase : public CList
   {
+protected:
+   bool              m_activate;
 public:
                      JCommentsBase(void);
                     ~JCommentsBase(void);
+   bool              Active(){return(m_activate);}
    virtual void      Display(void);
    virtual void      Concatenate(string &str,string comment);
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
+   virtual CObject  *CreateElement(void) {return(new JComment(""));}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCommentsBase::JCommentsBase(void)
+JCommentsBase::JCommentsBase(void) : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
@@ -51,6 +57,24 @@ JCommentsBase::Display(void)
 //+------------------------------------------------------------------+
 JCommentsBase::Concatenate(string &str,string comment)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JCommentsBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_activate);
+   CList::Save(file.Handle());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JCommentsBase::Restore(CFileBin *file)
+  {
+   file.ReadChar(m_activate);
+   CList::Load(file.Handle());
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -6,6 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
+#include <Files\FileBin.mqh>
 #include "TimeBase.mqh"
 class JStrategy;
 //+------------------------------------------------------------------+
@@ -29,6 +30,10 @@ public:
    virtual void      Active(const bool activate) {m_activate=activate;}
    //--- checking
    virtual bool      Evaluate(void) const;
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
+   virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -81,6 +86,33 @@ bool JTimesBase::Evaluate(void) const
          if(!time.Evaluate()) return(false);
      }
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTimesBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_activate);
+   CArrayObj::Save(file.Handle());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTimesBase::Restore(CFileBin *file)
+  {
+   file.ReadChar(m_activate);
+   CArrayObj::Load(file.Handle());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTimesBase::CreateElement(const int index)
+  {
+   JTime * time = new JTime();
+   time.SetContainer(GetPointer(this));
+   return(Insert(GetPointer(time),index));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

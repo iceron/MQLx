@@ -11,6 +11,7 @@
 class JStop : public JStopBase
   {
 public:
+                     JStop(void);
                      JStop(const string name);
                     ~JStop(void);
    virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const;
@@ -25,6 +26,14 @@ public:
 protected:
    virtual ulong     GetNewTicket(JOrder *order,JOrderStop *orderstop);
   };
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JStop::JStop(void)
+  {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
 //+------------------------------------------------------------------+
 JStop::JStop(const string name)
   {

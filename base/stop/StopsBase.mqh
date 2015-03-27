@@ -28,6 +28,10 @@ public:
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(const bool activate) {m_activate=activate;}
    virtual JStop    *Main();
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
+   virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -78,6 +82,33 @@ JStop *JStopsBase::Main()
       if(stop.Main()) return(stop);
      }
    return(NULL);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStopsBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_activate);
+   CArrayObj::Save(file.Handle());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStopsBase::Restore(CFileBin *file)
+  {
+   file.ReadChar(m_activate);
+   CArrayObj::Load(file.Handle());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStopsBase::CreateElement(const int index)
+  {
+   JStop * stop = new JStop();
+   stop.SetContainer(GetPointer(this));
+   return(Insert(GetPointer(stop),index));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

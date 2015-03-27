@@ -35,6 +35,9 @@ public:
    virtual void      TimeStart(const datetime start){m_time_start=start;}
    //--- checking
    virtual bool      Evaluate(void) const {return(true);}
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -57,6 +60,29 @@ JTimeBase::~JTimeBase(void)
 bool JTimeBase::Init(JStrategy *s,JTimes *times)
   {
    SetContainer(times);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTimeBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_activate);
+   file.WriteInteger(m_time_start);
+   file.WriteInteger(m_filter_type);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTimeBase::Restore(CFileBin *file)
+  {
+   int temp_enum = 0;
+   file.ReadChar(m_activate);
+   file.ReadInteger(temp_enum);
+   m_time_start = (datetime) temp_enum;
+   file.ReadInteger(temp_enum);
+   m_filter_type = (ENUM_TIME_FILTER_TYPE) temp_enum;
    return(true);
   }
 //+------------------------------------------------------------------+

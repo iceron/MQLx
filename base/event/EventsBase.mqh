@@ -40,6 +40,8 @@ public:
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    virtual void      DebugMode(bool debug=true);
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
 protected:
    virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);
    virtual bool      Deinit(void);
@@ -251,7 +253,7 @@ JEventsBase::DebugMode(bool debug=true)
 //+------------------------------------------------------------------+
 bool JEventsBase::Run(void)
   {
-   int total = m_current.Total();
+   int total= m_current.Total();
    for(int i=total-1;i>=0;i--)
      {
       JEvent *event=m_current.Detach(i);
@@ -314,6 +316,39 @@ void JEventsBase::Register(ENUM_EVENT_CLASS event_class,ENUM_ALERT_MODE alert_mo
          break;
         }
      }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventsBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_activate);
+   file.WriteString(m_sound_file);
+   file.WriteString(m_ftp_file);
+   file.WriteString(m_ftp_path);
+   file.WriteObject(GetPointer(m_standard));
+   file.WriteObject(GetPointer(m_error));
+   file.WriteObject(GetPointer(m_custom));
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JEventsBase::Restore(CFileBin *file)
+  {
+   file.ReadChar(m_activate);
+   file.ReadString(m_sound_file);
+   file.ReadString(m_ftp_file);
+   file.ReadString(m_ftp_path);
+   file.ReadObject(GetPointer(m_standard));
+   file.ReadObject(GetPointer(m_error));
+   file.ReadObject(GetPointer(m_custom));
+   for(int i=0;i<m_current.Total();i++)
+     {
+      JEvent *event=m_current.At(i);
+      event.SetContainer(GetPointer(this));
+     }
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

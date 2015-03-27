@@ -34,6 +34,7 @@ public:
    //--- recovery
    virtual bool      Backup(CFileBin *file);
    virtual bool      Restore(CFileBin *file);
+   virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -153,6 +154,15 @@ bool JExpertBase::Restore(CFileBin *file)
    file.ReadChar(m_activate);
    CArrayObj::Load(file.Handle());
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JExpertBase::CreateElement(const int index)
+  {
+   JStrategy * strat = new JStrategy();
+   strategy.SetContainer(GetPointer(this));
+   return(Insert(GetPointer(strat),index));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

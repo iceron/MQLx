@@ -12,6 +12,7 @@
 class JStop : public JStopBase
   {
 public:
+                     JStop(void);
                      JStop(const string name);
                     ~JStop(void);
    virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const;
@@ -21,6 +22,14 @@ public:
    virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop);
 
   };
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JStop::JStop(void)
+  {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
 //+------------------------------------------------------------------+
 JStop::JStop(const string name)
   {
@@ -119,7 +128,7 @@ double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 bool JStop::OpenStop(JOrder *order,JOrderStop *orderstop,double val)
   {
-   if (val==0) return(false);
+   if(val==0) return(false);
    bool res=false;
    double lotsize=LotSizeCalculate(order,orderstop);
    ENUM_ORDER_TYPE type=orderstop.MainTicketType();

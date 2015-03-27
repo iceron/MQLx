@@ -28,6 +28,10 @@ public:
    virtual void      Active(const bool activate) {m_activate=activate;}  
    //--- checking
    virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
+   virtual bool      CreateElement(const int index);
 protected:
 
   };
@@ -81,6 +85,38 @@ double JTrailsBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,co
         }
      }
    return(ret);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTrailsBase::Backup(CFileBin *file)
+  {
+   file.WriteChar(m_activate);
+   CArrayObj::Save(file.Handle());
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTrailsBase::Restore(CFileBin *file)
+  {
+   file.ReadChar(m_activate);
+   CArrayObj::Load(file.Handle());
+   for (int i=0;i<Total();i++)
+   {
+      JTrail *trail = At(i);
+      trail.SetContainer(GetPointer(this));
+   }
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTrailsBase::CreateElement(const int index)
+  {
+   JTrail * trail = new JTrail();
+   trail.SetContainer(GetPointer(this));
+   return(Insert(GetPointer(trail),index));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

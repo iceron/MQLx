@@ -36,6 +36,7 @@ public:
    //--- recovery
    virtual bool      Backup(CFileBin *file);
    virtual bool      Restore(CFileBin *file);
+   virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -141,6 +142,7 @@ void JOrderStopsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION 
 //+------------------------------------------------------------------+
 bool JOrderStopsBase::Backup(CFileBin *file)
   {
+   CArrayObj::Save(file.Handle());   
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -148,7 +150,17 @@ bool JOrderStopsBase::Backup(CFileBin *file)
 //+------------------------------------------------------------------+
 bool JOrderStopsBase::Restore(CFileBin *file)
   {
+   CArrayObj::Load(file.Handle());   
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopsBase::CreateElement(const int index)
+  {
+   JOrderStop * orderstop = new JOrderStop();
+   orderstop.SetContainer(GetPointer(this));
+   return(Insert(GetPointer(orderstop),index));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

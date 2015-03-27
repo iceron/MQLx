@@ -48,6 +48,7 @@ public:
    //--- recovery
    virtual bool      Backup(CFileBin *file);
    virtual bool      Restore(CFileBin *file);
+   virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -180,6 +181,15 @@ bool JOrdersBase::Restore(CFileBin *file)
    file.ReadObject(GetPointer(m_events));
    CArrayObj::Load(file.Handle());
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrdersBase::CreateElement(const int index)
+  {
+   JOrder * order = new JOrder();
+   order.SetContainer(GetPointer(this));
+   return(Insert(GetPointer(order),index));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
