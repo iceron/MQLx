@@ -161,7 +161,7 @@ bool JExpertBase::Restore(CFileBin *file)
 bool JExpertBase::CreateElement(const int index)
   {
    JStrategy * strat = new JStrategy();
-   strategy.SetContainer(GetPointer(this));
+   strat.SetContainer(GetPointer(this));
    return(Insert(GetPointer(strat),index));
   }
 //+------------------------------------------------------------------+

@@ -18,6 +18,7 @@ public:
                      JCommentsBase(void);
                     ~JCommentsBase(void);
    bool              Active(){return(m_activate);}
+   void              Active(bool active){m_activate = active;}
    virtual void      Display(void);
    virtual void      Concatenate(string &str,string comment);
    virtual bool      Backup(CFileBin *file);
