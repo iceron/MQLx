@@ -359,7 +359,7 @@ bool JEventErrorBase::Run(JEventRegistry *registry,string sound_file=NULL,string
 bool JEventErrorBase::Execute(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL)
   {
    if(registry.IsPrint(m_error))
-      Print(m_message+m_message_add);
+      PrintFormat(m_message+m_message_add);
    if(registry.IsSound(m_error))
       PlaySound(sound_file);
    if(registry.IsPopup(m_error))

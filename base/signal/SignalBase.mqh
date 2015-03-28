@@ -204,7 +204,7 @@ bool JSignalBase::IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD
            }
          default:
            {
-            Print(__FUNCTION__+": unknown order type");
+            PrintFormat(__FUNCTION__+": unknown order type");
            }
         }
      }

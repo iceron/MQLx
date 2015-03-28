@@ -70,7 +70,7 @@ bool JTimeFilterBase::Validate(void) const
    end=StructToTime(m_filter_end);
    if(end<start)
      {
-      Print("Invalid setting for start and end times.");
+      PrintFormat("Invalid setting for start and end times.");
       return(false);
      }
    return(true);

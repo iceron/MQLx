@@ -197,7 +197,7 @@ bool JStopBase::Validate(void) const
   {
    if (m_name==NULL)
    {
-      Print(__FUNCTION__+": Empty name for stop.");
+      PrintFormat(__FUNCTION__+": Empty name for stop.");
       return(false);
    }
    if (CheckPointer(m_trails))

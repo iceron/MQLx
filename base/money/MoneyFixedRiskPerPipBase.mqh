@@ -36,7 +36,7 @@ bool JMoneyFixedRiskPerPipBase::Validate(void) const
   {
    if (m_percent<=0)
    {
-      Print(__FUNCTION__+": invalid percentage: "+(string)m_percent);
+      PrintFormat(__FUNCTION__+": invalid percentage: "+(string)m_percent);
       return(false);
    }
    return(true);

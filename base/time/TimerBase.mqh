@@ -89,7 +89,7 @@ bool JTimerBase::Validate(void) const
   {
    if(m_total<=0)
      {
-      Print("Invalid time setting for timer");
+      PrintFormat("Invalid time setting for timer");
       return(false);
      }
    return(true);

@@ -109,7 +109,7 @@ bool JMoneyBase::Validate(void) const
   {
    if(m_volume_base>0)
      {
-      Print("invalid volume: "+(string)m_volume_base);
+      PrintFormat("invalid volume: "+(string)m_volume_base);
       return(false);
      }
    return(true);

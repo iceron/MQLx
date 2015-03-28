@@ -106,7 +106,7 @@ bool JEventsBase::IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION a
       case EVENT_CLASS_ERROR:    return(IsEventErrorAllowed(action));
       case EVENT_CLASS_CUSTOM:   return(IsEventCustomAllowed(action));
      }
-   Print("unknown event");
+   PrintFormat("unknown event");
    return(false);
   }
 //+------------------------------------------------------------------+
@@ -146,7 +146,7 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CO
         }
       default:
         {
-         Print("unknown event");
+         PrintFormat("unknown event");
          return;
         }
      }
@@ -211,7 +211,7 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,st
         }
       default:
         {
-         Print("unknown event");
+         PrintFormat("unknown event");
          break;
         }
      }

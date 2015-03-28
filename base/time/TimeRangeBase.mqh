@@ -54,7 +54,7 @@ bool JTimeRangeBase::Validate(void)
   {
    if (m_begin>m_start)
    {
-      Print("Invalid setting for start and end times.");
+      PrintFormat("Invalid setting for start and end times.");
       return(false);
    }
    return(true);

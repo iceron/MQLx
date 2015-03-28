@@ -456,7 +456,7 @@ bool JStrategyBase::Add(CObject *object)
         }
       default:
         {
-         Print(__FUNCTION__+": unknown object: "+DoubleToString(object.Type(),0));
+         PrintFormat(__FUNCTION__+": unknown object: "+DoubleToString(object.Type(),0));
         }
      }
    return(result);

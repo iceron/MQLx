@@ -261,7 +261,7 @@ bool JEventRegistryBase::IsAllowed(const ENUM_ALERT_MODE alert_mode,const int id
         }
       default:
         {
-         Print(__FUNCTION__+": unknown alert mode");
+         PrintFormat(__FUNCTION__+": unknown alert mode");
         }
      }
    return(false);
