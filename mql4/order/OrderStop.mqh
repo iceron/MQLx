@@ -188,7 +188,7 @@ void JOrderStop::Check(double &volume)
    if(((m_stoploss_closed || m_objsl==NULL) && (m_takeprofit_closed || m_objtp==NULL)) || volume<=0)
      {
       DeleteStopLines();
-      if(m_stop.Main() && m_stop.Virtual())
+      if(m_stop.Main() && m_stop.Virtual() && (m_stoploss>0 || m_takeprofit>0)) 
          m_order.IsClosed(true);
      }
    CheckDeinit();

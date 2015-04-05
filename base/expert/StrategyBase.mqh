@@ -34,6 +34,7 @@ class JStrategyBase : public CObject
 protected:
    //--- trade parameters
    bool              m_activate;
+   string            m_name;
    string            m_comment;
    datetime          m_expiration;
    int               m_magic;
@@ -163,6 +164,8 @@ public:
    virtual void      Magic(const int magic) {m_magic=magic;}
    virtual int       MaxOrdersHistory(void) const {return m_max_orders_history;}
    virtual void      MaxOrdersHistory(const int max) {m_max_orders_history=max;}
+   virtual string    Name() const {return(m_name);}
+   virtual void      Name(const string name) {m_name = name;}
    virtual bool      OfflineMode(void) const {return(m_offline_mode);}
    virtual void      OfflineMode(const bool mode) {m_offline_mode=mode;}
    virtual int       OfflineModeDelay() const {return(m_offline_mode_delay);}
@@ -194,6 +197,9 @@ public:
    virtual void      MaxOrders(const int maxorders) {m_max_orders=maxorders;}
    //--- deinitialization
    virtual void      Deinit(const int reason=0);
+   //--- recovery
+   virtual bool      Backup(CFileBin *file);
+   virtual bool      Restore(CFileBin *file);
 protected:
    //--- signal processing
    virtual bool      CheckSignals(int &entry,int &exit) const;
@@ -229,10 +235,7 @@ protected:
    virtual void      DeinitSignals(void);
    virtual void      DeinitStops(void);
    virtual void      DeinitSymbol(void);
-   virtual void      DeinitTrade(void);
-   //--- recovery
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
+   virtual void      DeinitTrade(void);   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -296,7 +299,7 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
 bool JStrategyBase::InitComponents(void)
   {
    bool result=InitOrders() && InitOrdersHistory() && InitSignals() && InitStops() && 
-   InitAccount() && InitMoneys() && InitTimes() && InitCandle();
+               InitAccount() && InitMoneys() && InitTimes() && InitCandle();
    if(OfflineMode())
       EventChartCustom(0,OFFLINE_TICK,0,0,m_symbol.Name());
    return(result);
@@ -1021,7 +1024,7 @@ bool JStrategyBase::Restore(CFileBin *file)
    file.ReadObject(GetPointer(m_comments));
    file.ReadObject(GetPointer(m_tick));
    file.ReadObject(GetPointer(m_candle));
-   
+
    m_signals.SetContainer(GetPointer(this));
    m_stops.SetContainer(GetPointer(this));
    m_orders.SetContainer(GetPointer(this));

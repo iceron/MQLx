@@ -143,7 +143,15 @@ void JExpertBase::OnDeinit(const int reason=0)
 bool JExpertBase::Backup(CFileBin *file)
   {
    file.WriteChar(m_activate);
-   CArrayObj::Save(file.Handle());
+   //CArrayObj::Save(file.Handle());
+   CFileBin *filebin = new CFileBin();
+   for (int i=0;i<Total();i++)
+   {      
+      JStrategy *strat = At(i);
+      filebin.Open(ADT::GetParentDir(file.FileName())+"experts\\"+strat.Name(),FILE_WRITE|FILE_BIN);
+      strat.Backup(GetPointer(filebin));      
+      filebin.Close();
+   }
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -152,7 +160,13 @@ bool JExpertBase::Backup(CFileBin *file)
 bool JExpertBase::Restore(CFileBin *file)
   {
    file.ReadChar(m_activate);
-   CArrayObj::Load(file.Handle());
+   //CArrayObj::Load(file.Handle());
+   CFileBin *filebin = new CFileBin();
+   //long search_handle=FileFindFirst(InpFilter,file_name);
+   do
+   {
+   }
+   while (true);
    return(true);
   }
 //+------------------------------------------------------------------+

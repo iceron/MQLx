@@ -76,7 +76,9 @@ void JStrategy::OnTradeTransaction(void)
       if(m_symbol.Name()!=OrderSymbol()) continue;
       temp.Ticket(OrderTicket());
       if(m_orders.Search(temp)>=0) continue;
+      Print(__FUNCTION__+": adding order");
       m_orders.NewOrder(OrderTicket(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
+      Print(__FUNCTION__+": done adding order "+m_orders.Total());
      }
    delete temp;
   }

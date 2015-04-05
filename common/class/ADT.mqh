@@ -15,6 +15,7 @@ public:
                      ADT(void);
                     ~ADT(void);
    static void       Delete(CObject *object);
+   static string     GetParentDir(string filename);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -38,5 +39,19 @@ ADT::Delete(CObject *object)
       delete object;
       object=NULL;
      }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string ADT::GetParentDir(string filename)
+  {
+   int pos=0;
+   int last_pos = 0;
+   while(pos!=-1)
+     {
+      last_pos=pos;
+      pos=StringFind(filename,"\\",pos+1);
+     }
+   return(StringSubstr(filename,0,last_pos+1));
   }
 //+------------------------------------------------------------------+
