@@ -23,8 +23,6 @@ public:
    virtual ulong     Ticket(void) const {return(m_ticket_current.At(m_ticket_current.Total()-1));}
    virtual void      NewTicket(const bool updated) {m_ticket_updated=updated;}
    virtual bool      NewTicket(void) const {return(m_ticket_updated);}
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -75,25 +73,5 @@ bool JOrder::IsClosed(void)
            }
      }
    return(false);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrder::Backup(CFileBin *file)
-  {
-   file.WriteObject(GetPointer(m_ticket_current));
-   file.WriteChar(m_ticket_updated);
-   JOrderBase::Backup(GetPointer(file));
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrder::Restore(CFileBin *file)
-  {
-   file.ReadObject(GetPointer(m_ticket_current));
-   file.ReadChar(m_ticket_updated);
-   JOrderBase::Restore(GetPointer(file));
-   return(true);
   }
 //+------------------------------------------------------------------+

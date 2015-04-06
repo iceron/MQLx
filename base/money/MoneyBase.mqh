@@ -63,9 +63,6 @@ public:
    virtual double    VolumeIncrement(void) const {return(m_volume_inc);}
    virtual void      VolumeBase(const double volume_base) {m_volume_base=volume_base;}
    virtual double    VolumeBase(void) const {return(m_volume_base);}
-   //--- recovery
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
 protected:
    virtual bool      UpdateByMargin(void);
    virtual bool      UpdateByPeriod(void);
@@ -196,45 +193,6 @@ bool JMoneyBase::UpdateByPeriod(void)
    if(TimeCurrent()>=m_last_update+m_period)
       return(true);
    return(false);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JMoneyBase::Backup(CFileBin *file)
-  {
-   file.WriteChar(m_activate);  
-   file.WriteInteger(m_update);   
-   file.WriteDouble(m_volume);
-   file.WriteDouble(m_percent);
-   file.WriteDouble(m_volume_base);
-   file.WriteDouble(m_volume_inc);
-   file.WriteDouble(m_balance);
-   file.WriteDouble(m_balance_inc);   
-   file.WriteInteger(m_period);
-   file.WriteInteger(m_last_update);   
-   file.WriteChar(m_equity);
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JMoneyBase::Restore(CFileBin *file)
-  {
-   int temp = 0;
-   file.ReadChar(m_activate);  
-   file.ReadInteger(temp); 
-   m_update = (ENUM_MONEY_UPDATE_TYPE)temp;  
-   file.ReadDouble(m_volume);
-   file.ReadDouble(m_percent);
-   file.ReadDouble(m_volume_base);
-   file.ReadDouble(m_volume_inc);
-   file.ReadDouble(m_balance);
-   file.ReadDouble(m_balance_inc);   
-   file.ReadInteger(m_period);
-   file.ReadInteger(temp); 
-   m_last_update = temp;
-   file.ReadChar(m_equity);
-   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

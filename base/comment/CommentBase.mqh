@@ -48,22 +48,6 @@ string JCommentBase::Text(void)
    return(m_comment);
   }
 //+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JCommentBase::Backup(CFileBin *file)
-  {
-   file.WriteString(m_comment);
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JCommentBase::Restore(CFileBin *file)
-  {
-   file.ReadString(m_comment);
-   return(true);
-  }
-//+------------------------------------------------------------------+
 #ifdef __MQL5__
 #include "..\..\mql5\comment\Comment.mqh"
 #else

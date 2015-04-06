@@ -60,24 +60,6 @@ JCommentsBase::Concatenate(string &str,string comment)
   {
   }
 //+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JCommentsBase::Backup(CFileBin *file)
-  {
-   file.WriteChar(m_activate);
-   CList::Save(file.Handle());
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JCommentsBase::Restore(CFileBin *file)
-  {
-   file.ReadChar(m_activate);
-   CList::Load(file.Handle());
-   return(true);
-  }
-//+------------------------------------------------------------------+
 #ifdef __MQL5__
 #include "..\..\mql5\comment\Comments.mqh"
 #else

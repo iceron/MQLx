@@ -217,48 +217,6 @@ bool JOrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
    return(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_LIMIT || type==ORDER_TYPE_SELL_STOP);
   }
 //+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrderBase::Backup(CFileBin *file)
-  {   
-   file.WriteChar(m_activate);
-   file.WriteChar(m_closed);
-   file.WriteChar(m_clean);
-   file.WriteInteger(m_magic);
-   file.WriteDouble(m_price);
-   file.WriteLong(m_ticket);
-   file.WriteInteger(m_type);
-   file.WriteDouble(m_volume);
-   file.WriteDouble(m_volume_initial);
-   file.WriteObject(GetPointer(m_order_stops));
-   file.WriteObject(GetPointer(m_main_stop));
-   file.WriteObject(GetPointer(m_main_stop));
-   file.WriteObject(GetPointer(m_events));
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrderBase::Restore(CFileBin *file)
-  {
-   int test_enum=0;
-   file.ReadChar(m_activate);
-   file.ReadChar(m_closed);
-   file.ReadChar(m_clean);
-   file.ReadInteger(m_magic);
-   file.ReadDouble(m_price);
-   file.ReadLong(m_ticket);
-   file.ReadInteger(test_enum);
-   m_type = (ENUM_ORDER_TYPE)test_enum;
-   file.ReadDouble(m_volume);
-   file.ReadDouble(m_volume_initial);
-   file.ReadObject(GetPointer(m_order_stops));
-   file.ReadObject(GetPointer(m_main_stop));
-   file.ReadObject(GetPointer(m_main_stop));
-   file.ReadObject(GetPointer(m_events));
-   return(true);
-  }
-//+------------------------------------------------------------------+
 #ifdef __MQL5__
 #include "..\..\mql5\order\Order.mqh"
 #else

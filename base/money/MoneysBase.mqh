@@ -88,26 +88,6 @@ double JMoneysBase::Volume(const double price,const ENUM_ORDER_TYPE type,const d
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneysBase::Backup(CFileBin *file)
-  {
-   file.WriteChar(m_activate);
-   file.WriteInteger(m_selected);
-   CArrayObj::Save(file.Handle());
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JMoneysBase::Restore(CFileBin *file)
-  {
-   file.ReadChar(m_activate);
-   file.ReadInteger(m_selected);
-   CArrayObj::Load(file.Handle());
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool JMoneysBase::CreateElement(const int index)
   {
    return(Insert(new JMoney(),index));

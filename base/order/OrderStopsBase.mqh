@@ -34,8 +34,6 @@ public:
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    //--- recovery
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
    virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
@@ -136,22 +134,6 @@ void JOrderStopsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION 
   {
    if(m_events!=NULL)
       m_events.CreateEvent(type,action,message_add);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrderStopsBase::Backup(CFileBin *file)
-  {
-   CArrayObj::Save(file.Handle());   
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrderStopsBase::Restore(CFileBin *file)
-  {
-   CArrayObj::Load(file.Handle());   
-   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

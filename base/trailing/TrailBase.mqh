@@ -64,9 +64,6 @@ protected:
    virtual double    Price(const ENUM_ORDER_TYPE type);
    //--- deinitialization
    virtual bool      Deinit(void);
-   //--- recovery
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -195,41 +192,6 @@ double JTrailBase::Price(const ENUM_ORDER_TYPE type)
          return(m_symbol.Ask()+m_trail*m_points_adjust);
      }
    return(0);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JTrailBase::Backup(CFileBin *file)
-  {
-   file.WriteChar(m_activate);
-   file.WriteInteger(m_target);
-   file.WriteInteger(m_mode);
-   file.WriteDouble(m_trail);
-   file.WriteDouble(m_start);
-   file.WriteDouble(m_end);
-   file.WriteDouble(m_step);
-   file.WriteDouble(m_points_adjust);   
-   file.WriteInteger(m_digits_adjust);
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JTrailBase::Restore(CFileBin *file)
-  {
-   int temp_enum = 0;
-   file.WriteChar(m_activate);  
-   file.WriteInteger(temp_enum);
-   m_target = (ENUM_TRAIL_TARGET) temp_enum;
-   file.WriteInteger(temp_enum);
-   m_mode = (ENUM_TRAIL_MODE) temp_enum;
-   file.WriteDouble(m_trail);
-   file.WriteDouble(m_start);
-   file.WriteDouble(m_end);
-   file.WriteDouble(m_step);
-   file.WriteDouble(m_points_adjust);   
-   file.WriteInteger(m_digits_adjust);
-   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

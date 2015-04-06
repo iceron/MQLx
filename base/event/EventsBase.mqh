@@ -16,7 +16,7 @@ class JStrategy;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JEventsBase : public CObject
+class JEventsBase : public CArrayObj
   {
 protected:
    bool              m_activate;
@@ -24,7 +24,6 @@ protected:
    string            m_ftp_file;
    string            m_ftp_path;
    JStrategy        *m_strategy;
-   CArrayObj        *m_current;
    JEventRegistry    m_standard;
    JEventRegistry    m_error;
    JEventRegistry    m_custom;
@@ -65,7 +64,6 @@ JEventsBase::JEventsBase(void) : m_activate(true),
                                  m_ftp_file(NULL),
                                  m_ftp_path(NULL)
   {
-   m_current=new CArrayObj();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -151,7 +149,7 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CO
         }
      }
    if(CheckPointer(event)==POINTER_DYNAMIC)
-      m_current.Add(event);
+      Add(event);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -216,7 +214,7 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,st
         }
      }
    if(CheckPointer(event)==POINTER_DYNAMIC)
-      m_current.Add(event);
+      Add(event);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -253,10 +251,10 @@ JEventsBase::DebugMode(bool debug=true)
 //+------------------------------------------------------------------+
 bool JEventsBase::Run(void)
   {
-   int total= m_current.Total();
+   int total= Total();
    for(int i=total-1;i>=0;i--)
      {
-      JEvent *event=m_current.Detach(i);
+      JEvent *event=Detach(i);
       if(event!=NULL)
         {
          if(!event.Instant())
@@ -290,7 +288,6 @@ bool JEventsBase::Run(void)
 //+------------------------------------------------------------------+
 bool JEventsBase::Deinit()
   {
-   ADT::Delete(m_current);
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -316,39 +313,6 @@ void JEventsBase::Register(ENUM_EVENT_CLASS event_class,ENUM_ALERT_MODE alert_mo
          break;
         }
      }
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JEventsBase::Backup(CFileBin *file)
-  {
-   file.WriteChar(m_activate);
-   file.WriteString(m_sound_file);
-   file.WriteString(m_ftp_file);
-   file.WriteString(m_ftp_path);
-   file.WriteObject(GetPointer(m_standard));
-   file.WriteObject(GetPointer(m_error));
-   file.WriteObject(GetPointer(m_custom));
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JEventsBase::Restore(CFileBin *file)
-  {
-   file.ReadChar(m_activate);
-   file.ReadString(m_sound_file);
-   file.ReadString(m_ftp_file);
-   file.ReadString(m_ftp_path);
-   file.ReadObject(GetPointer(m_standard));
-   file.ReadObject(GetPointer(m_error));
-   file.ReadObject(GetPointer(m_custom));
-   for(int i=0;i<m_current.Total();i++)
-     {
-      JEvent *event=m_current.At(i);
-      event.SetContainer(GetPointer(this));
-     }
-   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

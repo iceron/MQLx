@@ -16,6 +16,7 @@ class JTimesBase : public CArrayObj
   {
 protected:
    bool              m_activate;
+   int               m_selected;
    JStrategy        *m_strategy;
 public:
                      JTimesBase(void);
@@ -31,14 +32,13 @@ public:
    //--- checking
    virtual bool      Evaluate(void) const;
    //--- recovery
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
    virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimesBase::JTimesBase(void) : m_activate(true)
+JTimesBase::JTimesBase(void) : m_activate(true),
+                               m_selected(-1)
   {
   }
 //+------------------------------------------------------------------+
@@ -90,27 +90,9 @@ bool JTimesBase::Evaluate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimesBase::Backup(CFileBin *file)
-  {
-   file.WriteChar(m_activate);
-   CArrayObj::Save(file.Handle());
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JTimesBase::Restore(CFileBin *file)
-  {
-   file.ReadChar(m_activate);
-   CArrayObj::Load(file.Handle());
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool JTimesBase::CreateElement(const int index)
   {
-   JTime * time = new JTime();
+   JTime*time=new JTime();
    time.SetContainer(GetPointer(this));
    return(Insert(GetPointer(time),index));
   }

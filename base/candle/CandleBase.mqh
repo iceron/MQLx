@@ -114,26 +114,6 @@ void JCandleBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION acti
       m_events.CreateEvent(type,action,message_add);
   }
 //+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JCandleBase::Backup(CFileBin *file)
-  {
-   file.WriteChar(m_wait_for_new);
-   file.WriteChar(m_trade_processed);
-   file.WriteStruct(m_last);
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JCandleBase::Restore(CFileBin *file)
-  {
-   file.ReadChar(m_wait_for_new);
-   file.ReadChar(m_trade_processed);
-   file.ReadStruct(m_last);
-   return(true);
-  }
-//+------------------------------------------------------------------+
 #ifdef __MQL5__
 #include "..\..\mql5\candle\Candle.mqh"
 #else

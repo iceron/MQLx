@@ -46,8 +46,6 @@ public:
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    //--- recovery
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
    virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
@@ -155,32 +153,6 @@ void JOrdersBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION acti
   {
    if(m_events!=NULL)
       m_events.CreateEvent(type,action,message_add);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrdersBase::Backup(CFileBin *file)
-  {
-   file.WriteChar(m_activate);
-   file.WriteChar(m_clean);
-   file.WriteInteger(m_magic);
-   file.WriteObject(GetPointer(m_stops));
-   file.WriteObject(GetPointer(m_events));
-   CArrayObj::Save(file.Handle());
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrdersBase::Restore(CFileBin *file)
-  {
-   file.ReadChar(m_activate);
-   file.ReadChar(m_clean);
-   file.ReadInteger(m_magic);
-   file.ReadObject(GetPointer(m_stops));
-   file.ReadObject(GetPointer(m_events));
-   CArrayObj::Load(file.Handle());
-   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

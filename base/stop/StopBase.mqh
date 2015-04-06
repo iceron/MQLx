@@ -136,9 +136,6 @@ public:
    //--- trailing   
    virtual bool      Add(JTrails *trails);
    virtual double    CheckTrailing(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
-   //--- recovery
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
 protected:
    //--- object creation
    virtual JStopLine *CreateObject(const long id,const string name,const int window,const double price);
@@ -551,76 +548,6 @@ JStopLine *JStopBase::CreateObject(const long id,const string name,const int win
    if(obj.Create(id,name,window,price))
       return(obj);
    return(NULL);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStopBase::Backup(CFileBin *file)
-  {
-   file.WriteChar(m_activate);
-   file.WriteChar(m_main);
-   file.WriteString(m_name);
-   file.WriteChar(m_oco);
-   file.WriteDouble(m_stoploss);
-   file.WriteString(m_stoploss_name);
-   file.WriteInteger(m_stop_type);
-   file.WriteDouble(m_takeprofit);
-   file.WriteString(m_takeprofit_name);   
-   file.WriteInteger(m_volume_type);
-   file.WriteDouble(m_volume_fixed);
-   file.WriteDouble(m_volume_percent);   
-   file.WriteInteger(m_magic);
-   file.WriteString(m_comment);   
-   file.WriteDouble(m_points_adjust);
-   file.WriteInteger(m_digits_adjust);  
-   file.WriteChar(m_entry_visible);
-   file.WriteChar(m_stoploss_visible);
-   file.WriteChar(m_takeprofit_visible);
-   file.WriteInteger(m_entry_color);
-   file.WriteInteger(m_stoploss_color);
-   file.WriteInteger(m_takeprofit_color);
-   file.WriteInteger(m_entry_style);
-   file.WriteInteger(m_stoploss_style);
-   file.WriteInteger(m_takeprofit_style);
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStopBase::Restore(CFileBin *file)
-  {
-   int temp_enum = 0;
-   file.ReadChar(m_activate);
-   file.ReadChar(m_main);
-   file.ReadString(m_name);
-   file.ReadChar(m_oco);
-   file.ReadDouble(m_stoploss);
-   file.ReadString(m_stoploss_name);
-   file.ReadInteger(temp_enum);
-   m_stop_type = (ENUM_STOP_TYPE) temp_enum;
-   file.ReadDouble(m_takeprofit);
-   file.ReadString(m_takeprofit_name);   
-   file.ReadInteger(temp_enum);
-   m_volume_type = (ENUM_VOLUME_TYPE)temp_enum;
-   file.ReadDouble(m_volume_fixed);
-   file.ReadDouble(m_volume_percent);   
-   file.ReadInteger(m_magic);
-   file.ReadString(m_comment);   
-   file.ReadDouble(m_points_adjust);
-   file.ReadInteger(m_digits_adjust);  
-   file.ReadChar(m_entry_visible);
-   file.ReadChar(m_stoploss_visible);
-   file.ReadChar(m_takeprofit_visible);
-   file.ReadInteger(m_entry_color);
-   file.ReadInteger(m_stoploss_color);
-   file.ReadInteger(m_takeprofit_color);
-   file.ReadInteger(temp_enum);
-   m_entry_style = (ENUM_LINE_STYLE)temp_enum;
-   file.ReadInteger(temp_enum);
-   m_stoploss_style = (ENUM_LINE_STYLE)temp_enum;
-   file.ReadInteger(temp_enum);
-   m_takeprofit_style = (ENUM_LINE_STYLE)temp_enum;
-   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
