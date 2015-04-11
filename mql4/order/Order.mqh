@@ -23,6 +23,9 @@ public:
    virtual ulong     Ticket(void) const {return(m_ticket_current.At(m_ticket_current.Total()-1));}
    virtual void      NewTicket(const bool updated) {m_ticket_updated=updated;}
    virtual bool      NewTicket(void) const {return(m_ticket_updated);}
+   //--- recovery
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -73,5 +76,25 @@ bool JOrder::IsClosed(void)
            }
      }
    return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrder::Save(const int handle)
+  {  
+   JOrderBase::Save(handle);
+   ADT::WriteObject(handle,GetPointer(m_ticket_current));
+   ADT::WriteChar(handle,m_ticket_updated);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrder::Load(const int handle)
+  {
+   JOrderBase::Save(handle);
+   ADT::ReadObject(handle,GetPointer(m_ticket_current));
+   ADT::ReadChar(handle,m_ticket_updated);
+   return(true);
   }
 //+------------------------------------------------------------------+

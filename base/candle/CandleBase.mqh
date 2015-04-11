@@ -31,8 +31,9 @@ public:
    virtual void      TradeProcessed(bool processed) {m_trade_processed=processed;}
    virtual bool      IsNewCandle(const ENUM_TIMEFRAMES period);
    virtual bool      Compare(MqlRates &rates) const;
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
+   //---recovery
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);
 protected:
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
@@ -112,6 +113,24 @@ void JCandleBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION acti
   {
    if(m_events!=NULL)
       m_events.CreateEvent(type,action,message_add);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JCandleBase::Save(const int handle)
+  {
+   ADT::WriteChar(handle,m_trade_processed);
+   ADT::WriteStruct(handle,m_last);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JCandleBase::Load(const int handle)
+  {
+   ADT::ReadChar(handle,m_trade_processed);
+   ADT::ReadStruct(handle,m_last);
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

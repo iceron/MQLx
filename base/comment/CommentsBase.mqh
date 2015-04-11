@@ -21,9 +21,6 @@ public:
    void              Active(bool active){m_activate = active;}
    virtual void      Display(void);
    virtual void      Concatenate(string &str,string comment);
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
-   virtual CObject  *CreateElement(void) {return(new JComment(""));}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

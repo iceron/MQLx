@@ -47,6 +47,8 @@ public:
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    //--- recovery
    virtual bool      CreateElement(const int index);
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -159,9 +161,27 @@ void JOrdersBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION acti
 //+------------------------------------------------------------------+
 bool JOrdersBase::CreateElement(const int index)
   {
-   JOrder * order = new JOrder();
-   order.SetContainer(GetPointer(this));
+   JOrder*order=new JOrder();
+   order.Init(m_magic,GetPointer(this),m_events,m_stops,true);
    return(Insert(GetPointer(order),index));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrdersBase::Save(const int handle)
+  {
+   CArrayObj::Save(handle);
+   ADT::WriteChar(handle,m_clean);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrdersBase::Load(const int handle)
+  {
+   CArrayObj::Load(handle);
+   ADT::ReadChar(handle,m_clean);
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

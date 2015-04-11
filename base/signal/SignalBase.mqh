@@ -63,16 +63,19 @@ public:
    static bool       IsSignalTypeShort(const ENUM_CMD type);
    static int        SignalReverse(const int signal);
    static ENUM_ORDER_TYPE SignalToOrderType(const int signal);
+   //---recovery
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JSignalBase::JSignalBase() : m_activate(true),
-                                 m_name(NULL),
-                                 m_signal(CMD_NEUTRAL),
-                                 m_signal_valid(CMD_VOID),
-                                 m_reverse(false),
-                                 m_exit(false)
+                             m_name(NULL),
+                             m_signal(CMD_NEUTRAL),
+                             m_signal_valid(CMD_VOID),
+                             m_reverse(false),
+                             m_exit(false)
 
   {
    if(!m_empty_value.IsSorted())
@@ -289,6 +292,24 @@ ENUM_ORDER_TYPE JSignalBase::SignalToOrderType(const int signal)
       case CMD_SELLSTOP:   return(ORDER_TYPE_SELL_STOP);
      }
    return(NULL);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalBase::Save(const int handle)
+  {
+   ADT::WriteInteger(handle,m_signal);
+   ADT::WriteInteger(handle,m_signal_valid);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalBase::Load(const int handle)
+  {
+   ADT::ReadInteger(handle,m_signal);
+   ADT::ReadInteger(handle,m_signal_valid);
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

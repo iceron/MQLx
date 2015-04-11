@@ -197,6 +197,9 @@ public:
    virtual void      MaxOrders(const int maxorders) {m_max_orders=maxorders;}
    //--- deinitialization
    virtual void      Deinit(const int reason=0);
+   //--- recovery
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);
 protected:
    //--- signal processing
    virtual bool      CheckSignals(int &entry,int &exit) const;
@@ -232,7 +235,7 @@ protected:
    virtual void      DeinitSignals(void);
    virtual void      DeinitStops(void);
    virtual void      DeinitSymbol(void);
-   virtual void      DeinitTrade(void);   
+   virtual void      DeinitTrade(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -927,6 +930,30 @@ void JStrategyBase::DeinitEvents(void)
 void JStrategyBase::DeinitComments(void)
   {
    ADT::Delete(m_comments);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::Save(const int handle)
+  {
+   ADT::WriteStruct(handle,m_last_trade_data);
+   ADT::WriteObject(handle,GetPointer(m_orders));
+   ADT::WriteObject(handle,GetPointer(m_orders_history));
+   ADT::WriteObject(handle,GetPointer(m_tick));
+   ADT::WriteObject(handle,GetPointer(m_candle));
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::Load(const int handle)
+  {
+   ADT::ReadStruct(handle,m_last_trade_data);
+   ADT::ReadObject(handle,GetPointer(m_orders));
+   ADT::ReadObject(handle,GetPointer(m_orders_history));
+   ADT::ReadObject(handle,GetPointer(m_tick));
+   ADT::ReadObject(handle,GetPointer(m_candle));   
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

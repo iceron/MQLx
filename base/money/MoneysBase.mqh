@@ -33,10 +33,6 @@ public:
    virtual void      Selected(const bool select) {m_selected=select;}
    //--- volume calculation
    virtual double    Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
-   //--- recovery
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
-   virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -84,13 +80,6 @@ double JMoneysBase::Volume(const double price,const ENUM_ORDER_TYPE type,const d
   {
    JMoney *money=m_data[m_selected];
    return(money==NULL?0:money.Volume(price,type,sl));
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JMoneysBase::CreateElement(const int index)
-  {
-   return(Insert(new JMoney(),index));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

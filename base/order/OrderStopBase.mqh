@@ -35,6 +35,7 @@ protected:
    bool              m_stoploss_closed;
    bool              m_takeprofit_closed;
    ENUM_STOP_TYPE    m_stop_type;
+   string            m_stop_name;
    //--- main order object
    JOrder           *m_order;
    //--- stop objects
@@ -49,7 +50,7 @@ public:
                     ~JOrderStopBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_ORDERSTOP);}
    //--- initialization
-   virtual void      Init(JOrder *order,JStop *stop,JOrderStops* order_stops,JEvents *events=NULL);
+   virtual void      Init(JOrder *order,JStop *stop,JOrderStops *order_stops,JEvents *events=NULL);
    virtual void      SetContainer(JOrderStops *orderstops){m_order_stops=orderstops;}
    //--- getters and setters  
 
@@ -95,6 +96,9 @@ public:
    virtual bool      Update(void);
    //--- deinitialization 
    virtual bool      Deinit(void);
+   //--- recovery
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);
 protected:
    virtual bool      IsStopLossValid(const double stoploss) const;
    virtual bool      IsTakeProfitValid(const double takeprofit) const;
@@ -126,7 +130,8 @@ JOrderStopBase::JOrderStopBase(void) : m_volume(0.0),
                                        m_takeprofit_ticket(0),
                                        m_stoploss_closed(false),
                                        m_takeprofit_closed(false),
-                                       m_stop_type(0)
+                                       m_stop_type(0),
+                                       m_stop_name("")
   {
   }
 //+------------------------------------------------------------------+
@@ -139,11 +144,12 @@ JOrderStopBase::~JOrderStopBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStopBase::Init(JOrder *order,JStop *stop,JOrderStops* order_stops,JEvents *events=NULL)
+void JOrderStopBase::Init(JOrder *order,JStop *stop,JOrderStops *order_stops,JEvents *events=NULL)
   {
-   if(stop==NULL || order==NULL) return;   
+   if(stop==NULL || order==NULL) return;
    if(!stop.Active()) return;
    SetContainer(m_order_stops);
+   m_stop_name = stop.Name();
    EventHandler(events);
    m_order=order;
    m_stop=stop;
@@ -161,7 +167,7 @@ void JOrderStopBase::Init(JOrder *order,JStop *stop,JOrderStops* order_stops,JEv
    if(m_takeprofit_initial>0 || m_stoploss_initial>0)
       m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
    if(stop.Main())
-      order.MainStop(GetPointer(this));      
+      order.MainStop(GetPointer(this));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -443,6 +449,52 @@ bool JOrderStopBase::Modify(const double stoploss,const double takeprofit)
       else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY,GetPointer(this));
      }
    return(stoploss_modified || takeprofit_modified);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopBase::Save(const int handle)
+  {
+   ADT::WriteDouble(handle,m_volume);
+   ADT::WriteDouble(handle,m_volume_fixed);
+   ADT::WriteDouble(handle,m_volume_percent);
+   ADT::WriteDouble(handle,m_stoploss);
+   ADT::WriteDouble(handle,m_takeprofit);
+   ADT::WriteDouble(handle,m_stoploss_last);
+   ADT::WriteDouble(handle,m_takeprofit_last);
+   ADT::WriteDouble(handle,m_stoploss_initial);
+   ADT::WriteDouble(handle,m_takeprofit_initial);
+   ADT::WriteLong(handle,m_stoploss_ticket);
+   ADT::WriteLong(handle,m_takeprofit_ticket);
+   ADT::WriteChar(handle,m_stoploss_closed);
+   ADT::WriteChar(handle,m_takeprofit_closed);
+   ADT::WriteInteger(handle,m_stop_type);
+   ADT::WriteString(handle,m_stop_name);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopBase::Load(const int handle)
+  {
+   int temp;
+   ADT::ReadDouble(handle,m_volume);
+   ADT::ReadDouble(handle,m_volume_fixed);
+   ADT::ReadDouble(handle,m_volume_percent);
+   ADT::ReadDouble(handle,m_stoploss);
+   ADT::ReadDouble(handle,m_takeprofit);
+   ADT::ReadDouble(handle,m_stoploss_last);
+   ADT::ReadDouble(handle,m_takeprofit_last);
+   ADT::ReadDouble(handle,m_stoploss_initial);
+   ADT::ReadDouble(handle,m_takeprofit_initial);
+   ADT::ReadLong(handle,m_stoploss_ticket);
+   ADT::ReadLong(handle,m_takeprofit_ticket);
+   ADT::ReadChar(handle,m_stoploss_closed);
+   ADT::ReadChar(handle,m_takeprofit_closed);
+   ADT::ReadInteger(handle,temp);
+   m_stop_type=(ENUM_STOP_TYPE) temp;
+   ADT::ReadString(handle,m_stop_name);
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

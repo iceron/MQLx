@@ -15,6 +15,7 @@ class JExpertBase : public CArrayObj
   {
 protected:
    bool              m_activate;
+   int               m_uninit_reason;
 public:
                      JExpertBase(void);
                     ~JExpertBase(void);
@@ -33,6 +34,8 @@ public:
    virtual void      OnDeinit(const int reason=0);
    //--- recovery
    virtual bool      CreateElement(const int index);
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -127,6 +130,7 @@ int JExpertBase::TradesTotal(void) const
 //+------------------------------------------------------------------+
 void JExpertBase::OnDeinit(const int reason=0)
   {
+   m_uninit_reason = reason;
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=Detach(i);
@@ -143,6 +147,24 @@ bool JExpertBase::CreateElement(const int index)
    JStrategy*strat=new JStrategy();
    strat.SetContainer(GetPointer(this));
    return(Insert(GetPointer(strat),index));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JExpertBase::Save(const int handle)
+  {
+   CArrayObj::Save(handle);
+   ADT::WriteInteger(handle,m_uninit_reason);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JExpertBase::Load(const int handle)
+  {
+   CArrayObj::Load(handle);
+   ADT::ReadInteger(handle,m_uninit_reason);
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

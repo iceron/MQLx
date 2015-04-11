@@ -47,6 +47,8 @@ public:
    virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
    //--- recovery
    virtual bool      CreateElement(const int index);
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -173,6 +175,24 @@ bool JSignalsBase::CreateElement(const int index)
    JSignal * signal = new JSignal();
    signal.SetContainer(GetPointer(this));
    return(Insert(GetPointer(signal),index));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalsBase::Save(const int handle)
+  {
+   ADT::WriteInteger(handle,m_last_entry);
+   ADT::WriteInteger(handle,m_last_exit);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JSignalsBase::Load(const int handle)
+  {
+   ADT::ReadInteger(handle,m_last_entry);
+   ADT::ReadInteger(handle,m_last_exit);
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

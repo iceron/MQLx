@@ -44,7 +44,7 @@ public:
    virtual void      CreateStops(JStops *stops);
    virtual void      CheckStops(void);
    virtual bool      EventHandler(JEvents *events);
-   virtual bool      Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops);
+   virtual bool      Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops,bool recreate=false);
    virtual void      IsClosed(const bool closed) {m_closed=closed;}
    virtual bool      IsClosed(void) const {return(false);}
    virtual void      Magic(const int magic){m_magic=magic;}
@@ -73,8 +73,8 @@ public:
    static bool       IsOrderTypeLong(const ENUM_ORDER_TYPE type);
    static bool       IsOrderTypeShort(const ENUM_ORDER_TYPE type);
    //--- recovery
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -100,13 +100,14 @@ JOrderBase::~JOrderBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops)
+bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops,bool recreate=false)
   {
    m_magic=magic;
    SetContainer(GetPointer(orders));
    EventHandler(GetPointer(events));
    CreateStops(GetPointer(m_stops));
-   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND_DONE,GetPointer(this));
+   if (!recreate)
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND_DONE,GetPointer(this));
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -116,13 +117,12 @@ void JOrderBase::CreateStops(JStops *stops)
   {
    if(CheckPointer(stops)==POINTER_INVALID)
       return;
-   int total=stops.Total();
-   if(total>0)
+   if(stops.Total()>0)
      {
       if(CheckPointer(m_order_stops)==POINTER_INVALID)
          m_order_stops=new JOrderStops();
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE,GetPointer(this),stops);
-      for(int i=0;i<total;i++)
+      for(int i=0;i<stops.Total();i++)
         {
          JStop *stop=stops.At(i);
          if(CheckPointer(stop)==POINTER_INVALID)
@@ -215,6 +215,41 @@ bool JOrderBase::IsOrderTypeLong(const ENUM_ORDER_TYPE type)
 bool JOrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
   {
    return(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_LIMIT || type==ORDER_TYPE_SELL_STOP);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderBase::Save(const int handle)
+  {  
+   ADT::WriteChar(handle,m_closed);
+   ADT::WriteChar(handle,m_clean);
+   ADT::WriteInteger(handle,m_magic);
+   ADT::WriteDouble(handle,m_price);
+   ADT::WriteLong(handle,m_ticket);
+   ADT::WriteDouble(handle,m_volume);
+   ADT::WriteDouble(handle,m_volume_initial);
+   if (CheckPointer(m_order_stops)==POINTER_DYNAMIC)
+      ADT::WriteObject(handle,GetPointer(m_order_stops));
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderBase::Load(const int handle)
+  {
+   ADT::ReadChar(handle,m_closed);
+   ADT::ReadChar(handle,m_clean);
+   ADT::ReadInteger(handle,m_magic);
+   ADT::ReadDouble(handle,m_price);
+   ADT::ReadLong(handle,m_ticket);
+   ADT::ReadDouble(handle,m_volume);
+   ADT::ReadDouble(handle,m_volume_initial);
+   if (CheckPointer(m_order_stops)==POINTER_DYNAMIC)
+   {
+      ADT::ReadObject(handle,GetPointer(m_order_stops));
+      m_order_stops.SetContainer(GetPointer(this));
+   }   
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

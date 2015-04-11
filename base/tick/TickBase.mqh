@@ -26,6 +26,9 @@ public:
    datetime          Last() const {return(m_last.last);}
    datetime          Volume() const {return(m_last.volume);}
    virtual bool      IsNewTick(CSymbolInfo *symbol);
+   //---recovery
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);
 protected:
    virtual bool      Compare(MqlTick &current);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
@@ -92,6 +95,22 @@ void JTickBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action
   {
    if(m_events!=NULL)
       m_events.CreateEvent(type,action,message_add);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTickBase::Save(const int handle)
+  {
+   ADT::WriteStruct(handle,m_last);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JTickBase::Load(const int handle)
+  {
+   ADT::ReadStruct(handle,m_last);
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

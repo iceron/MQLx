@@ -35,6 +35,8 @@ public:
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    //--- recovery
    virtual bool      CreateElement(const int index);
+   virtual bool      Save(const int handle);
+   virtual bool      Load(const int handle);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -143,6 +145,22 @@ bool JOrderStopsBase::CreateElement(const int index)
    JOrderStop * orderstop = new JOrderStop();
    orderstop.SetContainer(GetPointer(this));
    return(Insert(GetPointer(orderstop),index));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopsBase::Save(const int handle)
+  {  
+   CArrayObj::Save(handle);
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JOrderStopsBase::Load(const int handle)
+  {
+   CArrayObj::Load(handle);
+   return(true);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

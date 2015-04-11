@@ -18,8 +18,6 @@ public:
                     ~JCommentBase(void);
    virtual void      Init(string &comment);
    string            Text();
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
