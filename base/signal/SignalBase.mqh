@@ -136,7 +136,7 @@ bool JSignalBase::IsEmpty(double val)
 //+------------------------------------------------------------------+
 int JSignalBase::CheckSignal(void)
   {
-   if(!Active()) return(CMD_NEUTRAL);
+   if(!Active()) return(CMD_ALL);
    int res=CMD_NEUTRAL;
    bool long_cond=LongCondition();
    bool short_cond=ShortCondition();
