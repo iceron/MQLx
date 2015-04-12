@@ -24,12 +24,6 @@ protected:
    double            m_volume;
    double            m_volume_fixed;
    double            m_volume_percent;
-/*
-   double            m_stoploss;
-   double            m_takeprofit;
-   double            m_stoploss_last;
-   double            m_takeprofit_last;
-   */
    CArrayDouble      m_stoploss;
    CArrayDouble      m_takeprofit;
    double            m_stoploss_initial;
@@ -57,7 +51,6 @@ public:
    virtual void      Init(JOrder *order,JStop *stop,JOrderStops *order_stops,JEvents *events=NULL);
    virtual void      SetContainer(JOrderStops *orderstops){m_order_stops=orderstops;}
    //--- getters and setters  
-
    virtual string    EntryName(void) const {return(m_stop.Name()+"."+(string)m_order.Ticket());}
    virtual bool      EventHandler(JEvents *events);
    virtual ulong     MainMagic(void) const {return(m_order.Magic());}
@@ -72,7 +65,7 @@ public:
    virtual string    StopLossName(void) const {return(m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket());}
    virtual void      StopLossTicket(const ulong ticket) {m_stoploss_ticket=ticket;}
    virtual ulong     StopLossTicket(void) const {return(m_stoploss_ticket);}
-   virtual void      TakeProfit(const double takeprofit) {m_takeprofit.Add(stoploss);}
+   virtual void      TakeProfit(const double takeprofit) {m_takeprofit.Add(takeprofit);}
    virtual double    TakeProfit(void) const {return(m_takeprofit.Total()>0?m_takeprofit.At(m_takeprofit.Total()-1):0);}
    virtual double    TakeProfit(const int index) const {return(m_takeprofit.Total()>index?m_takeprofit.At(index):0);}
    virtual double    TakeProfitLast(void) const {return(m_takeprofit.Total()>2?m_takeprofit.At(m_takeprofit.Total()-2):0);}
@@ -124,14 +117,6 @@ protected:
 JOrderStopBase::JOrderStopBase(void) : m_volume(0.0),
                                        m_volume_fixed(0.0),
                                        m_volume_percent(0.0),
-                                       /*
-                                       m_stoploss(0.0),
-                                       m_takeprofit(0.0),
-                                       m_stoploss_last(0.0),
-                                       m_takeprofit_last(0.0),
-                                       m_stoploss_initial(0.0),
-                                       m_takeprofit_initial(0.0),
-                                       */
                                        m_stoploss_ticket(0),
                                        m_takeprofit_ticket(0),
                                        m_stoploss_closed(false),
@@ -470,16 +455,10 @@ bool JOrderStopBase::Save(const int handle)
    ADT::WriteDouble(handle,m_volume_percent);
    ADT::WriteObject(handle,GetPointer(m_stoploss));
    ADT::WriteObject(handle,GetPointer(m_takeprofit));
-   /*
-   ADT::WriteDouble(handle,m_stoploss_last);
-   ADT::WriteDouble(handle,m_takeprofit_last);
-   ADT::WriteDouble(handle,m_stoploss_initial);
-   ADT::WriteDouble(handle,m_takeprofit_initial);
-   */
    ADT::WriteLong(handle,m_stoploss_ticket);
    ADT::WriteLong(handle,m_takeprofit_ticket);
-   ADT::WriteChar(handle,m_stoploss_closed);
-   ADT::WriteChar(handle,m_takeprofit_closed);
+   ADT::WriteBool(handle,m_stoploss_closed);
+   ADT::WriteBool(handle,m_takeprofit_closed);
    ADT::WriteInteger(handle,m_stop_type);
    ADT::WriteString(handle,m_stop_name);
    return(true);
@@ -495,16 +474,10 @@ bool JOrderStopBase::Load(const int handle)
    ADT::ReadDouble(handle,m_volume_percent);
    ADT::ReadObject(handle,GetPointer(m_stoploss));
    ADT::ReadObject(handle,GetPointer(m_takeprofit));
-   /*
-   ADT::ReadDouble(handle,m_stoploss_last);
-   ADT::ReadDouble(handle,m_takeprofit_last);
-   ADT::ReadDouble(handle,m_stoploss_initial);
-   ADT::ReadDouble(handle,m_takeprofit_initial);
-   */
    ADT::ReadLong(handle,m_stoploss_ticket);
    ADT::ReadLong(handle,m_takeprofit_ticket);
-   ADT::ReadChar(handle,m_stoploss_closed);
-   ADT::ReadChar(handle,m_takeprofit_closed);
+   ADT::ReadBool(handle,m_stoploss_closed);
+   ADT::ReadBool(handle,m_takeprofit_closed);
    ADT::ReadInteger(handle,temp);
    m_stop_type=(ENUM_STOP_TYPE) temp;
    ADT::ReadString(handle,m_stop_name);

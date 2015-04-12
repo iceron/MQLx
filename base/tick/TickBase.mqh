@@ -21,10 +21,10 @@ public:
                     ~JTickBase(void);
    MqlTick           LastTick() const {return(m_last);}
    datetime          Time() const {return(m_last.time);}
-   datetime          Bid() const {return(m_last.bid);}
-   datetime          Ask() const {return(m_last.ask);}
-   datetime          Last() const {return(m_last.last);}
-   datetime          Volume() const {return(m_last.volume);}
+   double            Bid() const {return(m_last.bid);}
+   double            Ask() const {return(m_last.ask);}
+   double            Last() const {return(m_last.last);}
+   ulong             Volume() const {return(m_last.volume);}
    virtual bool      IsNewTick(CSymbolInfo *symbol);
    //---recovery
    virtual bool      Save(const int handle);

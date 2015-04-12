@@ -84,7 +84,7 @@ bool JOrder::Save(const int handle)
   {  
    JOrderBase::Save(handle);
    ADT::WriteObject(handle,GetPointer(m_ticket_current));
-   ADT::WriteChar(handle,m_ticket_updated);
+   ADT::WriteBool(handle,m_ticket_updated);
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -94,7 +94,7 @@ bool JOrder::Load(const int handle)
   {
    JOrderBase::Save(handle);
    ADT::ReadObject(handle,GetPointer(m_ticket_current));
-   ADT::ReadChar(handle,m_ticket_updated);
+   ADT::WriteBool(handle,m_ticket_updated);
    return(true);
   }
 //+------------------------------------------------------------------+

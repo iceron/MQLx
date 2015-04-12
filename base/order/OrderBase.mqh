@@ -221,8 +221,8 @@ bool JOrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 bool JOrderBase::Save(const int handle)
   {  
-   ADT::WriteChar(handle,m_closed);
-   ADT::WriteChar(handle,m_clean);
+   ADT::WriteBool(handle,m_closed);
+   ADT::WriteBool(handle,m_clean);
    ADT::WriteInteger(handle,m_magic);
    ADT::WriteDouble(handle,m_price);
    ADT::WriteLong(handle,m_ticket);
@@ -237,8 +237,8 @@ bool JOrderBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool JOrderBase::Load(const int handle)
   {
-   ADT::ReadChar(handle,m_closed);
-   ADT::ReadChar(handle,m_clean);
+   ADT::ReadBool(handle,m_closed);
+   ADT::ReadBool(handle,m_clean);
    ADT::ReadInteger(handle,m_magic);
    ADT::ReadDouble(handle,m_price);
    ADT::ReadLong(handle,m_ticket);

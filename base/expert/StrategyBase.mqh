@@ -149,15 +149,15 @@ public:
    virtual bool      EnableShort(void) const {return(m_short_allowed);}
    virtual void      EnableShort(bool allowed){m_short_allowed=allowed;}
    virtual datetime  LastTradeTime(void) const {return(m_last_trade_data.time);}
-   virtual datetime  LastTradeBid(void) const {return(m_last_trade_data.bid);}
-   virtual datetime  LastTradeAsk(void) const {return(m_last_trade_data.ask);}
-   virtual datetime  LastTradeLast(void) const {return(m_last_trade_data.last);}
-   virtual datetime  LastTradeVolume(void) const {return(m_last_trade_data.volume);}
+   virtual double    LastTradeBid(void) const {return(m_last_trade_data.bid);}
+   virtual double    LastTradeAsk(void) const {return(m_last_trade_data.ask);}
+   virtual double    LastTradeLast(void) const {return(m_last_trade_data.last);}
+   virtual ulong     LastTradeVolume(void) const {return(m_last_trade_data.volume);}
    virtual datetime  LastTickTime(void) const {return(m_tick.Time());}
-   virtual datetime  LastTickBid(void) const {return(m_tick.Bid());}
-   virtual datetime  LastTickAsk(void) const {return(m_tick.Ask());}
-   virtual datetime  LastTickLast(void) const {return(m_tick.Last());}
-   virtual datetime  LastTickVolume(void) const {return(m_tick.Volume());}
+   virtual double    LastTickBid(void) const {return(m_tick.Bid());}
+   virtual double    LastTickAsk(void) const {return(m_tick.Ask());}
+   virtual double    LastTickLast(void) const {return(m_tick.Last());}
+   virtual ulong     LastTickVolume(void) const {return(m_tick.Volume());}
    virtual double    LotSize(void) const {return(m_lotsize);}
    virtual void      LotSize(const double lotsize){m_lotsize=lotsize;}
    virtual int       Magic(void) const {return m_magic;}
@@ -573,12 +573,6 @@ bool JStrategyBase::OnTick(void)
    ManageOrders();
    int entry=0,exit=0;
    CheckSignals(entry,exit);
-   AddComment(TimeToStr(LastTickTime(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
-   AddComment("Last Trade: "+TimeToStr(LastTradeTime(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
-   AddComment("Last Time: "+TimeToStr(m_candle.LastTime(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
-   AddComment("Last Open: "+m_candle.LastOpen());
-   AddComment("Last Close: "+m_candle.LastClose());
-   AddComment("Total Orders: "+OrdersTotal());
    AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
    AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
    if(newbar || (m_every_tick && newtick))

@@ -171,7 +171,7 @@ bool JOrdersBase::CreateElement(const int index)
 bool JOrdersBase::Save(const int handle)
   {
    CArrayObj::Save(handle);
-   ADT::WriteChar(handle,m_clean);
+   ADT::WriteBool(handle,m_clean);
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -180,7 +180,7 @@ bool JOrdersBase::Save(const int handle)
 bool JOrdersBase::Load(const int handle)
   {
    CArrayObj::Load(handle);
-   ADT::ReadChar(handle,m_clean);
+   ADT::ReadBool(handle,m_clean);
    return(true);
   }
 //+------------------------------------------------------------------+

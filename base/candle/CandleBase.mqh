@@ -22,7 +22,7 @@ public:
                      JCandleBase(void);
                     ~JCandleBase(void);
    virtual bool      Init(CSymbolInfo *symbol,JEvents *events);
-   virtual double    LastTime() const {return(m_last.time);}
+   virtual datetime  LastTime() const {return(m_last.time);}
    virtual double    LastOpen() const {return(m_last.open);}
    virtual double    LastHigh() const {return(m_last.high);}
    virtual double    LastLow() const {return(m_last.low);}
@@ -119,7 +119,7 @@ void JCandleBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION acti
 //+------------------------------------------------------------------+
 bool JCandleBase::Save(const int handle)
   {
-   ADT::WriteChar(handle,m_trade_processed);
+   ADT::WriteBool(handle,m_trade_processed);
    ADT::WriteStruct(handle,m_last);
    return(true);
   }
@@ -128,7 +128,7 @@ bool JCandleBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool JCandleBase::Load(const int handle)
   {
-   ADT::ReadChar(handle,m_trade_processed);
+   ADT::ReadBool(handle,m_trade_processed);
    ADT::ReadStruct(handle,m_last);
    return(true);
   }

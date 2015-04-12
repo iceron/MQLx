@@ -17,6 +17,7 @@ public:
    static void       Delete(CObject *object);
    static string     GetParentDir(string filename);
    //--- methods for writing data
+   static uint       WriteBool(const int handle,const bool value);
    static uint       WriteChar(const int handle,const char value);
    static uint       WriteShort(const int handle,const short value);
    static uint       WriteInteger(const int handle,const int value);
@@ -37,6 +38,7 @@ public:
    static uint       WriteStruct(const int handle,T &data);
    static bool       WriteObject(const int handle,CObject *object);
    //--- methods for reading data
+   static bool       ReadBool(const int handle,bool &value);
    static bool       ReadChar(const int handle,char &value);
    static bool       ReadShort(const int handle,short &value);
    static bool       ReadInteger(const int handle,int &value);
@@ -93,6 +95,15 @@ string ADT::GetParentDir(string filename)
       pos=StringFind(filename,"\\",pos+1);
      }
    return(StringSubstr(filename,0,last_pos+1));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+static uint ADT::WriteBool(const int handle,const bool value)
+  {
+   if(handle!=INVALID_HANDLE)
+      return(FileWriteInteger(handle,value,sizeof(bool)));
+   return(0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -254,6 +265,19 @@ static bool ADT::WriteObject(const int handle,CObject *object)
    if(handle!=INVALID_HANDLE)
       if(CheckPointer(object))
          return(object.Save(handle));
+   return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+static bool ADT::ReadBool(const int handle,bool &value)
+  {
+   if(handle!=INVALID_HANDLE)
+     {
+      ResetLastError();
+      value=(bool)FileReadInteger(handle,sizeof(bool));
+      return(GetLastError()==0);
+     }
    return(false);
   }
 //+------------------------------------------------------------------+
