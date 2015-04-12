@@ -59,13 +59,13 @@ public:
    virtual ENUM_CMD  LongCondition(void) {return(0);}
    virtual ENUM_CMD  ShortCondition(void) {return(0);}
    //-- comments
-   virtual void AddComment(const string comment);
+   virtual void      AddComment(const string comment);
    //--- static methods
    static bool       IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD res,const bool exact=false);
    static bool       IsSignalTypeLong(const ENUM_CMD type);
    static bool       IsSignalTypeShort(const ENUM_CMD type);
    static int        SignalReverse(const int signal);
-   static ENUM_ORDER_TYPE SignalToOrderType(const int signal);   
+   static ENUM_ORDER_TYPE SignalToOrderType(const int signal);
    //---recovery
    virtual bool      Save(const int handle);
    virtual bool      Load(const int handle);
@@ -104,8 +104,8 @@ bool JSignalBase::Validate(void) const
 bool JSignalBase::Init(JStrategy *s,JComments *comments,JEvents *events)
   {
    m_strategy=s;
-   m_comments = comments;
-   m_events = events;
+   m_comments= comments;
+   m_events=events;
    return(true);
   }
 //+------------------------------------------------------------------+
