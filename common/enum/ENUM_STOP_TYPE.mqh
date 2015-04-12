@@ -10,6 +10,7 @@
 //+------------------------------------------------------------------+
 enum ENUM_STOP_TYPE
   {
+   STOP_TYPE_BROKER,
    STOP_TYPE_VIRTUAL,
    STOP_TYPE_PENDING
   };

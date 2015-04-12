@@ -159,7 +159,7 @@ double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,con
    if((type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
       if((price>=activation-m_trail*m_points_adjust || activation==0.0) && (new_price>price+m_step*m_points_adjust))
-         next_stop=new_price-m_trail*m_points_adjust;
+         next_stop=new_price;
       else next_stop=activation-m_trail*m_points_adjust;
       if((deactivation>0 && next_stop>=deactivation && next_stop>0.0) || (deactivation==0))
          if(next_stop<=new_price)
@@ -168,11 +168,11 @@ double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,con
    if((type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
       if((price<=activation+m_trail*m_points_adjust || activation==0.0) && (new_price<price-m_step*m_points_adjust))
-         next_stop=new_price+m_trail*m_points_adjust;
+         next_stop=new_price;
       else next_stop=activation+m_trail*m_points_adjust;
       if((deactivation>0 && next_stop<=deactivation && next_stop>0.0) || (deactivation==0))
          if(next_stop>=new_price)
-            return(next_stop);
+            return(next_stop);    
      }
    return(0.0);
   }
