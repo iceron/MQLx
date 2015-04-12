@@ -324,7 +324,7 @@ bool JStrategyBase::InitOrdersHistory(void)
 bool JStrategyBase::InitSignals(void)
   {
    if(m_signals==NULL) return(true);
-   return(m_signals.Init(GetPointer(this)));
+   return(m_signals.Init(GetPointer(this),GetPointer(m_comments),GetPointer(m_events)));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

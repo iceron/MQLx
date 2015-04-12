@@ -7,7 +7,7 @@
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_CMD.mqh"
 #include <Arrays\ArrayDouble.mqh>
-#include <Files\FileBin.mqh>
+#include "..\comment\CommentsBase.mqh"
 #include "..\indicator\IndicatorsBase.mqh"
 class JStrategy;
 class JSignals;
@@ -27,13 +27,14 @@ protected:
    JStrategy        *m_strategy;
    CArrayDouble      m_empty_value;
    JSignals         *m_signals;
-   JEvent           *m_event;
+   JComments        *m_comments;
+   JEvents          *m_events;
 public:
                      JSignalBase();
                     ~JSignalBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_SIGNAL);}
    //--- initialization
-   virtual bool      Init(JStrategy *s);
+   virtual bool      Init(JStrategy *s,JComments *comments,JEvents *events);
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
    virtual bool      Validate(void) const;
    //--- getters and setters
@@ -57,15 +58,17 @@ public:
    virtual bool      IsEmpty(const double val);
    virtual ENUM_CMD  LongCondition(void) {return(0);}
    virtual ENUM_CMD  ShortCondition(void) {return(0);}
+   //-- comments
+   virtual void AddComment(const string comment);
    //--- static methods
    static bool       IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD res,const bool exact=false);
    static bool       IsSignalTypeLong(const ENUM_CMD type);
    static bool       IsSignalTypeShort(const ENUM_CMD type);
    static int        SignalReverse(const int signal);
-   static ENUM_ORDER_TYPE SignalToOrderType(const int signal);
+   static ENUM_ORDER_TYPE SignalToOrderType(const int signal);   
    //---recovery
    virtual bool      Save(const int handle);
-   virtual bool      Load(const int handle);   
+   virtual bool      Load(const int handle);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -98,9 +101,11 @@ bool JSignalBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::Init(JStrategy *s)
+bool JSignalBase::Init(JStrategy *s,JComments *comments,JEvents *events)
   {
    m_strategy=s;
+   m_comments = comments;
+   m_events = events;
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -310,6 +315,14 @@ bool JSignalBase::Load(const int handle)
    ADT::ReadInteger(handle,m_signal);
    ADT::ReadInteger(handle,m_signal_valid);
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JSignalBase::AddComment(const string comment)
+  {
+   if(CheckPointer(m_comments)==POINTER_DYNAMIC)
+      m_comments.Add(new JComment(comment));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

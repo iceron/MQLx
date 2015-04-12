@@ -22,12 +22,14 @@ protected:
    bool              m_new_signal;
    bool              m_reverse;
    JStrategy        *m_strategy;
+   JComments        *m_comments;
+   JEvents          *m_events;
 public:
                      JSignalsBase(void);
                     ~JSignalsBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_SIGNALS);}
    //--- initialization
-   virtual bool      Init(JStrategy *s);
+   virtual bool      Init(JStrategy *s,JComments *comments,JEvents *events);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Validate() const;
    //--- checking   
@@ -45,6 +47,8 @@ public:
    virtual int       LastValidEntry(void) const {return(m_last_entry);}
    virtual bool      Reverse(void) const{return(m_reverse);}
    virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
+   //-- comments
+   virtual void AddComment(const string comment);
    //--- recovery
    virtual bool      CreateElement(const int index);
    virtual bool      Save(const int handle);
@@ -69,12 +73,12 @@ JSignalsBase::~JSignalsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalsBase::Init(JStrategy *s)
+bool JSignalsBase::Init(JStrategy *s,JComments *comments,JEvents *events)
   {
    for(int i=0;i<Total();i++)
      {
       JSignal *signal=At(i);
-      signal.Init(s);
+      signal.Init(GetPointer(s),GetPointer(comments),GetPointer(events));
      }
    SetContainer(s);
    return(true);
@@ -193,6 +197,14 @@ bool JSignalsBase::Load(const int handle)
    ADT::ReadInteger(handle,m_last_entry);
    ADT::ReadInteger(handle,m_last_exit);
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JSignalsBase::AddComment(const string comment)
+  {
+   if(CheckPointer(m_comments)==POINTER_DYNAMIC)
+      m_comments.Add(new JComment(comment));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
