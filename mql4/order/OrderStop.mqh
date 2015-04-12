@@ -66,9 +66,9 @@ bool JOrderStop::Recreate(void)
    if(DeleteStopLines())
      {
       if(!m_takeprofit_closed)
-         m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,m_takeprofit);
+         m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,TakeProfit());
       if(!m_stoploss_closed)
-         m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,m_stoploss);
+         m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,StopLoss());
       if(!m_stoploss_closed || !m_takeprofit_closed)
          m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,m_order.Price());
       ENUM_POINTER_TYPE pointer_entry=CheckPointer(m_objentry);
@@ -93,7 +93,7 @@ bool JOrderStop::UpdateOrderStop(const double stoploss,const double takeprofit)
          modify_sl=m_stop.OrderModify(m_stoploss_ticket,stoploss);
       else if(m_stop.Main() && !m_stop.Virtual())
          modify_sl=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
-      else m_stoploss=stoploss;
+      else StopLoss(stoploss);
      }
    if(takeprofit>0)
      {
@@ -101,7 +101,7 @@ bool JOrderStop::UpdateOrderStop(const double stoploss,const double takeprofit)
          modify_tp=m_stop.OrderModify(m_takeprofit_ticket,stoploss);
       else if(m_stop.Main() && !m_stop.Virtual())
          modify_tp=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
-      else m_takeprofit=takeprofit;
+      else TakeProfit(takeprofit);
 
      }
    return(modify_tp||modify_sl);
@@ -188,7 +188,7 @@ void JOrderStop::Check(double &volume)
    if(((m_stoploss_closed || m_objsl==NULL) && (m_takeprofit_closed || m_objtp==NULL)) || volume<=0)
      {
       DeleteStopLines();
-      if(m_stop.Main() && m_stop.Virtual() && (m_stoploss>0 || m_takeprofit>0)) 
+      if(m_stop.Main() && m_stop.Virtual() && (StopLoss()>0 || TakeProfit()>0)) 
          m_order.IsClosed(true);
      }
    CheckDeinit();
