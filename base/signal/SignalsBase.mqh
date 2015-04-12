@@ -114,7 +114,7 @@ bool JSignalsBase::CheckSignals(int &entry,int &exit)
          entry=CMD_NEUTRAL;
    if(entry>0)
       m_last_entry=entry;      
-   if(entry>0 && entry==JSignal::SignalReverse(exit))
+   if((entry>0 && entry==JSignal::SignalReverse(exit)) || exit==CMD_VOID)
      {      
       entry= CMD_VOID;
       exit = CMD_VOID;
