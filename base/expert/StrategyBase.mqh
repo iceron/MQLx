@@ -299,7 +299,7 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
 bool JStrategyBase::InitComponents(void)
   {
    bool result=InitOrders() && InitOrdersHistory() && InitSignals() && InitStops() && 
-               InitAccount() && InitMoneys() && InitTimes() && InitCandle();
+               InitAccount() && InitMoneys() && InitTimes() && InitCandle() && InitTrade();
    if(OfflineMode())
       EventChartCustom(0,OFFLINE_TICK,0,0,m_symbol.Name());
    return(result);
