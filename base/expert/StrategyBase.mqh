@@ -589,7 +589,6 @@ bool JStrategyBase::OnTick(void)
            }
         }
      }
-
    ManageOrdersHistory();
    if(CheckPointer(m_events)==POINTER_DYNAMIC)
       m_events.Run();
@@ -689,8 +688,7 @@ bool JStrategyBase::CloseStops(void)
 JStrategyBase::CloseOppositeOrders(const int entry,const int exit)
   {
    if(m_orders.Total()==0) return;
-   if(m_position_reverse)
-      CloseOrders(entry,exit);
+   CloseOrders(entry,exit);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
