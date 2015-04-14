@@ -22,7 +22,7 @@ public:
                      JTimeBase(void);
                     ~JTimeBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_TIME);}
-   virtual bool      Validate() const {return(true);}
+   virtual bool      Validate() {return(true);}
    //--- initialization
    virtual bool      Init(JStrategy *s,JTimes *times);
    virtual void      SetContainer(JTimes *times){m_times=times;}
@@ -34,7 +34,7 @@ public:
    virtual datetime  TimeStart(void) const {return(m_time_start);}
    virtual void      TimeStart(const datetime start){m_time_start=start;}
    //--- checking
-   virtual bool      Evaluate(void) const {return(true);}
+   virtual bool      Evaluate(void) {return(true);}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -5,7 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include "Time.mqh"
+#include "TimeBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -24,8 +24,8 @@ protected:
 public:
                      JTimeFilterBase(void);
                     ~JTimeFilterBase(void);
-   virtual bool      Validate(void) const;
-   virtual bool      Evaluate(void) const;
+   virtual bool      Validate(void);
+   virtual bool      Evaluate(void);
    virtual bool      Init(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0);
    virtual void      SetDays(const bool sun,const bool mon,const bool tue,const bool wed,const bool thu,const bool fri,const bool sat);
    virtual bool      Sunday(void) const {return(m_sun);}
@@ -52,8 +52,9 @@ JTimeFilterBase::JTimeFilterBase(void) : m_sun(false),
                                          m_wed(true),
                                          m_thu(true),
                                          m_fri(true),
-                                         m_sat(false)
+                                         m_sat(false)                                         
   {
+
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -64,11 +65,11 @@ JTimeFilterBase::~JTimeFilterBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeFilterBase::Validate(void) const
+bool JTimeFilterBase::Validate(void)
   {
-   start=StructToTime(m_filter_start);
-   end=StructToTime(m_filter_end);
-   if(end<start)
+   datetime t_start=StructToTime(m_filter_start);
+   datetime t_end=StructToTime(m_filter_end);
+   if(t_end<t_start)
      {
       PrintFormat("Invalid setting for start and end times.");
       return(false);
@@ -91,7 +92,7 @@ bool JTimeFilterBase::Init(const int gmt,const int starthour,const int endhour,c
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeFilterBase::Evaluate(void) const
+bool JTimeFilterBase::Evaluate(void)
   {
    if(!Active()) return(true);
    bool result=true;
@@ -148,9 +149,9 @@ bool JTimeFilterBase::Evaluate(void) const
       m_filter_end.day = time.day;
       m_filter_end.day_of_week = time.day_of_week;
       m_filter_end.day_of_year = time.day_of_year;
-      start=StructToTime(m_filter_start);
-      end=StructToTime(m_filter_end);
-      if(!(current>=start && current<=end))
+      datetime f_start=StructToTime(m_filter_start);
+      datetime f_end=StructToTime(m_filter_end);
+      if(!(current>=f_start && current<=f_end))
          result=false;
      }
    return(m_filter_type==TIME_FILTER_INCLUDE?result:!result);

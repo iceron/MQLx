@@ -5,7 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include "Time.mqh"
+#include "TimeBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -50,9 +50,9 @@ bool JTimeRangeBase::Init(datetime begin,datetime end)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeRangeBase::Validate(void)
+bool JTimeRangeBase::Validate(void) const
   {
-   if (m_begin>m_start)
+   if (m_end>m_begin)
    {
       PrintFormat("Invalid setting for start and end times.");
       return(false);
@@ -62,7 +62,7 @@ bool JTimeRangeBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeRangeBase::Evaluate(void)
+bool JTimeRangeBase::Evaluate(void) const
   {
    if(!Active()) return(true);
    datetime current=TimeCurrent();

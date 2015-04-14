@@ -7,7 +7,9 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
 #include <Files\FileBin.mqh>
-#include "TimeBase.mqh"
+#include "TimeFilterBase.mqh"
+#include "TimeRangeBase.mqh"
+#include "TimerBase.mqh"
 class JStrategy;
 //+------------------------------------------------------------------+
 //|                                                                  |

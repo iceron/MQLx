@@ -47,7 +47,7 @@ public:
    virtual bool      Total(void) const {return(m_total);}
    //--- evaluation   
    virtual bool      Elapsed(void) const {return(m_elapsed);}
-   virtual bool      Evaluate(void) const;
+   virtual bool      Evaluate(void);
    virtual void      RecalculateTotal(void);
   };
 //+------------------------------------------------------------------+
@@ -104,7 +104,7 @@ void JTimerBase::RecalculateTotal(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimerBase::Evaluate(void) const
+bool JTimerBase::Evaluate(void)
   {
    if(!Active()) return(true);
    bool result=true;
