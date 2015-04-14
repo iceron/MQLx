@@ -235,6 +235,7 @@ protected:
    virtual void      DeinitSignals(void);
    virtual void      DeinitStops(void);
    virtual void      DeinitSymbol(void);
+   virtual void      DeinitTimes(void);
    virtual void      DeinitTrade(void);
   };
 //+------------------------------------------------------------------+
@@ -861,6 +862,7 @@ void JStrategyBase::Deinit(const int reason=0)
    DeinitAccount();
    DeinitEvents();
    DeinitComments();
+   DeinitTimes();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -922,6 +924,13 @@ void JStrategyBase::DeinitEvents(void)
 void JStrategyBase::DeinitComments(void)
   {
    ADT::Delete(m_comments);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JStrategyBase::DeinitTimes(void)
+  {
+   ADT::Delete(m_times);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -97,7 +97,7 @@ bool JTimeFilterBase::Evaluate(void)
    if(!Active()) return(true);
    bool result=true;
    MqlDateTime time;
-   datetime current=TimeCurrent(),start=0,end=0;
+   datetime current=TimeCurrent();
    TimeToStruct(current,time);
    switch(time.day_of_week)
      {
