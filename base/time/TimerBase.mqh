@@ -30,7 +30,7 @@ public:
                     ~JTimerBase(void);
    //--- initialization
    virtual bool      Init(const uint years,const uint months,const uint days,const uint hours,const uint minutes,const uint seconds);
-   virtual bool      Validate(void) const;
+   virtual bool      Validate(void);
    //--- getters and setters
    virtual uint      Year(void) const {return(m_years);}
    virtual void      Year(const uint years) {m_years=years;}
@@ -85,7 +85,7 @@ bool JTimerBase::Init(const uint years,const uint months,const uint days,const u
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimerBase::Validate(void) const
+bool JTimerBase::Validate(void)
   {
    if(m_total<=0)
      {
@@ -110,7 +110,7 @@ bool JTimerBase::Evaluate(void)
    bool result=true;
    m_elapsed=(int)(TimeCurrent()-m_time_start);
    if(m_elapsed>=m_total) result=false;
-   return(m_filter_type==TIME_FILTER_INCLUDE?result:!result);
+   return(Reverse()?result:!result);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

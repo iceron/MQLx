@@ -154,7 +154,7 @@ bool JTimeFilterBase::Evaluate(void)
       if(!(current>=f_start && current<=f_end))
          result=false;
      }
-   return(m_filter_type==TIME_FILTER_INCLUDE?result:!result);
+   return(Reverse()?result:!result);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

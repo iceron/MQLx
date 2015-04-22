@@ -18,12 +18,12 @@ public:
                      JTimeRangeBase(void);
                     ~JTimeRangeBase(void);
    virtual bool      Init(datetime begin,datetime end);
-   virtual bool      Validate(void) const;
+   virtual bool      Validate(void);
    virtual datetime  Begin(void) const  {return(m_begin);}
    virtual void      Begin(const datetime begin) {m_begin=begin;}
    virtual datetime  End(void) const  {return(m_end);}
    virtual void      End(const datetime end) {m_end=end;}
-   virtual bool      Evaluate(void) const;
+   virtual bool      Evaluate(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -50,7 +50,7 @@ bool JTimeRangeBase::Init(datetime begin,datetime end)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeRangeBase::Validate(void) const
+bool JTimeRangeBase::Validate(void)
   {
    if (m_end>m_begin)
    {
@@ -62,12 +62,12 @@ bool JTimeRangeBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeRangeBase::Evaluate(void) const
+bool JTimeRangeBase::Evaluate(void)
   {
    if(!Active()) return(true);
    datetime current=TimeCurrent();
    bool result=current>=m_begin && current<=m_end;
-   return(m_filter_type==TIME_FILTER_INCLUDE?result:!result);
+   return(Reverse()?result:!result);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

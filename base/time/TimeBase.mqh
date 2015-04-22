@@ -5,8 +5,9 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include <traderjet-cross\common\enum\ENUM_TIME_FILTER_TYPE.mqh>
 #include <Object.mqh>
+#include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
+class JStrategy;
 class JTimes;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -15,8 +16,8 @@ class JTimeBase : public CObject
   {
 protected:
    bool              m_activate;
+   bool              m_reverse;
    datetime          m_time_start;
-   ENUM_TIME_FILTER_TYPE m_filter_type;
    JTimes           *m_times;
 public:
                      JTimeBase(void);
@@ -29,8 +30,8 @@ public:
    //--- setters and getters
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(const bool activate) {m_activate=activate;}
-   virtual ENUM_TIME_FILTER_TYPE FilterType(void) const {return(m_filter_type);}
-   virtual void      FilterType(const ENUM_TIME_FILTER_TYPE type){m_filter_type=type;}
+   virtual bool      Reverse() {return(m_reverse);}
+   virtual void      Reverse(bool reverse) {m_reverse = reverse;}
    virtual datetime  TimeStart(void) const {return(m_time_start);}
    virtual void      TimeStart(const datetime start){m_time_start=start;}
    //--- checking
@@ -40,10 +41,9 @@ public:
 //|                                                                  |
 //+------------------------------------------------------------------+
 JTimeBase::JTimeBase(void) : m_activate(true),
-                             m_time_start(0),
-                             m_filter_type(TIME_FILTER_INCLUDE)
+                             m_reverse(false),
+                             m_time_start(TimeCurrent())
   {
-   m_time_start=TimeCurrent();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
