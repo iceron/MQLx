@@ -582,7 +582,8 @@ bool JStrategyBase::OnTick(void)
       ManageOrders();
       if(!m_candle.TradeProcessed())
         {
-         ret=TradeOpen(entry);
+         if (!CheckPointer(m_times) || (m_times.Evaluate()))
+            ret=TradeOpen(entry);
          if(ret)
            {
             m_last_trade_data=m_tick.LastTick();
