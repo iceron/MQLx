@@ -21,6 +21,7 @@ protected:
    string            m_name;
    int               m_signal;
    int               m_signal_valid;
+   bool              m_new_signal;
    bool              m_reverse;
    bool              m_exit;
    JIndicators      *m_indicators;
@@ -44,6 +45,8 @@ public:
    virtual void      ExitSignal(const bool exit) {m_exit=exit;}
    virtual string    Name(void) const {return(m_name);}
    virtual void      Name(const string name) {m_name=name;}
+   virtual int       NewSignal(void) const {return(m_new_signal);}
+   virtual void      NewSignal(const int signal) {m_new_signal=signal;}
    virtual bool      Reverse(void) const {return(m_reverse);}
    virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
    virtual int       LastEntry(void) const {return(m_signal);}
@@ -77,6 +80,7 @@ JSignalBase::JSignalBase() : m_activate(true),
                              m_name(NULL),
                              m_signal(CMD_NEUTRAL),
                              m_signal_valid(CMD_VOID),
+                             m_new_signal(false),
                              m_reverse(false),
                              m_exit(false)
 
@@ -153,7 +157,13 @@ int JSignalBase::CheckSignal(void)
      }
    if(m_reverse) res=JSignalBase::SignalReverse(res);
    if(res>CMD_NEUTRAL) m_signal_valid=res;
-   m_signal=res;
+   if (m_new_signal)
+   {
+      if (m_signal==res)
+         res = CMD_NEUTRAL;
+      else m_signal = res;
+   }
+   else m_signal=res;
    return(res);
   }
 //+------------------------------------------------------------------+
