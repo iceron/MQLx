@@ -49,8 +49,6 @@ public:
    virtual CObject *GetObject(ENUM_CLASS_TYPE type,int &idx);
    virtual bool      Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
    virtual bool      Execute(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
-   virtual bool      Backup(CFileBin *file);
-   virtual bool      Restore(CFileBin *file);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
