@@ -24,24 +24,26 @@ protected:
 public:
                      JTimeFilterBase(void);
                     ~JTimeFilterBase(void);
+   //--- initialization                    
    virtual bool      Validate(void);
    virtual bool      Evaluate(void);
    virtual bool      Init(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0);
    virtual void      SetDays(const bool sun,const bool mon,const bool tue,const bool wed,const bool thu,const bool fri,const bool sat);
-   virtual bool      Sunday(void) const {return(m_sun);}
-   virtual void      Sunday(const bool t) {m_sun=t;}
-   virtual bool      Monday(void) const {return(m_mon);}
-   virtual void      Monday(const bool t) {m_mon=t;}
-   virtual bool      Tuesday(void) const {return(m_tue);}
-   virtual void      Tuesday(const bool t) {m_tue=t;}
-   virtual bool      Wednesday(void) const {return(m_wed);}
-   virtual void      Wednesday(const bool t) {m_wed=t;}
-   virtual bool      Thursday(void) const {return(m_thu);}
-   virtual void      Thursday(const bool t) {m_thu=t;}
-   virtual bool      Friday(void) const {return(m_fri);}
-   virtual void      Friday(const bool t) {m_fri=t;}
-   virtual bool      Saturday(void) const {return(m_sat);}
-   virtual void      Saturday(const bool t) {m_sat=t;}
+   //--- setters and getters
+   bool              Sunday(void) const {return(m_sun);}
+   void              Sunday(const bool t) {m_sun=t;}
+   bool              Monday(void) const {return(m_mon);}
+   void              Monday(const bool t) {m_mon=t;}
+   bool              Tuesday(void) const {return(m_tue);}
+   void              Tuesday(const bool t) {m_tue=t;}
+   bool              Wednesday(void) const {return(m_wed);}
+   void              Wednesday(const bool t) {m_wed=t;}
+   bool              Thursday(void) const {return(m_thu);}
+   void              Thursday(const bool t) {m_thu=t;}
+   bool              Friday(void) const {return(m_fri);}
+   void              Friday(const bool t) {m_fri=t;}
+   bool              Saturday(void) const {return(m_sat);}
+   void              Saturday(const bool t) {m_sat=t;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

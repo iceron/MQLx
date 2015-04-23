@@ -36,25 +36,25 @@ public:
    virtual void      SetContainer(JTrails *trails){m_trails=trails;}
    virtual bool      Validate(void) const;
    //--- getters and setters    
-   virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(const bool activate) {m_activate=activate;}
-   virtual int       DigitsAdjust(void) const {return(m_digits_adjust);}
-   virtual void      DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
-   virtual double    End(void) const {return(m_end);}
-   virtual void      End(const double end) {m_end=end;}
-   virtual double    PointsAdjust(void) const {return(m_points_adjust);}
-   virtual void      PointsAdjust(const double adjust) {m_points_adjust=adjust;}
-   virtual void      Set(const double trail,const double st,const double step=1,const double end=0);
-   virtual double    Start(void) const {return(m_start);}
-   virtual void      Start(const double st) {m_start=st;}
-   virtual double    Step(void) const {return(m_step);}
-   virtual void      Step(const double step) {m_step=step;}
-   virtual double    Trail(void) const {return(m_trail);}
-   virtual void      Trail(const double trail) {m_trail=trail;}
-   virtual int       TrailMode(void) const {return(m_mode);}
-   virtual void      TrailMode(const ENUM_TRAIL_MODE mode) {m_mode=mode;}
-   virtual int       TrailTarget(void) const {return(m_target);}
-   virtual void      TrailTarget(const ENUM_TRAIL_TARGET target) {m_target=target;}
+   bool              Active(void) const {return(m_activate);}
+   void              Active(const bool activate) {m_activate=activate;}
+   int               DigitsAdjust(void) const {return(m_digits_adjust);}
+   void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
+   double            End(void) const {return(m_end);}
+   void              End(const double end) {m_end=end;}
+   double            PointsAdjust(void) const {return(m_points_adjust);}
+   void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
+   void              Set(const double trail,const double st,const double step=1,const double end=0);
+   double            Start(void) const {return(m_start);}
+   void              Start(const double st) {m_start=st;}
+   double            Step(void) const {return(m_step);}
+   void              Step(const double step) {m_step=step;}
+   double            Trail(void) const {return(m_trail);}
+   void              Trail(const double trail) {m_trail=trail;}
+   int               TrailMode(void) const {return(m_mode);}
+   void              TrailMode(const ENUM_TRAIL_MODE mode) {m_mode=mode;}
+   int               TrailTarget(void) const {return(m_target);}
+   void              TrailTarget(const ENUM_TRAIL_TARGET target) {m_target=target;}
    //--- checking
    virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
 protected:

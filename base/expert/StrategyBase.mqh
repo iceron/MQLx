@@ -110,72 +110,72 @@ public:
    virtual bool      InitStops(void);
    virtual bool      InitCandle(void);
    virtual bool      Validate(void) const;
-   //container
-   virtual JExpert  *GetContainer() const {return(GetPointer(m_expert));}
+   //--- container
+   virtual JExpert   *GetContainer() const {return(GetPointer(m_expert));}
    virtual void      SetContainer(JExpert *e){m_expert=e;}
    //--- activation and deactivation
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(const bool activate) {m_activate=activate;}
    //--- setters and getters   
-   virtual CAccountInfo *AccountInfo(void) const {return(GetPointer(m_account));}
-   virtual JCandle   *Candle(void) const {return(GetPointer(m_candle));}
-   virtual JComments *Comments() const {return(GetPointer(m_comments));}
-   virtual JEvents  *Events(void) const {return(m_events);}
-   virtual JStop    *MainStop(void) const {return(m_main_stop);}
-   virtual JMoneys  *Moneys(void) const {return(m_moneys);}
-   virtual JOrders  *Orders() const {return(GetPointer(m_orders));}
-   virtual JOrders  *OrdersHistory() const {return(GetPointer(m_orders_history));}
-   virtual CArrayInt *OtherMagic() const {return(GetPointer(m_other_magic));}
-   virtual JSignals *Signals(void) const {return(GetPointer(m_signals));}
-   virtual JStops   *Stops(void) const {return(GetPointer(m_stops));}
-   virtual CSymbolInfo *SymbolInfo(void) const {return(GetPointer(m_symbol));}
-   virtual JTick    *Tick(void) const {return(GetPointer(m_tick));}
-   virtual JTimes   *Times(void) const {return(GetPointer(m_times));}
-   virtual void      AsyncMode(const bool async) {m_trade.SetAsyncMode(async);}
-   virtual string    Comment(void) const {return(m_comment);}
-   virtual void      Comment(const string comment){m_comment=comment;}
-   virtual void      ChartComment(JComments *comments) {m_comments = comments;}
-   virtual void      AddComment(const string comment);
-   virtual int       DigitsAdjust(void) const {return(m_digits_adjust);}
-   virtual void      DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
-   virtual datetime  Expiration(void) const {return(m_expiration);}
-   virtual void      Expiration(const datetime expiration) {m_expiration=expiration;}
-   virtual void      LastTradeRates(MqlTick &tick) {m_last_trade_data=tick;}
-   virtual bool      EnableTrade(void) const {return(m_trade_allowed);}
-   virtual void      EnableTrade(bool allowed){m_trade_allowed=allowed;}
-   virtual bool      EnableLong(void) const {return(m_long_allowed);}
-   virtual void      EnableLong(bool allowed){m_long_allowed=allowed;}
-   virtual bool      EnableShort(void) const {return(m_short_allowed);}
-   virtual void      EnableShort(bool allowed){m_short_allowed=allowed;}
-   virtual datetime  LastTradeTime(void) const {return(m_last_trade_data.time);}
-   virtual double    LastTradeBid(void) const {return(m_last_trade_data.bid);}
-   virtual double    LastTradeAsk(void) const {return(m_last_trade_data.ask);}
-   virtual double    LastTradeLast(void) const {return(m_last_trade_data.last);}
-   virtual ulong     LastTradeVolume(void) const {return(m_last_trade_data.volume);}
-   virtual datetime  LastTickTime(void) const {return(m_tick.Time());}
-   virtual double    LastTickBid(void) const {return(m_tick.Bid());}
-   virtual double    LastTickAsk(void) const {return(m_tick.Ask());}
-   virtual double    LastTickLast(void) const {return(m_tick.Last());}
-   virtual ulong     LastTickVolume(void) const {return(m_tick.Volume());}
-   virtual double    LotSize(void) const {return(m_lotsize);}
-   virtual void      LotSize(const double lotsize){m_lotsize=lotsize;}
-   virtual int       Magic(void) const {return m_magic;}
-   virtual void      Magic(const int magic) {m_magic=magic;}
-   virtual int       MaxOrdersHistory(void) const {return m_max_orders_history;}
-   virtual void      MaxOrdersHistory(const int max) {m_max_orders_history=max;}
-   virtual string    Name() const {return(m_name);}
-   virtual void      Name(const string name) {m_name = name;}
-   virtual bool      OfflineMode(void) const {return(m_offline_mode);}
-   virtual void      OfflineMode(const bool mode) {m_offline_mode=mode;}
-   virtual int       OfflineModeDelay() const {return(m_offline_mode_delay);}
-   virtual void      OfflineModeDelay(const int delay){m_offline_mode_delay=delay;}
-   virtual int       OrdersTotal(void) const {return(m_orders.Total());}
-   virtual int       OrdersHistoryTotal(void) const {return(m_orders_history.Total());}
-   virtual double    PointsAdjust(void) const {return(m_points_adjust);}
-   virtual void      PointsAdjust(const double adjust) {m_points_adjust=adjust;}
-   virtual int       TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total()+m_history_count);}
-   virtual ENUM_EXECUTION_MODE ExecutionMode(void) const {return(m_exec_mode);}
-   virtual void      ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
+   CAccountInfo      *AccountInfo(void) const {return(GetPointer(m_account));}
+   JCandle           *Candle(void) const {return(GetPointer(m_candle));}
+   JComments         *Comments() const {return(GetPointer(m_comments));}
+   JEvents           *Events(void) const {return(m_events);}
+   JStop             *MainStop(void) const {return(m_main_stop);}
+   JMoneys           *Moneys(void) const {return(m_moneys);}
+   JOrders           *Orders() const {return(GetPointer(m_orders));}
+   JOrders           *OrdersHistory() const {return(GetPointer(m_orders_history));}
+   CArrayInt         *OtherMagic() const {return(GetPointer(m_other_magic));}
+   JSignals          *Signals(void) const {return(GetPointer(m_signals));}
+   JStops            *Stops(void) const {return(GetPointer(m_stops));}
+   CSymbolInfo          *SymbolInfo(void) const {return(GetPointer(m_symbol));}
+   JTick             *Tick(void) const {return(GetPointer(m_tick));}
+   JTimes            *Times(void) const {return(GetPointer(m_times));}
+   void              AsyncMode(const bool async) {m_trade.SetAsyncMode(async);}
+   string            Comment(void) const {return(m_comment);}
+   void              Comment(const string comment){m_comment=comment;}
+   void              ChartComment(JComments *comments) {m_comments=comments;}
+   void              AddComment(const string comment);
+   int               DigitsAdjust(void) const {return(m_digits_adjust);}
+   void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
+   datetime          Expiration(void) const {return(m_expiration);}
+   void              Expiration(const datetime expiration) {m_expiration=expiration;}
+   void              LastTradeRates(MqlTick &tick) {m_last_trade_data=tick;}
+   bool              EnableTrade(void) const {return(m_trade_allowed);}
+   void              EnableTrade(bool allowed){m_trade_allowed=allowed;}
+   bool              EnableLong(void) const {return(m_long_allowed);}
+   void              EnableLong(bool allowed){m_long_allowed=allowed;}
+   bool              EnableShort(void) const {return(m_short_allowed);}
+   void              EnableShort(bool allowed){m_short_allowed=allowed;}
+   datetime          LastTradeTime(void) const {return(m_last_trade_data.time);}
+   double            LastTradeBid(void) const {return(m_last_trade_data.bid);}
+   double            LastTradeAsk(void) const {return(m_last_trade_data.ask);}
+   double            LastTradeLast(void) const {return(m_last_trade_data.last);}
+   ulong             LastTradeVolume(void) const {return(m_last_trade_data.volume);}
+   datetime          LastTickTime(void) const {return(m_tick.Time());}
+   double            LastTickBid(void) const {return(m_tick.Bid());}
+   double            LastTickAsk(void) const {return(m_tick.Ask());}
+   double            LastTickLast(void) const {return(m_tick.Last());}
+   ulong             LastTickVolume(void) const {return(m_tick.Volume());}
+   double            LotSize(void) const {return(m_lotsize);}
+   void              LotSize(const double lotsize){m_lotsize=lotsize;}
+   int               Magic(void) const {return m_magic;}
+   void              Magic(const int magic) {m_magic=magic;}
+   int               MaxOrdersHistory(void) const {return m_max_orders_history;}
+   void              MaxOrdersHistory(const int max) {m_max_orders_history=max;}
+   string            Name() const {return(m_name);}
+   void              Name(const string name) {m_name = name;}
+   bool              OfflineMode(void) const {return(m_offline_mode);}
+   void              OfflineMode(const bool mode) {m_offline_mode=mode;}
+   int               OfflineModeDelay() const {return(m_offline_mode_delay);}
+   void              OfflineModeDelay(const int delay){m_offline_mode_delay=delay;}
+   int               OrdersTotal(void) const {return(m_orders.Total());}
+   int               OrdersHistoryTotal(void) const {return(m_orders_history.Total());}
+   double            PointsAdjust(void) const {return(m_points_adjust);}
+   void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
+   int               TradesTotal(void) const{return(m_orders.Total()+m_orders_history.Total()+m_history_count);}
+   ENUM_EXECUTION_MODE ExecutionMode(void) const {return(m_exec_mode);}
+   void              ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
    //-- events
    virtual bool      OnTick(void);
    virtual void      OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam);
@@ -227,15 +227,15 @@ protected:
    virtual double    TakeProfitCalculate(const int res,const double price);
    virtual bool      TradeOpen(const int res) {return(true);}
    //--- deinitialization
-   virtual void      DeinitAccount(void);
-   virtual void      DeinitEvents(void);
-   virtual void      DeinitComments(void);
-   virtual void      DeinitMoneys(void);
-   virtual void      DeinitSignals(void);
-   virtual void      DeinitStops(void);
-   virtual void      DeinitSymbol(void);
-   virtual void      DeinitTimes(void);
-   virtual void      DeinitTrade(void);
+   void      DeinitAccount(void);
+   void      DeinitEvents(void);
+   void      DeinitComments(void);
+   void      DeinitMoneys(void);
+   void      DeinitSignals(void);
+   void      DeinitStops(void);
+   void      DeinitSymbol(void);
+   void      DeinitTimes(void);
+   void      DeinitTrade(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -565,7 +565,7 @@ bool JStrategyBase::OnTick(void)
       ManageOrders();
       if(!m_candle.TradeProcessed())
         {
-         if (!CheckPointer(m_times) || (m_times.Evaluate()))
+         if(!CheckPointer(m_times) || (m_times.Evaluate()))
             ret=TradeOpen(entry);
          if(ret)
            {
@@ -936,7 +936,7 @@ bool JStrategyBase::Load(const int handle)
    ADT::ReadObject(handle,GetPointer(m_orders));
    ADT::ReadObject(handle,GetPointer(m_orders_history));
    ADT::ReadObject(handle,GetPointer(m_tick));
-   ADT::ReadObject(handle,GetPointer(m_candle));   
+   ADT::ReadObject(handle,GetPointer(m_candle));
    return(true);
   }
 //+------------------------------------------------------------------+

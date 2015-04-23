@@ -41,28 +41,28 @@ public:
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- getters and setters
-   virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(const bool activate) {m_activate=activate;}
-   virtual void      Balance(const double balance) {m_balance=balance;}
-   virtual double    Balance(void) const {return(m_balance);}
-   virtual void      BalanceIncrement(const double balance) {m_balance_inc=balance;}
-   virtual double    BalanceIncrement(void) const {return(m_balance_inc);}
-   virtual void      Equity(const bool equity) {m_equity=equity;}
-   virtual bool      Equity(void) const {return(m_equity);}
-   virtual void      LastUpdate(const datetime update) {m_last_update=update;}
-   virtual datetime  LastUpdate(void) const {return(m_last_update);}
-   virtual void      Percent(const double percent) {m_percent=percent;}
-   virtual double    Percent(void) const {return(m_percent);}
-   virtual void      Period(const int period) {m_period=period;}
-   virtual int       Period(void) const {return(m_period);}
-   virtual void      UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
-   virtual double    Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
-   virtual void      VolumeCurrent(const double volume) {m_volume=volume;}
-   virtual double    VolumeCurrent(void) const {return(m_volume);}
-   virtual void      VolumeIncrement(const double volume) {m_volume_inc=volume;}
-   virtual double    VolumeIncrement(void) const {return(m_volume_inc);}
-   virtual void      VolumeBase(const double volume_base) {m_volume_base=volume_base;}
-   virtual double    VolumeBase(void) const {return(m_volume_base);}
+   bool      Active(void) const {return(m_activate);}
+   void      Active(const bool activate) {m_activate=activate;}
+   void      Balance(const double balance) {m_balance=balance;}
+   double    Balance(void) const {return(m_balance);}
+   void      BalanceIncrement(const double balance) {m_balance_inc=balance;}
+   double    BalanceIncrement(void) const {return(m_balance_inc);}
+   void      Equity(const bool equity) {m_equity=equity;}
+   bool      Equity(void) const {return(m_equity);}
+   void      LastUpdate(const datetime update) {m_last_update=update;}
+   datetime  LastUpdate(void) const {return(m_last_update);}
+   void      Percent(const double percent) {m_percent=percent;}
+   double    Percent(void) const {return(m_percent);}
+   void      Period(const int period) {m_period=period;}
+   int       Period(void) const {return(m_period);}
+   void      UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
+   double    Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
+   void      VolumeCurrent(const double volume) {m_volume=volume;}
+   double    VolumeCurrent(void) const {return(m_volume);}
+   void      VolumeIncrement(const double volume) {m_volume_inc=volume;}
+   double    VolumeIncrement(void) const {return(m_volume_inc);}
+   void      VolumeBase(const double volume_base) {m_volume_base=volume_base;}
+   double    VolumeBase(void) const {return(m_volume_base);}
 protected:
    virtual bool      UpdateByMargin(void);
    virtual bool      UpdateByPeriod(void);

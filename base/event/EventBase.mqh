@@ -34,16 +34,19 @@ public:
                     ~JEventBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_EVENT);}
    virtual void      SetContainer(JEvents *e){m_events=e;}
-   virtual bool      Activate(void) const {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
-   virtual int       Action() {return(m_action);}
-   virtual int       ID(void) const {return(m_action);}
-   virtual void      ID(ENUM_ACTION action) {m_action=action;}
+   //--- initialization
    virtual void      Init(const ENUM_ACTION id,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      Init(const ENUM_ACTION action,string message_add);
-   virtual bool      Instant() {return(m_instant);}
-   virtual void      CheckInstant();
-   virtual datetime  TimeStamp() {return(m_timestamp);}
+   //--- setters and getters
+   bool              Activate(void) const {return(m_activate);}
+   void              Activate(bool activate) {m_activate=activate;}
+   int               Action() {return(m_action);}
+   int               ID(void) const {return(m_action);}
+   void              ID(ENUM_ACTION action) {m_action=action;}   
+   bool              Instant() {return(m_instant);}
+   datetime          TimeStamp() {return(m_timestamp);}
+   //--- processing
+   virtual void      CheckInstant();   
    virtual void      AddObject(CObject *object);
    virtual CObject  *GetObject(ENUM_CLASS_TYPE type);
    virtual CObject  *GetObject(ENUM_CLASS_TYPE type,int &idx);

@@ -32,20 +32,20 @@ public:
    virtual bool      Init(const uint years,const uint months,const uint days,const uint hours,const uint minutes,const uint seconds);
    virtual bool      Validate(void);
    //--- getters and setters
-   virtual uint      Year(void) const {return(m_years);}
-   virtual void      Year(const uint years) {m_years=years;}
-   virtual uint      Month(void) const {return(m_months);}
-   virtual void      Month(const uint months) {m_months=months;}
-   virtual uint      Days(void) const {return(m_days);}
-   virtual void      Days(const uint days) {m_days=days;}
-   virtual uint      Hours(void) const {return(m_hours);}
-   virtual void      Hours(const uint hours) {m_hours=hours;}
-   virtual uint      Minutes(void) const {return(m_minutes);}
-   virtual void      Minutes(const uint minutes) {m_minutes=minutes;}
-   virtual uint      Seconds(void) const {return(m_seconds);}
-   virtual void      Seconds(const uint seconds) {m_seconds=seconds;}
-   virtual bool      Total(void) const {return(m_total);}
-   //--- evaluation   
+   uint              Year(void) const {return(m_years);}
+   void              Year(const uint years) {m_years=years;}
+   uint              Month(void) const {return(m_months);}
+   void              Month(const uint months) {m_months=months;}
+   uint              Days(void) const {return(m_days);}
+   void              Days(const uint days) {m_days=days;}
+   uint              Hours(void) const {return(m_hours);}
+   void              Hours(const uint hours) {m_hours=hours;}
+   uint              Minutes(void) const {return(m_minutes);}
+   void              Minutes(const uint minutes) {m_minutes=minutes;}
+   uint              Seconds(void) const {return(m_seconds);}
+   void              Seconds(const uint seconds) {m_seconds=seconds;}
+   bool              Total(void) const {return(m_total);}
+   //--- processing   
    virtual bool      Elapsed(void) const {return(m_elapsed);}
    virtual bool      Evaluate(void);
    virtual void      RecalculateTotal(void);

@@ -19,6 +19,7 @@ protected:
 public:
                      JTickBase(void);
                     ~JTickBase(void);
+   //--- setters and getters
    MqlTick           LastTick() const {return(m_last);}
    datetime          Time() const {return(m_last.time);}
    double            Bid() const {return(m_last.bid);}

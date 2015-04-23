@@ -51,33 +51,33 @@ public:
    virtual void      Init(JOrder *order,JStop *stop,JOrderStops *order_stops,JEvents *events=NULL);
    virtual void      SetContainer(JOrderStops *orderstops){m_order_stops=orderstops;}
    //--- getters and setters  
-   virtual string    EntryName(void) const {return(m_stop.Name()+"."+(string)m_order.Ticket());}
-   virtual bool      EventHandler(JEvents *events);
-   virtual ulong     MainMagic(void) const {return(m_order.Magic());}
-   virtual ulong     MainTicket(void) const {return(m_order.Ticket());}
-   virtual double    MainTicketPrice() const {return(m_order.Price());}
-   virtual ENUM_ORDER_TYPE MainTicketType(void) const {return(m_order.OrderType());}
-   virtual JOrder   *Order() {return(GetPointer(m_order));}
-   virtual void      StopLoss(const double stoploss) {m_stoploss.Add(stoploss);}
-   virtual double    StopLoss(void) const {return(m_stoploss.Total()>0?m_stoploss.At(m_stoploss.Total()-1):0);}
-   virtual double    StopLoss(const int index) const {return(m_stoploss.Total()>index?m_stoploss.At(index):0);}
-   virtual double    StopLossLast(void) const {return(m_stoploss.Total()>2?m_stoploss.At(m_stoploss.Total()-2):0);}
-   virtual string    StopLossName(void) const {return(m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket());}
-   virtual void      StopLossTicket(const ulong ticket) {m_stoploss_ticket=ticket;}
-   virtual ulong     StopLossTicket(void) const {return(m_stoploss_ticket);}
-   virtual void      TakeProfit(const double takeprofit) {m_takeprofit.Add(takeprofit);}
-   virtual double    TakeProfit(void) const {return(m_takeprofit.Total()>0?m_takeprofit.At(m_takeprofit.Total()-1):0);}
-   virtual double    TakeProfit(const int index) const {return(m_takeprofit.Total()>index?m_takeprofit.At(index):0);}
-   virtual double    TakeProfitLast(void) const {return(m_takeprofit.Total()>2?m_takeprofit.At(m_takeprofit.Total()-2):0);}
-   virtual string    TakeProfitName(void) const {return(m_stop.Name()+m_stop.TakeProfitName()+(string)m_order.Ticket());}
-   virtual void      TakeProfitTicket(const ulong ticket) {m_takeprofit_ticket=ticket;}
-   virtual ulong     TakeProfitTicket(void) const {return(m_takeprofit_ticket);}
-   virtual void      Volume(const double volume) {m_volume=volume;}
-   virtual double    Volume(void) const {return(m_volume);}
-   virtual void      VolumeFixed(const double volume) {m_volume_fixed=volume;}
-   virtual double    VolumeFixed(void) const {return(m_volume_fixed);}
-   virtual void      VolumePercent(const double volume) {m_volume_percent=volume;}
-   virtual double    VolumePercent(void) const {return(m_volume_percent);}
+   string            EntryName(void) const {return(m_stop.Name()+"."+(string)m_order.Ticket());}
+   bool              EventHandler(JEvents *events);
+   ulong             MainMagic(void) const {return(m_order.Magic());}
+   ulong             MainTicket(void) const {return(m_order.Ticket());}
+   double            MainTicketPrice() const {return(m_order.Price());}
+   ENUM_ORDER_TYPE   MainTicketType(void) const {return(m_order.OrderType());}
+   JOrder            *Order() {return(GetPointer(m_order));}
+   void              StopLoss(const double stoploss) {m_stoploss.Add(stoploss);}
+   double            StopLoss(void) const {return(m_stoploss.Total()>0?m_stoploss.At(m_stoploss.Total()-1):0);}
+   double            StopLoss(const int index) const {return(m_stoploss.Total()>index?m_stoploss.At(index):0);}
+   double            StopLossLast(void) const {return(m_stoploss.Total()>2?m_stoploss.At(m_stoploss.Total()-2):0);}
+   string            StopLossName(void) const {return(m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket());}
+   void              StopLossTicket(const ulong ticket) {m_stoploss_ticket=ticket;}
+   ulong             StopLossTicket(void) const {return(m_stoploss_ticket);}
+   void              TakeProfit(const double takeprofit) {m_takeprofit.Add(takeprofit);}
+   double            TakeProfit(void) const {return(m_takeprofit.Total()>0?m_takeprofit.At(m_takeprofit.Total()-1):0);}
+   double            TakeProfit(const int index) const {return(m_takeprofit.Total()>index?m_takeprofit.At(index):0);}
+   double            TakeProfitLast(void) const {return(m_takeprofit.Total()>2?m_takeprofit.At(m_takeprofit.Total()-2):0);}
+   string            TakeProfitName(void) const {return(m_stop.Name()+m_stop.TakeProfitName()+(string)m_order.Ticket());}
+   void              TakeProfitTicket(const ulong ticket) {m_takeprofit_ticket=ticket;}
+   ulong             TakeProfitTicket(void) const {return(m_takeprofit_ticket);}
+   void              Volume(const double volume) {m_volume=volume;}
+   double            Volume(void) const {return(m_volume);}
+   void              VolumeFixed(const double volume) {m_volume_fixed=volume;}
+   double            VolumeFixed(void) const {return(m_volume_fixed);}
+   void              VolumePercent(const double volume) {m_volume_percent=volume;}
+   double            VolumePercent(void) const {return(m_volume_percent);}
    //--- checking   
    virtual void      Check(double &volume) {}
    virtual void      CheckInit();

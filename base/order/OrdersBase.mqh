@@ -29,13 +29,13 @@ public:
    virtual void      SetContainer(JStrategy *s);
    virtual void      SetStops(JStops *stops);
    //--- getters and setters
-   virtual bool      Activate(void) const {return(m_activate);}
-   virtual void      Activate(const bool activate) {m_activate=activate;}
-   virtual bool      Clean(void) const {return(m_clean);}
-   virtual void      Clean(const bool clean) {m_clean=clean;}
-   virtual bool      EventHandler(JEvents *events);
-   virtual void      Magic(int magic) {m_magic=magic;}
-   virtual int       Magic() {return(m_magic);}
+   bool              Activate(void) const {return(m_activate);}
+   void              Activate(const bool activate) {m_activate=activate;}
+   bool              Clean(void) const {return(m_clean);}
+   void              Clean(const bool clean) {m_clean=clean;}
+   bool              EventHandler(JEvents *events);
+   void              Magic(int magic) {m_magic=magic;}
+   int               Magic() {return(m_magic);}
    //--- events                  
    virtual void      OnTick(void);
    //--- order creation

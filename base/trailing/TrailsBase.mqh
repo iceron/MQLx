@@ -24,8 +24,8 @@ public:
    virtual bool      Init(JStrategy *s,JStop *stop);
    virtual void      SetContainer(JStop *stop){m_stop=stop;}
    //--- getters and setters
-   virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(const bool activate) {m_activate=activate;}  
+   bool              Active(void) const {return(m_activate);}
+   void              Active(const bool activate) {m_activate=activate;}  
    //--- checking
    virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
    //--- recovery

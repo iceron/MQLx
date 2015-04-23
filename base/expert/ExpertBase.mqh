@@ -21,6 +21,14 @@ public:
                      JExpertBase(void);
                     ~JExpertBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_EXPERT);}
+   //--- getters and setters
+   bool              Active(void) const {return(m_activate);}
+   void              Active(const bool activate) {m_activate=activate;}
+   void              ChartComment(const bool enable=true);
+   int               OrdersTotal(void) const;
+   int               OrdersHistoryTotal(void) const;
+   int               TradesTotal(void) const;
+   //--- initialization
    virtual bool      Validate(void) const;
    virtual bool      InitComponents(void) const;
    //--- events
@@ -28,14 +36,7 @@ public:
    virtual void      OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam);
    //--- chart comments
    virtual void      AddComment(const string comment);
-   virtual void      DisplayComment(void) const;   
-   //--- getters and setters
-   virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(const bool activate) {m_activate=activate;}
-   virtual void      ChartComment(const bool enable=true);
-   virtual int       OrdersTotal(void) const;
-   virtual int       OrdersHistoryTotal(void) const;
-   virtual int       TradesTotal(void) const;
+   virtual void      DisplayComment(void) const;      
    //--- deinitialization
    virtual void      OnDeinit(const int reason=0);
    //--- recovery

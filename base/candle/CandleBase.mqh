@@ -22,16 +22,18 @@ public:
                      JCandleBase(void);
                     ~JCandleBase(void);
    virtual bool      Init(CSymbolInfo *symbol,JEvents *events);
-   virtual datetime  LastTime() const {return(m_last.time);}
-   virtual double    LastOpen() const {return(m_last.open);}
-   virtual double    LastHigh() const {return(m_last.high);}
-   virtual double    LastLow() const {return(m_last.low);}
-   virtual double    LastClose() const {return(m_last.close);}
+   //--- setters and getters
+   datetime          LastTime() const {return(m_last.time);}
+   double            LastOpen() const {return(m_last.open);}
+   double            LastHigh() const {return(m_last.high);}
+   double            LastLow() const {return(m_last.low);}
+   double            LastClose() const {return(m_last.close);}
+   //--- processing
    virtual bool      TradeProcessed() const {return(m_trade_processed);}
    virtual void      TradeProcessed(bool processed) {m_trade_processed=processed;}
    virtual bool      IsNewCandle(const ENUM_TIMEFRAMES period);
    virtual bool      Compare(MqlRates &rates) const;
-   //---recovery
+   //--- recovery
    virtual bool      Save(const int handle);
    virtual bool      Load(const int handle);
 protected:

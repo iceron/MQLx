@@ -39,12 +39,12 @@ public:
    virtual bool      Activate() const {return(m_activate);}
    virtual void      Activate(const bool activate) {m_activate=activate;}
    //--- setters and getters
-   virtual color     ArrowColor(const ENUM_ORDER_TYPE type);
-   virtual void      SetAsyncMode(const bool mode) {m_async_mode=mode;}
-   virtual void      SetExpertMagicNumber(const int magic) {m_magic=magic;}
-   virtual void      SetDeviationInPoints(const ulong deviation) {m_deviation=deviation;}
-   virtual void      SetOrderExpiration(const datetime expire) {m_order_expiration=expire;}
-   virtual bool      SetSymbol(CSymbolInfo *symbol);
+   color             ArrowColor(const ENUM_ORDER_TYPE type);
+   void              SetAsyncMode(const bool mode) {m_async_mode=mode;}
+   void              SetExpertMagicNumber(const int magic) {m_magic=magic;}
+   void              SetDeviationInPoints(const ulong deviation) {m_deviation=deviation;}
+   void              SetOrderExpiration(const datetime expire) {m_order_expiration=expire;}
+   bool              SetSymbol(CSymbolInfo *symbol);
    //-- trade methods   
    virtual ulong     Buy(const double volume,const double price,const double sl,const double tp,const string comment="");
    virtual ulong     Sell(const double volume,const double price,const double sl,const double tp,const string comment="");

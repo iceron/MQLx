@@ -31,30 +31,34 @@ public:
                      JEventsBase(void);
                     ~JEventsBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_EVENT);}
-   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
-   virtual bool      Activate(void) const {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}
+   //--- initialization   
    virtual void      InitRegister(ENUM_EVENT_CLASS event_class,CArrayInt *print,CArrayInt *sound,CArrayInt *popup,CArrayInt *email,CArrayInt *push,CArrayInt *ftp);
    virtual void      InitRegister(ENUM_EVENT_CLASS event_class,int &print[],int &sound[],int &popup[],int &email[],int &push[],int &ftp[]);
+   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   //--- setters and getters
+   virtual bool      Activate(void) const {return(m_activate);}
+   virtual void      Activate(bool activate) {m_activate=activate;}   
    virtual bool      Run(void);
-   virtual void      Register(ENUM_EVENT_CLASS event_class,ENUM_ALERT_MODE alert_mode,int id);
+   //--- processing
+   virtual void      Register(ENUM_EVENT_CLASS event_class,ENUM_ALERT_MODE alert_mode,int id);   
+   virtual void      DebugMode(bool debug=true);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
-   virtual void      DebugMode(bool debug=true);
-protected:
-   virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);
-   virtual bool      Deinit(void);
-   virtual void      Send();
-   virtual bool      IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION action);
-   virtual bool      IsEventStandardAllowed(const ENUM_ACTION action);
-   virtual bool      IsEventErrorAllowed(const ENUM_ACTION action);
-   virtual bool      IsEventCustomAllowed(const ENUM_ACTION action);
    virtual JEventStandard *CreateStandardEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual JEventError *CreateErrorEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual JEventCustom *CreateCustomEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual JEventStandard *CreateStandardEvent(const ENUM_ACTION action,string message_add);
    virtual JEventError *CreateErrorEvent(const ENUM_ACTION action,string message_add);
    virtual JEventCustom *CreateCustomEvent(const ENUM_ACTION action,string message_add);
+protected:      
+   //--- event checking 
+   virtual bool      IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION action);
+   virtual bool      IsEventStandardAllowed(const ENUM_ACTION action);
+   virtual bool      IsEventErrorAllowed(const ENUM_ACTION action);
+   virtual bool      IsEventCustomAllowed(const ENUM_ACTION action);   
+   //--- events   
+   virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);  
+   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -70,7 +74,6 @@ JEventsBase::JEventsBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 JEventsBase::~JEventsBase(void)
   {
-   Deinit();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -287,13 +290,6 @@ bool JEventsBase::Run(void)
         }
       delete event;
      }
-   return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JEventsBase::Deinit()
-  {
    return(true);
   }
 //+------------------------------------------------------------------+

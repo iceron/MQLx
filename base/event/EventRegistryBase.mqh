@@ -23,14 +23,17 @@ protected:
 public:
                      JEventRegistryBase(void);
                     ~JEventRegistryBase(void);
-   virtual void      Register(const ENUM_ALERT_MODE alert_mode,const int id);
-   virtual bool      IsAllowed(const ENUM_ALERT_MODE alert_mode,const int id);
-   virtual bool      IsAllowed(const int id);
-   virtual void      Clear(const ENUM_ALERT_MODE alert_mode);
-   virtual void      Clear();
-   virtual void      DebugMode(bool debug=true);
+   //--- initialization
    virtual bool      Init(CArrayInt *print,CArrayInt *sound,CArrayInt *popup,CArrayInt *email,CArrayInt *push,CArrayInt *ftp);
    virtual bool      Init(int &print[],int &sound[],int &popup[],int &email[],int &push[],int &ftp[]);
+   //--- processing
+   virtual void      Clear(const ENUM_ALERT_MODE alert_mode);
+   virtual void      Clear();   
+   virtual void      DebugMode(bool debug=true);
+   virtual void      Register(const ENUM_ALERT_MODE alert_mode,const int id);
+   //--- checking
+   virtual bool      IsAllowed(const ENUM_ALERT_MODE alert_mode,const int id);
+   virtual bool      IsAllowed(const int id);
    bool              IsPrint(int id);
    bool              IsSound(int id);
    bool              IsPopup(int id);

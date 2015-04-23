@@ -37,30 +37,30 @@ public:
    //--- initialization
    virtual void      SetContainer(JOrders *orders){m_orders=orders;}
    //--- getters and setters       
-   virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(const bool activate) {m_activate=activate;}
-   virtual bool      Clean(void) const {return(m_clean);}
-   virtual void      Clean(const bool clean) {m_clean=clean;}
-   virtual void      CreateStops(JStops *stops);
-   virtual void      CheckStops(void);
-   virtual bool      EventHandler(JEvents *events);
-   virtual bool      Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops,bool recreate=false);
-   virtual void      IsClosed(const bool closed) {m_closed=closed;}
-   virtual bool      IsClosed(void) const {return(false);}
-   virtual void      Magic(const int magic){m_magic=magic;}
-   virtual int       Magic(void) const {return(m_magic);}
-   virtual void      MainStop(JOrderStop *order_stop){m_main_stop=order_stop;}
-   virtual JOrderStop *MainStop(void) const {return(m_main_stop);}
-   virtual void      Price(const double price){m_price=price;}
-   virtual double    Price(void) const {return(m_price);}
-   virtual void      OrderType(const ENUM_ORDER_TYPE type){m_type=type;}
-   virtual ENUM_ORDER_TYPE OrderType(void) const {return(m_type);}
-   virtual void      Ticket(const ulong ticket) {m_ticket=ticket;}
-   virtual ulong     Ticket(void) const {return(m_ticket);}
-   virtual void      Volume(const double volume){m_volume=volume;}
-   virtual double    Volume(void) const {return(m_volume);}
-   virtual void      VolumeInitial(const double volume){m_volume_initial=volume;}
-   virtual double    VolumeInitial(void) const {return(m_volume_initial);}
+   bool              Active(void) const {return(m_activate);}
+   void              Active(const bool activate) {m_activate=activate;}
+   bool              Clean(void) const {return(m_clean);}
+   void              Clean(const bool clean) {m_clean=clean;}
+   void              CreateStops(JStops *stops);
+   void              CheckStops(void);
+   bool              EventHandler(JEvents *events);
+   bool              Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops,bool recreate=false);
+   void              IsClosed(const bool closed) {m_closed=closed;}
+   bool              IsClosed(void) const {return(false);}
+   void              Magic(const int magic){m_magic=magic;}
+   int               Magic(void) const {return(m_magic);}
+   void              MainStop(JOrderStop *order_stop){m_main_stop=order_stop;}
+   JOrderStop        *MainStop(void) const {return(m_main_stop);}
+   void              Price(const double price){m_price=price;}
+   double            Price(void) const {return(m_price);}
+   void              OrderType(const ENUM_ORDER_TYPE type){m_type=type;}
+   ENUM_ORDER_TYPE   OrderType(void) const {return(m_type);}
+   void              Ticket(const ulong ticket) {m_ticket=ticket;}
+   ulong             Ticket(void) const {return(m_ticket);}
+   void              Volume(const double volume){m_volume=volume;}
+   double            Volume(void) const {return(m_volume);}
+   void              VolumeInitial(const double volume){m_volume_initial=volume;}
+   double            VolumeInitial(void) const {return(m_volume_initial);}
    //--events
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);

@@ -29,8 +29,9 @@ public:
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation
-   virtual bool      Active(void) const {return(m_activate);}
-   virtual void      Active(const bool activate) {m_activate=activate;}
+   bool              Active(void) const {return(m_activate);}
+   void              Active(const bool activate) {m_activate=activate;}
+   int               Selected() {return(m_selected);}
    //--- checking
    virtual bool      Evaluate(void) const;
    //--- recovery

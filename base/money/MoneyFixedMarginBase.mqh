@@ -16,7 +16,6 @@ public:
                     ~JMoneyFixedMarginBase(void);
    virtual void      UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl);
    virtual bool      Validate(void);
-
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

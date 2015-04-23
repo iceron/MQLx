@@ -17,12 +17,15 @@ protected:
 public:
                      JTimeRangeBase(void);
                     ~JTimeRangeBase(void);
+   //--- initialization                    
    virtual bool      Init(datetime begin,datetime end);
    virtual bool      Validate(void);
-   virtual datetime  Begin(void) const  {return(m_begin);}
-   virtual void      Begin(const datetime begin) {m_begin=begin;}
-   virtual datetime  End(void) const  {return(m_end);}
-   virtual void      End(const datetime end) {m_end=end;}
+   //--- setters and getters
+   datetime          Begin(void) const  {return(m_begin);}
+   void              Begin(const datetime begin) {m_begin=begin;}
+   datetime          End(void) const  {return(m_end);}
+   void              End(const datetime end) {m_end=end;}
+   //--- processing
    virtual bool      Evaluate(void);
   };
 //+------------------------------------------------------------------+
