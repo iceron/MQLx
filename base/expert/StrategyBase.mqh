@@ -134,9 +134,8 @@ public:
    virtual void      AsyncMode(const bool async) {m_trade.SetAsyncMode(async);}
    virtual string    Comment(void) const {return(m_comment);}
    virtual void      Comment(const string comment){m_comment=comment;}
-   virtual void      ChartComment(const bool enable=true);
+   virtual void      ChartComment(JComments *comments) {m_comments = comments;}
    virtual void      AddComment(const string comment);
-   virtual void      DisplayComment(void) const;
    virtual int       DigitsAdjust(void) const {return(m_digits_adjust);}
    virtual void      DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    virtual datetime  Expiration(void) const {return(m_expiration);}
@@ -409,26 +408,10 @@ bool JStrategyBase::InitEvent(JEvents *events=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategyBase::ChartComment(const bool enable=true)
-  {
-   if(enable)
-      m_comments=new JComments();
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 void JStrategyBase::AddComment(const string comment)
   {
    if(CheckPointer(m_comments)==POINTER_DYNAMIC)
       m_comments.Add(new JComment(comment));
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JStrategyBase::DisplayComment(void) const
-  {
-   if(CheckPointer(m_comments)==POINTER_DYNAMIC)
-      m_comments.Display();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -594,7 +577,6 @@ bool JStrategyBase::OnTick(void)
    ManageOrdersHistory();
    if(CheckPointer(m_events)==POINTER_DYNAMIC)
       m_events.Run();
-   DisplayComment();
    return(ret);
   }
 //+------------------------------------------------------------------+

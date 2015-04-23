@@ -16,17 +16,23 @@ class JExpertBase : public CArrayObj
 protected:
    bool              m_activate;
    int               m_uninit_reason;
+   JComments        *m_comments;
 public:
                      JExpertBase(void);
                     ~JExpertBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_EXPERT);}
    virtual bool      Validate(void) const;
+   virtual bool      InitComponents(void) const;
    //--- events
    virtual void      OnTick(void);
    virtual void      OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam);
+   //--- chart comments
+   virtual void      AddComment(const string comment);
+   virtual void      DisplayComment(void) const;   
    //--- getters and setters
    virtual bool      Active(void) const {return(m_activate);}
    virtual void      Active(const bool activate) {m_activate=activate;}
+   virtual void      ChartComment(const bool enable=true);
    virtual int       OrdersTotal(void) const;
    virtual int       OrdersHistoryTotal(void) const;
    virtual int       TradesTotal(void) const;
@@ -65,6 +71,28 @@ bool JExpertBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+void JExpertBase::ChartComment(const bool enable=true)
+  {
+   if(enable)
+      m_comments=new JComments();     
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JExpertBase::InitComponents(void) const
+  {
+   for(int i=0;i<Total();i++)
+     {
+      JStrategy *strat=At(i);
+      if (CheckPointer(m_comments))
+         strat.ChartComment(GetPointer(m_comments));
+      strat.InitComponents();
+     }
+   return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 int JExpertBase::OrdersTotal(void) const
   {
    int total=0;
@@ -86,6 +114,23 @@ void JExpertBase::OnTick(void)
       JStrategy *strat=At(i);
       strat.OnTick();
      }
+   DisplayComment();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JExpertBase::AddComment(const string comment)
+  {
+   if(CheckPointer(m_comments)==POINTER_DYNAMIC)
+      m_comments.Add(new JComment(comment));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JExpertBase::DisplayComment(void) const
+  {
+   if(CheckPointer(m_comments)==POINTER_DYNAMIC)
+      m_comments.Display();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -130,7 +175,7 @@ int JExpertBase::TradesTotal(void) const
 //+------------------------------------------------------------------+
 void JExpertBase::OnDeinit(const int reason=0)
   {
-   m_uninit_reason = reason;
+   m_uninit_reason=reason;
    for(int i=0;i<Total();i++)
      {
       JStrategy *strat=Detach(i);

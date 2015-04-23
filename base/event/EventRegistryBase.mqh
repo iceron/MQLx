@@ -43,12 +43,6 @@ public:
 //+------------------------------------------------------------------+
 JEventRegistryBase::JEventRegistryBase(void) : m_debug(false)
   {
-   m_print.Sort();
-   m_sound.Sort();
-   m_popup.Sort();
-   m_email.Sort();
-   m_push.Sort();
-   m_ftp.Sort();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

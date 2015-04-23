@@ -45,8 +45,8 @@ public:
    virtual void      CheckInstant();
    virtual datetime  TimeStamp() {return(m_timestamp);}
    virtual void      AddObject(CObject *object);
-   virtual CObject *GetObject(ENUM_CLASS_TYPE type);
-   virtual CObject *GetObject(ENUM_CLASS_TYPE type,int &idx);
+   virtual CObject  *GetObject(ENUM_CLASS_TYPE type);
+   virtual CObject  *GetObject(ENUM_CLASS_TYPE type,int &idx);
    virtual bool      Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
    virtual bool      Execute(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL);
   };
