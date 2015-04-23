@@ -218,7 +218,7 @@ protected:
    virtual double    LotSizeCalculate(double price,ENUM_ORDER_TYPE type,double stoploss);
    virtual void      ManageOrders(void);
    virtual void      ManageOrdersHistory(void);
-   virtual bool      MarginAllowed() {return(true);}
+   virtual bool      MarginAllowed(const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);
    virtual void      OnTradeTransaction(JOrder *order);
    virtual double    PriceCalculate(ENUM_ORDER_TYPE type);
    virtual double    PriceCalculateCustom(const int res) {return(0);}
@@ -228,15 +228,15 @@ protected:
    virtual double    TakeProfitCalculate(const int res,const double price);
    virtual bool      TradeOpen(const int res) {return(true);}
    //--- deinitialization
-   void      DeinitAccount(void);
-   void      DeinitEvents(void);
-   void      DeinitComments(void);
-   void      DeinitMoneys(void);
-   void      DeinitSignals(void);
-   void      DeinitStops(void);
-   void      DeinitSymbol(void);
-   void      DeinitTimes(void);
-   void      DeinitTrade(void);
+   void              DeinitAccount(void);
+   void              DeinitEvents(void);
+   void              DeinitComments(void);
+   void              DeinitMoneys(void);
+   void              DeinitSignals(void);
+   void              DeinitStops(void);
+   void              DeinitSymbol(void);
+   void              DeinitTimes(void);
+   void              DeinitTrade(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -629,11 +629,11 @@ bool JStrategyBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,co
   {
    bool ret=false;
    CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND,EnumToString(type)+" "+DoubleToString(lotsize,2)+" "+DoubleToString(sl,5)+" "+DoubleToString(tp,5)+" "+m_comment+" "+DoubleToString(m_magic,0));
-   if (!MarginAllowed())
-   {  
+   if(!MarginAllowed(m_symbol.Name(),type,lotsize,price))
+     {
       CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SEND,"not enough margin to trade");
       return(ret);
-   } 
+     }
    if(JOrder::IsOrderTypeLong(type))
       ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
    if(JOrder::IsOrderTypeShort(type))
@@ -641,6 +641,13 @@ bool JStrategyBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,co
    if(!ret)
       CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SEND);
    return(ret);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JStrategyBase::MarginAllowed(const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price)
+  {
+   return(m_account.MarginCheck(symbol,type,volume,price));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

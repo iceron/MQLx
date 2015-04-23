@@ -14,7 +14,6 @@ public:
                      JStrategy(void);
                     ~JStrategy(void);
    virtual bool      CloseOrder(JOrder *order,const int index);                    
-   virtual bool      MarginAllowed();
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void);
    virtual bool      TradeOpen(const int res);   
@@ -53,13 +52,6 @@ bool JStrategy::CloseOrder(JOrder *order,const int index)
         }
      }
    return(closed);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStrategy::MarginAllowed(void)
-  {   
-   return(false);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

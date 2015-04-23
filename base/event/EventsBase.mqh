@@ -69,6 +69,7 @@ JEventsBase::JEventsBase(void) : m_activate(true),
                                  m_ftp_path(NULL)
   {
    m_error=new JEventRegistry();
+   m_error.DebugMode(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
