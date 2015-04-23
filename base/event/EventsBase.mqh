@@ -74,6 +74,12 @@ JEventsBase::JEventsBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 JEventsBase::~JEventsBase(void)
   {
+   if (CheckPointer(m_standard))
+      delete m_standard;
+   if (CheckPointer(m_error))
+      delete m_error;
+   if (CheckPointer(m_custom))
+      delete m_custom;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

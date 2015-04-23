@@ -52,6 +52,18 @@ JEventRegistryBase::JEventRegistryBase(void) : m_debug(false)
 //+------------------------------------------------------------------+
 JEventRegistryBase::~JEventRegistryBase(void)
   {
+   if(CheckPointer(m_print))
+      delete m_print;
+   if(CheckPointer(m_print))
+      delete m_sound;
+   if(CheckPointer(m_print))
+      delete m_popup;
+   if(CheckPointer(m_print))
+      delete m_email;
+   if(CheckPointer(m_print))
+      delete m_push;
+   if(CheckPointer(m_print))
+      delete m_ftp;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
