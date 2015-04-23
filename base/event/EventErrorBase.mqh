@@ -350,7 +350,7 @@ bool JEventErrorBase::Run(JEventRegistry *registry,string sound_file=NULL,string
       default:   m_error_string="unknown error";
      }
    m_subject=m_error_string;
-   Execute(registry,sound_file,file_name,ftp_path);
+   Execute(GetPointer(registry),sound_file,file_name,ftp_path);
    return(true);
   }
 //+------------------------------------------------------------------+

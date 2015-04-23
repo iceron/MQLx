@@ -629,9 +629,11 @@ bool JStrategyBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,co
   {
    bool ret=false;
    CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND,EnumToString(type)+" "+DoubleToString(lotsize,2)+" "+DoubleToString(sl,5)+" "+DoubleToString(tp,5)+" "+m_comment+" "+DoubleToString(m_magic,0));
-   Print("opening trade");
    if (!MarginAllowed())
+   {  
+      CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SEND,"not enough margin to trade");
       return(ret);
+   } 
    if(JOrder::IsOrderTypeLong(type))
       ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
    if(JOrder::IsOrderTypeShort(type))

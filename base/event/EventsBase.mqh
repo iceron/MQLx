@@ -37,10 +37,10 @@ public:
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    //--- setters and getters
    virtual bool      Activate(void) const {return(m_activate);}
-   virtual void      Activate(bool activate) {m_activate=activate;}   
+   virtual void      Activate(bool activate) {m_activate=activate;}
    virtual bool      Run(void);
    //--- processing
-   virtual void      Register(ENUM_EVENT_CLASS event_class,ENUM_ALERT_MODE alert_mode,int id);   
+   virtual void      Register(ENUM_EVENT_CLASS event_class,ENUM_ALERT_MODE alert_mode,int id);
    virtual void      DebugMode(bool debug=true);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
@@ -50,15 +50,15 @@ public:
    virtual JEventStandard *CreateStandardEvent(const ENUM_ACTION action,string message_add);
    virtual JEventError *CreateErrorEvent(const ENUM_ACTION action,string message_add);
    virtual JEventCustom *CreateCustomEvent(const ENUM_ACTION action,string message_add);
-protected:      
+protected:
    //--- event checking 
    virtual bool      IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION action);
    virtual bool      IsEventStandardAllowed(const ENUM_ACTION action);
    virtual bool      IsEventErrorAllowed(const ENUM_ACTION action);
-   virtual bool      IsEventCustomAllowed(const ENUM_ACTION action);   
+   virtual bool      IsEventCustomAllowed(const ENUM_ACTION action);
    //--- events   
-   virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);  
-   
+   virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);
+
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -68,17 +68,18 @@ JEventsBase::JEventsBase(void) : m_activate(true),
                                  m_ftp_file(NULL),
                                  m_ftp_path(NULL)
   {
+   m_error=new JEventRegistry();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventsBase::~JEventsBase(void)
   {
-   if (CheckPointer(m_standard))
+   if(CheckPointer(m_standard))
       delete m_standard;
-   if (CheckPointer(m_error))
+   if(CheckPointer(m_error))
       delete m_error;
-   if (CheckPointer(m_custom))
+   if(CheckPointer(m_custom))
       delete m_custom;
   }
 //+------------------------------------------------------------------+
@@ -119,50 +120,6 @@ bool JEventsBase::IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION a
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
-  {
-   JEvent *event=NULL;
-   switch(type)
-     {
-      case EVENT_CLASS_STANDARD:
-        {
-         if(IsEventStandardAllowed(action))
-           {
-            event=CreateStandardEvent(action,object1,object2,object3);
-            if(event.Instant())
-               event.Run(CheckPointer(m_standard)?GetPointer(m_standard):NULL,m_sound_file,m_ftp_file,m_ftp_path);
-           }
-         break;
-        }
-      case EVENT_CLASS_ERROR:
-        {
-         event=CreateErrorEvent(action,object1,object2,object3);
-         if(event.Instant())
-            event.Run(CheckPointer(m_error)?GetPointer(m_error):NULL,m_sound_file,m_ftp_file,m_ftp_path);
-         break;
-        }
-      case EVENT_CLASS_CUSTOM:
-        {
-         if(IsEventCustomAllowed(action))
-           {
-            event=CreateCustomEvent(action,object1,object2,object3);
-            if(event.Instant())
-               event.Run(CheckPointer(m_custom)?GetPointer(m_custom):NULL,m_sound_file,m_ftp_file,m_ftp_path);
-           }
-         break;
-        }
-      default:
-        {
-         PrintFormat("unknown event");
-         return;
-        }
-     }
-   if(CheckPointer(event)==POINTER_DYNAMIC)
-      Add(event);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 JEventStandard *JEventsBase::CreateStandardEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
    return(new JEventStandard(action,object1,object2,object3));
@@ -184,6 +141,50 @@ JEventCustom *JEventsBase::CreateCustomEvent(const ENUM_ACTION action,CObject *o
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
+  {
+   JEvent *event=NULL;
+   switch(type)
+     {
+      case EVENT_CLASS_STANDARD:
+        {
+         if(IsEventStandardAllowed(action))
+           {
+            event=CreateStandardEvent(action,object1,object2,object3);
+            if(event.Instant() && CheckPointer(m_standard))
+               event.Run(GetPointer(m_standard),m_sound_file,m_ftp_file,m_ftp_path);
+           }
+         break;
+        }
+      case EVENT_CLASS_ERROR:
+        {
+         event=CreateErrorEvent(action,object1,object2,object3);
+         if(event.Instant() && CheckPointer(m_error))
+            event.Run(GetPointer(m_error),m_sound_file,m_ftp_file,m_ftp_path);
+         break;
+        }
+      case EVENT_CLASS_CUSTOM:
+        {
+         if(IsEventCustomAllowed(action))
+           {
+            event=CreateCustomEvent(action,object1,object2,object3);
+            if(event.Instant() && CheckPointer(m_custom))
+               event.Run(GetPointer(m_custom),m_sound_file,m_ftp_file,m_ftp_path);
+           }
+         break;
+        }
+      default:
+        {
+         PrintFormat("unknown event");
+         return;
+        }
+     }
+   if(CheckPointer(event)==POINTER_DYNAMIC)
+      Add(event);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
   {
    JEvent *event=NULL;
@@ -194,8 +195,11 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,st
          if(IsEventStandardAllowed(action))
            {
             event=CreateStandardEvent(action,message_add);
-            if(event.Instant())
-               event.Run(CheckPointer(m_standard)?GetPointer(m_standard):NULL,m_sound_file,m_ftp_file,m_ftp_path);
+            if(CheckPointer(event)==POINTER_DYNAMIC)
+              {
+               if(event.Instant() && CheckPointer(m_standard))
+                  event.Run(GetPointer(m_standard),m_sound_file,m_ftp_file,m_ftp_path);
+              }
            }
          break;
         }
@@ -203,17 +207,21 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,st
         {
          event=CreateErrorEvent(action,message_add);
          if(CheckPointer(event)==POINTER_DYNAMIC)
-            if(event.Instant())
-               event.Run(CheckPointer(m_error)?GetPointer(m_error):NULL,m_sound_file,m_ftp_file,m_ftp_path);
+           {
+            if(event.Instant() && CheckPointer(m_error))
+               event.Run(GetPointer(m_error),m_sound_file,m_ftp_file,m_ftp_path);
+           }
          break;
         }
       case EVENT_CLASS_CUSTOM:
         {
          if(IsEventCustomAllowed(action))
+           {
             event=CreateCustomEvent(action,message_add);
-         if(CheckPointer(event)==POINTER_DYNAMIC)
-            if(event.Instant())
-               event.Run(CheckPointer(m_custom)?GetPointer(m_custom):NULL,m_sound_file,m_ftp_file,m_ftp_path);
+            if(CheckPointer(event)==POINTER_DYNAMIC)
+               if(event.Instant() && CheckPointer(m_custom))
+                  event.Run(GetPointer(m_custom),m_sound_file,m_ftp_file,m_ftp_path);
+           }
          break;
         }
       default:
@@ -278,17 +286,20 @@ bool JEventsBase::Run(void)
               {
                case CLASS_TYPE_EVENT_STANDARD:
                  {
-                  event.Run(CheckPointer(m_standard)?GetPointer(m_standard):NULL);
+                  if(CheckPointer(m_standard))
+                     event.Run(GetPointer(m_standard));
                   break;
                  }
                case CLASS_TYPE_EVENT_ERROR:
                  {
-                  event.Run(CheckPointer(m_error)?GetPointer(m_error):NULL);
+                  if(CheckPointer(m_error))
+                     event.Run(GetPointer(m_error));
                   break;
                  }
                case CLASS_TYPE_EVENT_CUSTOM:
                  {
-                  event.Run(CheckPointer(m_custom)?GetPointer(m_custom):NULL);
+                  if(CheckPointer(m_custom))
+                     event.Run(GetPointer(m_custom));
                   break;
                  }
               }
