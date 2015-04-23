@@ -14,6 +14,7 @@ public:
                      JStrategy(void);
                     ~JStrategy(void);
    virtual bool      CloseOrder(JOrder *order,const int index);
+   virtual bool      MarginAllowed();
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
    virtual bool      TradeOpen(const int res);

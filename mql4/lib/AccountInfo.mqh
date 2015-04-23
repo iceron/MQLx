@@ -293,6 +293,7 @@ double CAccountInfo::MarginCheck(const string symbol,const ENUM_ORDER_TYPE trade
    if(!OrderCalcMargin(trade_operation,symbol,volume,price,margin))
       return(EMPTY_VALUE);
    */   
+   return(AccountFreeMarginCheck(symbol,trade_operation,volume)>=0);
 //---
    return(margin);
   }

@@ -13,10 +13,11 @@ class JStrategy : public JStrategyBase
 public:
                      JStrategy(void);
                     ~JStrategy(void);
+   virtual bool      CloseOrder(JOrder *order,const int index);                    
+   virtual bool      MarginAllowed();
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void);
-   virtual bool      TradeOpen(const int res);
-   virtual bool      CloseOrder(JOrder *order,const int index);
+   virtual bool      TradeOpen(const int res);   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -56,6 +57,13 @@ bool JStrategy::CloseOrder(JOrder *order,const int index)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool JStrategy::MarginAllowed(void)
+  {   
+   return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategy::OnTick(void)
   {
    bool ret=JStrategyBase::OnTick();
@@ -86,20 +94,20 @@ void JStrategy::OnTradeTransaction(void)
 bool JStrategy::TradeOpen(const int res)
   {
    if(res<=0) return(false);
-   bool ret=false;   
+   bool ret=false;
    int trades_total = TradesTotal();
-   int orders_total = OrdersTotal();   
-   ENUM_ORDER_TYPE type=JSignal::SignalToOrderType(res); 
-   if (!IsPositionAllowed(type))
+   int orders_total = OrdersTotal();
+   ENUM_ORDER_TYPE type=JSignal::SignalToOrderType(res);
+   if(!IsPositionAllowed(type))
       return(true);
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
-     {      
+     {
       double price=PriceCalculate(type);
-      double sl=0,tp=0;                
+      double sl=0,tp=0;
       if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
         {
-          sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(type,price):m_main_stop.StopLossCalculate(type,price);
-          tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(type,price):m_main_stop.TakeProfitCalculate(type,price);
+         sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(type,price):m_main_stop.StopLossCalculate(type,price);
+         tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(type,price):m_main_stop.TakeProfitCalculate(type,price);
         }
       double lotsize=LotSizeCalculate(price,ORDER_TYPE_BUY,StopLossCalculate(res,price));
       ret=SendOrder(type,lotsize,price,sl,tp);
