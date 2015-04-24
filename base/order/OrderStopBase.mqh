@@ -78,6 +78,8 @@ public:
    double            VolumeFixed(void) const {return(m_volume_fixed);}
    void              VolumePercent(const double volume) {m_volume_percent=volume;}
    double            VolumePercent(void) const {return(m_volume_percent);}
+   //--- hiding and showing of stop lines
+   virtual void      Show(bool show=true);
    //--- checking   
    virtual void      Check(double &volume) {}
    virtual void      CheckInit();
@@ -147,18 +149,18 @@ void JOrderStopBase::Init(JOrder *order,JStop *stop,JOrderStops *order_stops,JEv
    m_stop.Volume(GetPointer(this),m_volume_fixed,m_volume_percent);
    m_volume=MathMax(m_volume_fixed,m_volume_percent);
    m_stop.Refresh();
-   double stoploss= m_stop.StopLossPrice(order,GetPointer(this));
-   double takeprofit = m_stop.TakeProfitPrice(order,GetPointer(this));
+   double stoploss=m_stop.StopLossPrice(order,GetPointer(this));
+   double takeprofit=m_stop.TakeProfitPrice(order,GetPointer(this));
    if(stoploss>0)
-   {
+     {
       m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,stoploss);
       m_stoploss.Add(stoploss);
-   }   
-   if(takeprofit>0) 
-   {
+     }
+   if(takeprofit>0)
+     {
       m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,takeprofit);
       m_takeprofit.Add(takeprofit);
-   }         
+     }
    if(stoploss>0 || takeprofit>0)
       m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
    if(stop.Main())
@@ -444,6 +446,19 @@ bool JOrderStopBase::Modify(const double stoploss,const double takeprofit)
       else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY,GetPointer(this));
      }
    return(stoploss_modified || takeprofit_modified);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JOrderStopBase::Show(bool show=true)
+  {
+   int setting=show?OBJ_ALL_PERIODS:OBJ_NO_PERIODS;
+   if(CheckPointer(m_objentry))
+      m_objentry.Timeframes(setting);
+   if(CheckPointer(m_objsl))
+      m_objsl.Timeframes(setting);
+   if(CheckPointer(m_objtp))
+      m_objtp.Timeframes(setting);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -61,6 +61,8 @@ public:
    double            Volume(void) const {return(m_volume);}
    void              VolumeInitial(const double volume){m_volume_initial=volume;}
    double            VolumeInitial(void) const {return(m_volume_initial);}
+   //--- hiding and showing of stop lines
+   virtual void      ShowStops(bool show=true) {m_order_stops.Show(show);}
    //--events
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
@@ -106,7 +108,7 @@ bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops,
    SetContainer(GetPointer(orders));
    EventHandler(GetPointer(events));
    CreateStops(GetPointer(m_stops));
-   if (!recreate)
+   if(!recreate)
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND_DONE,GetPointer(this));
    return(true);
   }
@@ -220,7 +222,7 @@ bool JOrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JOrderBase::Save(const int handle)
-  {  
+  {
    ADT::WriteBool(handle,m_closed);
    ADT::WriteBool(handle,m_clean);
    ADT::WriteInteger(handle,m_magic);
@@ -228,7 +230,7 @@ bool JOrderBase::Save(const int handle)
    ADT::WriteLong(handle,m_ticket);
    ADT::WriteDouble(handle,m_volume);
    ADT::WriteDouble(handle,m_volume_initial);
-   if (CheckPointer(m_order_stops)==POINTER_DYNAMIC)
+   if(CheckPointer(m_order_stops)==POINTER_DYNAMIC)
       ADT::WriteObject(handle,GetPointer(m_order_stops));
    return(true);
   }
@@ -244,11 +246,11 @@ bool JOrderBase::Load(const int handle)
    ADT::ReadLong(handle,m_ticket);
    ADT::ReadDouble(handle,m_volume);
    ADT::ReadDouble(handle,m_volume_initial);
-   if (CheckPointer(m_order_stops)==POINTER_DYNAMIC)
-   {
+   if(CheckPointer(m_order_stops)==POINTER_DYNAMIC)
+     {
       ADT::ReadObject(handle,GetPointer(m_order_stops));
       m_order_stops.SetContainer(GetPointer(this));
-   }   
+     }
    return(true);
   }
 //+------------------------------------------------------------------+

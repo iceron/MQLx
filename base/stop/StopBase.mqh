@@ -72,48 +72,48 @@ public:
    virtual void      SetContainer(JStops *stops){m_stops=stops;}
    virtual bool      Validate(void) const;
    //--- getters and setters
-    bool             Active(void) {return(m_activate);}
-    void             Active(const bool activate) {m_activate=activate;}
-    void             Comment(string comment) {m_comment=comment;}
-    string           Comment(void) const {return(m_comment);}
-    int              DigitsAdjust(void) const {return(m_digits_adjust);}
-    void             DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
-    void             EntryColor(const color clr) {m_entry_color=clr;}
-    void             EntryStyle(const ENUM_LINE_STYLE style) {m_entry_style=style;}
-    void             Magic(const int magic) {m_magic=magic;}
-    int              Magic(void) const {return(m_magic);}
-    void             Main(const bool main) {m_main=main;}
-    bool             Main(void) const {return(m_main);}
-    void             Name(const string name) {m_name=name;}
-    string           Name(void) const{return(m_name);}
-    void             OCO(const bool oco) {if(!Main())m_oco=oco;}
-    bool             OCO(void) const{return(m_oco);}
-    bool             Pending() const {return(m_stop_type==STOP_TYPE_PENDING);}
-    double           PointsAdjust(void) const {return(m_points_adjust);}
-    void             PointsAdjust(const double adjust) {m_points_adjust=adjust;}
-    void             StopLoss(const double sl) {m_stoploss=sl;}
-    double           StopLoss(void) const {return(m_stoploss);}
-    void             StopLossColor(const color clr) {m_stoploss_color=clr;}
-    bool             StopLossCustom(void) {return(m_stoploss==0);}
-    void             StopLossName(const string name) {m_stoploss_name=name;}
-    string           StopLossName(void) const{return(m_stoploss_name);}
-    void             StopLossStyle(const ENUM_LINE_STYLE style) {m_stoploss_style=style;}
-    void             StopType(const ENUM_STOP_TYPE stop_type);
-    ENUM_STOP_TYPE   StopType(void) const {return(m_stop_type);}
-    void             TakeProfit(const double tp) {m_takeprofit=tp;}
-    double           TakeProfit(void) const {return(m_takeprofit);}
-    void             TakeProfitColor(const color clr) {m_takeprofit_color=clr;}
-    bool             TakeProfitCustom(void) {return(m_takeprofit==0);}
-    void             TakeProfitName(const string name) {m_takeprofit_name=name;}
-    string           TakeProfitName(void) const {return(m_takeprofit_name);}
-    void             TakeProfitStyle(const ENUM_LINE_STYLE style) {m_takeprofit_style=style;}
-    bool             Virtual(void) const {return(m_stop_type==STOP_TYPE_VIRTUAL);}
-    void             Volume(JOrderStop *orderstop,double &volume_fixed,double &volume_percent);
-    double           VolumeFixed(void) const {return(m_volume_fixed);}
-    void             VolumeFixed(const double volume) {m_volume_fixed=volume;}
-    double           VolumePercent(void) const {return(m_volume_percent);}
-    void             VolumePercent(const double volume) {m_volume_percent=volume;}
-    void             VolumeType(const ENUM_VOLUME_TYPE type){m_volume_type=type;}
+   bool              Active(void) {return(m_activate);}
+   void              Active(const bool activate) {m_activate=activate;}
+   void              Comment(string comment) {m_comment=comment;}
+   string            Comment(void) const {return(m_comment);}
+   int               DigitsAdjust(void) const {return(m_digits_adjust);}
+   void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
+   void              EntryColor(const color clr) {m_entry_color=clr;}
+   void              EntryStyle(const ENUM_LINE_STYLE style) {m_entry_style=style;}
+   void              Magic(const int magic) {m_magic=magic;}
+   int               Magic(void) const {return(m_magic);}
+   void              Main(const bool main) {m_main=main;}
+   bool              Main(void) const {return(m_main);}
+   void              Name(const string name) {m_name=name;}
+   string            Name(void) const{return(m_name);}
+   void              OCO(const bool oco) {if(!Main())m_oco=oco;}
+   bool              OCO(void) const{return(m_oco);}
+   bool              Pending() const {return(m_stop_type==STOP_TYPE_PENDING);}
+   double            PointsAdjust(void) const {return(m_points_adjust);}
+   void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
+   void              StopLoss(const double sl) {m_stoploss=sl;}
+   double            StopLoss(void) const {return(m_stoploss);}
+   void              StopLossColor(const color clr) {m_stoploss_color=clr;}
+   bool              StopLossCustom(void) {return(m_stoploss==0);}
+   void              StopLossName(const string name) {m_stoploss_name=name;}
+   string            StopLossName(void) const{return(m_stoploss_name);}
+   void              StopLossStyle(const ENUM_LINE_STYLE style) {m_stoploss_style=style;}
+   void              StopType(const ENUM_STOP_TYPE stop_type);
+   ENUM_STOP_TYPE    StopType(void) const {return(m_stop_type);}
+   void              TakeProfit(const double tp) {m_takeprofit=tp;}
+   double            TakeProfit(void) const {return(m_takeprofit);}
+   void              TakeProfitColor(const color clr) {m_takeprofit_color=clr;}
+   bool              TakeProfitCustom(void) {return(m_takeprofit==0);}
+   void              TakeProfitName(const string name) {m_takeprofit_name=name;}
+   string            TakeProfitName(void) const {return(m_takeprofit_name);}
+   void              TakeProfitStyle(const ENUM_LINE_STYLE style) {m_takeprofit_style=style;}
+   bool              Virtual(void) const {return(m_stop_type==STOP_TYPE_VIRTUAL);}
+   void              Volume(JOrderStop *orderstop,double &volume_fixed,double &volume_percent);
+   double            VolumeFixed(void) const {return(m_volume_fixed);}
+   void              VolumeFixed(const double volume) {m_volume_fixed=volume;}
+   double            VolumePercent(void) const {return(m_volume_percent);}
+   void              VolumePercent(const double volume) {m_volume_percent=volume;}
+   void              VolumeType(const ENUM_VOLUME_TYPE type){m_volume_type=type;}
    //--- stop order checking
    virtual bool      CheckStopLoss(JOrder *order,JOrderStop *orderstop);
    virtual bool      CheckTakeProfit(JOrder *order,JOrderStop *orderstop);
@@ -122,7 +122,7 @@ public:
    //--- stop order object creation
    virtual JStopLine *CreateEntryObject(const long id,const string name,const int window,const double price);
    virtual JStopLine *CreateStopLossObject(const long id,const string name,const int window,const double price);
-   virtual JStopLine *CreateTakeProfitObject(const long id,const string name,const int window,const double price);
+   virtual JStopLine *CreateTakeProfitObject(const long id,const string name,const int window,const double price);   
    //--- stop order price calculation   
    virtual bool      Refresh(void);
    virtual double    StopLossCalculate(const ENUM_ORDER_TYPE type,const double price);
@@ -190,22 +190,22 @@ JStopBase::~JStopBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopBase::Validate(void) const 
+bool JStopBase::Validate(void) const
   {
-   if (m_name==NULL)
-   {
+   if(m_name==NULL)
+     {
       PrintFormat(__FUNCTION__+": Empty name for stop.");
       return(false);
-   }
-   if (CheckPointer(m_trails))
-   {
-      for (int i=0;i<m_trails.Total();i++)
-      {
-         JTrail *trail = m_trails.At(i);
-         if (!trail.Validate())
+     }
+   if(CheckPointer(m_trails))
+     {
+      for(int i=0;i<m_trails.Total();i++)
+        {
+         JTrail *trail=m_trails.At(i);
+         if(!trail.Validate())
             return(false);
-      }
-   }   
+        }
+     }
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -213,7 +213,7 @@ bool JStopBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool JStopBase::Init(JStrategy *s)
   {
-   if (s==NULL) return(false);
+   if(s==NULL) return(false);
    InitSymbol(s.SymbolInfo());
    InitAccount(s.AccountInfo());
    m_points_adjust = s.PointsAdjust();
@@ -228,7 +228,7 @@ bool JStopBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 bool JStopBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
   {
-   if (symbolinfo==NULL) return(false);
+   if(symbolinfo==NULL) return(false);
    m_symbol=symbolinfo;
    return(true);
   }
@@ -237,7 +237,7 @@ bool JStopBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
 //+------------------------------------------------------------------+
 bool JStopBase::InitAccount(CAccountInfo *accountinfo=NULL)
   {
-   if (accountinfo==NULL) return(false);
+   if(accountinfo==NULL) return(false);
    m_account=accountinfo;
    return(true);
   }
@@ -264,7 +264,7 @@ bool JStopBase::InitTrade(JTrade *trade=NULL)
 //+------------------------------------------------------------------+
 bool JStopBase::InitEvent(JEvent *event)
   {
-   if (event==NULL) return(false);
+   if(event==NULL) return(false);
    m_event=event;
    return(true);
   }

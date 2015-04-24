@@ -30,7 +30,9 @@ public:
    virtual void      Check(double &volume);
    virtual bool      CheckNewTicket(JOrderStop *orderstop) {return(true);}
    virtual bool      Close(void);
-   //--events
+   //--- hiding and showing of stop lines
+   virtual void      Show(bool show=true);
+   //--- events
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    //--- recovery
@@ -111,6 +113,17 @@ bool JOrderStopsBase::Close(void)
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CLOSE_DONE,GetPointer(this));
      }
    return(res);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JOrderStopsBase::Show(bool show=true)
+  {
+   for (int i=0;i<Total();i++)
+   {
+      JOrderStop *orderstop = At(i);
+      orderstop.Show(show);
+   }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
