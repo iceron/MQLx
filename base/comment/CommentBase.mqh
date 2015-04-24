@@ -16,7 +16,7 @@ protected:
 public:
                      JCommentBase(void);
                     ~JCommentBase(void);
-   virtual void      Init(string &comment);
+   virtual void      Init(string comment);
    string            Text();
   };
 //+------------------------------------------------------------------+
@@ -34,7 +34,7 @@ JCommentBase::~JCommentBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCommentBase::Init(string &comment)
+JCommentBase::Init(string comment)
   {
    m_comment=comment;
   }
