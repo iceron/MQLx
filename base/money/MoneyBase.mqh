@@ -144,23 +144,9 @@ double JMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const do
      {
       switch(m_update)
         {
-         case(MONEY_UPDATE_ALWAYS):
-           {
-            UpdateLotSize(price,type,sl);
-            break;
-           }
-         case(MONEY_UPDATE_PERIOD):
-           {
-            if(UpdateByPeriod())
-               UpdateLotSize(price,type,sl);
-            break;
-           }
-         case(MONEY_UPDATE_BALANCE):
-           {
-            if(UpdateByMargin())
-               UpdateLotSize(price,type,sl);
-            break;
-           }
+         case(MONEY_UPDATE_ALWAYS):    UpdateLotSize(price,type,sl);                      break;
+         case(MONEY_UPDATE_PERIOD):    if(UpdateByPeriod()) UpdateLotSize(price,type,sl); break;
+         case(MONEY_UPDATE_BALANCE):   if(UpdateByMargin()) UpdateLotSize(price,type,sl); break;
         }
      }
    return(m_volume);

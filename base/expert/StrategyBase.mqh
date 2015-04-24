@@ -422,30 +422,11 @@ bool JStrategyBase::Add(CObject *object)
    bool result=false;
    switch(object.Type())
      {
-      case CLASS_TYPE_SIGNALS:
-        {
-         result=AddSignals(object);
-         break;
-        }
-      case CLASS_TYPE_MONEYS:
-        {
-         result=AddMoneys(object);
-         break;
-        }
-      case CLASS_TYPE_STOPS:
-        {
-         result=AddStops(object);
-         break;
-        }
-      case CLASS_TYPE_TIMES:
-        {
-         result=AddTimes(object);
-         break;
-        }
-      default:
-        {
-         PrintFormat(__FUNCTION__+": unknown object: "+DoubleToString(object.Type(),0));
-        }
+      case CLASS_TYPE_SIGNALS:   result=AddSignals(object); break;
+      case CLASS_TYPE_MONEYS:    result=AddMoneys(object);  break;
+      case CLASS_TYPE_STOPS:     result=AddStops(object);   break;
+      case CLASS_TYPE_TIMES:     result=AddTimes(object);   break;
+      default: PrintFormat(__FUNCTION__+": unknown object: "+DoubleToString(object.Type(),0));
      }
    return(result);
   }
@@ -602,14 +583,9 @@ double JStrategyBase::PriceCalculate(ENUM_ORDER_TYPE type)
    double price=0;
    switch(type)
      {
-      case ORDER_TYPE_BUY:
-         price=m_symbol.Ask();
-         break;
-      case ORDER_TYPE_SELL:
-         price=m_symbol.Bid();
-         break;
-      default:
-         price=PriceCalculateCustom(type);
+      case ORDER_TYPE_BUY:    price=m_symbol.Ask();   break;
+      case ORDER_TYPE_SELL:   price=m_symbol.Bid();   break;
+      default:                price=PriceCalculateCustom(type);
      }
    return(price);
   }

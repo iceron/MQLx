@@ -154,18 +154,12 @@ bool JEventBase::Run(JEventRegistry *registry,string sound_file=NULL,string file
 //+------------------------------------------------------------------+
 bool JEventBase::Execute(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL)
   {
-   if(registry.IsPrint(m_action))
-      Print(m_message+" "+m_message_add);
-   if(registry.IsSound(m_action))
-      PlaySound(sound_file);
-   if(registry.IsPopup(m_action))
-      Alert(m_message+" "+m_message_add);
-   if(registry.IsEmail(m_action))
-      SendMail(m_subject,m_message+" "+m_message_add);
-   if(registry.IsPush(m_action))
-      SendNotification(m_message+" "+m_message_add);
-   if(registry.IsFTP(m_action))
-      SendFTP(file_name,ftp_path);
+   if(registry.IsPrint(m_action)) Print(m_message+" "+m_message_add);
+   if(registry.IsSound(m_action)) PlaySound(sound_file);
+   if(registry.IsPopup(m_action)) Alert(m_message+" "+m_message_add);
+   if(registry.IsEmail(m_action)) SendMail(m_subject,m_message+" "+m_message_add);
+   if(registry.IsPush(m_action))  SendNotification(m_message+" "+m_message_add);
+   if(registry.IsFTP(m_action))   SendFTP(file_name,ftp_path);
    return(false);
   }
 //+------------------------------------------------------------------+

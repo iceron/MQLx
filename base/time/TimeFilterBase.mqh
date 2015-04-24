@@ -56,7 +56,6 @@ JTimeFilterBase::JTimeFilterBase(void) : m_sun(false),
                                          m_fri(true),
                                          m_sat(false)                                         
   {
-
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -103,41 +102,13 @@ bool JTimeFilterBase::Evaluate(void)
    TimeToStruct(current,time);
    switch(time.day_of_week)
      {
-      case 0:
-        {
-         if(!m_sun) result=false;
-         break;
-        }
-      case 1:
-        {
-         if(!m_mon) result=false;
-         break;
-        }
-      case 2:
-        {
-         if(!m_tue) result=false;
-         break;
-        }
-      case 3:
-        {
-         if(!m_wed) result=false;
-         break;
-        }
-      case 4:
-        {
-         if(!m_thu) result=false;
-         break;
-        }
-      case 5:
-        {
-         if(!m_fri) result=false;
-         break;
-        }
-      case 6:
-        {
-         if(!m_sat) result=false;
-         break;
-        }
+      case 0:  if(!m_sun) result=false; break;
+      case 1:  if(!m_mon) result=false; break;
+      case 2:  if(!m_tue) result=false; break;
+      case 3:  if(!m_wed) result=false; break;
+      case 4:  if(!m_thu) result=false; break;
+      case 5:  if(!m_fri) result=false; break;
+      case 6:  if(!m_sat) result=false; break;
      }
    if(result)
      {

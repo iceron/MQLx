@@ -274,40 +274,13 @@ bool JEventRegistryBase::IsAllowed(const ENUM_ALERT_MODE alert_mode,const int id
   {
    switch(alert_mode)
      {
-      case ALERT_MODE_PRINT:
-        {
-         return(IsPrint(id));
-         break;
-        }
-      case ALERT_MODE_SOUND:
-        {
-         return(IsSound(id));
-         break;
-        }
-      case ALERT_MODE_POPUP:
-        {
-         return(IsPopup(id));
-         break;
-        }
-      case ALERT_MODE_EMAIL:
-        {
-         return(IsEmail(id));
-         break;
-        }
-      case ALERT_MODE_PUSH:
-        {
-         return(IsPush(id));
-         break;
-        }
-      case ALERT_MODE_FTP:
-        {
-         return(IsFTP(id));
-         break;
-        }
-      default:
-        {
-         PrintFormat(__FUNCTION__+": unknown alert mode");
-        }
+      case ALERT_MODE_PRINT:  return(IsPrint(id));
+      case ALERT_MODE_SOUND:  return(IsSound(id));
+      case ALERT_MODE_POPUP:  return(IsPopup(id));
+      case ALERT_MODE_EMAIL:  return(IsEmail(id));
+      case ALERT_MODE_PUSH:   return(IsPush(id));
+      case ALERT_MODE_FTP:    return(IsFTP(id));
+      default:                PrintFormat(__FUNCTION__+": unknown alert mode");
      }
    return(false);
   }
@@ -325,46 +298,13 @@ JEventRegistryBase::Clear(const ENUM_ALERT_MODE alert_mode)
   {
    switch(alert_mode)
      {
-      case ALERT_MODE_PRINT:
-        {
-         if(CheckPointer(m_print))
-            m_print.Clear();
-         break;
-        }
-      case ALERT_MODE_SOUND:
-        {
-         if(CheckPointer(m_print))
-            m_sound.Clear();
-         break;
-        }
-      case ALERT_MODE_POPUP:
-        {
-         if(CheckPointer(m_print))
-            m_popup.Clear();
-         break;
-        }
-      case ALERT_MODE_EMAIL:
-        {
-         if(CheckPointer(m_print))
-            m_email.Clear();
-         break;
-        }
-      case ALERT_MODE_PUSH:
-        {
-         if(CheckPointer(m_print))
-            m_push.Clear();
-         break;
-        }
-      case ALERT_MODE_FTP:
-        {
-         if(CheckPointer(m_print))
-            m_ftp.Clear();
-         break;
-        }
-      default:
-        {
-         Print(__FUNCTION__+": unknown alert mode");
-        }
+      case ALERT_MODE_PRINT:  if(CheckPointer(m_print)) m_print.Clear(); break;
+      case ALERT_MODE_SOUND:  if(CheckPointer(m_print)) m_sound.Clear(); break;
+      case ALERT_MODE_POPUP:  if(CheckPointer(m_print)) m_popup.Clear(); break;
+      case ALERT_MODE_EMAIL:  if(CheckPointer(m_print)) m_email.Clear(); break;
+      case ALERT_MODE_PUSH:   if(CheckPointer(m_print)) m_push.Clear();  break;
+      case ALERT_MODE_FTP:    if(CheckPointer(m_print)) m_ftp.Clear();   break; 
+      default:                Print(__FUNCTION__+": unknown alert mode");
      }
   }
 //+------------------------------------------------------------------+
@@ -372,18 +312,12 @@ JEventRegistryBase::Clear(const ENUM_ALERT_MODE alert_mode)
 //+------------------------------------------------------------------+
 JEventRegistryBase::Clear()
   {
-   if(CheckPointer(m_print))
-      m_print.Clear();
-   if(CheckPointer(m_print))
-      m_sound.Clear();
-   if(CheckPointer(m_print))
-      m_popup.Clear();
-   if(CheckPointer(m_print))
-      m_email.Clear();
-   if(CheckPointer(m_print))
-      m_push.Clear();
-   if(CheckPointer(m_print))
-      m_ftp.Clear();
+   if(CheckPointer(m_print)) m_print.Clear();      
+   if(CheckPointer(m_print)) m_sound.Clear();
+   if(CheckPointer(m_print)) m_popup.Clear();
+   if(CheckPointer(m_print)) m_email.Clear();
+   if(CheckPointer(m_print)) m_push.Clear();
+   if(CheckPointer(m_print)) m_ftp.Clear();
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

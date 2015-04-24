@@ -174,11 +174,7 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CO
            }
          break;
         }
-      default:
-        {
-         PrintFormat("unknown event");
-         return;
-        }
+      default: PrintFormat("unknown event");
      }
    if(CheckPointer(event)==POINTER_DYNAMIC)
       Add(event);
@@ -225,11 +221,7 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,st
            }
          break;
         }
-      default:
-        {
-         PrintFormat("unknown event");
-         break;
-        }
+      default: PrintFormat("unknown event");
      }
    if(CheckPointer(event)==POINTER_DYNAMIC)
       Add(event);
@@ -260,12 +252,9 @@ JEventCustom *JEventsBase::CreateCustomEvent(const ENUM_ACTION action,string mes
 //+------------------------------------------------------------------+
 JEventsBase::DebugMode(bool debug=true)
   {
-   if(!CheckPointer(m_standard))
-      m_standard=new JEventRegistry();
-   if(!CheckPointer(m_error))
-      m_error=new JEventRegistry();
-   if(!CheckPointer(m_custom))
-      m_custom=new JEventRegistry();
+   if(!CheckPointer(m_standard)) m_standard=new JEventRegistry();
+   if(!CheckPointer(m_error)) m_error=new JEventRegistry();
+   if(!CheckPointer(m_custom)) m_custom=new JEventRegistry();
    m_standard.DebugMode(debug);
    m_error.DebugMode(debug);
    m_custom.DebugMode(debug);
@@ -279,30 +268,27 @@ bool JEventsBase::Run(void)
    for(int i=total-1;i>=0;i--)
      {
       JEvent *event=Detach(i);
-      if(event!=NULL)
+      if(event!=NULL && !event.Instant())
         {
-         if(!event.Instant())
+         switch(event.Type())
            {
-            switch(event.Type())
+            case CLASS_TYPE_EVENT_STANDARD:
               {
-               case CLASS_TYPE_EVENT_STANDARD:
-                 {
-                  if(CheckPointer(m_standard))
-                     event.Run(GetPointer(m_standard));
-                  break;
-                 }
-               case CLASS_TYPE_EVENT_ERROR:
-                 {
-                  if(CheckPointer(m_error))
-                     event.Run(GetPointer(m_error));
-                  break;
-                 }
-               case CLASS_TYPE_EVENT_CUSTOM:
-                 {
-                  if(CheckPointer(m_custom))
-                     event.Run(GetPointer(m_custom));
-                  break;
-                 }
+               if(CheckPointer(m_standard))
+                  event.Run(GetPointer(m_standard));
+               break;
+              }
+            case CLASS_TYPE_EVENT_ERROR:
+              {
+               if(CheckPointer(m_error))
+                  event.Run(GetPointer(m_error));
+               break;
+              }
+            case CLASS_TYPE_EVENT_CUSTOM:
+              {
+               if(CheckPointer(m_custom))
+                  event.Run(GetPointer(m_custom));
+               break;
               }
            }
         }

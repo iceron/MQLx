@@ -175,52 +175,13 @@ bool JSignalBase::IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD
      {
       switch(type)
         {
-         case ORDER_TYPE_BUY:
-           {
-            if(res==CMD_BUY)
-               return(true);
-            else
-               return(false);
-           }
-         case ORDER_TYPE_SELL:
-           {
-            if(res==CMD_SELL)
-               return(true);
-            else
-               return(false);
-           }
-         case ORDER_TYPE_BUY_LIMIT:
-           {
-            if(res==CMD_BUYLIMIT)
-               return(true);
-            else
-               return(false);
-           }
-         case ORDER_TYPE_BUY_STOP:
-           {
-            if(res==CMD_BUYSTOP)
-               return(true);
-            else
-               return(false);
-           }
-         case ORDER_TYPE_SELL_LIMIT:
-           {
-            if(res==CMD_SELLLIMIT)
-               return(true);
-            else
-               return(false);
-           }
-         case ORDER_TYPE_SELL_STOP:
-           {
-            if(res==CMD_SELLSTOP)
-               return(true);
-            else
-               return(false);
-           }
-         default:
-           {
-            PrintFormat(__FUNCTION__+": unknown order type");
-           }
+         case ORDER_TYPE_BUY:          return(res==CMD_BUY);
+         case ORDER_TYPE_SELL:         return(res==CMD_SELL);
+         case ORDER_TYPE_BUY_LIMIT:    return(res==CMD_BUYLIMIT);
+         case ORDER_TYPE_BUY_STOP:     return(res==CMD_BUYSTOP);
+         case ORDER_TYPE_SELL_LIMIT:   return(res==CMD_SELLLIMIT);
+         case ORDER_TYPE_SELL_STOP:    return(res==CMD_SELLSTOP);
+         default: PrintFormat(__FUNCTION__+": unknown order type");
         }
      }
    return((IsSignalTypeShort((ENUM_CMD) res) && JOrder::IsOrderTypeLong(type))

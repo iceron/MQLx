@@ -91,183 +91,43 @@ bool JEventStandardBase::Run(JEventRegistry *registry,string sound_file=NULL,str
   {
    switch(Action())
      {
-      case ACTION_PROGRAM_INIT:
-        {
-         OnProgramInit();
-         break;
-        }
-      case ACTION_PROGRAM_DEINIT:
-        {
-         OnProgramInitDone();
-         break;
-        }
-      case ACTION_CLASS_CREATE:
-        {
-         OnClassCreate();
-         break;
-        }
-      case ACTION_CLASS_CREATE_DONE:
-        {
-         OnClassCreateDone();
-         break;
-        }
-      case ACTION_CLASS_VALIDATE:
-        {
-         OnClassValidate();
-         break;
-        }
-      case ACTION_CLASS_VALIDATE_DONE:
-        {
-         OnClassValidateDone();
-         break;
-        }
-      case ACTION_CLASS_DELETE:
-        {
-         OnClassDelete();
-         break;
-        }
-      case ACTION_CLASS_DELETE_DONE:
-        {
-         OnClassDeleteDone();
-         break;
-        }
-      case ACTION_CANDLE:
-        {
-         OnCandle();
-         break;
-        }
-      case ACTION_TICK:
-        {
-         OnTick();
-         break;
-        }
-      case ACTION_ORDER_SEND:
-        {
-         OnOrderSend();
-         break;
-        }
-      case ACTION_ORDER_SEND_DONE:
-        {
-         OnOrderSendDone();
-         break;
-        }
-      case ACTION_ORDER_MODIFY:
-        {
-         OnOrderModify();
-         break;
-        }
-      case ACTION_ORDER_MODIFY_DONE:
-        {
-         OnOrderModifyDone();
-         break;
-        }
-      case ACTION_ORDER_ENTRY_MODIFY:
-        {
-         OnOrderEntryModify();
-         break;
-        }
-      case ACTION_ORDER_ENTRY_MODIFY_DONE:
-        {
-         OnOrderEntryModifyDone();
-         break;
-        }
-      case ACTION_ORDER_SL_MODIFY:
-        {
-         OnOrderSLModify();
-         break;
-        }
-      case ACTION_ORDER_SL_MODIFY_DONE:
-        {
-         OnOrderSLModifyDone();
-         break;
-        }
-      case ACTION_ORDER_TP_MODIFY:
-        {
-         OnOrderTPModify();
-         break;
-        }
-      case ACTION_ORDER_TP_MODIFY_DONE:
-        {
-         OnOrderTPModifyDone();
-         break;
-        }
-      case ACTION_ORDER_ME_MODIFY:
-        {
-         OnOrderMEModify();
-         break;
-        }
-      case ACTION_ORDER_ME_MODIFY_DONE:
-        {
-         OnOrderMEModifyDone();
-         break;
-        }      
-      case ACTION_ORDER_CLOSE:
-        {
-         OnOrderClose();
-         break;
-        }
-      case ACTION_ORDER_CLOSE_DONE:
-        {
-         OnOrderCloseDone();
-         break;
-        }
-      case ACTION_ORDER_TRAIL:
-        {
-         OnOrderTrail();
-         break;
-        }
-      case ACTION_ORDER_TRAIL_DONE:
-        {
-         OnOrderTrailDone();
-         break;
-        }
-      case ACTION_ORDER_STOPS_CLOSE_DONE:
-        {
-         OnOrderStopsCloseDone();
-         break;
-        }      
-      case ACTION_ORDER_TRAIL_SL:
-        {
-         OnOrderTrailSL();
-         break;
-        }
-      case ACTION_ORDER_TRAIL_SL_DONE:
-        {
-         OnOrderTrailSLDone();
-         break;
-        }
-      case ACTION_ORDER_TRAIL_TP:
-        {
-         OnOrderTrailTP();
-         break;
-        }
-      case ACTION_ORDER_TRAIL_TP_DONE:
-        {
-         OnOrderTrailTPDone();
-         break;
-        }
-      case ACTION_TRADE_ENABLED:
-        {
-         OnTradeEnabled();
-         break;
-        }
-      case ACTION_TRADE_DISABLED:
-        {
-         OnTradeDisabled();
-         break;
-        }
-      case ACTION_TRADE_TIME_START:
-        {
-         OnTradeTimeStart();
-         break;
-        }
-      case ACTION_TRADE_TIME_END:
-        {
-         OnTradeTimeEnd();
-         break;
-        }
+      case ACTION_PROGRAM_INIT:              OnProgramInit();           break;
+      case ACTION_PROGRAM_DEINIT:            OnProgramInitDone();       break;
+      case ACTION_CLASS_CREATE:              OnClassCreate();           break;
+      case ACTION_CLASS_CREATE_DONE:         OnClassCreateDone();       break;
+      case ACTION_CLASS_VALIDATE:            OnClassValidate();         break;
+      case ACTION_CLASS_VALIDATE_DONE:       OnClassValidateDone();     break;
+      case ACTION_CLASS_DELETE:              OnClassDelete();           break;
+      case ACTION_CLASS_DELETE_DONE:         OnClassDeleteDone();       break;
+      case ACTION_CANDLE:                    OnCandle();                break;
+      case ACTION_TICK:                      OnTick();                  break;
+      case ACTION_ORDER_SEND:                OnOrderSend();             break;
+      case ACTION_ORDER_SEND_DONE:           OnOrderSendDone();         break;
+      case ACTION_ORDER_MODIFY:              OnOrderModify();           break;
+      case ACTION_ORDER_MODIFY_DONE:         OnOrderModifyDone();       break;
+      case ACTION_ORDER_ENTRY_MODIFY:        OnOrderEntryModify();      break;
+      case ACTION_ORDER_ENTRY_MODIFY_DONE:   OnOrderEntryModifyDone();  break;
+      case ACTION_ORDER_SL_MODIFY:           OnOrderSLModify();         break;
+      case ACTION_ORDER_SL_MODIFY_DONE:      OnOrderSLModifyDone();     break;
+      case ACTION_ORDER_TP_MODIFY:           OnOrderTPModify();         break;
+      case ACTION_ORDER_TP_MODIFY_DONE:      OnOrderTPModifyDone();     break;
+      case ACTION_ORDER_ME_MODIFY:           OnOrderMEModify();         break;
+      case ACTION_ORDER_ME_MODIFY_DONE:      OnOrderMEModifyDone();     break;
+      case ACTION_ORDER_CLOSE:               OnOrderClose();            break;
+      case ACTION_ORDER_CLOSE_DONE:          OnOrderCloseDone();        break;
+      case ACTION_ORDER_TRAIL:               OnOrderTrail();            break;
+      case ACTION_ORDER_TRAIL_DONE:          OnOrderTrailDone();        break;
+      case ACTION_ORDER_STOPS_CLOSE_DONE:    OnOrderStopsCloseDone();   break;
+      case ACTION_ORDER_TRAIL_SL:            OnOrderTrailSL();          break;
+      case ACTION_ORDER_TRAIL_SL_DONE:       OnOrderTrailSLDone();      break;
+      case ACTION_ORDER_TRAIL_TP:            OnOrderTrailTP();          break;
+      case ACTION_ORDER_TRAIL_TP_DONE:       OnOrderTrailTPDone();      break;
+      case ACTION_TRADE_ENABLED:             OnTradeEnabled();          break;
+      case ACTION_TRADE_DISABLED:            OnTradeDisabled();         break;
+      case ACTION_TRADE_TIME_START:          OnTradeTimeStart();        break;
+      case ACTION_TRADE_TIME_END:            OnTradeTimeEnd();          break;
      }
-   if (m_message!=NULL)
+   if(m_message!=NULL) 
       Execute(registry,sound_file,file_name,ftp_path);
    return(true);
   }
@@ -374,9 +234,9 @@ JEventStandardBase::OnOrderSendDone(void)
   {
    m_subject = "Order sent";
    m_message = "Order sent";
-   JOrder *order = GetObject(CLASS_TYPE_ORDER);
-   if (CheckPointer(order)==POINTER_DYNAMIC)
-      m_message_add = "#"+DoubleToString(order.Ticket(),0)+" "+EnumToString(order.OrderType());
+   JOrder *order=GetObject(CLASS_TYPE_ORDER);
+   if(CheckPointer(order)==POINTER_DYNAMIC)
+      m_message_add="#"+DoubleToString(order.Ticket(),0)+" "+EnumToString(order.OrderType());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -400,7 +260,7 @@ JEventStandardBase::OnOrderEntryModifyDone(void)
 JEventStandardBase::OnOrderSLModify(void)
   {
    m_subject = "Modifying order SL";
-   m_message = "Modifying order SL";   
+   m_message = "Modifying order SL";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -409,9 +269,9 @@ JEventStandardBase::OnOrderSLModifyDone(void)
   {
    m_subject = "Order SL modified";
    m_message = "Order SL modified";
-   JOrderStop *orderstop = GetObject(CLASS_TYPE_ORDERSTOP);   
-   if (CheckPointer(orderstop)==POINTER_DYNAMIC)
-      m_message_add = orderstop.StopLossName()+" "+(string)orderstop.StopLossLast()+"->"+(string)orderstop.StopLoss(); 
+   JOrderStop *orderstop=GetObject(CLASS_TYPE_ORDERSTOP);
+   if(CheckPointer(orderstop)==POINTER_DYNAMIC)
+      m_message_add=orderstop.StopLossName()+" "+(string)orderstop.StopLossLast()+"->"+(string)orderstop.StopLoss();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -428,9 +288,9 @@ JEventStandardBase::OnOrderTPModifyDone(void)
   {
    m_subject = "Order TP modified";
    m_message = "Order TP modified";
-   JOrderStop *orderstop = GetObject(CLASS_TYPE_ORDERSTOP);   
-   if (CheckPointer(orderstop)==POINTER_DYNAMIC)
-      m_message_add = orderstop.TakeProfitName()+" "+(string)orderstop.TakeProfitLast()+"->"+(string)orderstop.TakeProfit(); 
+   JOrderStop *orderstop=GetObject(CLASS_TYPE_ORDERSTOP);
+   if(CheckPointer(orderstop)==POINTER_DYNAMIC)
+      m_message_add=orderstop.TakeProfitName()+" "+(string)orderstop.TakeProfitLast()+"->"+(string)orderstop.TakeProfit();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -463,12 +323,12 @@ JEventStandardBase::OnOrderModifyDone(void)
   {
    m_subject = "Order modified";
    m_message = "Order modified";
-   JOrderStop *orderstop = GetObject(CLASS_TYPE_ORDERSTOP);   
-   if (CheckPointer(orderstop)==POINTER_DYNAMIC)
-   {      
-      m_message_add = m_message_add = orderstop.StopLossName()+" "+(string)orderstop.StopLossLast()+"->"+(string)orderstop.StopLoss(); ;  
-      m_message_add += " "+orderstop.TakeProfitName()+" "+(string)orderstop.TakeProfitLast()+"->"+(string)orderstop.TakeProfit();  
-   }   
+   JOrderStop *orderstop=GetObject(CLASS_TYPE_ORDERSTOP);
+   if(CheckPointer(orderstop)==POINTER_DYNAMIC)
+     {
+      m_message_add = m_message_add = orderstop.StopLossName()+" "+(string)orderstop.StopLossLast()+"->"+(string)orderstop.StopLoss();;
+      m_message_add+= " "+orderstop.TakeProfitName()+" "+(string)orderstop.TakeProfitLast()+"->"+(string)orderstop.TakeProfit();
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -476,7 +336,7 @@ JEventStandardBase::OnOrderModifyDone(void)
 JEventStandardBase::OnOrderClose(void)
   {
    m_subject = "Closing order";
-   m_message = "Closing order";   
+   m_message = "Closing order";
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -485,9 +345,9 @@ JEventStandardBase::OnOrderCloseDone(void)
   {
    m_subject = "Order closed";
    m_message = "Order closed";
-   JOrder *order = GetObject(CLASS_TYPE_ORDER);
-   if (CheckPointer(order)==POINTER_DYNAMIC)
-      m_message_add = "#"+DoubleToString(order.Ticket(),0);
+   JOrder *order=GetObject(CLASS_TYPE_ORDER);
+   if(CheckPointer(order)==POINTER_DYNAMIC)
+      m_message_add="#"+DoubleToString(order.Ticket(),0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
