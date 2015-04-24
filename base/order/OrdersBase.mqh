@@ -82,24 +82,21 @@ bool JOrdersBase::Init(const int magic=0,JStrategy *s=NULL,JStops *stops=NULL,JE
 //+------------------------------------------------------------------+
 JOrdersBase::SetContainer(JStrategy *s)
   {
-   if(s!=NULL)
-      m_strategy=s;
+   if(s!=NULL) m_strategy=s;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JOrdersBase::SetStops(JStops *stops)
   {
-   if(stops!=NULL)
-      m_stops=stops;
+   if(stops!=NULL) m_stops=stops;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JOrdersBase::EventHandler(JEvents *events)
   {
-   if(events!=NULL)
-      m_events=events;
+   if(events!=NULL) m_events=events;
    return(m_events!=NULL);
   }
 //+------------------------------------------------------------------+
@@ -145,16 +142,14 @@ bool JOrdersBase::CloseStops(void)
 //+------------------------------------------------------------------+
 void JOrdersBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
-   if(m_events!=NULL)
-      m_events.CreateEvent(type,action,object1,object2,object3);
+   if(m_events!=NULL) m_events.CreateEvent(type,action,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JOrdersBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
   {
-   if(m_events!=NULL)
-      m_events.CreateEvent(type,action,message_add);
+   if(m_events!=NULL) m_events.CreateEvent(type,action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

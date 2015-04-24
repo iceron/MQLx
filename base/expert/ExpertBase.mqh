@@ -74,8 +74,7 @@ bool JExpertBase::Validate(void) const
 //+------------------------------------------------------------------+
 void JExpertBase::ChartComment(const bool enable=true)
   {
-   if(enable)
-      m_comments=new JComments();     
+   if(enable) m_comments=new JComments();     
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

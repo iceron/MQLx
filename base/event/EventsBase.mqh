@@ -54,11 +54,10 @@ protected:
    //--- event checking 
    virtual bool      IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION action);
    virtual bool      IsEventStandardAllowed(const ENUM_ACTION action);
-   virtual bool      IsEventErrorAllowed(const ENUM_ACTION action);
+   virtual bool      IsEventErrorAllowed(const ENUM_ACTION action) {return(true);}
    virtual bool      IsEventCustomAllowed(const ENUM_ACTION action);
    //--- events   
    virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);
-
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -76,12 +75,9 @@ JEventsBase::JEventsBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 JEventsBase::~JEventsBase(void)
   {
-   if(CheckPointer(m_standard))
-      delete m_standard;
-   if(CheckPointer(m_error))
-      delete m_error;
-   if(CheckPointer(m_custom))
-      delete m_custom;
+   if(CheckPointer(m_standard)) delete m_standard;
+   if(CheckPointer(m_error))    delete m_error;
+   if(CheckPointer(m_custom))   delete m_custom;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -89,13 +85,6 @@ JEventsBase::~JEventsBase(void)
 bool JEventsBase::IsEventStandardAllowed(const ENUM_ACTION action)
   {
    return(CheckPointer(m_standard)?m_standard.IsAllowed(action):false);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JEventsBase::IsEventErrorAllowed(const ENUM_ACTION action)
-  {
-   return(true);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

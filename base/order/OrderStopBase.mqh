@@ -242,18 +242,14 @@ bool JOrderStopBase::Close(void)
    CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CLOSE,GetPointer(this));
    bool res1=false,res2=false,result=false;
    if(m_stoploss_closed || StopLoss()==0 || m_stoploss_ticket==0)
-     {
       res1=true;
-     }
    else if(m_stoploss_ticket>0 && !m_stoploss_closed)
      {
       if(m_stop.DeleteStopOrder(m_stoploss_ticket))
          res1=DeleteStopLoss();
      }
    if(m_takeprofit_closed || TakeProfit()==0 || m_takeprofit_ticket==0)
-     {
       res2=true;
-     }
    else if(m_takeprofit_ticket>0 && !m_takeprofit_closed)
      {
       if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
@@ -453,12 +449,9 @@ bool JOrderStopBase::Modify(const double stoploss,const double takeprofit)
 JOrderStopBase::Show(bool show=true)
   {
    int setting=show?OBJ_ALL_PERIODS:OBJ_NO_PERIODS;
-   if(CheckPointer(m_objentry))
-      m_objentry.Timeframes(setting);
-   if(CheckPointer(m_objsl))
-      m_objsl.Timeframes(setting);
-   if(CheckPointer(m_objtp))
-      m_objtp.Timeframes(setting);
+   if(CheckPointer(m_objentry))  m_objentry.Timeframes(setting);
+   if(CheckPointer(m_objsl))     m_objsl.Timeframes(setting);
+   if(CheckPointer(m_objtp))     m_objtp.Timeframes(setting);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

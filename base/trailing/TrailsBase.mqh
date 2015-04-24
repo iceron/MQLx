@@ -74,13 +74,9 @@ double JTrailsBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,co
       if (mode!=trail_target) continue;
       val=trail.Check(type,entry_price,price,mode);
       if((type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_TAKEPROFIT))
-        {
          if(val>ret || ret==0.0) ret=val;
-        }
       else if((type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_TAKEPROFIT))
-        {
          if(val<ret || ret==0.0) ret=val;
-        }
      }
    return(ret);
   }

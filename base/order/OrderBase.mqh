@@ -50,7 +50,7 @@ public:
    void              Magic(const int magic){m_magic=magic;}
    int               Magic(void) const {return(m_magic);}
    void              MainStop(JOrderStop *order_stop){m_main_stop=order_stop;}
-   JOrderStop        *MainStop(void) const {return(m_main_stop);}
+   JOrderStop       *MainStop(void) const {return(m_main_stop);}
    void              Price(const double price){m_price=price;}
    double            Price(void) const {return(m_price);}
    void              OrderType(const ENUM_ORDER_TYPE type){m_type=type;}
@@ -177,16 +177,14 @@ bool JOrderBase::EventHandler(JEvents *events)
 //+------------------------------------------------------------------+
 void JOrderBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
-   if(m_events!=NULL)
-      m_events.CreateEvent(type,action,object1,object2,object3);
+   if(m_events!=NULL) m_events.CreateEvent(type,action,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JOrderBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
   {
-   if(m_events!=NULL)
-      m_events.CreateEvent(type,action,message_add);
+   if(m_events!=NULL) m_events.CreateEvent(type,action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

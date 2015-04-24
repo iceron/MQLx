@@ -8,7 +8,6 @@
 #include "..\..\common\enum\ENUM_TRAIL_TARGET.mqh"
 #include "..\..\common\enum\ENUM_TRAIL_MODE.mqh"
 #include "..\..\common\enum\ENUM_STOP_TYPE.mqh"
-#include <Files\FileBin.mqh>
 #include "..\event\EventBase.mqh"
 #include "..\stop\StopLineBase.mqh"
 #include "..\trade\TradeBase.mqh"
@@ -126,11 +125,11 @@ public:
    //--- stop order price calculation   
    virtual bool      Refresh(void);
    virtual double    StopLossCalculate(const ENUM_ORDER_TYPE type,const double price);
-   virtual double    StopLossCustom(const ENUM_ORDER_TYPE type,const double price);
+   virtual double    StopLossCustom(const ENUM_ORDER_TYPE type,const double price) {return(0);}
    virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop){return(0.0);}
    virtual double    StopLossTicks(const ENUM_ORDER_TYPE type,const double price) {return(m_stoploss);}
    virtual double    TakeProfitCalculate(const ENUM_ORDER_TYPE type,const double price);
-   virtual double    TakeProfitCustom(const ENUM_ORDER_TYPE type,const double price);
+   virtual double    TakeProfitCustom(const ENUM_ORDER_TYPE type,const double price) {return(0);}
    virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop) {return(0.0);}
    virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE type,const double price) {return(m_takeprofit);}
    //--- trailing   
@@ -343,20 +342,6 @@ double JStopBase::TakeProfitCalculate(const ENUM_ORDER_TYPE type,const double pr
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStopBase::TakeProfitCustom(const ENUM_ORDER_TYPE type,const double price)
-  {
-   return(0.0);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-double JStopBase::StopLossCustom(const ENUM_ORDER_TYPE type,const double price)
-  {
-   return(0.0);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool JStopBase::GetClosePrice(const ENUM_ORDER_TYPE type,double &price)
   {
    if(!Refresh()) return(false);
@@ -378,13 +363,9 @@ bool JStopBase::CheckStopLoss(JOrder *order,JOrderStop *orderstop)
    if(!GetClosePrice(type,price)) return(false);
    bool close=false;
    if(type==ORDER_TYPE_BUY)
-     {
       if(price<=stoploss) close=true;
-     }
    else if(type==ORDER_TYPE_SELL)
-     {
       if(price>=stoploss) close=true;
-     }
    if(close)
       return(CloseStop(order,orderstop,price));
    return(false);
@@ -401,13 +382,9 @@ bool JStopBase::CheckTakeProfit(JOrder *order,JOrderStop *orderstop)
    if(!GetClosePrice(type,price)) return(false);
    bool close=false;
    if(type==ORDER_TYPE_BUY)
-     {
       if(price>=takeprofit) close=true;
-     }
    else if(type==ORDER_TYPE_SELL)
-     {
       if(price<=takeprofit) close=true;
-     }
    if(close)
       return(CloseStop(order,orderstop,price));
    return(false);

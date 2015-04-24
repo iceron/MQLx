@@ -108,7 +108,7 @@ bool JSignalBase::Validate(void) const
 bool JSignalBase::Init(JStrategy *s,JComments *comments,JEvents *events)
   {
    m_strategy=s;
-   m_comments= comments;
+   m_comments=comments;
    m_events=events;
    return(true);
   }

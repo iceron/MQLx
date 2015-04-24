@@ -52,18 +52,12 @@ JEventRegistryBase::JEventRegistryBase(void) : m_debug(false)
 //+------------------------------------------------------------------+
 JEventRegistryBase::~JEventRegistryBase(void)
   {
-   if(CheckPointer(m_print))
-      delete m_print;
-   if(CheckPointer(m_print))
-      delete m_sound;
-   if(CheckPointer(m_print))
-      delete m_popup;
-   if(CheckPointer(m_print))
-      delete m_email;
-   if(CheckPointer(m_print))
-      delete m_push;
-   if(CheckPointer(m_print))
-      delete m_ftp;
+   if(CheckPointer(m_print))  delete m_print;
+   if(CheckPointer(m_print))  delete m_sound;
+   if(CheckPointer(m_print))  delete m_popup;
+   if(CheckPointer(m_print))  delete m_email;
+   if(CheckPointer(m_print))  delete m_push;
+   if(CheckPointer(m_print))  delete m_ftp;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -261,10 +255,7 @@ JEventRegistryBase::Register(ENUM_ALERT_MODE alert_mode,int id)
          m_ftp.InsertSort(id);
          break;
         }
-      default:
-        {
-         Print(__FUNCTION__+": unknown alert mode");
-        }
+      default: PrintFormat(__FUNCTION__+": unknown alert mode");
      }
   }
 //+------------------------------------------------------------------+
