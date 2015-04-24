@@ -22,6 +22,7 @@ protected:
    ENUM_ORDER_TYPE_TIME m_order_type_time;
    datetime          m_order_expiration;
    bool              m_async_mode;
+   uint              m_retry;
    color             m_color_long;
    color             m_color_short;
    color             m_color_buystop;
@@ -63,6 +64,7 @@ JTrade::JTrade(void) : m_activate(true),
                        m_order_type_time(0),
                        m_symbol(NULL),
                        m_async_mode(0),
+                       m_retry(3),
                        m_color_long(clrGreen),
                        m_color_buystop(clrGreen),
                        m_color_buylimit(clrGreen),
@@ -162,18 +164,26 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
    datetime expire=0;
    if(order_type>1 && expiration>0) expire=expiration*1000+TimeCurrent();
    double stops_level=m_symbol.StopsLevel();
-   if(stops_level==0 && order_type<=1)
+   for(uint i=0;i<m_retry;i++)
      {
-      ticket=::OrderSend(symbol,order_type,volume,price,(int)(m_deviation*m_symbol.Point()),0,0,comment,m_magic,expire,arrowcolor);
-      Sleep(500);
-      if(ticket>0)
-         if(sl>0 || tp>0)
-            res=::OrderModify((int)ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
+      if (IsStopped())
+         return(0);
+      if (IsTradeContextBusy() || !IsConnected())
+      {
+         Sleep(100);
+         continue;
+      }
+      if(stops_level==0 && order_type<=1)
+        {
+         ticket=::OrderSend(symbol,order_type,volume,price,(int)(m_deviation*m_symbol.Point()),0,0,comment,m_magic,expire,arrowcolor);
+         Sleep(100);
+         if(ticket>0)
+            if(sl>0 || tp>0)
+               res=::OrderModify((int)ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
+        }
+      else ticket=::OrderSend(symbol,order_type,volume,price,(int)m_deviation,sl,tp,comment,m_magic,expire,arrowcolor);
      }
-   else ticket=::OrderSend(symbol,order_type,volume,price,(int)m_deviation,sl,tp,comment,m_magic,expire,arrowcolor);
-   if(ticket>0)
-      return(ticket);
-   return(0);
+   return(ticket>0?ticket:0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
