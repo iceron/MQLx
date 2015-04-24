@@ -23,6 +23,7 @@ protected:
    datetime          m_order_expiration;
    bool              m_async_mode;
    uint              m_retry;
+   int               m_sleep;
    color             m_color_long;
    color             m_color_short;
    color             m_color_buystop;
@@ -41,6 +42,10 @@ public:
    virtual void      Activate(const bool activate) {m_activate=activate;}
    //--- setters and getters
    color             ArrowColor(const ENUM_ORDER_TYPE type);
+   int               Retry() {return(m_retry);}
+   void              Retry(int retry){m_retry=retry;}
+   int               Sleep() {return(m_sleep);}
+   void              Sleep(int sleep){m_sleep=sleep;}
    void              SetAsyncMode(const bool mode) {m_async_mode=mode;}
    void              SetExpertMagicNumber(const int magic) {m_magic=magic;}
    void              SetDeviationInPoints(const ulong deviation) {m_deviation=deviation;}
@@ -65,6 +70,7 @@ JTrade::JTrade(void) : m_activate(true),
                        m_symbol(NULL),
                        m_async_mode(0),
                        m_retry(3),
+                       m_sleep(100),
                        m_color_long(clrGreen),
                        m_color_buystop(clrGreen),
                        m_color_buylimit(clrGreen),
@@ -164,24 +170,28 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
    datetime expire=0;
    if(order_type>1 && expiration>0) expire=expiration*1000+TimeCurrent();
    double stops_level=m_symbol.StopsLevel();
-   for(uint i=0;i<m_retry;i++)
+   for(uint i=0;i<m_retry||ticket>0;i++)
      {
-      if (IsStopped())
+      if(IsStopped())
          return(0);
-      if (IsTradeContextBusy() || !IsConnected())
-      {
-         Sleep(100);
+      if(IsTradeContextBusy() || !IsConnected())
+        {
+         ::Sleep(m_sleep);
          continue;
-      }
+        }
       if(stops_level==0 && order_type<=1)
         {
          ticket=::OrderSend(symbol,order_type,volume,price,(int)(m_deviation*m_symbol.Point()),0,0,comment,m_magic,expire,arrowcolor);
-         Sleep(100);
+         ::Sleep(m_sleep);
          if(ticket>0)
             if(sl>0 || tp>0)
                res=::OrderModify((int)ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
         }
-      else ticket=::OrderSend(symbol,order_type,volume,price,(int)m_deviation,sl,tp,comment,m_magic,expire,arrowcolor);
+      else 
+      {
+         ticket=::OrderSend(symbol,order_type,volume,price,(int)m_deviation,sl,tp,comment,m_magic,expire,arrowcolor);      
+         ::Sleep(m_sleep);
+      }   
      }
    return(ticket>0?ticket:0);
   }
