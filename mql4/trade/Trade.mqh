@@ -174,7 +174,6 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
      {
       if (ticket>0)
          break;
-      Print(i+" "+ticket);
       if(IsStopped())
          return(0);
       if(IsTradeContextBusy() || !IsConnected())
