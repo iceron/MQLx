@@ -6,7 +6,6 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_TRAIL_TARGET.mqh"
-#include "..\..\common\enum\ENUM_TRAIL_MODE.mqh"
 #include <Object.mqh>
 #include "..\lib\SymbolInfo.mqh"
 class JTrails;
@@ -18,7 +17,6 @@ class JTrailBase : public CObject
 protected:
    bool              m_activate;
    ENUM_TRAIL_TARGET m_target;
-   ENUM_TRAIL_MODE   m_mode;
    double            m_trail;
    double            m_start;
    double            m_end;
@@ -51,8 +49,6 @@ public:
    void              Step(const double step) {m_step=step;}
    double            Trail(void) const {return(m_trail);}
    void              Trail(const double trail) {m_trail=trail;}
-   int               TrailMode(void) const {return(m_mode);}
-   void              TrailMode(const ENUM_TRAIL_MODE mode) {m_mode=mode;}
    int               TrailTarget(void) const {return(m_target);}
    void              TrailTarget(const ENUM_TRAIL_TARGET target) {m_target=target;}
    //--- checking
@@ -70,7 +66,6 @@ protected:
 //+------------------------------------------------------------------+
 JTrailBase::JTrailBase(void) : m_activate(true),
                                m_target(TRAIL_TARGET_STOPLOSS),
-                               m_mode(TRAIL_MODE_TRAILING),
                                m_start(0.0),
                                m_end(0.0),
                                m_trail(0.0),
@@ -158,7 +153,7 @@ double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,con
    new_price=Price(type);
    if((type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
-      if((price>=activation-m_trail*m_points_adjust || activation==0.0) && (new_price>price+m_step*m_points_adjust))
+      if(m_step>0 && (price>=activation-m_trail*m_points_adjust || activation==0.0) && (new_price>price+m_step*m_points_adjust))
          next_stop=new_price;
       else next_stop=activation-m_trail*m_points_adjust;
       if((deactivation>0 && next_stop>=deactivation && next_stop>0.0) || (deactivation==0))
@@ -167,7 +162,7 @@ double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,con
      }
    if((type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
-      if((price<=activation+m_trail*m_points_adjust || activation==0.0) && (new_price<price-m_step*m_points_adjust))
+      if(m_step>0 && (price<=activation+m_trail*m_points_adjust || activation==0.0) && (new_price<price-m_step*m_points_adjust))
          next_stop=new_price;
       else next_stop=activation+m_trail*m_points_adjust;
       if((deactivation>0 && next_stop<=deactivation && next_stop>0.0) || (deactivation==0))

@@ -6,7 +6,6 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_TRAIL_TARGET.mqh"
-#include "..\..\common\enum\ENUM_TRAIL_MODE.mqh"
 #include "..\..\common\enum\ENUM_STOP_TYPE.mqh"
 #include "..\event\EventBase.mqh"
 #include "..\stop\StopLineBase.mqh"
