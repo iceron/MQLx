@@ -603,7 +603,7 @@ double JStrategyBase::LotSizeCalculate(const double price,const ENUM_ORDER_TYPE 
 //+------------------------------------------------------------------+
 bool JStrategyBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,const double price,const double sl,const double tp)
   {
-   bool ret=false;
+   bool ret=0;
    CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND,EnumToString(type)+" "+DoubleToString(lotsize,2)+" "+DoubleToString(sl,5)+" "+DoubleToString(tp,5)+" "+m_comment+" "+DoubleToString(m_magic,0));
    if(!MarginAllowed(m_symbol.Name(),type,lotsize,price))
      {

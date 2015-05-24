@@ -170,8 +170,11 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
    datetime expire=0;
    if(order_type>1 && expiration>0) expire=expiration*1000+TimeCurrent();
    double stops_level=m_symbol.StopsLevel();
-   for(uint i=0;i<m_retry||ticket>0;i++)
+   for(uint i=0;i<m_retry;i++)
      {
+      if (ticket>0)
+         break;
+      Print(i+" "+ticket);
       if(IsStopped())
          return(0);
       if(IsTradeContextBusy() || !IsConnected())

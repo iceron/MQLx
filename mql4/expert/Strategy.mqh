@@ -92,6 +92,7 @@ bool JStrategy::TradeOpen(const int res)
    ENUM_ORDER_TYPE type=JSignal::SignalToOrderType(res);
    if(!IsPositionAllowed(type))
       return(true);
+   
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       double price=PriceCalculate(type);
@@ -103,7 +104,7 @@ bool JStrategy::TradeOpen(const int res)
         }
       double lotsize=LotSizeCalculate(price,ORDER_TYPE_BUY,StopLossCalculate(res,price));
       ret=SendOrder(type,lotsize,price,sl,tp);
-     }
+     }   
    return(ret);
   }
 //+------------------------------------------------------------------+
