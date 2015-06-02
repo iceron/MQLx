@@ -62,7 +62,7 @@ bool JStrategy::TradeOpen(const int res)
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       price=PriceCalculate(type);
-      lotsize=LotSizeCalculate(price,ORDER_TYPE_BUY,StopLossCalculate(res,price));
+      lotsize=LotSizeCalculate(price,type,m_main_stop.StopLossCalculate(type,price));
       ret=SendOrder(type,lotsize,price,0,0);
      }
    return(ret);

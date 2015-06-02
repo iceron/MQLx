@@ -138,6 +138,7 @@ public:
    void              AddComment(const string comment);
    int               DigitsAdjust(void) const {return(m_digits_adjust);}
    void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
+   void              DisplayComment();
    datetime          Expiration(void) const {return(m_expiration);}
    void              Expiration(const datetime expiration) {m_expiration=expiration;}
    void              LastTradeRates(MqlTick &tick) {m_last_trade_data=tick;}
@@ -417,6 +418,14 @@ void JStrategyBase::AddComment(const string comment)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+void JStrategyBase::DisplayComment()
+  {
+   if(CheckPointer(m_comments)==POINTER_DYNAMIC)
+      m_comments.Display();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool JStrategyBase::Add(CObject *object)
   {
    bool result=false;
@@ -539,6 +548,7 @@ bool JStrategyBase::OnTick(void)
    ManageOrders();
    int entry=0,exit=0;
    CheckSignals(entry,exit);
+   AddComment("last tick: "+TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
    AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
    AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
    if(newbar || (m_every_tick && newtick))
@@ -559,6 +569,7 @@ bool JStrategyBase::OnTick(void)
    ManageOrdersHistory();
    if(CheckPointer(m_events)==POINTER_DYNAMIC)
       m_events.Run();
+   DisplayComment();
    return(ret);
   }
 //+------------------------------------------------------------------+
@@ -595,7 +606,7 @@ double JStrategyBase::PriceCalculate(ENUM_ORDER_TYPE type)
 double JStrategyBase::LotSizeCalculate(const double price,const ENUM_ORDER_TYPE type,const double stoploss)
   {
    if(CheckPointer(m_moneys))
-      return(m_moneys.Volume(price,type,stoploss));
+      return(m_moneys.Volume(0,type,stoploss));
    return(m_lotsize);
   }
 //+------------------------------------------------------------------+

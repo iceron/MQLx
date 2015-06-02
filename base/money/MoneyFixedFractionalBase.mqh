@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                           MoneyFixedRiskBase.mqh |
+//|                                         MoneyFixedMarginBase.mqh |
 //|                                                   Enrico Lambino |
 //|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
@@ -9,30 +9,30 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JMoneyFixedRiskBase : public JMoney
+class JMoneyFixedFractionalBase : public JMoney
   {
 public:
-                     JMoneyFixedRiskBase(void);
-                    ~JMoneyFixedRiskBase(void);
+                     JMoneyFixedFractionalBase(void);
+                    ~JMoneyFixedFractionalBase(void);
    virtual void      UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl);
-   virtual bool      Validate(void) const;
+   virtual bool      Validate(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedRiskBase::JMoneyFixedRiskBase(void)
+JMoneyFixedFractionalBase::JMoneyFixedFractionalBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedRiskBase::~JMoneyFixedRiskBase(void)
+JMoneyFixedFractionalBase::~JMoneyFixedFractionalBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyFixedRiskBase::Validate(void) const 
+bool JMoneyFixedFractionalBase::Validate(void)
   {
    if (m_percent<=0)
    {
@@ -44,49 +44,24 @@ bool JMoneyFixedRiskBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JMoneyFixedRiskBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
+void JMoneyFixedFractionalBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
-   if(m_symbol==NULL) return;
-   double minvol=m_symbol.LotsMin();
-   double balance=m_equity==false?m_account.Balance():m_account.Equity();   
-   if(sl==0.0)
+   if(m_symbol==NULL || m_account==NULL)
+      return;
+   double balance=m_equity==false?m_account.Balance():m_account.Equity();  
+   if(price==0.0)
    {
-      m_volume=minvol;
+      if(type==ORDER_TYPE_BUY)
+         m_volume = ((balance*(m_percent/100))/(MathAbs(m_symbol.Ask()-sl)/m_symbol.TickSize()))/m_symbol.TickValue();
+      else if(type==ORDER_TYPE_SELL)
+         m_volume = ((balance*(m_percent/100))/(MathAbs(m_symbol.Bid()-sl)/m_symbol.TickSize()))/m_symbol.TickValue();
    }   
-   else
-     {
-      double loss=0;
-      if(price==0.0)
-        {
-         if(type==ORDER_TYPE_BUY)
-         {
-            loss=-m_account.OrderProfitCheck(m_symbol.Name(),type,1.0,m_symbol.Ask(),sl);
-         }   
-         else if(type==ORDER_TYPE_SELL)
-         {
-            loss=-m_account.OrderProfitCheck(m_symbol.Name(),type,1.0,m_symbol.Bid(),sl);
-         }   
-        }
-      else
-      {
-         loss=-m_account.OrderProfitCheck(m_symbol.Name(),type,1.0,price,sl);
-      }            
-      double stepvol=m_symbol.LotsStep();
-      m_volume=MathFloor(m_account.Balance()*m_percent/loss/100.0/stepvol)*stepvol;
-      Print("calculated volume: "+m_volume+" loss: "+loss+" sl: "+sl+" percent: "+m_percent);
-     }
-   
-   if(m_volume<minvol)
-      m_volume=minvol;
-   double maxvol=m_symbol.LotsMax();
-   if(m_volume>maxvol)
-      m_volume=maxvol;
-   m_last_update=TimeCurrent();
+   else m_volume = ((balance*(m_percent/100))/(MathAbs(price-sl)/m_symbol.TickSize()))/m_symbol.TickValue();   
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\money\MoneyFixedRisk.mqh"
+#include "..\..\mql5\money\MoneyFixedFractional.mqh"
 #else
-#include "..\..\mql4\money\MoneyFixedRisk.mqh"
+#include "..\..\mql4\money\MoneyFixedFractional.mqh"
 #endif
 //+------------------------------------------------------------------+

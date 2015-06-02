@@ -52,6 +52,10 @@ public:
                                      const double volume,const double price) const;
    double            MaxLotCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
                                  const double price,const double percent=100) const;
+   bool              OrderCalcMargin(const ENUM_ORDER_TYPE action,const string symbol,const double volume,
+                                     const double price,double &margin) const;
+   bool              OrderCalcProfit(const ENUM_ORDER_TYPE action,const string symbol,const double volume,
+                                     const double price_open,const double price_close,double &profit) const;
   };
 //+------------------------------------------------------------------+
 //| Constructor                                                      |
@@ -260,6 +264,30 @@ string CAccountInfo::InfoString(const ENUM_ACCOUNT_INFO_STRING prop_id) const
    return(AccountInfoString(prop_id));
   }
 //+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CAccountInfo::OrderCalcMargin(const ENUM_ORDER_TYPE action,const string symbol,const double volume,
+                                   const double price,double &margin) const
+  {
+   margin=MarketInfo(symbol,MODE_MARGINREQUIRED)*volume;
+   return(margin<EMPTY_VALUE);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CAccountInfo::OrderCalcProfit(const ENUM_ORDER_TYPE action,const string symbol,const double volume,
+                                   const double price_open,const double price_close,double &profit) const
+  {
+   double difference=0;
+   if(action==OP_BUY || action==OP_BUYLIMIT || action==OP_BUYSTOP)
+      difference = (price_close-price_open)/MarketInfo(symbol,MODE_TICKSIZE);
+   else if(action==OP_SELL || action==OP_SELLLIMIT || action==OP_SELLSTOP)
+      difference = (price_open-price_close)/MarketInfo(symbol,MODE_TICKSIZE);
+   profit=(volume/(difference))/MarketInfo(symbol,MODE_TICKVALUE);
+   Print(__FUNCTION__+" profit: "+profit);
+   return(profit<EMPTY_VALUE);
+  }
+//+------------------------------------------------------------------+
 //| Access functions OrderCalcProfit(...).                            |
 //| INPUT:  name            - symbol name,                           |
 //|         trade_operation - trade operation,                       |
@@ -272,7 +300,7 @@ double CAccountInfo::OrderProfitCheck(const string symbol,const ENUM_ORDER_TYPE 
   {
    double profit=EMPTY_VALUE;
 //---
-   //if(!OrderCalcProfit(trade_operation,symbol,volume,price_open,price_close,profit))
+   if(!OrderCalcProfit(trade_operation,symbol,volume,price_open,price_close,profit))
       return(EMPTY_VALUE);
 //---
    return(profit);
@@ -289,11 +317,8 @@ double CAccountInfo::MarginCheck(const string symbol,const ENUM_ORDER_TYPE trade
   {
    double margin=EMPTY_VALUE;
 //---
-   /*
    if(!OrderCalcMargin(trade_operation,symbol,volume,price,margin))
       return(EMPTY_VALUE);
-   */   
-   return(AccountFreeMarginCheck(symbol,trade_operation,volume)>=0);
 //---
    return(margin);
   }
@@ -327,13 +352,12 @@ double CAccountInfo::MaxLotCheck(const string symbol,const ENUM_ORDER_TYPE trade
       return(0.0);
      }
 //--- calculate margin requirements for 1 lot
-   /*
    if(!OrderCalcMargin(trade_operation,symbol,1.0,price,margin) || margin<0.0)
      {
       Print("CAccountInfo::MaxLotCheck margin calculation failed");
       return(0.0);
      }
-   */  
+
 //---
    if(margin==0.0) // for pending orders
       return(SymbolInfoDouble(symbol,SYMBOL_VOLUME_MAX));

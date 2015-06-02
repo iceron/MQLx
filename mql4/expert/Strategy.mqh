@@ -102,7 +102,7 @@ bool JStrategy::TradeOpen(const int res)
          sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(type,price):m_main_stop.StopLossCalculate(type,price);
          tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(type,price):m_main_stop.TakeProfitCalculate(type,price);
         }
-      double lotsize=LotSizeCalculate(price,ORDER_TYPE_BUY,StopLossCalculate(res,price));
+      double lotsize=LotSizeCalculate(price,type,sl);
       ret=SendOrder(type,lotsize,price,sl,tp);
      }   
    return(ret);

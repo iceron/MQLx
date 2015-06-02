@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                               MoneyFixedRisk.mqh |
+//|                                             MoneyFixedMargin.mqh |
 //|                                                   Enrico Lambino |
 //|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
@@ -8,22 +8,22 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JMoneyFixedRisk : public JMoneyFixedRiskBase
+class JMoneyFixedFractional : public JMoneyFixedFractionalBase
   {
 public:
-                     JMoneyFixedRisk(void);
-                    ~JMoneyFixedRisk(void);
+                     JMoneyFixedFractional(void);
+                    ~JMoneyFixedFractional(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedRisk::JMoneyFixedRisk(void)
+JMoneyFixedFractional::JMoneyFixedFractional(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedRisk::~JMoneyFixedRisk(void)
+JMoneyFixedFractional::~JMoneyFixedFractional(void)
   {
   }
 //+------------------------------------------------------------------+

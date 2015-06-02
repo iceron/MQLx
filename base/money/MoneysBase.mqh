@@ -6,6 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
+#include "MoneyFixedFractionalBase.mqh"
 #include "MoneyFixedMarginBase.mqh"
 #include "MoneyFixedRiskBase.mqh"
 #include "MoneyFixedRiskPerPipBase.mqh"
