@@ -20,6 +20,7 @@ protected:
    ENUM_MONEY_UPDATE_TYPE m_update;
    double            m_volume;
    double            m_percent;
+   double            m_risk;
    double            m_volume_base;
    double            m_volume_inc;
    double            m_balance;
@@ -55,6 +56,8 @@ public:
    double    Percent(void) const {return(m_percent);}
    void      Period(const int period) {m_period=period;}
    int       Period(void) const {return(m_period);}
+   void      Risk(const double percent) {m_percent=percent;}
+   double    Risk(void) const {return(m_percent);}
    void      UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
    double    Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
    void      VolumeCurrent(const double volume) {m_volume=volume;}
