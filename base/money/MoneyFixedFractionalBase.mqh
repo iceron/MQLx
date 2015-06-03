@@ -56,8 +56,8 @@ void JMoneyFixedFractionalBase::UpdateLotSize(const double price,const ENUM_ORDE
       else if(type==ORDER_TYPE_SELL)
          m_volume = ((balance*(m_percent/100))/(MathAbs(m_symbol.Bid()-sl)/m_symbol.TickSize()))/m_symbol.TickValue();
    }   
-   else m_volume = ((balance*(m_percent/100))/(MathAbs(price-sl)/m_symbol.TickSize()))/m_symbol.TickValue();   
-   m_last_update=TimeCurrent();
+   else m_volume = ((balance*(m_percent/100))/(MathAbs(price-sl)/m_symbol.TickSize()))/m_symbol.TickValue();  
+   OnLotSizeUpdated();   
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -59,7 +59,7 @@ public:
    void      Risk(const double percent) {m_percent=percent;}
    double    Risk(void) const {return(m_percent);}
    void      UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
-   double    Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
+   double            Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
    void      VolumeCurrent(const double volume) {m_volume=volume;}
    double    VolumeCurrent(void) const {return(m_volume);}
    void      VolumeIncrement(const double volume) {m_volume_inc=volume;}
@@ -67,9 +67,10 @@ public:
    void      VolumeBase(const double volume_base) {m_volume_base=volume_base;}
    double    VolumeBase(void) const {return(m_volume_base);}
 protected:
+   virtual void      OnLotSizeUpdated();
    virtual bool      UpdateByMargin(void);
    virtual bool      UpdateByPeriod(void);
-   virtual void      UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl);
+   virtual void      UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl);   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -162,7 +163,7 @@ void JMoneyBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,con
    double balance=m_equity==false?m_account.Balance():m_account.Equity();
    m_volume=m_volume_base+((int)(balance/m_balance_inc))*m_volume_inc;
    m_balance=balance;
-   m_last_update=TimeCurrent();
+   OnLotSizeUpdated();   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -182,6 +183,19 @@ bool JMoneyBase::UpdateByPeriod(void)
    if(TimeCurrent()>=m_last_update+m_period)
       return(true);
    return(false);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void JMoneyBase::OnLotSizeUpdated(void)
+  {
+   double maxvol=m_symbol.LotsMax();
+   double minvol=m_symbol.LotsMin();
+   if(m_volume<minvol)
+      m_volume=minvol;   
+   if(m_volume>maxvol)
+      m_volume=maxvol;
+   m_last_update=TimeCurrent();
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
