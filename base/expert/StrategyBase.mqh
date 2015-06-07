@@ -845,6 +845,9 @@ void JStrategyBase::Deinit(const int reason=0)
    DeinitAccount();
    DeinitEvents();
    DeinitComments();
+   
+   DeinitComments();DeinitComments();DeinitComments();DeinitComments();DeinitComments();DeinitComments();DeinitComments();
+   
    DeinitTimes();
   }
 //+------------------------------------------------------------------+
@@ -905,7 +908,7 @@ void JStrategyBase::DeinitEvents(void)
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JStrategyBase::DeinitComments(void)
-  {
+  {   
    ADT::Delete(m_comments);
   }
 //+------------------------------------------------------------------+

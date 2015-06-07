@@ -284,7 +284,6 @@ bool CAccountInfo::OrderCalcProfit(const ENUM_ORDER_TYPE action,const string sym
    else if(action==OP_SELL || action==OP_SELLLIMIT || action==OP_SELLSTOP)
       difference = (price_open-price_close)/MarketInfo(symbol,MODE_TICKSIZE);
    profit=(volume/(difference))/MarketInfo(symbol,MODE_TICKVALUE);
-   Print(__FUNCTION__+" profit: "+profit);
    return(profit<EMPTY_VALUE);
   }
 //+------------------------------------------------------------------+
