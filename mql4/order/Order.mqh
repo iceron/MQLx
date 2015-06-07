@@ -31,16 +31,16 @@ public:
 //|                                                                  |
 //+------------------------------------------------------------------+
 JOrder::JOrder(void): m_ticket_updated(false)
-  {  
-   if (!m_ticket_current.IsSorted()) 
-      m_ticket_current.Sort(); 
+  {
+   if(!m_ticket_current.IsSorted())
+      m_ticket_current.Sort();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JOrder::JOrder(const ulong ticket,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
-   if (!m_ticket_current.IsSorted()) 
+   if(!m_ticket_current.IsSorted())
       m_ticket_current.Sort();
    m_ticket=ticket;
    m_ticket_current.InsertSort((int)ticket);
@@ -69,11 +69,13 @@ bool JOrder::IsClosed(void)
    else
      {
       if(OrderSelect((int)Ticket(),SELECT_BY_TICKET))
+        {
          if(OrderCloseTime()>0)
            {
             m_closed=true;
             return(true);
            }
+        }
      }
    return(false);
   }
@@ -81,7 +83,7 @@ bool JOrder::IsClosed(void)
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JOrder::Save(const int handle)
-  {  
+  {
    JOrderBase::Save(handle);
    ADT::WriteObject(handle,GetPointer(m_ticket_current));
    ADT::WriteBool(handle,m_ticket_updated);
