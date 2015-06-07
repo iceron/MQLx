@@ -185,8 +185,8 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
         {
          ticket=::OrderSend(symbol,order_type,volume,price,(int)(m_deviation*m_symbol.Point()),0,0,comment,m_magic,expire,arrowcolor);
          ::Sleep(m_sleep);
-         if(ticket>0)
-            if(sl>0 || tp>0)
+         if(ticket>0 && (sl>0 || tp>0))
+            if (OrderSelect(ticket,SELECT_BY_TICKET))
                res=::OrderModify((int)ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
         }
       else 
