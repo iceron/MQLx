@@ -844,10 +844,7 @@ void JStrategyBase::Deinit(const int reason=0)
    DeinitMoneys();
    DeinitAccount();
    DeinitEvents();
-   DeinitComments();
-   
-   DeinitComments();DeinitComments();DeinitComments();DeinitComments();DeinitComments();DeinitComments();DeinitComments();
-   
+   DeinitComments();   
    DeinitTimes();
   }
 //+------------------------------------------------------------------+
