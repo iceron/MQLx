@@ -852,12 +852,7 @@ void JStrategyBase::Deinit(const int reason=0)
 //+------------------------------------------------------------------+
 void JStrategyBase::DeinitSignals(void)
   {
-   if(m_signals!=NULL)
-     {
-      m_signals.Clear();
-      delete m_signals;
-      m_signals=NULL;
-     }
+   ADT::Delete(m_signals);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
