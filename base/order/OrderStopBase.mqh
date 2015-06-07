@@ -151,18 +151,11 @@ void JOrderStopBase::Init(JOrder *order,JStop *stop,JOrderStops *order_stops,JEv
    m_stop.Refresh();
    double stoploss=m_stop.StopLossPrice(order,GetPointer(this));
    double takeprofit=m_stop.TakeProfitPrice(order,GetPointer(this));
-   if(stoploss>0)
-     {
-      m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,stoploss);
-      m_stoploss.Add(stoploss);
-     }
-   if(takeprofit>0)
-     {
-      m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,takeprofit);
-      m_takeprofit.Add(takeprofit);
-     }
-   if(stoploss>0 || takeprofit>0)
-      m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
+   m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,stoploss);
+   m_stoploss.Add(stoploss);
+   m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,takeprofit);
+   m_takeprofit.Add(takeprofit);
+   m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
    if(stop.Main())
       order.MainStop(GetPointer(this));
   }
@@ -449,7 +442,7 @@ bool JOrderStopBase::Modify(const double stoploss,const double takeprofit)
 JOrderStopBase::Show(bool show=true)
   {
    int setting=show?OBJ_ALL_PERIODS:OBJ_NO_PERIODS;
-   if(CheckPointer(m_objentry))  m_objentry.Timeframes(setting);
+   if(CheckPointer(m_objentry)) m_objentry.Timeframes(setting);
    if(CheckPointer(m_objsl))     m_objsl.Timeframes(setting);
    if(CheckPointer(m_objtp))     m_objtp.Timeframes(setting);
   }

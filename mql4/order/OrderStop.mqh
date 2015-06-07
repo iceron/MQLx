@@ -229,10 +229,11 @@ bool JOrderStop::ModifyTakeProfit(const double takeprofit)
 bool JOrderStop::ModifyStops(const double stoploss,const double takeprofit)
   {
    bool modify=false;
+   if(m_stop.Pending())
+      return(ModifyStopLoss(stoploss) && ModifyTakeProfit(takeprofit));
    if(m_stop.Main() && !m_stop.Virtual())
       modify=m_stop.Move(m_order.Ticket(),stoploss,takeprofit);
-   else
-      return(ModifyStopLoss(stoploss) && ModifyTakeProfit(takeprofit));
+   else modify = true;
    if(modify)
      {
       MoveStopLoss(stoploss);

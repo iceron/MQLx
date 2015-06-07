@@ -519,7 +519,6 @@ JStopLine *JStopBase::CreateTakeProfitObject(const long id,const string name,con
 //+------------------------------------------------------------------+
 JStopLine *JStopBase::CreateObject(const long id,const string name,const int window,const double price)
   {
-   if(price==0.0) return(NULL);
    JStopLine *obj=new JStopLine();
    if(obj.Create(id,name,window,price))
       return(obj);

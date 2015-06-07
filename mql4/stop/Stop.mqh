@@ -174,7 +174,8 @@ bool JStop::MoveStopLoss(const ulong ticket,const double stoploss)
   {
    if(OrderSelect((int)ticket,SELECT_BY_TICKET))
      {
-      if(MathAbs(stoploss-OrderStopLoss())<m_symbol.TickSize()) return(false);
+      if(MathAbs(stoploss-OrderStopLoss())<m_symbol.TickSize())
+         return(false);
       return(m_trade.OrderModify(ticket,OrderOpenPrice(),stoploss,OrderTakeProfit(),0,OrderExpiration()));
      }
    return(false);
