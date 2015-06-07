@@ -120,7 +120,7 @@ public:
    //--- stop order object creation
    virtual JStopLine *CreateEntryObject(const long id,const string name,const int window,const double price);
    virtual JStopLine *CreateStopLossObject(const long id,const string name,const int window,const double price);
-   virtual JStopLine *CreateTakeProfitObject(const long id,const string name,const int window,const double price);   
+   virtual JStopLine *CreateTakeProfitObject(const long id,const string name,const int window,const double price);
    //--- stop order price calculation   
    virtual bool      Refresh(void);
    virtual double    StopLossCalculate(const ENUM_ORDER_TYPE type,const double price);
@@ -465,17 +465,17 @@ bool JStopBase::OrderModify(const ulong ticket,const double value)
 //+------------------------------------------------------------------+
 JStopLine *JStopBase::CreateEntryObject(const long id,const string name,const int window,const double price)
   {
-   if(m_entry_visible)
+   JStopLine *obj=CreateObject(id,name,window,price);
+   if(CheckPointer(obj)==POINTER_DYNAMIC)
      {
-      JStopLine *obj=CreateObject(id,name,window,price);
-      if(CheckPointer(obj)==POINTER_DYNAMIC)
-        {
-         obj.Selectable(false);
-         obj.SetStyle(m_entry_style);
-         obj.SetColor(m_entry_color);
-         return(obj);
-        }
+      obj.Selectable(false);
+      obj.SetStyle(m_entry_style);
+      obj.SetColor(m_entry_color);
+      if(!m_entry_visible)
+         obj.Timeframes(OBJ_NO_PERIODS);
+      return(obj);
      }
+
    return(NULL);
   }
 //+------------------------------------------------------------------+
@@ -483,16 +483,15 @@ JStopLine *JStopBase::CreateEntryObject(const long id,const string name,const in
 //+------------------------------------------------------------------+
 JStopLine *JStopBase::CreateStopLossObject(const long id,const string name,const int window,const double price)
   {
-   if(m_stoploss_visible)
+   JStopLine *obj=CreateObject(id,name,window,price);
+   if(CheckPointer(obj)==POINTER_DYNAMIC)
      {
-      JStopLine *obj=CreateObject(id,name,window,price);
-      if(CheckPointer(obj)==POINTER_DYNAMIC)
-        {
-         obj.Selectable(true);
-         obj.SetStyle(m_stoploss_style);
-         obj.SetColor(m_stoploss_color);
-         return(obj);
-        }
+      obj.Selectable(true);
+      obj.SetStyle(m_stoploss_style);
+      obj.SetColor(m_stoploss_color);
+      if(!m_stoploss_visible)
+         obj.Timeframes(OBJ_NO_PERIODS);
+      return(obj);
      }
    return(NULL);
   }
@@ -501,17 +500,16 @@ JStopLine *JStopBase::CreateStopLossObject(const long id,const string name,const
 //+------------------------------------------------------------------+
 JStopLine *JStopBase::CreateTakeProfitObject(const long id,const string name,const int window,const double price)
   {
-   if(m_takeprofit_visible)
-     {
-      JStopLine *obj=CreateObject(id,name,window,price);
+   JStopLine *obj=CreateObject(id,name,window,price);
       if(CheckPointer(obj)==POINTER_DYNAMIC)
         {
          obj.Selectable(true);
          obj.SetStyle(m_takeprofit_style);
          obj.SetColor(m_takeprofit_color);
+         if(!m_takeprofit_visible)
+            obj.Timeframes(OBJ_NO_PERIODS);
          return(obj);
         }
-     }
    return(NULL);
   }
 //+------------------------------------------------------------------+
