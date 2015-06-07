@@ -187,6 +187,7 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
          ::Sleep(m_sleep);
          for(uint j=0;j<m_retry;j++)
            {
+            if (res) break;
             if(ticket>0 && (sl>0 || tp>0))
               {
                if(OrderSelect(ticket,SELECT_BY_TICKET))
