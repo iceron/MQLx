@@ -172,7 +172,7 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
    double stops_level=m_symbol.StopsLevel();
    for(uint i=0;i<m_retry;i++)
      {
-      if (ticket>0)
+      if(ticket>0)
          break;
       if(IsStopped())
          return(0);
@@ -185,15 +185,23 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
         {
          ticket=::OrderSend(symbol,order_type,volume,price,(int)(m_deviation*m_symbol.Point()),0,0,comment,m_magic,expire,arrowcolor);
          ::Sleep(m_sleep);
-         if(ticket>0 && (sl>0 || tp>0))
-            if (OrderSelect(ticket,SELECT_BY_TICKET))
-               res=::OrderModify((int)ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
+         for(uint j=0;j<m_retry;j++)
+           {
+            if(ticket>0 && (sl>0 || tp>0))
+              {
+               if(OrderSelect(ticket,SELECT_BY_TICKET))
+                 {
+                  res=::OrderModify((int)ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
+                  ::Sleep(m_sleep);
+                 }
+              }
+           }
         }
-      else 
-      {
-         ticket=::OrderSend(symbol,order_type,volume,price,(int)m_deviation,sl,tp,comment,m_magic,expire,arrowcolor);      
+      else
+        {
+         ticket=::OrderSend(symbol,order_type,volume,price,(int)m_deviation,sl,tp,comment,m_magic,expire,arrowcolor);
          ::Sleep(m_sleep);
-      }   
+        }
      }
    return(ticket>0?ticket:0);
   }
