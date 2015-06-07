@@ -291,7 +291,7 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
    m_magic=magic;
    m_position_reverse=position_reverse;
    m_one_trade_per_candle=one_trade_per_candle;
-   m_digits_adjust=(m_symbol.Digits()==3 || m_symbol.Digits()==5)?10:1;
+   m_digits_adjust=(m_symbol.Digits()==2 || m_symbol.Digits()==3 || m_symbol.Digits()==5)?10:1;
    m_points_adjust=m_symbol.Point()*m_digits_adjust;
    return(false);
   }
