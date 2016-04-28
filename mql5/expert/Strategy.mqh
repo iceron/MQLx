@@ -15,7 +15,7 @@ public:
                     ~JStrategy(void);
    //virtual bool      CloseOrder(JOrder *order,const int index);
    virtual bool      OnTick(void);
-   virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&)
+   virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -49,7 +49,7 @@ public:
                     ~COrderManagerBase();   
    //--- initialization
    virtual bool      Init(JStrategy*);
-   virtual bool      InitStops();
+   virtual bool      InitStops(JStrategy*);
    bool              InitMoneys();
    bool              InitTrade(JTrade*);
    bool              InitOrders(void);
@@ -153,7 +153,7 @@ COrderManagerBase::~COrderManagerBase()
 //+------------------------------------------------------------------+
 bool COrderManagerBase::Init(JStrategy *s)
   {
-   InitStops();
+   InitStops(s);
    InitMoneys();
    InitTrade();
    InitOrders();
@@ -403,10 +403,10 @@ void COrderManagerBase::AddOtherMagicString(const string &magics[])
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitStops()
+bool COrderManagerBase::InitStops(JStrategy *s)
   {
    if(m_stops==NULL) return(true);
-   return m_stops.Init(NULL);
+   return m_stops.Init(s);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

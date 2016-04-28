@@ -433,7 +433,7 @@ bool JStrategyBase::OnTick(void)
    ManageOrders();
    int entry=0,exit=0;
    CheckSignals(entry,exit);
-   AddComment("last tick: "+TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
+   //AddComment("last tick: "+TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
    AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
    AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
    if(newbar || (m_every_tick && newtick))

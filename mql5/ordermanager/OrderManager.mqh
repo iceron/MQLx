@@ -17,7 +17,7 @@ public:
                      COrderManager();
                     ~COrderManager();
    virtual bool      CloseOrder(JOrder*,const int);
-   virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
+   virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
    virtual bool      TradeOpen(const int res);
   };
 //+------------------------------------------------------------------+
@@ -60,14 +60,6 @@ bool COrderManager::TradeOpen(const int res)
       ret=SendOrder(type,lotsize,price,0,0);
      }
    return(ret);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
-  {
-   if(request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0)
-      NewOrder((int)result.order,request.type,result.volume,result.price);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
