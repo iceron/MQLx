@@ -123,7 +123,7 @@ void JOrderBase::CreateStops(JStops *stops)
      {
       if(CheckPointer(m_order_stops)==POINTER_INVALID)
          m_order_stops=new JOrderStops();
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE,GetPointer(this),stops);
+      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE,GetPointer(this),stops);
       for(int i=0;i<stops.Total();i++)
         {
          JStop *stop=stops.At(i);

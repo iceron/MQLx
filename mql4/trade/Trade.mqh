@@ -42,8 +42,8 @@ public:
    virtual void      Activate(const bool activate) {m_activate=activate;}
    //--- setters and getters
    color             ArrowColor(const ENUM_ORDER_TYPE type);
-   int               Retry() {return(m_retry);}
-   void              Retry(int retry){m_retry=retry;}
+   uint               Retry() {return(m_retry);}
+   void              Retry(uint retry){m_retry=retry;}
    int               Sleep() {return(m_sleep);}
    void              Sleep(int sleep){m_sleep=sleep;}
    void              SetAsyncMode(const bool mode) {m_async_mode=mode;}
@@ -165,7 +165,7 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
                         const string comment="")
   {
    bool res;
-   ulong ticket;
+   ulong ticket = 0;
    color arrowcolor=ArrowColor(order_type);
    datetime expire=0;
    if(order_type>1 && expiration>0) expire=expiration*1000+TimeCurrent();
@@ -190,7 +190,7 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
             if (res) break;
             if(ticket>0 && (sl>0 || tp>0))
               {
-               if(OrderSelect(ticket,SELECT_BY_TICKET))
+               if(OrderSelect((int)ticket,SELECT_BY_TICKET))
                  {
                   res=::OrderModify((int)ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
                   ::Sleep(m_sleep);
