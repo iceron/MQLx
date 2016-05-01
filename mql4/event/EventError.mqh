@@ -15,7 +15,7 @@ public:
                      JEventError(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
                      JEventError(const ENUM_ACTION action,string message_add);
                     ~JEventError(void);
-   virtual int       Type(void) {return(CLASS_TYPE_EVENT_ERROR);}
+   virtual int       Type(void) {return CLASS_TYPE_EVENT_ERROR;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

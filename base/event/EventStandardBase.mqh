@@ -18,7 +18,7 @@ public:
                      JEventStandardBase(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
                      JEventStandardBase(const ENUM_ACTION action,string message_add);
                     ~JEventStandardBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_EVENT_STANDARD);}
+   virtual int       Type(void) {return CLASS_TYPE_EVENT_STANDARD;}
    virtual void      OnProgramInit(void);
    virtual void      OnProgramInitDone(void);
    virtual void      OnProgramDeinitDone(void);
@@ -129,7 +129,7 @@ bool JEventStandardBase::Run(JEventRegistry *registry,string sound_file=NULL,str
      }
    if(m_message!=NULL) 
       Execute(registry,sound_file,file_name,ftp_path);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

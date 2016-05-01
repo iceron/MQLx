@@ -19,15 +19,15 @@ protected:
 public:
                      JMoneysBase(void);
                     ~JMoneysBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_MONEYS);}
+   virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}
    virtual bool      Validate(void) const;
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s) {m_strategy=s;}
    //--- setters and getters
-   virtual bool      Active(void) const {return(m_activate);}
+   virtual bool      Active(void) const {return m_activate;}
    virtual void      Active(const bool activate) {m_activate=activate;}
-   virtual int       Selected(void) const {return(m_selected);}
+   virtual int       Selected(void) const {return m_selected;}
    virtual void      Selected(const bool select) {m_selected=select;}
    //--- volume calculation
    virtual double    Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
@@ -55,7 +55,7 @@ bool JMoneysBase::Init(JStrategy *s)
       money.Init(GetPointer(s));
      }
    SetContainer(s);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -67,9 +67,9 @@ bool JMoneysBase::Validate(void) const
       JMoney *money=At(i);
       if (money==NULL) continue;
       if(!money.Validate())
-         return(false);
+         return false;
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -77,7 +77,7 @@ bool JMoneysBase::Validate(void) const
 double JMoneysBase::Volume(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    JMoney *money=m_data[m_selected];
-   return(money==NULL?0:money.Volume(price,type,sl));
+   return money==NULL?0:money.Volume(price,type,sl);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

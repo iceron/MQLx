@@ -41,7 +41,7 @@ JOrderStop::~JOrderStop(void)
 //+------------------------------------------------------------------+
 bool JOrderStop::NewTicket(void)
   {
-   return(m_order.NewTicket());
+   return m_order.NewTicket();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -62,7 +62,7 @@ void JOrderStop::UpdateTicket(const ulong ticket)
 //+------------------------------------------------------------------+
 bool JOrderStop::Recreate(void)
   {
-   if(m_order.IsClosed()) return(true);
+   if(m_order.IsClosed()) return true;
    if(DeleteStopLines())
      {
       if(!m_takeprofit_closed)
@@ -77,9 +77,9 @@ bool JOrderStop::Recreate(void)
       if((((!m_takeprofit_closed && pointer_tp==POINTER_DYNAMIC) || (m_takeprofit_closed && pointer_tp==POINTER_INVALID))) && 
          (((!m_stoploss_closed && pointer_sl==POINTER_DYNAMIC) || (m_stoploss_closed && pointer_sl==POINTER_INVALID))) && 
          (((!m_takeprofit_closed || !m_stoploss_closed) && CheckPointer(m_objentry)==POINTER_DYNAMIC)))
-         return(true);
+         return true;
      }
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -104,7 +104,7 @@ bool JOrderStop::UpdateOrderStop(const double stoploss,const double takeprofit)
       else TakeProfit(takeprofit);
 
      }
-   return(modify_tp||modify_sl);
+   return modify_tp||modify_sl;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -206,7 +206,7 @@ bool JOrderStop::ModifyStopLoss(const double stoploss)
    else modify=true;
    if(modify)
       MoveStopLoss(stoploss);
-   return(modify);
+   return modify;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -221,7 +221,7 @@ bool JOrderStop::ModifyTakeProfit(const double takeprofit)
    else modify=true;
    if(modify)
       MoveTakeProfit(takeprofit);
-   return(modify);
+   return modify;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -230,7 +230,7 @@ bool JOrderStop::ModifyStops(const double stoploss,const double takeprofit)
   {
    bool modify=false;
    if(m_stop.Pending())
-      return(ModifyStopLoss(stoploss) && ModifyTakeProfit(takeprofit));
+      return ModifyStopLoss(stoploss) && ModifyTakeProfit(takeprofit);
    if(m_stop.Main() && !m_stop.Virtual())
       modify=m_stop.Move(m_order.Ticket(),stoploss,takeprofit);
    else modify = true;
@@ -239,6 +239,6 @@ bool JOrderStop::ModifyStops(const double stoploss,const double takeprofit)
       MoveStopLoss(stoploss);
       MoveTakeProfit(takeprofit);
      }
-   return(modify);
+   return modify;
   }
 //+------------------------------------------------------------------+

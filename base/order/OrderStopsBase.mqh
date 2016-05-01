@@ -20,7 +20,7 @@ protected:
 public:
                      JOrderStopsBase(void);
                     ~JOrderStopsBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_ORDERSTOPS);}
+   virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOPS;}
    //--- initialization
    virtual void      SetContainer(JOrder *order){m_order=order;}
    virtual bool      EventHandler(JEvents *events);
@@ -28,7 +28,7 @@ public:
    virtual void      Deinit();
    //--- checking
    virtual void      Check(double &volume);
-   virtual bool      CheckNewTicket(JOrderStop *orderstop) {return(true);}
+   virtual bool      CheckNewTicket(JOrderStop *orderstop) {return true;}
    virtual bool      Close(void);
    //--- hiding and showing of stop lines
    virtual void      Show(bool show=true);
@@ -66,7 +66,7 @@ bool JOrderStopsBase::NewOrderStop(JOrder *order,JStop *stop,JOrderStops *order_
   {
    JOrderStop *order_stop=new JOrderStop();
    order_stop.Init(order,stop,order_stops,events);
-   return(Add(order_stop));
+   return Add(order_stop);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -112,7 +112,7 @@ bool JOrderStopsBase::Close(void)
         }
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CLOSE_DONE,GetPointer(this));
      }
-   return(res);
+   return res;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -132,7 +132,7 @@ bool JOrderStopsBase::EventHandler(JEvents *events)
   {
    if(events!=NULL)
       m_events=events;
-   return(m_events!=NULL);
+   return m_events!=NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -157,7 +157,7 @@ bool JOrderStopsBase::CreateElement(const int index)
   {
    JOrderStop * orderstop = new JOrderStop();
    orderstop.SetContainer(GetPointer(this));
-   return(Insert(GetPointer(orderstop),index));
+   return Insert(GetPointer(orderstop),index);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -165,7 +165,7 @@ bool JOrderStopsBase::CreateElement(const int index)
 bool JOrderStopsBase::Save(const int handle)
   {  
    CArrayObj::Save(handle);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -173,7 +173,7 @@ bool JOrderStopsBase::Save(const int handle)
 bool JOrderStopsBase::Load(const int handle)
   {
    CArrayObj::Load(handle);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

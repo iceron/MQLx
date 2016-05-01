@@ -70,7 +70,7 @@ protected:
 public:
                      JStrategyBase(void);
                     ~JStrategyBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_STRATEGY);}
+   virtual int       Type(void) const {return CLASS_TYPE_STRATEGY;}
    //--- initialization
    virtual bool      Add(CObject*);
    virtual bool      AddMoneys(JMoneys*);
@@ -88,55 +88,55 @@ public:
    virtual bool      InitCandle(void);
    virtual bool      Validate(void) const;
    //--- container
-   virtual JExpert   *GetContainer() const {return(GetPointer(m_expert));}
+   virtual JExpert   *GetContainer() const {return GetPointer(m_expert);}
    virtual void      SetContainer(JExpert *e){m_expert=e;}
    //--- activation and deactivation
-   virtual bool      Active(void) const {return(m_activate);}
+   virtual bool      Active(void) const {return m_activate;}
    virtual void      Active(const bool activate) {m_activate=activate;}
    //--- setters and getters       
-   int               DigitsAdjust(void) const {return(m_digits_adjust);}
+   int               DigitsAdjust(void) const {return m_digits_adjust;}
    void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
-   string            Name() const {return(m_name);}
+   string            Name() const {return m_name;}
    void              Name(const string name) {m_name = name;}
-   bool              OfflineMode(void) const {return(m_offline_mode);}
+   bool              OfflineMode(void) const {return m_offline_mode;}
    void              OfflineMode(const bool mode) {m_offline_mode=mode;}
-   int               OfflineModeDelay() const {return(m_offline_mode_delay);}
+   int               OfflineModeDelay() const {return m_offline_mode_delay;}
    void              OfflineModeDelay(const int delay){m_offline_mode_delay=delay;}   
-   double            PointsAdjust(void) const {return(m_points_adjust);}
+   double            PointsAdjust(void) const {return m_points_adjust;}
    void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}   
-   ENUM_EXECUTION_MODE ExecutionMode(void) const {return(m_exec_mode);}
+   ENUM_EXECUTION_MODE ExecutionMode(void) const {return m_exec_mode;}
    void              ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
    //--- object pointers
-   CAccountInfo      *AccountInfo(void) const {return(GetPointer(m_account));}
-   JCandle           *Candle(void) const {return(GetPointer(m_candle));}
-   JComments         *Comments() const {return(GetPointer(m_comments));}
-   JEvents           *Events(void) const {return(m_events);}
+   CAccountInfo      *AccountInfo(void) const {return GetPointer(m_account);}
+   JCandle           *Candle(void) const {return GetPointer(m_candle);}
+   JComments         *Comments() const {return GetPointer(m_comments);}
+   JEvents           *Events(void) const {return m_events;}
    JStop             *MainStop(void) const {return m_order_man.MainStop();}
    JMoneys           *Moneys(void) const {return m_order_man.Moneys();} 
    JOrders           *Orders() const {return m_order_man.Orders();}
    JOrders           *OrdersHistory() const {return m_order_man.OrdersHistory();}
    CArrayInt         *OtherMagic() const {return m_order_man.OtherMagic();}  
    JStops            *Stops(void) const {return m_order_man.Stops();}   
-   JSignals          *Signals(void) const {return(GetPointer(m_signals));}  
-   CSymbolInfo       *SymbolInfo(void) const {return(GetPointer(m_symbol));}
-   JTick             *Tick(void) const {return(GetPointer(m_tick));}   
-   JTimes            *Times(void) const {return(GetPointer(m_times));}     
+   JSignals          *Signals(void) const {return GetPointer(m_signals);}  
+   CSymbolInfo       *SymbolInfo(void) const {return GetPointer(m_symbol);}
+   JTick             *Tick(void) const {return GetPointer(m_tick);}   
+   JTimes            *Times(void) const {return GetPointer(m_times);}     
    //--- chart comment manager
    void              AddComment(const string);   
    void              ChartComment(JComments *comments) {m_comments=comments;}   
    void              DisplayComment();     
    //--- last trade data
    void              LastTradeRates(MqlTick &tick) {m_last_trade_data=tick;}   
-   datetime          LastTradeTime(void) const {return(m_last_trade_data.time);}
-   double            LastTradeBid(void) const {return(m_last_trade_data.bid);}
-   double            LastTradeAsk(void) const {return(m_last_trade_data.ask);}
-   double            LastTradeLast(void) const {return(m_last_trade_data.last);}
-   ulong             LastTradeVolume(void) const {return(m_last_trade_data.volume);}
-   datetime          LastTickTime(void) const {return(m_tick.Time());}
-   double            LastTickBid(void) const {return(m_tick.Bid());}
-   double            LastTickAsk(void) const {return(m_tick.Ask());}
-   double            LastTickLast(void) const {return(m_tick.Last());}
-   ulong             LastTickVolume(void) const {return(m_tick.Volume());} 
+   datetime          LastTradeTime(void) const {return m_last_trade_data.time;}
+   double            LastTradeBid(void) const {return m_last_trade_data.bid;}
+   double            LastTradeAsk(void) const {return m_last_trade_data.ask;}
+   double            LastTradeLast(void) const {return m_last_trade_data.last;}
+   ulong             LastTradeVolume(void) const {return m_last_trade_data.volume;}
+   datetime          LastTickTime(void) const {return m_tick.Time();}
+   double            LastTickBid(void) const {return m_tick.Bid();}
+   double            LastTickAsk(void) const {return m_tick.Ask();}
+   double            LastTickLast(void) const {return m_tick.Last();}
+   ulong             LastTickVolume(void) const {return m_tick.Volume();} 
    //--- order manager
    virtual bool      AddOtherMagic(const int magic) {return m_order_man.AddOtherMagic(magic);}
    virtual void      AddOtherMagicString(const string &magics[]){m_order_man.AddOtherMagicString(magics);}
@@ -161,17 +161,17 @@ public:
    virtual void      MaxTrades(const int max_trades){m_order_man.MaxTrades(max_trades);}
    virtual int       MaxOrders(void) const {return m_order_man.MaxOrders();}
    virtual void      MaxOrders(const int max_orders) {m_order_man.MaxOrders(max_orders);}    
-   int               OrdersTotal(void) const {return(m_order_man.OrdersTotal());}   
-   int               OrdersHistoryTotal(void) const {return(m_order_man.OrdersHistoryTotal());}      
-   int               TradesTotal(void) const{return(m_order_man.TradesTotal());}        
+   int               OrdersTotal(void) const {return m_order_man.OrdersTotal();}   
+   int               OrdersHistoryTotal(void) const {return m_order_man.OrdersHistoryTotal();}      
+   int               TradesTotal(void) const{return m_order_man.TradesTotal();}        
    //--- signal manager   
-   virtual int       Period(void) const {return(PeriodSeconds(m_period));}
+   virtual int       Period(void) const {return PeriodSeconds(m_period);}
    virtual void      Period(const ENUM_TIMEFRAMES period) {m_period=period;}
-   virtual bool      EveryTick(void) const {return(m_every_tick);}
+   virtual bool      EveryTick(void) const {return m_every_tick;}
    virtual void      EveryTick(const bool every_tick) {m_every_tick=every_tick;}
-   virtual bool      OneTradePerCandle(void) const {return(m_one_trade_per_candle);}
+   virtual bool      OneTradePerCandle(void) const {return m_one_trade_per_candle;}
    virtual void      OneTradePerCandle(const bool one_trade_per_candle){m_one_trade_per_candle=one_trade_per_candle;}
-   virtual bool      PositionReverse(void) const {return(m_position_reverse);}
+   virtual bool      PositionReverse(void) const {return m_position_reverse;}
    virtual void      PositionReverse(const bool position_reverse){m_position_reverse=position_reverse;}      
    //-- generic events
    virtual bool      OnTick(void);
@@ -233,9 +233,9 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
   {
    if(m_symbol==NULL)
       if((m_symbol=new CSymbolInfo)==NULL)
-         return(false);
+         return false;
    if(!m_symbol.Name(symbol))
-      return(false);
+      return false;
    m_period=period;
    m_every_tick=every_tick;
    Magic(magic);
@@ -245,7 +245,7 @@ bool JStrategyBase::Init(string symbol,ENUM_TIMEFRAMES period=PERIOD_CURRENT,boo
    m_points_adjust=m_symbol.Point()*m_digits_adjust;
    m_order_man.SetSymbol(GetPointer(m_symbol));
    m_order_man.InitTrade();
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -256,31 +256,31 @@ bool JStrategyBase::InitComponents(void)
                && InitCandle() && InitOrderManager();
    if(OfflineMode())
       EventChartCustom(0,OFFLINE_TICK,0,0,m_symbol.Name());
-   return(result);
+   return result;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitSignals(void)
   {
-   if(m_signals==NULL) return(true);
-   return(m_signals.Init(GetPointer(this),GetPointer(m_comments),GetPointer(m_events)));
+   if(m_signals==NULL) return true;
+   return m_signals.Init(GetPointer(this),GetPointer(m_comments),GetPointer(m_events));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitCandle(void)
   {
-   return(m_candle.Init(GetPointer(m_symbol),
-          CheckPointer(m_events)?GetPointer(m_events):NULL));
+   return m_candle.Init(GetPointer(m_symbol),
+          CheckPointer(m_events)?GetPointer(m_events):NULL);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::InitTimes(void)
   {
-   if(m_times==NULL) return(true);
-   return(m_times.Init(GetPointer(this)));
+   if(m_times==NULL) return true;
+   return m_times.Init(GetPointer(this));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -292,10 +292,10 @@ bool JStrategyBase::InitAccount(CAccountInfo *account=NULL)
    if(account==NULL)
      {
       if((m_account=new CAccountInfo)==NULL)
-         return(false);
+         return false;
      }
    else m_account=account;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -306,7 +306,7 @@ bool JStrategyBase::InitEvent(JEvents *events=NULL)
       m_events=new JEvents();
    else
       m_events=events;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -348,7 +348,7 @@ bool JStrategyBase::AddSignals(JSignals *signals)
    if(CheckPointer(signals)==POINTER_DYNAMIC)
      {
       m_signals=signals;
-      return(true);
+      return true;
      }
    return false;
   }
@@ -357,7 +357,7 @@ bool JStrategyBase::AddSignals(JSignals *signals)
 //+------------------------------------------------------------------+
 bool JStrategyBase::AddMoneys(JMoneys *moneys)
   {
-   return(m_order_man.AddMoneys(GetPointer(moneys)));
+   return m_order_man.AddMoneys(GetPointer(moneys));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -365,7 +365,7 @@ bool JStrategyBase::AddMoneys(JMoneys *moneys)
 bool JStrategyBase::AddStops(JStops *stops)
   {
    m_order_man.AddStops(GetPointer(stops));
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -375,9 +375,9 @@ bool JStrategyBase::AddTimes(JTimes *times)
    if(CheckPointer(times)==POINTER_DYNAMIC)
      {
       m_times=times;
-      return(true);
+      return true;
      }
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -387,12 +387,12 @@ bool JStrategyBase::Validate(void) const
    if(CheckPointer(m_signals)==POINTER_DYNAMIC)
      {
       if(!m_signals.Validate())
-         return(false);
+         return false;
      }
    if(CheckPointer(m_times)==POINTER_DYNAMIC)
      {
       if(!m_times.Validate())
-         return(false);
+         return false;
      }
    return m_order_man.Validate();
   }
@@ -420,8 +420,8 @@ void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &d
 //+------------------------------------------------------------------+
 bool JStrategyBase::OnTick(void)
   {
-   if(!Active()) return(false);
-   if(!Refresh()) return(false);
+   if(!Active()) return false;
+   if(!Refresh()) return false;
    bool ret=false;
    bool newtick= m_tick.IsNewTick(m_symbol);
    bool newbar = IsNewBar();
@@ -451,7 +451,7 @@ bool JStrategyBase::OnTick(void)
    if(CheckPointer(m_events)==POINTER_DYNAMIC)
       m_events.Run();
    DisplayComment();
-   return(ret);
+   return ret;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -459,8 +459,8 @@ bool JStrategyBase::OnTick(void)
 bool JStrategyBase::CheckSignals(int &entry,int &exit) const
   {
    if(CheckPointer(m_signals)==POINTER_DYNAMIC)
-      return(m_signals.CheckSignals(entry,exit));
-   return(false);
+      return m_signals.CheckSignals(entry,exit);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -468,17 +468,17 @@ bool JStrategyBase::CheckSignals(int &entry,int &exit) const
 bool JStrategyBase::Refresh(void)
   {
    if(!CheckPointer(m_symbol))
-      return(false);
+      return false;
    if(!m_symbol.RefreshRates())
-      return(false);
-   return(true);
+      return false;
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStrategyBase::IsNewBar(void)
   {
-   return(m_candle.IsNewCandle(m_period));
+   return m_candle.IsNewCandle(m_period);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -560,7 +560,7 @@ bool JStrategyBase::Save(const int handle)
 //ADT::WriteObject(handle,GetPointer(m_orders_history));
 //ADT::WriteObject(handle,GetPointer(m_tick));
 //ADT::WriteObject(handle,GetPointer(m_candle));
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -572,7 +572,7 @@ bool JStrategyBase::Load(const int handle)
 //ADT::ReadObject(handle,GetPointer(m_orders_history));
 //ADT::ReadObject(handle,GetPointer(m_tick));
 //ADT::ReadObject(handle,GetPointer(m_candle));
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

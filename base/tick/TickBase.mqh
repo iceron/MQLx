@@ -20,12 +20,12 @@ public:
                      JTickBase(void);
                     ~JTickBase(void);
    //--- setters and getters
-   MqlTick           LastTick() const {return(m_last);}
-   datetime          Time() const {return(m_last.time);}
-   double            Bid() const {return(m_last.bid);}
-   double            Ask() const {return(m_last.ask);}
-   double            Last() const {return(m_last.last);}
-   ulong             Volume() const {return(m_last.volume);}
+   MqlTick           LastTick() const {return m_last;}
+   datetime          Time() const {return m_last.time;}
+   double            Bid() const {return m_last.bid;}
+   double            Ask() const {return m_last.ask;}
+   double            Last() const {return m_last.last;}
+   ulong             Volume() const {return m_last.volume;}
    virtual bool      IsNewTick(CSymbolInfo *symbol);
    //---recovery
    virtual bool      Save(const int handle);
@@ -68,18 +68,18 @@ bool JTickBase::IsNewTick(CSymbolInfo *symbol)
            {
             m_last=current;
             CreateEvent(EVENT_CLASS_STANDARD,ACTION_TICK);
-            return(true);
+            return true;
            }
         }
      }
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JTickBase::Compare(MqlTick &current)
   {
-   return(m_last.time==0 || m_last.time<current.time);
+   return m_last.time==0 || m_last.time<current.time;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -103,7 +103,7 @@ void JTickBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action
 bool JTickBase::Save(const int handle)
   {
    ADT::WriteStruct(handle,m_last);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -111,7 +111,7 @@ bool JTickBase::Save(const int handle)
 bool JTickBase::Load(const int handle)
   {
    ADT::ReadStruct(handle,m_last);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

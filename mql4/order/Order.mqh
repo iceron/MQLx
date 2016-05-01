@@ -20,9 +20,9 @@ public:
                     ~JOrder(void);
    virtual bool      IsClosed(void);
    virtual void      Ticket(const ulong ticket) {m_ticket_current.InsertSort((int)ticket);}
-   virtual ulong     Ticket(void) const {return(m_ticket_current.At(m_ticket_current.Total()-1));}
+   virtual ulong     Ticket(void) const {return m_ticket_current.At(m_ticket_current.Total()-1);}
    virtual void      NewTicket(const bool updated) {m_ticket_updated=updated;}
-   virtual bool      NewTicket(void) const {return(m_ticket_updated);}
+   virtual bool      NewTicket(void) const {return m_ticket_updated;}
    //--- recovery
    virtual bool      Save(const int handle);
    virtual bool      Load(const int handle);
@@ -60,11 +60,11 @@ JOrder::~JOrder(void)
 //+------------------------------------------------------------------+
 bool JOrder::IsClosed(void)
   {
-   if(m_closed) return(true);
+   if(m_closed) return true;
    if(Volume()<=0.0)
      {
       m_closed=true;
-      return(true);
+      return true;
      }
    else
      {
@@ -73,11 +73,11 @@ bool JOrder::IsClosed(void)
          if(OrderCloseTime()>0)
            {
             m_closed=true;
-            return(true);
+            return true;
            }
         }
      }
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -87,7 +87,7 @@ bool JOrder::Save(const int handle)
    JOrderBase::Save(handle);
    ADT::WriteObject(handle,GetPointer(m_ticket_current));
    ADT::WriteBool(handle,m_ticket_updated);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -97,6 +97,6 @@ bool JOrder::Load(const int handle)
    JOrderBase::Save(handle);
    ADT::ReadObject(handle,GetPointer(m_ticket_current));
    ADT::WriteBool(handle,m_ticket_updated);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+

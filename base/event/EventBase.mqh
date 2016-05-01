@@ -32,19 +32,19 @@ public:
                      JEventBase(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
                      JEventBase(const ENUM_ACTION action,string message_add);
                     ~JEventBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_EVENT);}
+   virtual int       Type(void) {return CLASS_TYPE_EVENT;}
    virtual void      SetContainer(JEvents *e){m_events=e;}
    //--- initialization
    virtual void      Init(const ENUM_ACTION id,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
    virtual void      Init(const ENUM_ACTION action,string message_add);
    //--- setters and getters
-   bool              Activate(void) const {return(m_activate);}
+   bool              Activate(void) const {return m_activate;}
    void              Activate(bool activate) {m_activate=activate;}
-   int               Action() {return(m_action);}
-   int               ID(void) const {return(m_action);}
+   int               Action() {return m_action;}
+   int               ID(void) const {return m_action;}
    void              ID(ENUM_ACTION action) {m_action=action;}   
-   bool              Instant() {return(m_instant);}
-   datetime          TimeStamp() {return(m_timestamp);}
+   bool              Instant() {return m_instant;}
+   datetime          TimeStamp() {return m_timestamp;}
    //--- processing
    virtual void      CheckInstant();   
    virtual void      AddObject(CObject *object);
@@ -147,7 +147,7 @@ JEventBase::AddObject(CObject *object)
 //+------------------------------------------------------------------+
 bool JEventBase::Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL)
   {
-   return(false);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -160,7 +160,7 @@ bool JEventBase::Execute(JEventRegistry *registry,string sound_file=NULL,string 
    if(registry.IsEmail(m_action)) SendMail(m_subject,m_message+" "+m_message_add);
    if(registry.IsPush(m_action))  SendNotification(m_message+" "+m_message_add);
    if(registry.IsFTP(m_action))   SendFTP(file_name,ftp_path);
-   return(false);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -173,10 +173,10 @@ CObject *JEventBase::GetObject(ENUM_CLASS_TYPE type)
         {
          CObject *object = m_objects.At(i);
          if(object.Type()==type)
-            return(object);
+            return object;
         }
      }
-   return(NULL);
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -191,11 +191,11 @@ CObject *JEventBase::GetObject(ENUM_CLASS_TYPE type,int &idx)
          if(object.Type()==type)
            {
             idx=i;
-            return(object);
+            return object;
            }
         }
      }
-   return(NULL);
+   return NULL;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

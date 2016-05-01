@@ -113,7 +113,7 @@ bool JEventRegistryBase::Init(CArrayInt *print,CArrayInt *sound,CArrayInt *popup
       m_ftp.AddArray(ftp);
       m_ftp.Sort();
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -162,7 +162,7 @@ bool JEventRegistryBase::Init(int &print[],int &sound[],int &popup[],int &email[
       m_ftp.AddArray(ftp);
       m_ftp.Sort();
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -265,22 +265,22 @@ bool JEventRegistryBase::IsAllowed(const ENUM_ALERT_MODE alert_mode,const int id
   {
    switch(alert_mode)
      {
-      case ALERT_MODE_PRINT:  return(IsPrint(id));
-      case ALERT_MODE_SOUND:  return(IsSound(id));
-      case ALERT_MODE_POPUP:  return(IsPopup(id));
-      case ALERT_MODE_EMAIL:  return(IsEmail(id));
-      case ALERT_MODE_PUSH:   return(IsPush(id));
-      case ALERT_MODE_FTP:    return(IsFTP(id));
+      case ALERT_MODE_PRINT:  return IsPrint(id);
+      case ALERT_MODE_SOUND:  return IsSound(id);
+      case ALERT_MODE_POPUP:  return IsPopup(id);
+      case ALERT_MODE_EMAIL:  return IsEmail(id);
+      case ALERT_MODE_PUSH:   return IsPush(id);
+      case ALERT_MODE_FTP:    return IsFTP(id);
       default:                PrintFormat(__FUNCTION__+": unknown alert mode");
      }
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JEventRegistryBase::IsAllowed(const int id)
   {
-   return(IsPrint(id)||IsSound(id)||IsPopup(id)||IsEmail(id)||IsPush(id)||IsFTP(id));
+   return (IsPrint(id)||IsSound(id)||IsPopup(id)||IsEmail(id)||IsPush(id)||IsFTP(id));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

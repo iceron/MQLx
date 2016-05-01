@@ -37,9 +37,9 @@ bool JMoneyFixedFractionalBase::Validate(void)
    if (m_percent<=0)
    {
       PrintFormat(__FUNCTION__+": invalid percentage: "+(string)m_percent);
-      return(false);
+      return false;
    }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

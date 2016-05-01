@@ -17,7 +17,7 @@ public:
                      JEventCustomBase(const ENUM_ACTION action,string message_add);
                     ~JEventCustomBase(void);
    virtual int       Type(void) {return(CLASS_TYPE_EVENT_CUSTOM);}
-   virtual bool      Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL) {return(false);}
+   virtual bool      Run(JEventRegistry *registry,string sound_file=NULL,string file_name=NULL,string ftp_path=NULL) {return false;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

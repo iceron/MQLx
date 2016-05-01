@@ -206,7 +206,7 @@ bool JEventErrorBase::Run(JEventRegistry *registry,string sound_file=NULL,string
      }
    m_subject=m_error_string;
    Execute(GetPointer(registry),sound_file,file_name,ftp_path);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -219,7 +219,7 @@ bool JEventErrorBase::Execute(JEventRegistry *registry,string sound_file=NULL,st
    if(registry.IsEmail(m_error)) SendMail(m_subject,m_message+m_message_add);
    if(registry.IsPush(m_error))  SendNotification(m_message+m_message_add);
    if(registry.IsFTP(m_error))   SendFTP(file_name,ftp_path);
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -60,7 +60,7 @@ protected:
 public:
                      JStopBase(void);
                     ~JStopBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_STOP);}
+   virtual int       Type(void) const {return CLASS_TYPE_STOP;}
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
@@ -70,52 +70,52 @@ public:
    virtual void      SetContainer(JStops *stops){m_stops=stops;}
    virtual bool      Validate(void) const;
    //--- getters and setters
-   bool              Active(void) {return(m_activate);}
+   bool              Active(void) {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
    void              Comment(string comment) {m_comment=comment;}
-   string            Comment(void) const {return(m_comment);}
-   int               DigitsAdjust(void) const {return(m_digits_adjust);}
+   string            Comment(void) const {return m_comment;}
+   int               DigitsAdjust(void) const {return m_digits_adjust;}
    void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    void              EntryColor(const color clr) {m_entry_color=clr;}
    void              EntryStyle(const ENUM_LINE_STYLE style) {m_entry_style=style;}
    void              Magic(const int magic) {m_magic=magic;}
-   int               Magic(void) const {return(m_magic);}
+   int               Magic(void) const {return m_magic;}
    void              Main(const bool main) {m_main=main;}
-   bool              Main(void) const {return(m_main);}
+   bool              Main(void) const {return m_main;}
    void              Name(const string name) {m_name=name;}
-   string            Name(void) const{return(m_name);}
+   string            Name(void) const{return m_name;}
    void              OCO(const bool oco) {if(!Main())m_oco=oco;}
-   bool              OCO(void) const{return(m_oco);}
-   bool              Pending() const {return(m_stop_type==STOP_TYPE_PENDING);}
-   double            PointsAdjust(void) const {return(m_points_adjust);}
+   bool              OCO(void) const{return m_oco;}
+   bool              Pending() const {return m_stop_type==STOP_TYPE_PENDING;}
+   double            PointsAdjust(void) const {return m_points_adjust;}
    void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
    void              StopLoss(const double sl) {m_stoploss=sl;}
-   double            StopLoss(void) const {return(m_stoploss);}
+   double            StopLoss(void) const {return m_stoploss;}
    void              StopLossColor(const color clr) {m_stoploss_color=clr;}
-   bool              StopLossCustom(void) {return(m_stoploss==0);}
+   bool              StopLossCustom(void) {return m_stoploss==0;}
    void              StopLossName(const string name) {m_stoploss_name=name;}
-   string            StopLossName(void) const{return(m_stoploss_name);}
+   string            StopLossName(void) const{return m_stoploss_name;}
    void              StopLossStyle(const ENUM_LINE_STYLE style) {m_stoploss_style=style;}
    void              StopType(const ENUM_STOP_TYPE stop_type);
-   ENUM_STOP_TYPE    StopType(void) const {return(m_stop_type);}
+   ENUM_STOP_TYPE    StopType(void) const {return m_stop_type;}
    void              TakeProfit(const double tp) {m_takeprofit=tp;}
-   double            TakeProfit(void) const {return(m_takeprofit);}
+   double            TakeProfit(void) const {return m_takeprofit;}
    void              TakeProfitColor(const color clr) {m_takeprofit_color=clr;}
-   bool              TakeProfitCustom(void) {return(m_takeprofit==0);}
+   bool              TakeProfitCustom(void) {return m_takeprofit==0;}
    void              TakeProfitName(const string name) {m_takeprofit_name=name;}
-   string            TakeProfitName(void) const {return(m_takeprofit_name);}
+   string            TakeProfitName(void) const {return m_takeprofit_name;}
    void              TakeProfitStyle(const ENUM_LINE_STYLE style) {m_takeprofit_style=style;}
-   bool              Virtual(void) const {return(m_stop_type==STOP_TYPE_VIRTUAL);}
+   bool              Virtual(void) const {return m_stop_type==STOP_TYPE_VIRTUAL;}
    void              Volume(JOrderStop *orderstop,double &volume_fixed,double &volume_percent);
-   double            VolumeFixed(void) const {return(m_volume_fixed);}
+   double            VolumeFixed(void) const {return m_volume_fixed;}
    void              VolumeFixed(const double volume) {m_volume_fixed=volume;}
-   double            VolumePercent(void) const {return(m_volume_percent);}
+   double            VolumePercent(void) const {return m_volume_percent;}
    void              VolumePercent(const double volume) {m_volume_percent=volume;}
    void              VolumeType(const ENUM_VOLUME_TYPE type){m_volume_type=type;}
    //--- stop order checking
    virtual bool      CheckStopLoss(JOrder *order,JOrderStop *orderstop);
    virtual bool      CheckTakeProfit(JOrder *order,JOrderStop *orderstop);
-   virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const {return(false);}
+   virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const {return false;}
    virtual bool      OrderModify(const ulong ticket,const double value);
    //--- stop order object creation
    virtual JStopLine *CreateEntryObject(const long id,const string name,const int window,const double price);
@@ -124,13 +124,13 @@ public:
    //--- stop order price calculation   
    virtual bool      Refresh(void);
    virtual double    StopLossCalculate(const ENUM_ORDER_TYPE type,const double price);
-   virtual double    StopLossCustom(const ENUM_ORDER_TYPE type,const double price) {return(0);}
-   virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop){return(0.0);}
-   virtual double    StopLossTicks(const ENUM_ORDER_TYPE type,const double price) {return(m_stoploss);}
+   virtual double    StopLossCustom(const ENUM_ORDER_TYPE type,const double price) {return 0;}
+   virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop){return 0;}
+   virtual double    StopLossTicks(const ENUM_ORDER_TYPE type,const double price) {return m_stoploss;}
    virtual double    TakeProfitCalculate(const ENUM_ORDER_TYPE type,const double price);
-   virtual double    TakeProfitCustom(const ENUM_ORDER_TYPE type,const double price) {return(0);}
-   virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop) {return(0.0);}
-   virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE type,const double price) {return(m_takeprofit);}
+   virtual double    TakeProfitCustom(const ENUM_ORDER_TYPE type,const double price) {return 0;}
+   virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop) {return 0;}
+   virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE type,const double price) {return m_takeprofit;}
    //--- trailing   
    virtual bool      Add(JTrails *trails);
    virtual double    CheckTrailing(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
@@ -193,7 +193,7 @@ bool JStopBase::Validate(void) const
    if(m_name==NULL)
      {
       PrintFormat(__FUNCTION__+": Empty name for stop.");
-      return(false);
+      return false;
      }
    if(CheckPointer(m_trails))
      {
@@ -201,17 +201,17 @@ bool JStopBase::Validate(void) const
         {
          JTrail *trail=m_trails.At(i);
          if(!trail.Validate())
-            return(false);
+            return false;
         }
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStopBase::Init(JStrategy *s)
   {
-   if(s==NULL) return(false);
+   if(s==NULL) return false;
    InitSymbol(s.SymbolInfo());
    InitAccount(s.AccountInfo());
    m_points_adjust = s.PointsAdjust();
@@ -219,25 +219,25 @@ bool JStopBase::Init(JStrategy *s)
    InitTrade();
    if(CheckPointer(m_trails)==POINTER_DYNAMIC)
       m_trails.Init(s,GetPointer(this));
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStopBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
   {
-   if(symbolinfo==NULL) return(false);
+   if(symbolinfo==NULL) return false;
    m_symbol=symbolinfo;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStopBase::InitAccount(CAccountInfo *accountinfo=NULL)
   {
-   if(accountinfo==NULL) return(false);
+   if(accountinfo==NULL) return false;
    m_account=accountinfo;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -249,22 +249,22 @@ bool JStopBase::InitTrade(JTrade *trade=NULL)
    if(trade==NULL)
      {
       if((m_trade=new JTrade)==NULL)
-         return(false);
+         return false;
      }
    else m_trade=trade;
    m_trade.SetSymbol(GetPointer(m_symbol));
    m_trade.SetExpertMagicNumber(m_magic);
    m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStopBase::InitEvent(JEvent *event)
   {
-   if(event==NULL) return(false);
+   if(event==NULL) return false;
    m_event=event;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -289,14 +289,14 @@ double JStopBase::LotSizeCalculate(JOrder *order,JOrderStop *orderstop)
   {
    double lotsize=0.0;
    if(m_volume_type==VOLUME_TYPE_FIXED)
-      return(orderstop.Volume());
+      return orderstop.Volume();
    else if(m_volume_type==VOLUME_TYPE_PERCENT_REMAINING)
-      return(orderstop.Volume()*order.Volume());
+      return orderstop.Volume()*order.Volume();
    if(m_volume_type==VOLUME_TYPE_PERCENT_TOTAL)
       lotsize=orderstop.Volume()*order.VolumeInitial();
    else if(m_volume_type==VOLUME_TYPE_REMAINING)
       lotsize=order.Volume();
-   return(0.0);
+   return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -314,7 +314,7 @@ bool JStopBase::CloseStop(JOrder *order,JOrderStop *orderstop,const double price
          res=m_trade.Buy(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
       if(res) order.Volume(order.Volume()-lotsize);
      }
-   return(res);
+   return res;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -322,10 +322,10 @@ bool JStopBase::CloseStop(JOrder *order,JOrderStop *orderstop,const double price
 double JStopBase::StopLossCalculate(const ENUM_ORDER_TYPE type,const double price)
   {
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
-      return(price-m_stoploss*m_points_adjust);
+      return price-m_stoploss*m_points_adjust;
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
-      return(price+m_stoploss*m_points_adjust);
-   return(0.0);
+      return price+m_stoploss*m_points_adjust;
+   return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -333,22 +333,22 @@ double JStopBase::StopLossCalculate(const ENUM_ORDER_TYPE type,const double pric
 double JStopBase::TakeProfitCalculate(const ENUM_ORDER_TYPE type,const double price)
   {
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
-      return(price+m_takeprofit*m_points_adjust);
+      return price+m_takeprofit*m_points_adjust;
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
-      return(price-m_takeprofit*m_points_adjust);
-   return(0.0);
+      return price-m_takeprofit*m_points_adjust;
+   return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStopBase::GetClosePrice(const ENUM_ORDER_TYPE type,double &price)
   {
-   if(!Refresh()) return(false);
+   if(!Refresh()) return false;
    if(type==ORDER_TYPE_BUY)
       price=m_symbol.Bid();
    else if(type==ORDER_TYPE_SELL)
       price=m_symbol.Ask();
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -356,18 +356,18 @@ bool JStopBase::GetClosePrice(const ENUM_ORDER_TYPE type,double &price)
 bool JStopBase::CheckStopLoss(JOrder *order,JOrderStop *orderstop)
   {
    double stoploss=orderstop.StopLoss();
-   if(stoploss<=0.0) return(false);
+   if(stoploss<=0.0) return false;
    double price=0.0;
    ENUM_ORDER_TYPE type=order.OrderType();
-   if(!GetClosePrice(type,price)) return(false);
+   if(!GetClosePrice(type,price)) return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
       if(price<=stoploss) close=true;
    else if(type==ORDER_TYPE_SELL)
       if(price>=stoploss) close=true;
    if(close)
-      return(CloseStop(order,orderstop,price));
-   return(false);
+      return CloseStop(order,orderstop,price);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -375,18 +375,18 @@ bool JStopBase::CheckStopLoss(JOrder *order,JOrderStop *orderstop)
 bool JStopBase::CheckTakeProfit(JOrder *order,JOrderStop *orderstop)
   {
    double takeprofit=orderstop.TakeProfit();
-   if(takeprofit<=0.0) return(false);
+   if(takeprofit<=0.0) return false;
    double price=0.0;
    ENUM_ORDER_TYPE type=order.OrderType();
-   if(!GetClosePrice(type,price)) return(false);
+   if(!GetClosePrice(type,price)) return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
       if(price>=takeprofit) close=true;
    else if(type==ORDER_TYPE_SELL)
       if(price<=takeprofit) close=true;
    if(close)
-      return(CloseStop(order,orderstop,price));
-   return(false);
+      return CloseStop(order,orderstop,price);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -394,8 +394,8 @@ bool JStopBase::CheckTakeProfit(JOrder *order,JOrderStop *orderstop)
 bool JStopBase::Refresh(void)
   {
    if(CheckPointer(m_symbol)==POINTER_DYNAMIC)
-      return(m_symbol.RefreshRates());
-   return(false);
+      return m_symbol.RefreshRates();
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -442,23 +442,23 @@ bool JStopBase::Add(JTrails *trails)
   {
    if(CheckPointer(trails)==POINTER_DYNAMIC)
       m_trails=trails;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 double JStopBase::CheckTrailing(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
-   if(!CheckPointer(m_trails)) return(0);
-   if(!Refresh()) return(0);
-   return(m_trails.Check(type,entry_price,price,mode));
+   if(!CheckPointer(m_trails)) return 0;
+   if(!Refresh()) return 0;
+   return m_trails.Check(type,entry_price,price,mode);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStopBase::OrderModify(const ulong ticket,const double value)
   {
-   return(m_trade.OrderModify(ticket,value,0.0,0.0,0,0,0.0));
+   return m_trade.OrderModify(ticket,value,0.0,0.0,0,0,0.0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -473,10 +473,10 @@ JStopLine *JStopBase::CreateEntryObject(const long id,const string name,const in
       obj.SetColor(m_entry_color);
       if(!m_entry_visible)
          obj.Timeframes(OBJ_NO_PERIODS);
-      return(obj);
+      return obj;
      }
 
-   return(NULL);
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -491,9 +491,9 @@ JStopLine *JStopBase::CreateStopLossObject(const long id,const string name,const
       obj.SetColor(m_stoploss_color);
       if(!m_stoploss_visible)
          obj.Timeframes(OBJ_NO_PERIODS);
-      return(obj);
+      return obj;
      }
-   return(NULL);
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -508,9 +508,9 @@ JStopLine *JStopBase::CreateTakeProfitObject(const long id,const string name,con
          obj.SetColor(m_takeprofit_color);
          if(!m_takeprofit_visible)
             obj.Timeframes(OBJ_NO_PERIODS);
-         return(obj);
+         return obj;
         }
-   return(NULL);
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -519,8 +519,8 @@ JStopLine *JStopBase::CreateObject(const long id,const string name,const int win
   {
    JStopLine *obj=new JStopLine();
    if(obj.Create(id,name,window,price))
-      return(obj);
-   return(NULL);
+      return obj;
+   return NULL;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

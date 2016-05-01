@@ -34,7 +34,7 @@ protected:
 public:
                      JMoneyBase(void);
                     ~JMoneyBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_MONEY);}
+   virtual int       Type(void) const {return CLASS_TYPE_MONEY;}
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual bool      InitAccount(CAccountInfo *account);
@@ -42,30 +42,30 @@ public:
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- getters and setters
-   bool      Active(void) const {return(m_activate);}
+   bool      Active(void) const {return m_activate;}
    void      Active(const bool activate) {m_activate=activate;}
    void      Balance(const double balance) {m_balance=balance;}
-   double    Balance(void) const {return(m_balance);}
+   double    Balance(void) const {return m_balance;}
    void      BalanceIncrement(const double balance) {m_balance_inc=balance;}
-   double    BalanceIncrement(void) const {return(m_balance_inc);}
+   double    BalanceIncrement(void) const {return m_balance_inc;}
    void      Equity(const bool equity) {m_equity=equity;}
-   bool      Equity(void) const {return(m_equity);}
+   bool      Equity(void) const {return m_equity;}
    void      LastUpdate(const datetime update) {m_last_update=update;}
-   datetime  LastUpdate(void) const {return(m_last_update);}
+   datetime  LastUpdate(void) const {return m_last_update;}
    void      Percent(const double percent) {m_percent=percent;}
-   double    Percent(void) const {return(m_percent);}
+   double    Percent(void) const {return m_percent;}
    void      Period(const int period) {m_period=period;}
-   int       Period(void) const {return(m_period);}
+   int       Period(void) const {return m_period;}
    void      Risk(const double percent) {m_percent=percent;}
-   double    Risk(void) const {return(m_percent);}
+   double    Risk(void) const {return m_percent;}
    void      UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
    double            Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
    void      VolumeCurrent(const double volume) {m_volume=volume;}
-   double    VolumeCurrent(void) const {return(m_volume);}
+   double    VolumeCurrent(void) const {return m_volume;}
    void      VolumeIncrement(const double volume) {m_volume_inc=volume;}
-   double    VolumeIncrement(void) const {return(m_volume_inc);}
+   double    VolumeIncrement(void) const {return m_volume_inc;}
    void      VolumeBase(const double volume_base) {m_volume_base=volume_base;}
-   double    VolumeBase(void) const {return(m_volume_base);}
+   double    VolumeBase(void) const {return m_volume_base;}
 protected:
    virtual void      OnLotSizeUpdated();
    virtual bool      UpdateByMargin(void);
@@ -101,7 +101,7 @@ bool JMoneyBase::Init(JStrategy *s)
   {
    InitSymbol(s.SymbolInfo());
    InitAccount(s.AccountInfo());
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -111,18 +111,18 @@ bool JMoneyBase::Validate(void) const
    if(m_volume_base>0)
      {
       PrintFormat("invalid volume: "+(string)m_volume_base);
-      return(false);
+      return false;
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JMoneyBase::InitSymbol(CSymbolInfo *symbol)
   {
-   if(symbol==NULL) return(false);
+   if(symbol==NULL) return false;
    m_symbol=symbol;
-   return(CheckPointer(m_symbol));
+   return CheckPointer(m_symbol);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -132,17 +132,17 @@ bool JMoneyBase::InitAccount(CAccountInfo *account)
    if(account==NULL)
      {
       if((m_account=new CAccountInfo)==NULL)
-         return(false);
+         return false;
      }
    else m_account=account;
-   return(CheckPointer(m_account));
+   return CheckPointer(m_account);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 double JMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
-   if(!Active()) return(0.0);
+   if(!Active()) return 0;
    if(m_volume==0.0) UpdateLotSize(price,type,sl);
    else
      {
@@ -153,7 +153,7 @@ double JMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const do
          case(MONEY_UPDATE_BALANCE):   if(UpdateByMargin()) UpdateLotSize(price,type,sl); break;
         }
      }
-   return(m_volume);
+   return m_volume;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -172,8 +172,8 @@ bool JMoneyBase::UpdateByMargin(void)
   {
    double balance=m_equity==false?m_account.Balance():m_account.Equity();
    if(balance>=m_balance+m_balance_inc || balance<=m_balance-m_balance_inc)
-      return(true);
-   return(false);
+      return true;
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -181,8 +181,8 @@ bool JMoneyBase::UpdateByMargin(void)
 bool JMoneyBase::UpdateByPeriod(void)
   {
    if(TimeCurrent()>=m_last_update+m_period)
-      return(true);
-   return(false);
+      return true;
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

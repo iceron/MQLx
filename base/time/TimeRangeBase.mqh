@@ -21,9 +21,9 @@ public:
    virtual bool      Init(datetime begin,datetime end);
    virtual bool      Validate(void);
    //--- setters and getters
-   datetime          Begin(void) const  {return(m_begin);}
+   datetime          Begin(void) const  {return m_begin;}
    void              Begin(const datetime begin) {m_begin=begin;}
-   datetime          End(void) const  {return(m_end);}
+   datetime          End(void) const  {return m_end;}
    void              End(const datetime end) {m_end=end;}
    //--- processing
    virtual bool      Evaluate(void);
@@ -48,7 +48,7 @@ bool JTimeRangeBase::Init(datetime begin,datetime end)
   {
    m_begin=begin;
    m_end=end;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -58,19 +58,19 @@ bool JTimeRangeBase::Validate(void)
    if (m_end>m_begin)
    {
       PrintFormat("Invalid setting for start and end times.");
-      return(false);
+      return false;
    }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JTimeRangeBase::Evaluate(void)
   {
-   if(!Active()) return(true);
+   if(!Active()) return true;
    datetime current=TimeCurrent();
    bool result=current>=m_begin && current<=m_end;
-   return(Reverse()?result:!result);
+   return Reverse()?result:!result;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

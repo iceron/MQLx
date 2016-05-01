@@ -36,15 +36,15 @@ protected:
 public:
                      JTrade(void);
                     ~JTrade(void);
-   virtual int Type() const {return(CLASS_TYPE_TRADE);}
+   virtual int Type() const {return CLASS_TYPE_TRADE;}
    //--- activation and deactivation
-   virtual bool      Activate() const {return(m_activate);}
+   virtual bool      Activate() const {return m_activate;}
    virtual void      Activate(const bool activate) {m_activate=activate;}
    //--- setters and getters
    color             ArrowColor(const ENUM_ORDER_TYPE type);
-   uint               Retry() {return(m_retry);}
+   uint               Retry() {return m_retry;}
    void              Retry(uint retry){m_retry=retry;}
-   int               Sleep() {return(m_sleep);}
+   int               Sleep() {return m_sleep;}
    void              Sleep(int sleep){m_sleep=sleep;}
    void              SetAsyncMode(const bool mode) {m_async_mode=mode;}
    void              SetExpertMagicNumber(const int magic) {m_magic=magic;}
@@ -95,9 +95,9 @@ bool JTrade::SetSymbol(CSymbolInfo *symbol)
    if(symbol!=NULL)
      {
       m_symbol=symbol;
-      return(true);
+      return true;
      }
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -105,14 +105,14 @@ bool JTrade::SetSymbol(CSymbolInfo *symbol)
 bool JTrade::OrderModify(const ulong ticket,const double price,const double sl,const double tp,
                          const ENUM_ORDER_TYPE_TIME type_time,const datetime expiration,const double stoplimit=0.0)
   {
-   return(::OrderModify((int)ticket,price,sl,tp,expiration,m_color_modify));
+   return ::OrderModify((int)ticket,price,sl,tp,expiration,m_color_modify);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JTrade::OrderDelete(const ulong ticket)
   {
-   return(::OrderDelete((int)ticket));
+   return ::OrderDelete((int)ticket);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -120,20 +120,20 @@ bool JTrade::OrderDelete(const ulong ticket)
 ulong JTrade::Buy(const double volume,const double price,const double sl,const double tp,const string comment="")
   {
    if(m_symbol==NULL)
-      return(false);
+      return false;
    string symbol=m_symbol.Name();
    double stops_level=m_symbol.StopsLevel()*m_symbol.Point();
    double ask=m_symbol.Ask();
    if(symbol=="")
-      return(0);
+      return 0;
    if(price!=0)
      {
       if(price>ask+stops_level)
-         return(OrderOpen(symbol,ORDER_TYPE_BUY_STOP,volume,0.0,price,sl,tp,m_order_type_time,m_order_expiration,comment));
+         return OrderOpen(symbol,ORDER_TYPE_BUY_STOP,volume,0.0,price,sl,tp,m_order_type_time,m_order_expiration,comment);
       if(price<ask-stops_level)
-         return(OrderOpen(symbol,ORDER_TYPE_BUY_LIMIT,volume,0.0,price,sl,tp,m_order_type_time,m_order_expiration,comment));
+         return OrderOpen(symbol,ORDER_TYPE_BUY_LIMIT,volume,0.0,price,sl,tp,m_order_type_time,m_order_expiration,comment);
      }
-   return(OrderOpen(symbol,ORDER_TYPE_BUY,volume,0.0,ask,sl,tp,m_order_type_time,m_order_expiration,comment));
+   return OrderOpen(symbol,ORDER_TYPE_BUY,volume,0.0,ask,sl,tp,m_order_type_time,m_order_expiration,comment);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -141,20 +141,20 @@ ulong JTrade::Buy(const double volume,const double price,const double sl,const d
 ulong JTrade::Sell(const double volume,const double price,const double sl,const double tp,const string comment="")
   {
    if(m_symbol==NULL)
-      return(false);
+      return false;
    string symbol=m_symbol.Name();
    double stops_level=m_symbol.StopsLevel()*m_symbol.Point();
    double bid=m_symbol.Bid();
    if(symbol=="")
-      return(0);
+      return 0;
    if(price!=0)
      {
       if(price>bid+stops_level)
-         return(OrderOpen(symbol,ORDER_TYPE_SELL_LIMIT,volume,0.0,price,sl,tp,m_order_type_time,m_order_expiration,comment));
+         return OrderOpen(symbol,ORDER_TYPE_SELL_LIMIT,volume,0.0,price,sl,tp,m_order_type_time,m_order_expiration,comment);
       if(price<bid-stops_level)
-         return(OrderOpen(symbol,ORDER_TYPE_SELL_STOP,volume,0.0,price,sl,tp,m_order_type_time,m_order_expiration,comment));
+         return OrderOpen(symbol,ORDER_TYPE_SELL_STOP,volume,0.0,price,sl,tp,m_order_type_time,m_order_expiration,comment);
      }
-   return(OrderOpen(symbol,ORDER_TYPE_SELL,volume,0.0,bid,sl,tp,m_order_type_time,m_order_expiration,comment));
+   return OrderOpen(symbol,ORDER_TYPE_SELL,volume,0.0,bid,sl,tp,m_order_type_time,m_order_expiration,comment);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -175,7 +175,7 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
       if(ticket>0)
          break;
       if(IsStopped())
-         return(0);
+         return 0;
       if(IsTradeContextBusy() || !IsConnected())
         {
          ::Sleep(m_sleep);
@@ -204,7 +204,7 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
          ::Sleep(m_sleep);
         }
      }
-   return(ticket>0?ticket:0);
+   return ticket>0?ticket:0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -212,9 +212,9 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
 bool JTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const double price=0.0)
   {
    if(!OrderSelect((int)ticket,SELECT_BY_TICKET))
-      return(false);
+      return false;
    if(OrderCloseTime()>0)
-      return(true);
+      return true;
    double close_price=0.0;
    int deviation=0;
    if(OrderSymbol()==m_symbol.Name() && price>0.0)
@@ -228,7 +228,7 @@ bool JTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const double
       deviation=(int)(m_deviation*MarketInfo(OrderSymbol(),MODE_POINT));
      }
    double lots=(lotsize>0.0)?lotsize:OrderLots();
-   return(::OrderClose((int)ticket,lots,close_price,deviation,m_color_exit));
+   return ::OrderClose((int)ticket,lots,close_price,deviation,m_color_exit);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -257,7 +257,7 @@ bool JTrade::OrderCloseAll(CArrayInt *other_magic,const bool restrict_symbol=tru
         }
       if(res) res=OrderClose(OrderTicket(),OrderLots(),OrderType()==ORDER_TYPE_BUY?bid:ask);
      }
-   return(res);
+   return res;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -267,18 +267,18 @@ color JTrade::ArrowColor(const ENUM_ORDER_TYPE type)
    switch(type)
      {
       case ORDER_TYPE_BUY:
-         return(m_color_long);
+         return m_color_long;
       case ORDER_TYPE_SELL:
-         return(m_color_short);
+         return m_color_short;
       case ORDER_TYPE_BUY_STOP:
-         return(m_color_buystop);
+         return m_color_buystop;
       case ORDER_TYPE_BUY_LIMIT:
-         return(m_color_buylimit);
+         return m_color_buylimit;
       case ORDER_TYPE_SELL_STOP:
-         return(m_color_sellstop);
+         return m_color_sellstop;
       case ORDER_TYPE_SELL_LIMIT:
-         return(m_color_selllimit);
+         return m_color_selllimit;
      }
-   return(clrNONE);
+   return clrNONE;
   }
 //+------------------------------------------------------------------+

@@ -33,34 +33,34 @@ protected:
 public:
                      JOrderBase(void);
                     ~JOrderBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_ORDER);}
+   virtual int       Type(void) const {return CLASS_TYPE_ORDER;}
    //--- initialization
    virtual void      SetContainer(JOrders *orders){m_orders=orders;}
    //--- getters and setters       
-   bool              Active(void) const {return(m_activate);}
+   bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
-   bool              Clean(void) const {return(m_clean);}
+   bool              Clean(void) const {return m_clean;}
    void              Clean(const bool clean) {m_clean=clean;}
    void              CreateStops(JStops *stops);
    void              CheckStops(void);
    bool              EventHandler(JEvents *events);
    bool              Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops,bool recreate=false);
    void              IsClosed(const bool closed) {m_closed=closed;}
-   bool              IsClosed(void) const {return(false);}
+   bool              IsClosed(void) const {return false;}
    void              Magic(const int magic){m_magic=magic;}
-   int               Magic(void) const {return(m_magic);}
+   int               Magic(void) const {return m_magic;}
    void              MainStop(JOrderStop *order_stop){m_main_stop=order_stop;}
-   JOrderStop       *MainStop(void) const {return(m_main_stop);}
+   JOrderStop       *MainStop(void) const {return m_main_stop;}
    void              Price(const double price){m_price=price;}
-   double            Price(void) const {return(m_price);}
+   double            Price(void) const {return m_price;}
    void              OrderType(const ENUM_ORDER_TYPE type){m_type=type;}
-   ENUM_ORDER_TYPE   OrderType(void) const {return(m_type);}
+   ENUM_ORDER_TYPE   OrderType(void) const {return m_type;}
    void              Ticket(const ulong ticket) {m_ticket=ticket;}
-   ulong             Ticket(void) const {return(m_ticket);}
+   ulong             Ticket(void) const {return m_ticket;}
    void              Volume(const double volume){m_volume=volume;}
-   double            Volume(void) const {return(m_volume);}
+   double            Volume(void) const {return m_volume;}
    void              VolumeInitial(const double volume){m_volume_initial=volume;}
-   double            VolumeInitial(void) const {return(m_volume_initial);}
+   double            VolumeInitial(void) const {return m_volume_initial;}
    //--- hiding and showing of stop lines
    virtual void      ShowStops(bool show=true) {m_order_stops.Show(show);}
    //--events
@@ -110,7 +110,7 @@ bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops,
    CreateStops(GetPointer(m_stops));
    if(!recreate)
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND_DONE,GetPointer(this));
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -148,8 +148,8 @@ void JOrderBase::CheckStops(void)
 bool JOrderBase::CloseStops(void)
   {
    if(m_order_stops!=NULL)
-      return(m_order_stops.Close());
-   return(false);
+      return m_order_stops.Close();
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -158,10 +158,10 @@ int JOrderBase::Compare(const CObject *node,const int mode=0) const
   {
    const JOrder *order=node;
    if(Ticket()>order.Ticket())
-      return(1);
+      return 1;
    if(Ticket()<order.Ticket())
-      return(-1);
-   return(0);
+      return -1;
+   return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -170,7 +170,7 @@ bool JOrderBase::EventHandler(JEvents *events)
   {
    if(events!=NULL)
       m_events=events;
-   return(m_events!=NULL);
+   return m_events!=NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -193,28 +193,28 @@ string JOrderBase::OrderTypeToString(void) const
   {
    switch(OrderType())
      {
-      case ORDER_TYPE_BUY: return("BUY");
-      case ORDER_TYPE_SELL: return("SELL");
-      case ORDER_TYPE_BUY_LIMIT: return("BUY LIMIT");
-      case ORDER_TYPE_BUY_STOP: return("BUY STOP");
-      case ORDER_TYPE_SELL_LIMIT: return("SELL LIMIT");
-      case ORDER_TYPE_SELL_STOP: return("SELL STOP");
+      case ORDER_TYPE_BUY: return "BUY";
+      case ORDER_TYPE_SELL: return "SELL";
+      case ORDER_TYPE_BUY_LIMIT: return "BUY LIMIT";
+      case ORDER_TYPE_BUY_STOP: return "BUY STOP";
+      case ORDER_TYPE_SELL_LIMIT: return "SELL LIMIT";
+      case ORDER_TYPE_SELL_STOP: return "SELL STOP";
      }
-   return(NULL);
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JOrderBase::IsOrderTypeLong(const ENUM_ORDER_TYPE type)
   {
-   return(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_LIMIT || type==ORDER_TYPE_BUY_STOP);
+   return type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_LIMIT || type==ORDER_TYPE_BUY_STOP;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JOrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
   {
-   return(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_LIMIT || type==ORDER_TYPE_SELL_STOP);
+   return type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_LIMIT || type==ORDER_TYPE_SELL_STOP;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -230,7 +230,7 @@ bool JOrderBase::Save(const int handle)
    ADT::WriteDouble(handle,m_volume_initial);
    if(CheckPointer(m_order_stops)==POINTER_DYNAMIC)
       ADT::WriteObject(handle,GetPointer(m_order_stops));
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -249,7 +249,7 @@ bool JOrderBase::Load(const int handle)
       ADT::ReadObject(handle,GetPointer(m_order_stops));
       m_order_stops.SetContainer(GetPointer(this));
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

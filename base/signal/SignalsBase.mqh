@@ -27,25 +27,25 @@ protected:
 public:
                      JSignalsBase(void);
                     ~JSignalsBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_SIGNALS);}
+   virtual int       Type(void) const {return CLASS_TYPE_SIGNALS;}
    //--- initialization
    virtual bool      Init(JStrategy *s,JComments *comments,JEvents *events);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Validate() const;
    //--- checking   
-   virtual bool      Active(void) const{return(m_activate);}
+   virtual bool      Active(void) const{return m_activate;}
    virtual void      Active(const bool active) {m_activate=active;}
    virtual int       CheckEntry() const;
    virtual int       CheckExit() const;
    virtual bool      CheckSignals(int &entry,int &exit);
-   virtual int       NewSignal(void) const {return(m_new_signal);}
+   virtual int       NewSignal(void) const {return m_new_signal;}
    virtual void      NewSignal(const int signal) {m_new_signal=signal;}
-   virtual int       LastEntry(void) const {return(m_last_entry);}
+   virtual int       LastEntry(void) const {return m_last_entry;}
    virtual void      LastEntry(const int signal) {m_last_entry=signal;}
-   virtual int       LastExit(void) const {return(m_last_exit);}
+   virtual int       LastExit(void) const {return m_last_exit;}
    virtual void      LastExit(const int signal) {m_last_exit=signal;}
-   virtual int       LastValidEntry(void) const {return(m_last_entry);}
-   virtual bool      Reverse(void) const{return(m_reverse);}
+   virtual int       LastValidEntry(void) const {return m_last_entry;}
+   virtual bool      Reverse(void) const{return m_reverse;}
    virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
    //-- comments
    virtual void AddComment(const string comment);
@@ -81,7 +81,7 @@ bool JSignalsBase::Init(JStrategy *s,JComments *comments,JEvents *events)
       signal.Init(GetPointer(s),GetPointer(comments),GetPointer(events));
      }
    SetContainer(s);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -92,16 +92,16 @@ bool JSignalsBase::Validate(void) const
      {
       JSignal *signal=At(i);
       if(!signal.Validate())
-         return(false);
+         return false;
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JSignalsBase::CheckSignals(int &entry,int &exit)
   {
-   if(!Active()) return(false);
+   if(!Active()) return false;
    entry= CheckEntry();
    exit = CheckExit();
    if(m_reverse)
@@ -136,15 +136,15 @@ int JSignalsBase::CheckEntry() const
       if (ret==CMD_ALL) continue;
       if(ret==CMD_VOID || ret==CMD_NEUTRAL)
         {
-         return(ret);
+         return ret;
         }
       if(res>0 && ret!=res)
         {
-         return(CMD_NEUTRAL);
+         return CMD_NEUTRAL;
         }
       if(ret>0) res=ret;
      }
-   return(res);
+   return res;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -161,15 +161,15 @@ int JSignalsBase::CheckExit() const
       if (ret==CMD_ALL) continue;
       if(ret==CMD_VOID || ret==CMD_NEUTRAL)
         {
-         return(ret);
+         return ret;
         }
       if(res>0 && ret!=res)
         {
-         return (CMD_NEUTRAL);
+         return CMD_NEUTRAL;
         }
       if(ret>0) res=ret;
      }
-   return(res);
+   return res;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -178,7 +178,7 @@ bool JSignalsBase::CreateElement(const int index)
   {
    JSignal * signal = new JSignal();
    signal.SetContainer(GetPointer(this));
-   return(Insert(GetPointer(signal),index));
+   return Insert(GetPointer(signal),index);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -187,7 +187,7 @@ bool JSignalsBase::Save(const int handle)
   {
    ADT::WriteInteger(handle,m_last_entry);
    ADT::WriteInteger(handle,m_last_exit);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -196,7 +196,7 @@ bool JSignalsBase::Load(const int handle)
   {
    ADT::ReadInteger(handle,m_last_entry);
    ADT::ReadInteger(handle,m_last_exit);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

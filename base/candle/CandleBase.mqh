@@ -23,13 +23,13 @@ public:
                     ~JCandleBase(void);
    virtual bool      Init(CSymbolInfo *symbol,JEvents *events);
    //--- setters and getters
-   datetime          LastTime() const {return(m_last.time);}
-   double            LastOpen() const {return(m_last.open);}
-   double            LastHigh() const {return(m_last.high);}
-   double            LastLow() const {return(m_last.low);}
-   double            LastClose() const {return(m_last.close);}
+   datetime          LastTime() const {return m_last.time;}
+   double            LastOpen() const {return m_last.open;}
+   double            LastHigh() const {return m_last.high;}
+   double            LastLow() const {return m_last.low;}
+   double            LastClose() const {return m_last.close;}
    //--- processing
-   virtual bool      TradeProcessed() const {return(m_trade_processed);}
+   virtual bool      TradeProcessed() const {return m_trade_processed;}
    virtual void      TradeProcessed(bool processed) {m_trade_processed=processed;}
    virtual bool      IsNewCandle(const ENUM_TIMEFRAMES period);
    virtual bool      Compare(MqlRates &rates) const;
@@ -66,7 +66,7 @@ bool JCandleBase::Init(CSymbolInfo *symbol,JEvents *events)
   {
    m_symbol = symbol;
    m_events = events;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -78,7 +78,7 @@ bool JCandleBase::IsNewCandle(const ENUM_TIMEFRAMES period)
      {
       MqlRates rates[];
       if(CopyRates(m_symbol.Name(),period,1,1,rates)==-1)
-         return(false);
+         return false;
       if(m_wait_for_new && m_last.time==0)
          m_last=rates[0];
       else if(Compare(rates[0]))
@@ -89,14 +89,14 @@ bool JCandleBase::IsNewCandle(const ENUM_TIMEFRAMES period)
          CreateEvent(EVENT_CLASS_STANDARD,ACTION_CANDLE);
         }
      }
-   return(result);
+   return result;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JCandleBase::Compare(MqlRates &rates) const
   {
-   return(m_last.time==0 || m_last.time!=rates.time ||
+   return (m_last.time==0 || m_last.time!=rates.time ||
           (m_last.close/m_symbol.TickSize())!=(rates.close/m_symbol.TickSize()) || 
           (m_last.open/m_symbol.TickSize())!=(rates.open/m_symbol.TickSize()));
   }
@@ -123,7 +123,7 @@ bool JCandleBase::Save(const int handle)
   {
    ADT::WriteBool(handle,m_trade_processed);
    ADT::WriteStruct(handle,m_last);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -132,7 +132,7 @@ bool JCandleBase::Load(const int handle)
   {
    ADT::ReadBool(handle,m_trade_processed);
    ADT::ReadStruct(handle,m_last);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -35,8 +35,8 @@ JOrderStops::~JOrderStops(void)
 bool JOrderStops::CheckNewTicket(JOrderStop *orderstop)
   {
    if(orderstop.NewTicket())
-      return(UpdateStopsByTicket(GetNewTicket(orderstop)));
-   return(true);
+      return UpdateStopsByTicket(GetNewTicket(orderstop));
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -52,7 +52,7 @@ bool JOrderStops::UpdateStopsByTicket(const ulong ticket)
          if(res) res=order_stop.Recreate();
      }
    if(res) order_stop.NewTicket(false);
-   return(res);
+   return res;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -66,9 +66,9 @@ ulong JOrderStops::GetNewTicket(JOrderStop *orderstop)
       if(OrderMagicNumber()==orderstop.MainMagic())
         {
          orderstop.UpdateTicket(OrderTicket());
-         return(OrderTicket());
+         return OrderTicket();
         }
      }
-   return(0);
+   return 0;
   }
 //+------------------------------------------------------------------+

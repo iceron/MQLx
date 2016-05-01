@@ -19,13 +19,13 @@ protected:
 public:
                      JStopsBase(void);
                     ~JStopsBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_STOPS);}
+   virtual int       Type(void) const {return CLASS_TYPE_STOPS;}
    //--- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- setters and getters
-   virtual bool      Active(void) const {return(m_activate);}
+   virtual bool      Active(void) const {return m_activate;}
    virtual void      Active(const bool activate) {m_activate=activate;}
    virtual JStop    *Main();
    //--- recovery
@@ -54,7 +54,7 @@ bool JStopsBase::Init(JStrategy *s)
       stop.Init(s);
      }
    SetContainer(s);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -65,9 +65,9 @@ bool JStopsBase::Validate(void) const
      {
       JStop *stop=At(i);
       if(!stop.Validate())
-         return(false);
+         return false;
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -77,9 +77,9 @@ JStop *JStopsBase::Main()
    for(int i=0;i<Total();i++)
      {
       JStop *stop=At(i);
-      if(stop.Main()) return(stop);
+      if(stop.Main()) return stop;
      }
-   return(NULL);
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -88,7 +88,7 @@ bool JStopsBase::CreateElement(const int index)
   {
    JStop * stop = new JStop();
    stop.SetContainer(GetPointer(this));
-   return(Insert(GetPointer(stop),index));
+   return Insert(GetPointer(stop),index);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

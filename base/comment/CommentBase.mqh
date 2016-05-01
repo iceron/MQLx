@@ -43,7 +43,7 @@ JCommentBase::Init(string comment)
 //+------------------------------------------------------------------+
 string JCommentBase::Text(void)
   {
-   return(m_comment);
+   return m_comment;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -33,24 +33,24 @@ protected:
 public:
                      JSignalBase();
                     ~JSignalBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_SIGNAL);}
+   virtual int       Type(void) const {return CLASS_TYPE_SIGNAL;}
    //--- initialization
    virtual bool      Init(JStrategy *s,JComments *comments,JEvents *events);
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
    virtual bool      Validate(void) const;
    //--- getters and setters
-   virtual bool      Active(void) const {return(m_activate);}
+   virtual bool      Active(void) const {return m_activate;}
    virtual void      Active(const bool activate) {m_activate=activate;}
-   virtual bool      ExitSignal(void) const{return(m_exit);}
+   virtual bool      ExitSignal(void) const{return m_exit;}
    virtual void      ExitSignal(const bool exit) {m_exit=exit;}
-   virtual string    Name(void) const {return(m_name);}
+   virtual string    Name(void) const {return m_name;}
    virtual void      Name(const string name) {m_name=name;}
-   virtual int       NewSignal(void) const {return(m_new_signal);}
+   virtual int       NewSignal(void) const {return m_new_signal;}
    virtual void      NewSignal(const int signal) {m_new_signal=signal;}
-   virtual bool      Reverse(void) const {return(m_reverse);}
+   virtual bool      Reverse(void) const {return m_reverse;}
    virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
-   virtual int       LastEntry(void) const {return(m_signal);}
-   virtual int       LastValidSignal(void) const {return(m_signal_valid);}
+   virtual int       LastEntry(void) const {return m_signal;}
+   virtual int       LastValidSignal(void) const {return m_signal_valid;}
    virtual string    ToString(bool last_valid=false) const;
    //--- indicators
    JIndicator       *IndicatorAt(const int idx) const;
@@ -59,8 +59,8 @@ public:
    virtual void      AddEmptyValue(const double val);
    virtual int       CheckSignal(void);
    virtual bool      IsEmpty(const double val);
-   virtual ENUM_CMD  LongCondition(void) {return(0);}
-   virtual ENUM_CMD  ShortCondition(void) {return(0);}
+   virtual ENUM_CMD  LongCondition(void) {return 0;}
+   virtual ENUM_CMD  ShortCondition(void) {return 0;}
    //-- comments
    virtual void      AddComment(const string comment);
    //--- static methods
@@ -100,7 +100,7 @@ JSignalBase::~JSignalBase(void)
 //+------------------------------------------------------------------+
 bool JSignalBase::Validate(void) const
   {
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -110,7 +110,7 @@ bool JSignalBase::Init(JStrategy *s,JComments *comments,JEvents *events)
    m_strategy=s;
    m_comments=comments;
    m_events=events;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -124,7 +124,7 @@ void JSignalBase::AddIndicator(JIndicator *indicator)
 //+------------------------------------------------------------------+
 JIndicator *JSignalBase::IndicatorAt(const int idx) const
   {
-   return(m_indicators.At(idx));
+   return m_indicators.At(idx);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -138,14 +138,14 @@ void JSignalBase::AddEmptyValue(double val)
 //+------------------------------------------------------------------+
 bool JSignalBase::IsEmpty(double val)
   {
-   return(m_empty_value.Search(val)>=0);
+   return m_empty_value.Search(val)>=0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 int JSignalBase::CheckSignal(void)
   {
-   if(!Active()) return(CMD_ALL);
+   if(!Active()) return CMD_ALL;
    int res=CMD_NEUTRAL;
    bool long_cond=LongCondition();
    bool short_cond=ShortCondition();
@@ -164,7 +164,7 @@ int JSignalBase::CheckSignal(void)
       else m_signal = res;
    }
    else m_signal=res;
-   return(res);
+   return res;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -175,32 +175,32 @@ bool JSignalBase::IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD
      {
       switch(type)
         {
-         case ORDER_TYPE_BUY:          return(res==CMD_BUY);
-         case ORDER_TYPE_SELL:         return(res==CMD_SELL);
-         case ORDER_TYPE_BUY_LIMIT:    return(res==CMD_BUYLIMIT);
-         case ORDER_TYPE_BUY_STOP:     return(res==CMD_BUYSTOP);
-         case ORDER_TYPE_SELL_LIMIT:   return(res==CMD_SELLLIMIT);
-         case ORDER_TYPE_SELL_STOP:    return(res==CMD_SELLSTOP);
+         case ORDER_TYPE_BUY:          return res==CMD_BUY;
+         case ORDER_TYPE_SELL:         return res==CMD_SELL;
+         case ORDER_TYPE_BUY_LIMIT:    return res==CMD_BUYLIMIT;
+         case ORDER_TYPE_BUY_STOP:     return res==CMD_BUYSTOP;
+         case ORDER_TYPE_SELL_LIMIT:   return res==CMD_SELLLIMIT;
+         case ORDER_TYPE_SELL_STOP:    return res==CMD_SELLSTOP;
          default: PrintFormat(__FUNCTION__+": unknown order type");
         }
      }
-   return((IsSignalTypeShort((ENUM_CMD) res) && JOrder::IsOrderTypeLong(type))
+   return (IsSignalTypeShort((ENUM_CMD) res) && JOrder::IsOrderTypeLong(type))
           ||(IsSignalTypeLong((ENUM_CMD)res) && JOrder::IsOrderTypeShort(type))
-          || (res==CMD_VOID));
+          || (res==CMD_VOID);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JSignalBase::IsSignalTypeLong(const ENUM_CMD type)
   {
-   return(type==CMD_LONG || type==CMD_BUY || type==CMD_BUYLIMIT || type==CMD_BUYSTOP);
+   return type==CMD_LONG || type==CMD_BUY || type==CMD_BUYLIMIT || type==CMD_BUYSTOP;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JSignalBase::IsSignalTypeShort(const ENUM_CMD type)
   {
-   return(type==CMD_SHORT || type==CMD_SELL || type==CMD_SELLLIMIT || type==CMD_SELLSTOP);
+   return type==CMD_SHORT || type==CMD_SELL || type==CMD_SELLLIMIT || type==CMD_SELLSTOP;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -210,23 +210,23 @@ string JSignalBase::ToString(bool last_valid=false) const
    int signal=last_valid?m_signal_valid:m_signal;
    switch(signal)
      {
-      case CMD_VOID:       return("VOID");
-      case CMD_NEUTRAL:    return("NEUTRAL");
-      case CMD_BUY:        return("BUY");
-      case CMD_SELL:       return("SELL");
-      case CMD_BUYLIMIT:   return("BUYLIMIT");
-      case CMD_SELLLIMIT:  return("SELLLIMIT");
-      case CMD_BUYSTOP:    return("BUYSTOP");
-      case CMD_SELLSTOP:   return("SELLSTOP");
-      case CMD_LONG:       return("LONG");
-      case CMD_SHORT:      return("SHORT");
-      case CMD_LIMIT:      return("LIMIT");
-      case CMD_STOP:       return("STOP");
-      case CMD_MARKET:     return("MARKET");
-      case CMD_PENDING:    return("PENDING");
-      case CMD_ALL:        return("ALL");
+      case CMD_VOID:       return "VOID";
+      case CMD_NEUTRAL:    return "NEUTRAL";
+      case CMD_BUY:        return "BUY";
+      case CMD_SELL:       return "SELL";
+      case CMD_BUYLIMIT:   return "BUYLIMIT";
+      case CMD_SELLLIMIT:  return "SELLLIMIT";
+      case CMD_BUYSTOP:    return "BUYSTOP";
+      case CMD_SELLSTOP:   return "SELLSTOP";
+      case CMD_LONG:       return "LONG";
+      case CMD_SHORT:      return "SHORT";
+      case CMD_LIMIT:      return "LIMIT";
+      case CMD_STOP:       return "STOP";
+      case CMD_MARKET:     return "MARKET";
+      case CMD_PENDING:    return "PENDING";
+      case CMD_ALL:        return "ALL";
      }
-   return(NULL);
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -235,23 +235,23 @@ int JSignalBase::SignalReverse(const int signal)
   {
    switch(signal)
      {
-      case CMD_VOID:       return(CMD_ALL);
-      case CMD_NEUTRAL:    return(CMD_NEUTRAL);
-      case CMD_BUY:        return(CMD_SELL);
-      case CMD_SELL:       return(CMD_BUY);
-      case CMD_BUYLIMIT:   return(CMD_SELLLIMIT);
-      case CMD_SELLLIMIT:  return(CMD_BUYLIMIT);
-      case CMD_BUYSTOP:    return(CMD_SELLSTOP);
-      case CMD_SELLSTOP:   return(CMD_BUYSTOP);
-      case CMD_LONG:       return(CMD_SHORT);
-      case CMD_SHORT:      return(CMD_LONG);
-      case CMD_LIMIT:      return(CMD_STOP);
-      case CMD_STOP:       return(CMD_LIMIT);
-      case CMD_MARKET:     return(CMD_PENDING);
-      case CMD_PENDING:    return(CMD_MARKET);
-      case CMD_ALL:        return(CMD_VOID);
+      case CMD_VOID:       return CMD_ALL;
+      case CMD_NEUTRAL:    return CMD_NEUTRAL;
+      case CMD_BUY:        return CMD_SELL;
+      case CMD_SELL:       return CMD_BUY;
+      case CMD_BUYLIMIT:   return CMD_SELLLIMIT;
+      case CMD_SELLLIMIT:  return CMD_BUYLIMIT;
+      case CMD_BUYSTOP:    return CMD_SELLSTOP;
+      case CMD_SELLSTOP:   return CMD_BUYSTOP;
+      case CMD_LONG:       return CMD_SHORT;
+      case CMD_SHORT:      return CMD_LONG;
+      case CMD_LIMIT:      return CMD_STOP;
+      case CMD_STOP:       return CMD_LIMIT;
+      case CMD_MARKET:     return CMD_PENDING;
+      case CMD_PENDING:    return CMD_MARKET;
+      case CMD_ALL:        return CMD_VOID;
      }
-   return(NULL);
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -260,14 +260,14 @@ ENUM_ORDER_TYPE JSignalBase::SignalToOrderType(const int signal)
   {
    switch(signal)
      {
-      case CMD_BUY:        return(ORDER_TYPE_BUY);
-      case CMD_SELL:       return(ORDER_TYPE_SELL);
-      case CMD_BUYLIMIT:   return(ORDER_TYPE_BUY_LIMIT);
-      case CMD_SELLLIMIT:  return(ORDER_TYPE_SELL_LIMIT);
-      case CMD_BUYSTOP:    return(ORDER_TYPE_BUY_STOP);
-      case CMD_SELLSTOP:   return(ORDER_TYPE_SELL_STOP);
+      case CMD_BUY:        return ORDER_TYPE_BUY;
+      case CMD_SELL:       return ORDER_TYPE_SELL;
+      case CMD_BUYLIMIT:   return ORDER_TYPE_BUY_LIMIT;
+      case CMD_SELLLIMIT:  return ORDER_TYPE_SELL_LIMIT;
+      case CMD_BUYSTOP:    return ORDER_TYPE_BUY_STOP;
+      case CMD_SELLSTOP:   return ORDER_TYPE_SELL_STOP;
      }
-   return(NULL);
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -276,7 +276,7 @@ bool JSignalBase::Save(const int handle)
   {
    ADT::WriteInteger(handle,m_signal);
    ADT::WriteInteger(handle,m_signal_valid);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -285,7 +285,7 @@ bool JSignalBase::Load(const int handle)
   {
    ADT::ReadInteger(handle,m_signal);
    ADT::ReadInteger(handle,m_signal_valid);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

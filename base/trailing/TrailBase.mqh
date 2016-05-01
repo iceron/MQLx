@@ -28,28 +28,28 @@ protected:
 public:
                      JTrailBase(void);
                     ~JTrailBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_TRAIL);}
+   virtual int       Type(void) const {return CLASS_TYPE_TRAIL;}
    //--- initialization                    
    virtual bool      Init(JStrategy *s,JTrails *t);
    virtual void      SetContainer(JTrails *trails){m_trails=trails;}
    virtual bool      Validate(void) const;
    //--- getters and setters    
-   bool              Active(void) const {return(m_activate);}
+   bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
-   int               DigitsAdjust(void) const {return(m_digits_adjust);}
+   int               DigitsAdjust(void) const {return m_digits_adjust;}
    void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
-   double            End(void) const {return(m_end);}
+   double            End(void) const {return m_end;}
    void              End(const double end) {m_end=end;}
-   double            PointsAdjust(void) const {return(m_points_adjust);}
+   double            PointsAdjust(void) const {return m_points_adjust;}
    void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
    void              Set(const double trail,const double st,const double step=1,const double end=0);
-   double            Start(void) const {return(m_start);}
+   double            Start(void) const {return m_start;}
    void              Start(const double st) {m_start=st;}
-   double            Step(void) const {return(m_step);}
+   double            Step(void) const {return m_step;}
    void              Step(const double step) {m_step=step;}
-   double            Trail(void) const {return(m_trail);}
+   double            Trail(void) const {return m_trail;}
    void              Trail(const double trail) {m_trail=trail;}
-   int               TrailTarget(void) const {return(m_target);}
+   int               TrailTarget(void) const {return m_target;}
    void              TrailTarget(const ENUM_TRAIL_TARGET target) {m_target=target;}
    //--- checking
    virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
@@ -86,19 +86,19 @@ JTrailBase::~JTrailBase(void)
 //+------------------------------------------------------------------+
 bool JTrailBase::Validate(void) const
   {
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JTrailBase::Init(JStrategy *s,JTrails *t)
   {
-   if (s==NULL || t==NULL) return(false);
+   if (s==NULL || t==NULL) return false;
    //m_symbol=s.SymbolInfo();
    //m_points_adjust = s.PointsAdjust();
    //m_digits_adjust = s.DigitsAdjust();
    //SetContainer(t);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -106,7 +106,7 @@ bool JTrailBase::Init(JStrategy *s,JTrails *t)
 bool JTrailBase::Deinit(void)
   {
    if(m_symbol!=NULL) delete m_symbol;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -124,10 +124,10 @@ void JTrailBase::Set(const double trail,const double st,const double step=1,cons
 double JTrailBase::ActivationPrice(const ENUM_ORDER_TYPE type,const double entry_price)
   {
    if(type==ORDER_TYPE_BUY)
-      return(entry_price+m_start*m_points_adjust);
+      return entry_price+m_start*m_points_adjust;
    else if(type==ORDER_TYPE_SELL)
-      return(entry_price-m_start*m_points_adjust);
-   return(0);
+      return entry_price-m_start*m_points_adjust;
+   return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -135,18 +135,18 @@ double JTrailBase::ActivationPrice(const ENUM_ORDER_TYPE type,const double entry
 double JTrailBase::DeactivationPrice(const ENUM_ORDER_TYPE type,const double entry_price)
   {
    if(type==ORDER_TYPE_BUY)
-      return(m_end==0?0:entry_price+m_end*m_points_adjust);
+      return m_end==0?0:entry_price+m_end*m_points_adjust;
    else if(type==ORDER_TYPE_SELL)
-      return(m_end==0?0:entry_price-m_end*m_points_adjust);
-   return(0);
+      return m_end==0?0:entry_price-m_end*m_points_adjust;
+   return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
-   if(!Active()) return(0.0);
-   if (m_start==0 || m_trail==0) return(0.0);
+   if(!Active()) return 0;
+   if (m_start==0 || m_trail==0) return 0;
    double next_stop=0.0,activation=0.0,deactivation=0.0,new_price=0.0;
    activation=ActivationPrice(type,entry_price);
    deactivation=DeactivationPrice(type,entry_price);
@@ -158,7 +158,7 @@ double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,con
       else next_stop=activation-m_trail*m_points_adjust;
       if((deactivation>0 && next_stop>=deactivation && next_stop>0.0) || (deactivation==0))
          if(next_stop<=new_price)
-            return(next_stop);
+            return next_stop;
      }
    if((type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
@@ -167,9 +167,9 @@ double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,con
       else next_stop=activation+m_trail*m_points_adjust;
       if((deactivation>0 && next_stop<=deactivation && next_stop>0.0) || (deactivation==0))
          if(next_stop>=new_price)
-            return(next_stop);    
+            return next_stop;    
      }
-   return(0.0);
+   return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -179,14 +179,14 @@ double JTrailBase::Price(const ENUM_ORDER_TYPE type)
    if(type==ORDER_TYPE_BUY)
      {
       if(m_target==TRAIL_TARGET_STOPLOSS)
-         return(m_symbol.Bid()-m_trail*m_points_adjust);
+         return m_symbol.Bid()-m_trail*m_points_adjust;
      }
    else if(type==ORDER_TYPE_SELL)
      {
       if(m_target==TRAIL_TARGET_STOPLOSS)
-         return(m_symbol.Ask()+m_trail*m_points_adjust);
+         return m_symbol.Ask()+m_trail*m_points_adjust;
      }
-   return(0);
+   return 0;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

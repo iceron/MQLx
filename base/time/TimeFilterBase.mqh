@@ -30,19 +30,19 @@ public:
    virtual bool      Init(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0);
    virtual void      SetDays(const bool sun,const bool mon,const bool tue,const bool wed,const bool thu,const bool fri,const bool sat);
    //--- setters and getters
-   bool              Sunday(void) const {return(m_sun);}
+   bool              Sunday(void) const {return m_sun;}
    void              Sunday(const bool t) {m_sun=t;}
-   bool              Monday(void) const {return(m_mon);}
+   bool              Monday(void) const {return m_mon;}
    void              Monday(const bool t) {m_mon=t;}
-   bool              Tuesday(void) const {return(m_tue);}
+   bool              Tuesday(void) const {return m_tue;}
    void              Tuesday(const bool t) {m_tue=t;}
-   bool              Wednesday(void) const {return(m_wed);}
+   bool              Wednesday(void) const {return m_wed;}
    void              Wednesday(const bool t) {m_wed=t;}
-   bool              Thursday(void) const {return(m_thu);}
+   bool              Thursday(void) const {return m_thu;}
    void              Thursday(const bool t) {m_thu=t;}
-   bool              Friday(void) const {return(m_fri);}
+   bool              Friday(void) const {return m_fri;}
    void              Friday(const bool t) {m_fri=t;}
-   bool              Saturday(void) const {return(m_sat);}
+   bool              Saturday(void) const {return m_sat;}
    void              Saturday(const bool t) {m_sat=t;}
   };
 //+------------------------------------------------------------------+
@@ -73,9 +73,9 @@ bool JTimeFilterBase::Validate(void)
    if(t_end<t_start)
      {
       PrintFormat("Invalid setting for start and end times.");
-      return(false);
+      return false;
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -88,14 +88,14 @@ bool JTimeFilterBase::Init(const int gmt,const int starthour,const int endhour,c
    m_filter_end.hour=endhour+gmt;
    m_filter_end.min=endminute;
    m_filter_end.sec=endseconds;
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JTimeFilterBase::Evaluate(void)
   {
-   if(!Active()) return(true);
+   if(!Active()) return true;
    bool result=true;
    MqlDateTime time;
    datetime current=TimeCurrent();
@@ -127,7 +127,7 @@ bool JTimeFilterBase::Evaluate(void)
       if(!(current>=f_start && current<=f_end))
          result=false;
      }
-   return(Reverse()?result:!result);
+   return Reverse()?result:!result;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -22,20 +22,20 @@ protected:
 public:
                      JTimeBase(void);
                     ~JTimeBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_TIME);}
-   virtual bool      Validate() {return(true);}
+   virtual int       Type(void) const {return CLASS_TYPE_TIME;}
+   virtual bool      Validate() {return true;}
    //--- initialization
    virtual bool      Init(JStrategy *s,JTimes *times);
    virtual void      SetContainer(JTimes *times){m_times=times;}
    //--- setters and getters
-   bool              Active(void) const {return(m_activate);}
+   bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
-   bool              Reverse() {return(m_reverse);}
+   bool              Reverse() {return m_reverse;}
    void              Reverse(bool reverse) {m_reverse = reverse;}
-   datetime          TimeStart(void) const {return(m_time_start);}
-   void              TimeStart(const datetime start){m_time_start=start;}
+   datetime          TimeStart(void) const {return m_time_start;}
+   void              TimeStart(const datetime st){m_time_start=st;}
    //--- checking
-   virtual bool      Evaluate(void) {return(true);}
+   virtual bool      Evaluate(void) {return true;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -57,7 +57,7 @@ JTimeBase::~JTimeBase(void)
 bool JTimeBase::Init(JStrategy *s,JTimes *times)
   {
    SetContainer(times);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -20,9 +20,9 @@ protected:
 public:
                      JExpertBase(void);
                     ~JExpertBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_EXPERT);}
+   virtual int       Type(void) const {return CLASS_TYPE_EXPERT;}
    //--- getters and setters
-   bool              Active(void) const {return(m_activate);}
+   bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
    void              ChartComment(const bool enable=true);
    int               OrdersTotal(void) const;
@@ -65,9 +65,9 @@ bool JExpertBase::Validate(void) const
      {
       JStrategy *strat=At(i);
       if(!strat.Validate())
-         return(false);
+         return false;
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -88,7 +88,7 @@ bool JExpertBase::InitComponents(void) const
          strat.ChartComment(GetPointer(m_comments));
       strat.InitComponents();
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -101,7 +101,7 @@ int JExpertBase::OrdersTotal(void) const
       JStrategy *strat=At(i);
       total+=strat.OrdersTotal();
      }
-   return(total);
+   return total;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -155,7 +155,7 @@ int JExpertBase::OrdersHistoryTotal(void) const
       JStrategy *strat=At(i);
       total+=strat.OrdersHistoryTotal();
      }
-   return(total);
+   return total;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -168,7 +168,7 @@ int JExpertBase::TradesTotal(void) const
       JStrategy *strat=At(i);
       total+=strat.TradesTotal();
      }
-   return(total);
+   return total;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -191,7 +191,7 @@ bool JExpertBase::CreateElement(const int index)
   {
    JStrategy*strat=new JStrategy();
    strat.SetContainer(GetPointer(this));
-   return(Insert(GetPointer(strat),index));
+   return Insert(GetPointer(strat),index);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -200,7 +200,7 @@ bool JExpertBase::Save(const int handle)
   {
    CArrayObj::Save(handle);
    ADT::WriteInteger(handle,m_uninit_reason);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -209,7 +209,7 @@ bool JExpertBase::Load(const int handle)
   {
    CArrayObj::Load(handle);
    ADT::ReadInteger(handle,m_uninit_reason);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

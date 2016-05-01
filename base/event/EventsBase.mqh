@@ -30,13 +30,13 @@ protected:
 public:
                      JEventsBase(void);
                     ~JEventsBase(void);
-   virtual int       Type(void) {return(CLASS_TYPE_EVENT);}
+   virtual int       Type(void) {return CLASS_TYPE_EVENT;}
    //--- initialization   
    virtual void      InitRegister(ENUM_EVENT_CLASS event_class,CArrayInt *print,CArrayInt *sound,CArrayInt *popup,CArrayInt *email,CArrayInt *push,CArrayInt *ftp);
    virtual void      InitRegister(ENUM_EVENT_CLASS event_class,int &print[],int &sound[],int &popup[],int &email[],int &push[],int &ftp[]);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    //--- setters and getters
-   virtual bool      Activate(void) const {return(m_activate);}
+   virtual bool      Activate(void) const {return m_activate;}
    virtual void      Activate(bool activate) {m_activate=activate;}
    virtual bool      Run(void);
    //--- processing
@@ -54,7 +54,7 @@ protected:
    //--- event checking 
    virtual bool      IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION action);
    virtual bool      IsEventStandardAllowed(const ENUM_ACTION action);
-   virtual bool      IsEventErrorAllowed(const ENUM_ACTION action) {return(true);}
+   virtual bool      IsEventErrorAllowed(const ENUM_ACTION action) {return true;}
    virtual bool      IsEventCustomAllowed(const ENUM_ACTION action);
    //--- events   
    virtual bool      SendAlert(ENUM_ALERT_MODE mode,string func,string action,string info);
@@ -100,33 +100,33 @@ bool JEventsBase::IsEventAllowed(const ENUM_EVENT_CLASS type,const ENUM_ACTION a
   {
    switch(type)
      {
-      case EVENT_CLASS_STANDARD: return(IsEventStandardAllowed(action));
-      case EVENT_CLASS_ERROR:    return(IsEventErrorAllowed(action));
-      case EVENT_CLASS_CUSTOM:   return(IsEventCustomAllowed(action));
+      case EVENT_CLASS_STANDARD: return IsEventStandardAllowed(action);
+      case EVENT_CLASS_ERROR:    return IsEventErrorAllowed(action);
+      case EVENT_CLASS_CUSTOM:   return IsEventCustomAllowed(action);
      }
    PrintFormat("unknown event");
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventStandard *JEventsBase::CreateStandardEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
-   return(new JEventStandard(action,object1,object2,object3));
+   return new JEventStandard(action,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventError *JEventsBase::CreateErrorEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
-   return(new JEventError(action,object1,object2,object3));
+   return new JEventError(action,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventCustom *JEventsBase::CreateCustomEvent(const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
   {
-   return(new JEventCustom(action,object1,object2,object3));
+   return new JEventCustom(action,object1,object2,object3);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -220,21 +220,21 @@ JEventsBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,st
 //+------------------------------------------------------------------+
 JEventStandard *JEventsBase::CreateStandardEvent(const ENUM_ACTION action,string message_add)
   {
-   return(new JEventStandard(action,message_add));
+   return new JEventStandard(action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventError *JEventsBase::CreateErrorEvent(const ENUM_ACTION action,string message_add)
   {
-   return(new JEventError(action,message_add));
+   return new JEventError(action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JEventCustom *JEventsBase::CreateCustomEvent(const ENUM_ACTION action,string message_add)
   {
-   return(new JEventCustom(action,message_add));
+   return new JEventCustom(action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -283,7 +283,7 @@ bool JEventsBase::Run(void)
         }
       delete event;
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

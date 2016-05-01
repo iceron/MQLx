@@ -35,6 +35,6 @@ bool JStrategy::OnTick(void)
   {
    bool ret=JStrategyBase::OnTick();
    if(ret) OnTradeTransaction();
-   return(ret);
+   return ret;
   }
 //+------------------------------------------------------------------+

@@ -23,15 +23,15 @@ protected:
 public:
                      JTimesBase(void);
                     ~JTimesBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_TIMES);}
+   virtual int       Type(void) const {return CLASS_TYPE_TIMES;}
    //-- initialization
    virtual bool      Init(JStrategy *s);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation
-   bool              Active(void) const {return(m_activate);}
+   bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
-   int               Selected() {return(m_selected);}
+   int               Selected() {return m_selected;}
    //--- checking
    virtual bool      Evaluate(void) const;
    //--- recovery
@@ -61,7 +61,7 @@ bool JTimesBase::Init(JStrategy *s)
       time.Init(s,GetPointer(this));
      }
    SetContainer(s);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -72,23 +72,23 @@ bool JTimesBase::Validate(void) const
      {
       JTime *time=At(i);
       if(!time.Validate())
-         return(false);
+         return false;
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JTimesBase::Evaluate(void) const
   {
-   if(!Active()) return(true);
+   if(!Active()) return true;
    for(int i=0;i<Total();i++)
      {
       JTime *time=At(i);
       if(CheckPointer(time))
-         if(!time.Evaluate()) return(false);
+         if(!time.Evaluate()) return false;
      }
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -97,7 +97,7 @@ bool JTimesBase::CreateElement(const int index)
   {
    JTime*time=new JTime();
    time.SetContainer(GetPointer(this));
-   return(Insert(GetPointer(time),index));
+   return Insert(GetPointer(time),index);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

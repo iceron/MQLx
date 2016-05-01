@@ -23,19 +23,19 @@ protected:
 public:
                      JOrdersBase(void);
                     ~JOrdersBase(void);
-   virtual int       Type(void) const {return(CLASS_TYPE_ORDERS);}
+   virtual int       Type(void) const {return CLASS_TYPE_ORDERS;}
    //--- initialization
    virtual bool      Init(const int magic=0,JStrategy *s=NULL,JStops *stops=NULL,JEvents *events=NULL);
    virtual void      SetContainer(JStrategy *s);
    virtual void      SetStops(JStops *stops);
    //--- getters and setters
-   bool              Activate(void) const {return(m_activate);}
+   bool              Activate(void) const {return m_activate;}
    void              Activate(const bool activate) {m_activate=activate;}
-   bool              Clean(void) const {return(m_clean);}
+   bool              Clean(void) const {return m_clean;}
    void              Clean(const bool clean) {m_clean=clean;}
    bool              EventHandler(JEvents *events);
    void              Magic(int magic) {m_magic=magic;}
-   int               Magic() {return(m_magic);}
+   int               Magic() {return m_magic;}
    //--- events                  
    virtual void      OnTick(void);
    //--- order creation
@@ -75,7 +75,7 @@ bool JOrdersBase::Init(const int magic=0,JStrategy *s=NULL,JStops *stops=NULL,JE
    SetContainer(s);
    SetStops(stops);
    EventHandler(events);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -97,7 +97,7 @@ JOrdersBase::SetStops(JStops *stops)
 bool JOrdersBase::EventHandler(JEvents *events)
   {
    if(events!=NULL) m_events=events;
-   return(m_events!=NULL);
+   return m_events!=NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -107,8 +107,8 @@ bool JOrdersBase::NewOrder(const int ticket,const ENUM_ORDER_TYPE type,const dou
    JOrder *order=new JOrder(ticket,type,volume,price);
    if(CheckPointer(order)==POINTER_DYNAMIC)
       if(InsertSort(GetPointer(order)))
-         return(order.Init(m_magic,GetPointer(this),m_events,m_stops));
-   return(false);
+         return order.Init(m_magic,GetPointer(this),m_events,m_stops);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -135,7 +135,7 @@ bool JOrdersBase::CloseStops(void)
          if(!order.CloseStops())
             res=false;
      }
-   return(res);
+   return res;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -158,7 +158,7 @@ bool JOrdersBase::CreateElement(const int index)
   {
    JOrder*order=new JOrder();
    order.Init(m_magic,GetPointer(this),m_events,m_stops,true);
-   return(Insert(GetPointer(order),index));
+   return Insert(GetPointer(order),index);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -167,7 +167,7 @@ bool JOrdersBase::Save(const int handle)
   {
    CArrayObj::Save(handle);
    ADT::WriteBool(handle,m_clean);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -176,7 +176,7 @@ bool JOrdersBase::Load(const int handle)
   {
    CArrayObj::Load(handle);
    ADT::ReadBool(handle,m_clean);
-   return(true);
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
