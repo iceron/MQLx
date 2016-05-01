@@ -54,6 +54,7 @@ public:
    bool              InitTrade(JTrade*);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);                    
+   virtual bool      Validate(void) const;      
    //--- setters and getters
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
    bool              EnableTrade(void) const {return(m_trade_allowed);}
@@ -221,6 +222,20 @@ bool COrderManagerBase::InitOrders(void)
 bool COrderManagerBase::InitOrdersHistory(void)
   {
    return(m_orders_history.Init(m_magic,NULL,m_stops,NULL));
+  }
+bool COrderManagerBase::Validate(void) const
+  {
+   if(CheckPointer(m_moneys)==POINTER_DYNAMIC)
+     {
+      if(!m_moneys.Validate())
+         return false;
+     }
+   if(CheckPointer(m_stops)==POINTER_DYNAMIC)
+     {
+      if(!m_stops.Validate())
+         return false;
+     }
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

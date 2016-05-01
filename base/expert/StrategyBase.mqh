@@ -36,10 +36,6 @@ protected:
    //--- trade parameters
    bool              m_activate;
    string            m_name;
-   //string            m_comment;
-   //bool              m_trade_allowed;
-   //bool              m_long_allowed;
-   //bool              m_short_allowed;
    //--- signal parameters
    bool              m_every_tick;
    ENUM_EXECUTION_MODE m_exec_mode;
@@ -398,7 +394,7 @@ bool JStrategyBase::Validate(void) const
       if(!m_times.Validate())
          return(false);
      }
-   return(true);
+   return m_order_man.Validate();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
