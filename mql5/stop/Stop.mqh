@@ -51,7 +51,7 @@ bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
    HistorySelect(0,TimeCurrent());
    if(ticket>0)
      {
-      if(ord.Select(ticket)) return(false);
+      if(ord.Select(ticket)) return false;
       else
         {
          long state;
@@ -61,7 +61,7 @@ bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
             if(h_ord.State()==ORDER_STATE_FILLED)
               {
                volume_remaining-=h_ord.VolumeInitial();
-               return(true);
+               return true;
               }
            }
          else
@@ -77,7 +77,7 @@ bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
                      if(state==ORDER_STATE_FILLED)
                        {
                         volume_remaining-=h_ord.VolumeInitial();
-                        return(true);
+                        return true;
                        }
                     }
                  }
@@ -85,21 +85,21 @@ bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
            }
         }
      }
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStop::DeleteStopOrder(const ulong ticket) const
   {
-   if(ticket<=0) return(true);
+   if(ticket<=0) return true;
    if(m_trade.OrderDelete(ticket))
      {
       uint result=m_trade.ResultRetcode();
       if(result==TRADE_RETCODE_DONE || result==TRADE_RETCODE_PLACED)
-         return(true);
+         return true;
      }
-   return(false);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -110,7 +110,7 @@ double JStop::TakeProfitPrice(JOrder *order,JOrderStop *orderstop)
    if((m_stop_type==STOP_TYPE_PENDING || m_main) && (val>0.0))
       if(OpenStop(order,orderstop,val))
          orderstop.TakeProfitTicket(m_trade.ResultOrder());
-   return(val==0?val:NormalizeDouble(val,m_symbol.Digits()));
+   return val==0?val:NormalizeDouble(val,m_symbol.Digits());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -121,14 +121,14 @@ double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
    if((m_stop_type==STOP_TYPE_PENDING || m_main) && (val>0.0))
       if(OpenStop(order,orderstop,val))
          orderstop.StopLossTicket(m_trade.ResultOrder());
-   return(val==0?val:NormalizeDouble(val,m_symbol.Digits()));
+   return val==0?val:NormalizeDouble(val,m_symbol.Digits());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool JStop::OpenStop(JOrder *order,JOrderStop *orderstop,double val)
   {
-   if(val==0) return(false);
+   if(val==0) return false;
    bool res=false;
    double lotsize=LotSizeCalculate(order,orderstop);
    ENUM_ORDER_TYPE type=orderstop.MainTicketType();
@@ -143,6 +143,6 @@ bool JStop::OpenStop(JOrder *order,JOrderStop *orderstop,double val)
          res=m_trade.Buy(lotsize,val,0,0,m_comment);
         }
      }
-   return(res);
+   return res;
   }
 //+------------------------------------------------------------------+

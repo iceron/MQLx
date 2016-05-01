@@ -135,7 +135,7 @@ void JOrderStop::Check(double &volume)
 //+------------------------------------------------------------------+
 bool JOrderStop::ModifyStops(const double stoploss,const double takeprofit)
   {
-   return(ModifyStopLoss(stoploss) && ModifyTakeProfit(takeprofit));
+   return ModifyStopLoss(stoploss) && ModifyTakeProfit(takeprofit);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -148,7 +148,7 @@ bool JOrderStop::ModifyStopLoss(const double stoploss)
    else modify=true;
    if(modify)
       MoveStopLoss(stoploss);
-   return(modify);
+   return modify;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -161,6 +161,6 @@ bool JOrderStop::ModifyTakeProfit(const double takeprofit)
    else modify=true;
    if(modify)
       MoveTakeProfit(takeprofit);
-   return(modify);
+   return modify;
   }
 //+------------------------------------------------------------------+

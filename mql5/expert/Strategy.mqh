@@ -35,7 +35,7 @@ JStrategy::~JStrategy(void)
 bool JStrategy::OnTick(void)
   {
    bool ret=JStrategyBase::OnTick();
-   return(ret);
+   return ret;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -45,21 +45,21 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
 //+------------------------------------------------------------------+
 bool COrderManager::TradeOpen(const int res)
   {
-   if(res<=0) return(false);
+   if(res<=0) return false;
    bool ret=false;
    double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();
    int orders_total = OrdersTotal();
    ENUM_ORDER_TYPE type=JSignal::SignalToOrderType(res);
    if(!IsPositionAllowed(type))
-      return(true);
+      return true;
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       price=PriceCalculate(type);
       lotsize=LotSizeCalculate(price,type,m_main_stop.StopLossCalculate(type,price));
       ret=SendOrder(type,lotsize,price,0,0);
      }
-   return(ret);
+   return ret;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -88,6 +88,6 @@ bool COrderManager::CloseOrder(JOrder *order,const int index)
            }
         }
      }
-   return(closed);
+   return closed;
   }
 //+------------------------------------------------------------------+
