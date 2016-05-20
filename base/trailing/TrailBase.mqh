@@ -94,10 +94,10 @@ bool JTrailBase::Validate(void) const
 bool JTrailBase::Init(JStrategy *s,JTrails *t)
   {
    if (s==NULL || t==NULL) return false;
-   //m_symbol=s.SymbolInfo();
-   //m_points_adjust = s.PointsAdjust();
-   //m_digits_adjust = s.DigitsAdjust();
-   //SetContainer(t);
+   m_symbol=s.SymbolInfo();
+   m_points_adjust = s.PointsAdjust();
+   m_digits_adjust = s.DigitsAdjust();
+   SetContainer(t);
    return true;
   }
 //+------------------------------------------------------------------+
