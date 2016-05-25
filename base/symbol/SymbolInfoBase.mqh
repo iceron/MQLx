@@ -26,9 +26,9 @@ protected:
    double            m_swap_short;         // symbol swap short
    int               m_digits;             // symbol digits   
    ENUM_SYMBOL_TRADE_EXECUTION m_trade_execution;    // symbol trade execution
-   int m_trade_calcmode;     // symbol trade calcmode
+   int               m_trade_calcmode;     // symbol trade calcmode
    ENUM_SYMBOL_TRADE_MODE m_trade_mode;         // symbol trade mode
-   int m_swap_mode;          // symbol swap mode
+   int               m_swap_mode;          // symbol swap mode
    ENUM_DAY_OF_WEEK  m_swap3;              // symbol swap3      
 public:
                      CSymbolInfoBase(void);
@@ -90,7 +90,7 @@ public:
    string            CurrencyProfit(void) const;
    string            CurrencyMargin(void) const;
    string            Description(void) const;
-   string            Path(void) const;   
+   string            Path(void) const;
    //--- access methods to the API MQL5 functions
    bool              InfoInteger(const ENUM_SYMBOL_INFO_INTEGER prop_id,long &var) const;
    bool              InfoDouble(const ENUM_SYMBOL_INFO_DOUBLE prop_id,double &var) const;
@@ -98,27 +98,29 @@ public:
    //--- service methods
    double            NormalizePrice(const double price) const;
    bool              CheckMarketWatch(void);
+   //--- comparison
+   virtual int       Compare(const CObject *node,const int mode=0) const;
   };
 //+------------------------------------------------------------------+
 //| Constructor                                                      |
 //+------------------------------------------------------------------+
 CSymbolInfoBase::CSymbolInfoBase(void) : m_name(""),
-                                 m_point(0.0),
-                                 m_tick_value(0.0),                                 
-                                 m_tick_size(0.0),
-                                 m_contract_size(0.0),
-                                 m_lots_min(0.0),
-                                 m_lots_max(0.0),
-                                 m_lots_step(0.0),
-                                 m_swap_long(0.0),
-                                 m_swap_short(0.0),
-                                 m_digits(0),                                 
-                                 m_trade_execution(0),
-                                 m_trade_calcmode(0),
-                                 m_trade_mode(0),
-                                 m_swap_mode(0),
-                                 m_swap3(0)                              
-                                 
+                                         m_point(0.0),
+                                         m_tick_value(0.0),
+                                         m_tick_size(0.0),
+                                         m_contract_size(0.0),
+                                         m_lots_min(0.0),
+                                         m_lots_max(0.0),
+                                         m_lots_step(0.0),
+                                         m_swap_long(0.0),
+                                         m_swap_short(0.0),
+                                         m_digits(0),
+                                         m_trade_execution(0),
+                                         m_trade_calcmode(0),
+                                         m_trade_mode(0),
+                                         m_swap_mode(0),
+                                         m_swap3(0)
+
   {
   }
 //+------------------------------------------------------------------+
@@ -156,7 +158,7 @@ bool CSymbolInfoBase::Refresh(void)
    if(!SymbolInfoDouble(m_name,SYMBOL_POINT,m_point))
       return(false);
    if(!SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_VALUE,m_tick_value))
-      return(false);   
+      return(false);
    if(!SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_SIZE,m_tick_size))
       return(false);
    if(!SymbolInfoDouble(m_name,SYMBOL_TRADE_CONTRACT_SIZE,m_contract_size))
@@ -166,14 +168,14 @@ bool CSymbolInfoBase::Refresh(void)
    if(!SymbolInfoDouble(m_name,SYMBOL_VOLUME_MAX,m_lots_max))
       return(false);
    if(!SymbolInfoDouble(m_name,SYMBOL_VOLUME_STEP,m_lots_step))
-      return(false);   
+      return(false);
    if(!SymbolInfoDouble(m_name,SYMBOL_SWAP_LONG,m_swap_long))
       return(false);
    if(!SymbolInfoDouble(m_name,SYMBOL_SWAP_SHORT,m_swap_short))
       return(false);
    if(!SymbolInfoInteger(m_name,SYMBOL_DIGITS,tmp))
       return(false);
-   m_digits=(int)tmp;   
+   m_digits=(int)tmp;
    if(!SymbolInfoInteger(m_name,SYMBOL_TRADE_EXEMODE,tmp))
       return(false);
    m_trade_execution=(ENUM_SYMBOL_TRADE_EXECUTION)tmp;
@@ -188,7 +190,7 @@ bool CSymbolInfoBase::Refresh(void)
    m_swap_mode=(int)tmp;
    if(!SymbolInfoInteger(m_name,SYMBOL_SWAP_ROLLOVER3DAYS,tmp))
       return(false);
-   m_swap3=(ENUM_DAY_OF_WEEK)tmp;   
+   m_swap3=(ENUM_DAY_OF_WEEK)tmp;
 //--- succeed
    return(true);
   }
@@ -396,6 +398,14 @@ bool CSymbolInfoBase::CheckMarketWatch(void)
      }
 //--- succeed
    return(true);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CSymbolInfoBase::Compare(const CObject *node,const int mode=0) const
+  {
+   const CSymbolInfo *item = node;
+   return StringCompare(m_name,item.Name());
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
