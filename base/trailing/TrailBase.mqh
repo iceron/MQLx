@@ -7,7 +7,7 @@
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_TRAIL_TARGET.mqh"
 #include <Object.mqh>
-#include "..\lib\SymbolInfo.mqh"
+//#include "..\lib\SymbolInfo.mqh"
 class JTrails;
 //+------------------------------------------------------------------+
 //|                                                                  |

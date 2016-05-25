@@ -6,7 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include <Files\FileBin.mqh>
-#include "..\lib\SymbolInfo.mqh"
+//#include "..\lib\SymbolInfo.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

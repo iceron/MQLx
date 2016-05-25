@@ -8,7 +8,7 @@
 #include "..\..\common\enum\ENUM_VOLUME_TYPE.mqh"
 #include <Arrays\ArrayDouble.mqh>
 #include "..\event\EventBase.mqh"
-#include "..\lib\SymbolInfo.mqh"
+//#include "..\lib\SymbolInfo.mqh"
 #include "..\trade\TradeBase.mqh"
 #include "..\stop\StopBase.mqh"
 #include "..\stop\StopLineBase.mqh"

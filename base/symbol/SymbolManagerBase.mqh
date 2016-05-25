@@ -44,8 +44,10 @@ bool CSymbolManagerBase::Add(CSymbolInfo *node)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CSymbolInfo *CSymbolManagerBase::Get(const string name)
+CSymbolInfo *CSymbolManagerBase::Get(const string name=NULL)
   {
+   if (name==NULL && Total()>0)
+      return At(0);
    for(int i=0;i<Total();i++)
      {
       CSymbolInfo *item=At(i);

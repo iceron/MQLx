@@ -14,6 +14,7 @@
 #include <Files\FileBin.mqh>
 #include "..\lib\AccountInfo.mqh"
 #include "..\lib\SymbolInfo.mqh"
+//#include "..\symbol\SymbolManagerBase.mqh"
 #include "..\event\EventBase.mqh"
 #include "..\tick\TickBase.mqh"
 #include "..\candle\CandleBase.mqh"

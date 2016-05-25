@@ -9,7 +9,7 @@
 class JStrategy;
 #include <Arrays\ArrayInt.mqh>
 #include "..\lib\AccountInfo.mqh"
-#include "..\lib\SymbolInfo.mqh"
+//#include "..\lib\SymbolInfo.mqh"
 #include "..\..\common\class\ADT.mqh"
 #include "..\order\OrdersBase.mqh"
 #include "..\stop\StopsBase.mqh"
