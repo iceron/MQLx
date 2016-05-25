@@ -84,10 +84,10 @@ public:
    //--- object pointers
    JStop             *MainStop(void) const {return m_main_stop;}
    JMoneys           *Moneys(void) const {return GetPointer(m_moneys);}
-   JOrders           *Orders() const {return GetPointer(m_orders);}
-   JOrders           *OrdersHistory() const {return GetPointer(m_orders_history);}
+   JOrders           *Orders() {return GetPointer(m_orders);}
+   JOrders           *OrdersHistory() {return GetPointer(m_orders_history);}
    JStops            *Stops(void) const {return GetPointer(m_stops);}
-   CArrayInt         *OtherMagic() const {return GetPointer(m_other_magic);}
+   CArrayInt         *OtherMagic() {return GetPointer(m_other_magic);}
    //--- current orders
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(JOrder*);

@@ -108,18 +108,18 @@ public:
    void              ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
    //--- object pointers
    CAccountInfo      *AccountInfo(void) const {return GetPointer(m_account);}
-   JCandle           *Candle(void) const {return GetPointer(m_candle);}
+   JCandle           *Candle(void) {return GetPointer(m_candle);}
    JComments         *Comments() const {return GetPointer(m_comments);}
    JEvents           *Events(void) const {return m_events;}
    JStop             *MainStop(void) const {return m_order_man.MainStop();}
    JMoneys           *Moneys(void) const {return m_order_man.Moneys();} 
-   JOrders           *Orders() const {return m_order_man.Orders();}
-   JOrders           *OrdersHistory() const {return m_order_man.OrdersHistory();}
-   CArrayInt         *OtherMagic() const {return m_order_man.OtherMagic();}  
+   JOrders           *Orders() {return m_order_man.Orders();}
+   JOrders           *OrdersHistory() {return m_order_man.OrdersHistory();}
+   CArrayInt         *OtherMagic() {return m_order_man.OtherMagic();}  
    JStops            *Stops(void) const {return m_order_man.Stops();}   
    JSignals          *Signals(void) const {return GetPointer(m_signals);}  
    CSymbolInfo       *SymbolInfo(void) const {return GetPointer(m_symbol);}
-   JTick             *Tick(void) const {return GetPointer(m_tick);}   
+   JTick             *Tick(void) {return GetPointer(m_tick);}   
    JTimes            *Times(void) const {return GetPointer(m_times);}     
    //--- chart comment manager
    void              AddComment(const string);   
