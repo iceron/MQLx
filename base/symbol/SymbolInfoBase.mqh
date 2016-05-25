@@ -242,6 +242,25 @@ int CSymbolInfoBase::FreezeLevel(void) const
    return((int)SymbolInfoInteger(m_name,SYMBOL_TRADE_FREEZE_LEVEL));
   }
 //+------------------------------------------------------------------+
+//| Get the property value "SYMBOL_TRADE_MODE" as string             |
+//+------------------------------------------------------------------+
+string CSymbolInfoBase::TradeModeDescription(void) const
+  {
+   string str;
+//---
+   switch(m_trade_mode)
+     {
+      case SYMBOL_TRADE_MODE_DISABLED : str="Disabled";           break;
+      case SYMBOL_TRADE_MODE_LONGONLY : str="Long only";          break;
+      case SYMBOL_TRADE_MODE_SHORTONLY: str="Short only";         break;
+      case SYMBOL_TRADE_MODE_CLOSEONLY: str="Close only";         break;
+      case SYMBOL_TRADE_MODE_FULL     : str="Full access";        break;
+      default                         : str="Unknown trade mode";
+     }
+//--- result
+   return(str);
+  }
+//+------------------------------------------------------------------+
 //| Get the property value "SYMBOL_TRADE_EXEMODE" as string          |
 //+------------------------------------------------------------------+
 string CSymbolInfoBase::TradeExecutionDescription(void) const

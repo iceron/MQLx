@@ -28,6 +28,8 @@ protected:
 public:
                      CSymbolInfo(void);
                     ~CSymbolInfo(void);
+   //--- methods of access to protected data
+   bool              Refresh(void);              
    //--- fast access methods to the integer symbol propertyes
    bool              IsSynchronized(void) const;
    //--- volumes
@@ -94,6 +96,7 @@ public:
 //+------------------------------------------------------------------+
 CSymbolInfo::CSymbolInfo(void) : m_tick_value_profit(0.0),
                                  m_tick_value_loss(0.0),
+                                 m_lots_limit(0),
                                  m_order_mode(0),
                                  m_margin_initial(0.0),
                                  m_margin_maintenance(0.0),
@@ -113,25 +116,6 @@ CSymbolInfo::~CSymbolInfo(void)
   {
   }
 //+------------------------------------------------------------------+
-//| Set name                                                         |
-//+------------------------------------------------------------------+
-bool CSymbolInfo::Name(const string name)
-  {
-   m_name=name;
-//---
-   if(!CheckMarketWatch())
-      return(false);
-//---
-   if(!Refresh())
-     {
-      m_name="";
-      Print(__FUNCTION__+": invalid data of symbol '"+name+"'");
-      return(false);
-     }
-//--- succeed
-   return(true);
-  }
-//+------------------------------------------------------------------+
 //| Refresh cached data                                              |
 //+------------------------------------------------------------------+
 bool CSymbolInfo::Refresh(void)
@@ -142,10 +126,6 @@ bool CSymbolInfo::Refresh(void)
    if(!SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_VALUE_PROFIT,m_tick_value_profit))
       return(false);
    if(!SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_VALUE_LOSS,m_tick_value_loss))
-      return(false);
-   if(!SymbolInfoInteger(m_name,SYMBOL_TRADE_MODE,m_trade_mode))
-      return(false);
-   if(!SymbolInfoInteger(m_name,SYMBOL_SWAP_MODE,m_swap_mode))
       return(false);
    if(!SymbolInfoDouble(m_name,SYMBOL_VOLUME_LIMIT,m_lots_limit))
       return(false);   
@@ -176,27 +156,6 @@ bool CSymbolInfo::Refresh(void)
    return(true);
   }
 //+------------------------------------------------------------------+
-//| Refresh cached data                                              |
-//+------------------------------------------------------------------+
-bool CSymbolInfo::RefreshRates(void)
-  {
-   return(SymbolInfoTick(m_name,m_tick));
-  }
-//+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_SELECT"                           |
-//+------------------------------------------------------------------+
-bool CSymbolInfo::Select(void) const
-  {
-   return((bool)SymbolInfoInteger(m_name,SYMBOL_SELECT));
-  }
-//+------------------------------------------------------------------+
-//| Set the property value "SYMBOL_SELECT"                           |
-//+------------------------------------------------------------------+
-bool CSymbolInfo::Select(const bool select)
-  {
-   return(SymbolSelect(m_name,select));
-  }
-//+------------------------------------------------------------------+
 //| Check synchronize symbol                                         |
 //+------------------------------------------------------------------+
 bool CSymbolInfo::IsSynchronized(void) const
@@ -223,20 +182,6 @@ ulong CSymbolInfo::VolumeLow(void) const
 int CSymbolInfo::TicksBookDepth(void) const
   {
    return((int)SymbolInfoInteger(m_name,SYMBOL_TICKS_BOOKDEPTH));
-  }
-//+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_TRADE_STOPS_LEVEL"                |
-//+------------------------------------------------------------------+
-int CSymbolInfo::StopsLevel(void) const
-  {
-   return((int)SymbolInfoInteger(m_name,SYMBOL_TRADE_STOPS_LEVEL));
-  }
-//+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_TRADE_FREEZE_LEVEL"               |
-//+------------------------------------------------------------------+
-int CSymbolInfo::FreezeLevel(void) const
-  {
-   return((int)SymbolInfoInteger(m_name,SYMBOL_TRADE_FREEZE_LEVEL));
   }
 //+------------------------------------------------------------------+
 //| Get the property value "SYMBOL_BIDHIGH"                          |
@@ -325,25 +270,6 @@ string CSymbolInfo::TradeCalcModeDescription(void) const
   }
 */
 //+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_TRADE_MODE" as string             |
-//+------------------------------------------------------------------+
-string CSymbolInfo::TradeModeDescription(void) const
-  {
-   string str;
-//---
-   switch(m_trade_mode)
-     {
-      case SYMBOL_TRADE_MODE_DISABLED : str="Disabled";           break;
-      case SYMBOL_TRADE_MODE_LONGONLY : str="Long only";          break;
-      case SYMBOL_TRADE_MODE_SHORTONLY: str="Short only";         break;
-      case SYMBOL_TRADE_MODE_CLOSEONLY: str="Close only";         break;
-      case SYMBOL_TRADE_MODE_FULL     : str="Full access";        break;
-      default                         : str="Unknown trade mode";
-     }
-//--- result
-   return(str);
-  }
-//+------------------------------------------------------------------+
 //| Get the property value "SYMBOL_TRADE_EXEMODE" as string          |
 //+------------------------------------------------------------------+
 string CSymbolInfo::TradeExecutionDescription(void) const
@@ -409,81 +335,11 @@ string CSymbolInfo::SwapModeDescription(void) const
   }
 */
 //+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_SWAP_ROLLOVER3DAYS" as string     |
-//+------------------------------------------------------------------+
-string CSymbolInfo::SwapRollover3daysDescription(void) const
-  {
-   string str;
-//---
-   switch(m_swap3)
-     {
-      case SUNDAY   : str="Sunday";    break;
-      case MONDAY   : str="Monday";    break;
-      case TUESDAY  : str="Tuesday";   break;
-      case WEDNESDAY: str="Wednesday"; break;
-      case THURSDAY : str="Thursday";  break;
-      case FRIDAY   : str="Friday";    break;
-      case SATURDAY : str="Saturday";  break;
-      default       : str="Unknown";
-     }
-//--- result
-   return(str);
-  }
-//+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_START_TIME"                       |
-//+------------------------------------------------------------------+
-datetime CSymbolInfo::StartTime(void) const
-  {
-   return((datetime)SymbolInfoInteger(m_name,SYMBOL_START_TIME));
-  }
-//+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_EXPIRATION_TIME"                  |
-//+------------------------------------------------------------------+
-datetime CSymbolInfo::ExpirationTime(void) const
-  {
-   return((datetime)SymbolInfoInteger(m_name,SYMBOL_EXPIRATION_TIME));
-  }
-//+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_CURRENCY_BASE"                    |
-//+------------------------------------------------------------------+
-string CSymbolInfo::CurrencyBase(void) const
-  {
-   return(SymbolInfoString(m_name,SYMBOL_CURRENCY_BASE));
-  }
-//+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_CURRENCY_PROFIT"                  |
-//+------------------------------------------------------------------+
-string CSymbolInfo::CurrencyProfit(void) const
-  {
-   return(SymbolInfoString(m_name,SYMBOL_CURRENCY_PROFIT));
-  }
-//+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_CURRENCY_MARGIN"                  |
-//+------------------------------------------------------------------+
-string CSymbolInfo::CurrencyMargin(void) const
-  {
-   return(SymbolInfoString(m_name,SYMBOL_CURRENCY_MARGIN));
-  }
-//+------------------------------------------------------------------+
 //| Get the property value "SYMBOL_BANK"                             |
 //+------------------------------------------------------------------+
 string CSymbolInfo::Bank(void) const
   {
    return(SymbolInfoString(m_name,SYMBOL_BANK));
-  }
-//+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_DESCRIPTION"                      |
-//+------------------------------------------------------------------+
-string CSymbolInfo::Description(void) const
-  {
-   return(SymbolInfoString(m_name,SYMBOL_DESCRIPTION));
-  }
-//+------------------------------------------------------------------+
-//| Get the property value "SYMBOL_PATH"                             |
-//+------------------------------------------------------------------+
-string CSymbolInfo::Path(void) const
-  {
-   return(SymbolInfoString(m_name,SYMBOL_PATH));
   }
 //+------------------------------------------------------------------+
 //| Get the property value "SYMBOL_SESSION_DEALS"                    |
@@ -575,59 +431,5 @@ double CSymbolInfo::SessionPriceLimitMin(void) const
 double CSymbolInfo::SessionPriceLimitMax(void) const
   {
    return(SymbolInfoDouble(m_name,SYMBOL_SESSION_PRICE_LIMIT_MAX));
-  }
-//+------------------------------------------------------------------+
-//| Access functions SymbolInfoInteger(...)                          |
-//+------------------------------------------------------------------+
-bool CSymbolInfo::InfoInteger(const ENUM_SYMBOL_INFO_INTEGER prop_id,long &var) const
-  {
-   return(SymbolInfoInteger(m_name,prop_id,var));
-  }
-//+------------------------------------------------------------------+
-//| Access functions SymbolInfoDouble(...)                           |
-//+------------------------------------------------------------------+
-bool CSymbolInfo::InfoDouble(const ENUM_SYMBOL_INFO_DOUBLE prop_id,double &var) const
-  {
-   return(SymbolInfoDouble(m_name,prop_id,var));
-  }
-//+------------------------------------------------------------------+
-//| Access functions SymbolInfoString(...)                           |
-//+------------------------------------------------------------------+
-bool CSymbolInfo::InfoString(const ENUM_SYMBOL_INFO_STRING prop_id,string &var) const
-  {
-   return(SymbolInfoString(m_name,prop_id,var));
-  }
-//+------------------------------------------------------------------+
-//| Normalize price                                                  |
-//+------------------------------------------------------------------+
-double CSymbolInfo::NormalizePrice(const double price) const
-  {
-   if(m_tick_size!=0)
-      return(NormalizeDouble(MathRound(price/m_tick_size)*m_tick_size,m_digits));
-//---
-   return(NormalizeDouble(price,m_digits));
-  }
-//+------------------------------------------------------------------+
-//| Checks if symbol is selected in the MarketWatch                  |
-//| and adds symbol to the MarketWatch, if necessary                 |
-//+------------------------------------------------------------------+
-bool CSymbolInfo::CheckMarketWatch(void)
-  {
-//--- check if symbol is selected in the MarketWatch
-   if(!Select())
-     {
-      if(GetLastError()==ERR_UNKNOWN_SYMBOL)
-        {
-         printf(__FUNCTION__+": Unknown symbol '%s'",m_name);
-         return(false);
-        }
-      if(!Select(true))
-        {
-         printf(__FUNCTION__+": Error adding symbol %d",GetLastError());
-         return(false);
-        }
-     }
-//--- succeed
-   return(true);
   }
 //+------------------------------------------------------------------+
