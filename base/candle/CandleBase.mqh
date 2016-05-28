@@ -6,7 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include <Files\FileBin.mqh>
-//#include "..\lib\SymbolInfo.mqh"
+#include "..\lib\SymbolInfo.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -15,23 +15,26 @@ class JCandleBase : public CObject
 protected:
    bool              m_wait_for_new;
    bool              m_trade_processed;
+   int               m_period;
    MqlRates          m_last;
    CSymbolInfo      *m_symbol;
    JEvents          *m_events;
 public:
                      JCandleBase(void);
                     ~JCandleBase(void);
-   virtual bool      Init(CSymbolInfo *symbol,JEvents *events);
+   virtual bool      Init(CSymbolInfo *symbol,int timeframe,JEvents *events);
    //--- setters and getters
    datetime          LastTime() const {return m_last.time;}
    double            LastOpen() const {return m_last.open;}
    double            LastHigh() const {return m_last.high;}
    double            LastLow() const {return m_last.low;}
    double            LastClose() const {return m_last.close;}
+   string            SymbolName() const {return m_symbol.Name();}
+   int               TimeFrame() const {return m_period;}
    //--- processing
    virtual bool      TradeProcessed() const {return m_trade_processed;}
    virtual void      TradeProcessed(bool processed) {m_trade_processed=processed;}
-   virtual bool      IsNewCandle(const ENUM_TIMEFRAMES period);
+   virtual bool      IsNewCandle();
    virtual bool      Compare(MqlRates &rates) const;
    //--- recovery
    virtual bool      Save(const int handle);
@@ -62,7 +65,7 @@ JCandleBase::~JCandleBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JCandleBase::Init(CSymbolInfo *symbol,JEvents *events)
+bool JCandleBase::Init(CSymbolInfo *symbol,int timeframe,JEvents *events)
   {
    m_symbol = symbol;
    m_events = events;
@@ -71,13 +74,13 @@ bool JCandleBase::Init(CSymbolInfo *symbol,JEvents *events)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JCandleBase::IsNewCandle(const ENUM_TIMEFRAMES period)
+bool JCandleBase::IsNewCandle()
   {
    bool result=false;
    if(m_symbol!=NULL)
      {
       MqlRates rates[];
-      if(CopyRates(m_symbol.Name(),period,1,1,rates)==-1)
+      if(CopyRates(m_symbol.Name(),(ENUM_TIMEFRAMES)m_period,1,1,rates)==-1)
          return false;
       if(m_wait_for_new && m_last.time==0)
          m_last=rates[0];

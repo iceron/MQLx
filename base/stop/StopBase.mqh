@@ -62,7 +62,7 @@ public:
                     ~JStopBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOP;}
    //--- initialization
-   virtual bool      Init(JStrategy *s);
+   virtual bool      Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
    virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
    virtual bool      InitTrade(JTrade *trade=NULL);
@@ -209,16 +209,16 @@ bool JStopBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopBase::Init(JStrategy *s)
+bool JStopBase::Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
   {
-   if(s==NULL) return false;
-   InitSymbol(s.SymbolInfo());
-   InitAccount(s.AccountInfo());
-   m_points_adjust = s.PointsAdjust();
-   m_digits_adjust = s.DigitsAdjust();
+   if(symbolinfo==NULL || accountinfo==NULL) return false;
+   InitSymbol(symbolinfo);
+   InitAccount(accountinfo);
+   //m_points_adjust = s.PointsAdjust();
+   //m_digits_adjust = s.DigitsAdjust();
    InitTrade();
    if(CheckPointer(m_trails)==POINTER_DYNAMIC)
-      m_trails.Init(s,GetPointer(this));
+      m_trails.Init(symbolinfo,GetPointer(this));
    return true;
   }
 //+------------------------------------------------------------------+

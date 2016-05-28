@@ -21,7 +21,7 @@ public:
                     ~JTrailsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TRAILS;}   
    //--- initialization
-   virtual bool      Init(JStrategy *s,JStop *stop);
+   virtual bool      Init(CSymbolInfo *symbolinfo,JStop *stop);
    virtual void      SetContainer(JStop *stop){m_stop=stop;}
    //--- getters and setters
    bool              Active(void) const {return m_activate;}
@@ -48,13 +48,13 @@ JTrailsBase::~JTrailsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrailsBase::Init(JStrategy *s,JStop *stop)
+bool JTrailsBase::Init(CSymbolInfo *symbolinfo,JStop *stop)
   {
    if(!Active()) return true;
    for(int i=0;i<Total();i++)
      {
       JTrail *trail=At(i);
-      trail.Init(s,GetPointer(this));
+      trail.Init(symbolinfo,GetPointer(this));
      }
    SetContainer(stop);
    return true;

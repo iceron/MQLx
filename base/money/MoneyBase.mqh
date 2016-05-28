@@ -36,7 +36,7 @@ public:
                     ~JMoneyBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_MONEY;}
    //--- initialization
-   virtual bool      Init(JStrategy *s);
+   virtual bool      Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
    virtual bool      InitAccount(CAccountInfo *account);
    virtual bool      InitSymbol(CSymbolInfo *symbol);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
@@ -97,10 +97,10 @@ JMoneyBase::~JMoneyBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyBase::Init(JStrategy *s)
+bool JMoneyBase::Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
   {
-   InitSymbol(s.SymbolInfo());
-   InitAccount(s.AccountInfo());
+   InitSymbol(symbolinfo);
+   InitAccount(accountinfo);
    return true;
   }
 //+------------------------------------------------------------------+

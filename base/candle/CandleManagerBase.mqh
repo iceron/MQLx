@@ -1,66 +1,61 @@
 //+------------------------------------------------------------------+
-//|                                                SymbolManager.mqh |
+//|                                            CandleManagerBase.mqh |
 //|                                                   Enrico Lambino |
 //|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#property strict
 #include <Arrays\ArrayObj.mqh>
-//#include "SymbolInfoBase.mqh"
-#include "..\lib\SymbolInfo.mqh"
+#include "CandleBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CSymbolManagerBase : public CArrayObj
+class CCandleManagerBase : public CArrayObj
   {
 protected:
 public:
-                     CSymbolManagerBase();
-                    ~CSymbolManagerBase();
-   virtual bool      Add(CSymbolInfo *symbolinfo);
-   CSymbolInfo*      Get(const string name);
+                     CCandleManagerBase(void);
+                    ~CCandleManagerBase(void);
+                    virtual bool IsNewBar(string symbol,int timeframe);
+                    virtual JCandle* Get(string symbol,int timeframe);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CSymbolManagerBase::CSymbolManagerBase()
+CCandleManagerBase::CCandleManagerBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CSymbolManagerBase::~CSymbolManagerBase()
+CCandleManagerBase::~CCandleManagerBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CSymbolManagerBase::Add(CSymbolInfo *node)
+bool CCandleManagerBase::IsNewBar(string symbol,int timeframe)
   {
-   if(!Search(node))
-      return Add(node);
-   return false;
+   JCandle *candle = Get(symbol,timeframe);
+   return candle.IsNewCandle();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CSymbolInfo *CSymbolManagerBase::Get(const string name=NULL)
+JCandle *CCandleManagerBase::Get(string symbol,int timeframe)
   {
-   if (name==NULL && Total()>0)
-      return At(0);
    for(int i=0;i<Total();i++)
      {
-      CSymbolInfo *item=At(i);
-      if(StringCompare(item.Name(),name)==0)
-         return item;
+      JCandle *candle=At(i);
+      if(StringCompare(symbol,candle.SymbolName())==0 && timeframe==candle.TimeFrame())
+        return candle;
      }
    return NULL;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\symbol\SymbolManager.mqh"
+#include "..\..\mql5\candle\CandleManager.mqh"
 #else
-#include "..\..\mql4\symbol\SymbolManager.mqh"
+#include "..\..\mql4\candle\CandleManager.mqh"
 #endif
 //+------------------------------------------------------------------+

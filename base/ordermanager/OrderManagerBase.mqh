@@ -39,7 +39,9 @@ protected:
    int               m_max_trades;
    CArrayInt         m_other_magic;
    CSymbolInfo      *m_symbol;
+   CSymbolManager      *m_symbol_man;
    JTrade           *m_trade;
+   CTradeManager    *m_trade_man;
    JMoneys          *m_moneys;
    //--- order objects
    JStops           *m_stops;
@@ -48,9 +50,9 @@ public:
                      COrderManagerBase();
                     ~COrderManagerBase();
    //--- initialization
-   virtual bool      Init(JStrategy*);
-   virtual bool      InitStops(JStrategy*);
-   bool              InitMoneys();
+   virtual bool      Init(JStrategy *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
+   virtual bool      InitStops(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
+   bool              InitMoneys(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
    bool              InitTrade(JTrade*);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
@@ -152,13 +154,15 @@ COrderManagerBase::~COrderManagerBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::Init(JStrategy *s)
+bool COrderManagerBase::Init(JStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   InitStops(s);
-   InitMoneys();
+   /*
+   InitStops(s,symbolinfo,accountinfo);
+   InitMoneys(s,symbolinfo,accountinfo);
    InitTrade();
    InitOrders();
    InitOrdersHistory();
+   */
    return true;
   }
 //+------------------------------------------------------------------+
@@ -185,16 +189,17 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitMoneys()
+bool COrderManagerBase::InitMoneys(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
   {
    if(m_moneys==NULL) return true;
-      return m_moneys.Init(NULL);
+      return m_moneys.Init(s,symbolinfo,accountinfo);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitTrade(JTrade *trade=NULL)
   {
+   /*
    if(m_trade!=NULL)
       delete m_trade;
    if(trade==NULL)
@@ -207,6 +212,7 @@ bool COrderManagerBase::InitTrade(JTrade *trade=NULL)
    m_trade.SetExpertMagicNumber(m_magic);
    m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
    m_trade.SetOrderExpiration(m_expiration);
+   */
    return true;
   }
 //+------------------------------------------------------------------+
@@ -421,10 +427,10 @@ void COrderManagerBase::AddOtherMagicString(const string &magics[])
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitStops(JStrategy *s)
+bool COrderManagerBase::InitStops(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
   {
    if(m_stops==NULL) return true;
-      return m_stops.Init(s);
+      return m_stops.Init(s,symbolinfo,accountinfo);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

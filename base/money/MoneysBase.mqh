@@ -22,7 +22,7 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}
    virtual bool      Validate(void) const;
    //--- initialization
-   virtual bool      Init(JStrategy *s);
+   virtual bool      Init(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
    virtual void      SetContainer(JStrategy *s) {m_strategy=s;}
    //--- setters and getters
    virtual bool      Active(void) const {return m_activate;}
@@ -47,12 +47,12 @@ JMoneysBase::~JMoneysBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneysBase::Init(JStrategy *s)
+bool JMoneysBase::Init(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
   {
    for(int i=0;i<Total();i++)
      {
       JMoney *money=At(i);
-      money.Init(GetPointer(s));
+      money.Init(GetPointer(symbolinfo),GetPointer(accountinfo));
      }
    SetContainer(s);
    return true;
