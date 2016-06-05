@@ -16,16 +16,14 @@ class JOrdersBase : public CArrayObj
 protected:
    bool              m_activate;
    bool              m_clean;
-   //int               m_magic;
    JStops           *m_stops;
-   JEvents          *m_events;
    JStrategy        *m_strategy;
 public:
                      JOrdersBase(void);
                     ~JOrdersBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERS;}
    //--- initialization
-   virtual bool      Init(/*const int magic=0,*/JStrategy *s=NULL,JStops *stops=NULL,JEvents *events=NULL);
+   virtual bool      Init(JStrategy *s=NULL,JStops *stops=NULL);
    virtual void      SetContainer(JStrategy *s);
    virtual void      SetStops(JStops *stops);
    //--- getters and setters
@@ -33,7 +31,6 @@ public:
    void              Activate(const bool activate) {m_activate=activate;}
    bool              Clean(void) const {return m_clean;}
    void              Clean(const bool clean) {m_clean=clean;}
-   bool              EventHandler(JEvents *events);
    //void              Magic(int magic) {m_magic=magic;}
    //int               Magic() {return m_magic;}
    //--- events                  
@@ -42,9 +39,6 @@ public:
    virtual bool      NewOrder(const int ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price);
    //--- archiving
    virtual bool      CloseStops(void);
-   //--- events
-   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
-   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    //--- recovery
    virtual bool      CreateElement(const int index);
    virtual bool      Save(const int handle);
@@ -69,12 +63,10 @@ JOrdersBase::~JOrdersBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::Init(/*const int magic=0,*/JStrategy *s=NULL,JStops *stops=NULL,JEvents *events=NULL)
+bool JOrdersBase::Init(JStrategy *s=NULL,JStops *stops=NULL)
   {
-   //m_magic=magic;
    SetContainer(s);
    SetStops(stops);
-   EventHandler(events);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -94,20 +86,12 @@ JOrdersBase::SetStops(JStops *stops)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::EventHandler(JEvents *events)
-  {
-   if(events!=NULL) m_events=events;
-   return m_events!=NULL;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool JOrdersBase::NewOrder(const int ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
    JOrder *order=new JOrder(ticket,symbol,type,volume,price);
    if(CheckPointer(order)==POINTER_DYNAMIC)
       if(InsertSort(GetPointer(order)))
-         return order.Init(magic,GetPointer(this),m_events,m_stops);
+         return order.Init(magic,GetPointer(this),m_stops);
    return false;
   }
 //+------------------------------------------------------------------+
@@ -140,24 +124,10 @@ bool JOrdersBase::CloseStops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrdersBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
-  {
-   if(m_events!=NULL) m_events.CreateEvent(type,action,object1,object2,object3);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JOrdersBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
-  {
-   if(m_events!=NULL) m_events.CreateEvent(type,action,message_add);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool JOrdersBase::CreateElement(const int index)
   {
    JOrder*order=new JOrder();
-   order.Init(0,GetPointer(this),m_events,m_stops,true);
+   order.Init(0,GetPointer(this),m_stops,true);
    return Insert(GetPointer(order),index);
   }
 //+------------------------------------------------------------------+

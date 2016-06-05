@@ -7,7 +7,6 @@
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_TRAIL_TARGET.mqh"
 #include "..\..\common\enum\ENUM_STOP_TYPE.mqh"
-#include "..\event\EventBase.mqh"
 #include "..\stop\StopLineBase.mqh"
 #include "..\trade\TradeBase.mqh"
 #include "..\trailing\TrailsBase.mqh"
@@ -56,7 +55,6 @@ protected:
    CAccountInfo     *m_account;
    JTrade           *m_trade;
    JTrails          *m_trails;
-   JEvent           *m_event;
    JStops           *m_stops;
 public:
                      JStopBase(void);
@@ -67,7 +65,6 @@ public:
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
    virtual bool      InitSymbol(CSymbolManager *symbolmanager);
    virtual bool      InitTrade(JTrade *trade=NULL);
-   virtual bool      InitEvent(JEvent *event);
    virtual void      SetContainer(JStops *stops){m_stops=stops;}
    virtual bool      Validate(void) const;
    //--- getters and setters
@@ -259,15 +256,6 @@ bool JStopBase::InitTrade(JTrade *trade=NULL)
    m_trade.SetSymbol(GetPointer(m_symbol));
    m_trade.SetExpertMagicNumber(m_magic);
    //m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
-   return true;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStopBase::InitEvent(JEvent *event)
-  {
-   if(event==NULL) return false;
-   m_event=event;
    return true;
   }
 //+------------------------------------------------------------------+

@@ -13,7 +13,7 @@ class JStrategy;
 #include "..\..\common\class\ADT.mqh"
 #include "..\order\OrdersBase.mqh"
 #include "..\stop\StopsBase.mqh"
-#include "..\event\EventsBase.mqh"
+//#include "..\event\EventsBase.mqh"
 #include "..\signal\SignalsBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -224,14 +224,14 @@ bool COrderManagerBase::InitTrade(JTrade *trade=NULL)
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitOrders(void)
   {
-   return m_orders.Init(/*m_magic,*/NULL,m_stops,NULL);
+   return m_orders.Init(NULL,m_stops);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitOrdersHistory(void)
   {
-   return m_orders_history.Init(/*m_magic,*/NULL,m_stops,NULL);
+   return m_orders_history.Init(NULL,m_stops);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

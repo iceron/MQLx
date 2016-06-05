@@ -23,13 +23,12 @@ protected:
    bool              m_reverse;
    JStrategy        *m_strategy;
    JComments        *m_comments;
-   JEvents          *m_events;
 public:
                      JSignalsBase(void);
                     ~JSignalsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_SIGNALS;}
    //--- initialization
-   virtual bool      Init(JStrategy *s,JComments *comments,JEvents *events);
+   virtual bool      Init(JStrategy *s,JComments *comments);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Validate() const;
    //--- checking   
@@ -73,12 +72,12 @@ JSignalsBase::~JSignalsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalsBase::Init(JStrategy *s,JComments *comments,JEvents *events)
+bool JSignalsBase::Init(JStrategy *s,JComments *comments)
   {
    for(int i=0;i<Total();i++)
      {
       JSignal *signal=At(i);
-      signal.Init(GetPointer(s),GetPointer(comments),GetPointer(events));
+      signal.Init(GetPointer(s),GetPointer(comments));
      }
    SetContainer(s);
    return true;

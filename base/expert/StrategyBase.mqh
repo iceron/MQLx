@@ -15,7 +15,6 @@
 #include "..\lib\AccountInfo.mqh"
 //#include "..\lib\SymbolInfo.mqh"
 #include "..\symbol\SymbolManagerBase.mqh"
-#include "..\event\EventBase.mqh"
 #include "..\candle\CandleBase.mqh"
 #include "..\signal\SignalsBase.mqh"
 #include "..\trade\TradeBase.mqh"
@@ -24,7 +23,6 @@
 #include "..\money\MoneysBase.mqh"
 #include "..\time\TimesBase.mqh"
 #include "..\comment\CommentsBase.mqh"
-#include "..\event\EventsBase.mqh"
 //#include "..\trademanager\TradeManagerBase.mqh"
 #include "..\ordermanager\OrderManagerBase.mqh"
 //#include "..\instance\ExpertInstanceManagerBase.mqh"
@@ -62,8 +60,6 @@ protected:
    COrderManager     m_order_man;
    //--- trading time objects
    JTimes           *m_times;
-   //--- events
-   JEvents          *m_events;
    //--- comments
    JComments        *m_comments;
    //--- candle
@@ -86,7 +82,6 @@ public:
    virtual bool      Init(string symbol,int timeframe,int magic,bool every_tick=true,bool one_trade_per_candle=true,bool position_reverse=true);
    virtual bool      InitAccount(CAccountInfo*);
    virtual bool      InitTrade(JTrade *trade=NULL){return m_order_man.InitTrade(GetPointer(trade));}
-   virtual bool      InitEvent(JEvents*);
    virtual bool      InitComponents(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
@@ -115,7 +110,6 @@ public:
    //--- object pointers
    CAccountInfo      *AccountInfo(void) const {return GetPointer(m_account);}
    JComments         *Comments() const {return GetPointer(m_comments);}
-   JEvents           *Events(void) const {return m_events;}
    JStop             *MainStop(void) const {return m_order_man.MainStop();}
    JMoneys           *Moneys(void) const {return m_order_man.Moneys();}
    JOrders           *Orders() {return m_order_man.Orders();}
@@ -181,9 +175,6 @@ public:
 protected:
    //--- candle manager   
    virtual bool      IsNewBar(string symbol,int period);
-   //--- event manager
-   virtual void      CreateEvent(const ENUM_EVENT_CLASS,const ENUM_ACTION,CObject*,CObject*,CObject*);
-   virtual void      CreateEvent(const ENUM_EVENT_CLASS,const ENUM_ACTION,string);
    //--- order manager
    virtual void      CloseOppositeOrders(const int entry,const int exit) {m_order_man.CloseOppositeOrders(entry,exit);}
    virtual void      ManageOrders(void) {m_order_man.ManageOrders();}
@@ -197,7 +188,6 @@ protected:
    //--- deinitialization
    void              Deinit(const int);
    void              DeinitAccount(void);
-   void              DeinitEvents(void);
    void              DeinitComments(void);
    void              DeinitSignals(void);
    void              DeinitSymbol(void);
@@ -248,7 +238,7 @@ bool JStrategyBase::Init(string symbol,int period,int magic,bool every_tick=true
 //m_order_man.SetSymbol(GetPointer(m_symbol));
    m_order_man.InitTrade();
    JCandle *candle=new JCandle();
-   candle.Init(instrument,m_period,NULL);
+   candle.Init(instrument,m_period);
    m_candle_man.Add(candle);
    Magic(magic);
 
@@ -282,7 +272,7 @@ bool JStrategyBase::InitComponents(void)
 bool JStrategyBase::InitSignals(void)
   {
    if(m_signals==NULL) return true;
-   return m_signals.Init(GetPointer(this),GetPointer(m_comments),GetPointer(m_events));
+   return m_signals.Init(GetPointer(this),GetPointer(m_comments));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -315,17 +305,6 @@ bool JStrategyBase::InitAccount(CAccountInfo *account=NULL)
          return false;
      }
    else m_account=account;
-   return true;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStrategyBase::InitEvent(JEvents *events=NULL)
-  {
-   if(events==NULL)
-      m_events=new JEvents();
-   else
-      m_events=events;
    return true;
   }
 //+------------------------------------------------------------------+
@@ -408,7 +387,7 @@ JStrategyBase::AddCandle(const string symbol,const int timeframe)
    instrument.Name(symbol);
    instrument.Refresh();
    JCandle *candle=new JCandle();
-   candle.Init(instrument,timeframe,NULL);
+   candle.Init(instrument,timeframe);
    m_candle_man.Add(candle);
   }
 //+------------------------------------------------------------------+
@@ -484,8 +463,6 @@ bool JStrategyBase::OnTick(void)
         }
      }
    ManageOrdersHistory();
-   if(CheckPointer(m_events)==POINTER_DYNAMIC)
-      m_events.Run();
    DisplayComment();
    return ret;
 /*
@@ -568,28 +545,11 @@ bool JStrategyBase::IsNewBar(const string symbol,const int period)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategyBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
-  {
-   if(m_events!=NULL)
-      m_events.CreateEvent(type,action,object1,object2,object3);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JStrategyBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
-  {
-   if(m_events!=NULL)
-      m_events.CreateEvent(type,action,message_add);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 void JStrategyBase::Deinit(const int reason=0)
   {
    DeinitSymbol();
    DeinitSignals();
    DeinitAccount();
-   DeinitEvents();
    DeinitComments();
    DeinitTimes();
 
@@ -616,13 +576,6 @@ void JStrategyBase::DeinitSymbol(void)
 void JStrategyBase::DeinitAccount(void)
   {
    ADT::Delete(m_account);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JStrategyBase::DeinitEvents(void)
-  {
-   ADT::Delete(m_events);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -19,11 +19,10 @@ protected:
    int               m_period;
    MqlRates          m_last;
    CSymbolInfo      *m_symbol;
-   JEvents          *m_events;
 public:
                      JCandleBase(void);
                     ~JCandleBase(void);
-   virtual bool      Init(CSymbolInfo *symbol,int timeframe,JEvents *events);
+   virtual bool      Init(CSymbolInfo *symbol,int timeframe);
    //--- setters and getters
    datetime          LastTime(void) const {return m_last.time;}
    double            LastOpen(void) const {return m_last.open;}
@@ -41,9 +40,6 @@ public:
    //--- recovery
    virtual bool      Save(const int handle);
    virtual bool      Load(const int handle);
-protected:
-   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
-   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
   };
 //+------------------------------------------------------------------+
 JCandleBase::JCandleBase(void) : m_wait_for_new(false),
@@ -59,11 +55,10 @@ JCandleBase::~JCandleBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JCandleBase::Init(CSymbolInfo *symbol,int timeframe,JEvents *events)
+bool JCandleBase::Init(CSymbolInfo *symbol,int timeframe)
   {
    m_symbol = symbol;
    m_period = timeframe;
-   m_events = events;
    return true;
   }
 //+------------------------------------------------------------------+
@@ -84,7 +79,6 @@ void JCandleBase::Check(void)
          m_new=true;
          m_trade_processed=false;
          m_last=rates[0];
-         CreateEvent(EVENT_CLASS_STANDARD,ACTION_CANDLE);
         }
      }
   }
@@ -103,22 +97,6 @@ bool JCandleBase::Compare(MqlRates &rates) const
    return (m_last.time==0 || m_last.time!=rates.time ||
            (m_last.close/m_symbol.TickSize())!=(rates.close/m_symbol.TickSize()) || 
            (m_last.open/m_symbol.TickSize())!=(rates.open/m_symbol.TickSize()));
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JCandleBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
-  {
-   if(m_events!=NULL)
-      m_events.CreateEvent(type,action,object1,object2,object3);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JCandleBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
-  {
-   if(m_events!=NULL)
-      m_events.CreateEvent(type,action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

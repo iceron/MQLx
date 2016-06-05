@@ -7,7 +7,6 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
 #include <Files\FileBin.mqh>
-#include "..\event\EventBase.mqh"
 #include "OrderStopsBase.mqh"
 class JOrders;
 class JStops;
@@ -30,7 +29,6 @@ protected:
    JOrderStops      *m_order_stops;
    JOrderStop       *m_main_stop;
    JOrders          *m_orders;
-   JEvents          *m_events;
 public:
                      JOrderBase(void);
                     ~JOrderBase(void);
@@ -44,8 +42,7 @@ public:
    void              Clean(const bool clean) {m_clean=clean;}
    void              CreateStops(JStops *stops);
    void              CheckStops(void);
-   bool              EventHandler(JEvents *events);
-   bool              Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops,bool recreate=false);
+   bool              Init(int magic,JOrders *orders,JStops *m_stops,bool recreate=false);
    void              IsClosed(const bool closed) {m_closed=closed;}
    bool              IsClosed(void) const {return false;}
    void              Magic(const int magic){m_magic=magic;}
@@ -66,9 +63,6 @@ public:
    double            VolumeInitial(void) const {return m_volume_initial;}
    //--- hiding and showing of stop lines
    virtual void      ShowStops(bool show=true) {m_order_stops.Show(show);}
-   //--events
-   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL);
-   virtual void      CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add);
    //--- archiving
    virtual bool      CloseStops(void);
    virtual int       Compare(const CObject *node,const int mode=0) const;
@@ -105,14 +99,11 @@ JOrderBase::~JOrderBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *stops,bool recreate=false)
+bool JOrderBase::Init(int magic,JOrders *orders,JStops *stops,bool recreate=false)
   {
    m_magic=magic;
    SetContainer(GetPointer(orders));
-   EventHandler(GetPointer(events));
    CreateStops(GetPointer(stops));
-   if(!recreate)
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND_DONE,GetPointer(this));
    return true;
   }
 //+------------------------------------------------------------------+
@@ -125,16 +116,14 @@ void JOrderBase::CreateStops(JStops *stops)
    if(stops.Total()>0)
      {
       if(CheckPointer(m_order_stops)==POINTER_INVALID)
-         m_order_stops=new JOrderStops();
-      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE,GetPointer(this),stops);      
+         m_order_stops=new JOrderStops();  
       for(int i=0;i<stops.Total();i++)
         {
          JStop *stop=stops.At(i);
          if(CheckPointer(stop)==POINTER_INVALID)
             continue;
-         m_order_stops.NewOrderStop(GetPointer(this),stop,m_order_stops,m_events);
+         m_order_stops.NewOrderStop(GetPointer(this),stop,m_order_stops);
         }
-      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE_DONE,GetPointer(this),m_order_stops);
      }
   }
 //+------------------------------------------------------------------+
@@ -165,29 +154,6 @@ int JOrderBase::Compare(const CObject *node,const int mode=0) const
    if(Ticket()<order.Ticket())
       return -1;
    return 0;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JOrderBase::EventHandler(JEvents *events)
-  {
-   if(events!=NULL)
-      m_events=events;
-   return m_events!=NULL;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JOrderBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,CObject *object1=NULL,CObject *object2=NULL,CObject *object3=NULL)
-  {
-   if(m_events!=NULL) m_events.CreateEvent(type,action,object1,object2,object3);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JOrderBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION action,string message_add)
-  {
-   if(m_events!=NULL) m_events.CreateEvent(type,action,message_add);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

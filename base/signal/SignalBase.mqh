@@ -29,13 +29,12 @@ protected:
    CArrayDouble      m_empty_value;
    JSignals         *m_signals;
    JComments        *m_comments;
-   JEvents          *m_events;
 public:
                      JSignalBase();
                     ~JSignalBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_SIGNAL;}
    //--- initialization
-   virtual bool      Init(JStrategy *s,JComments *comments,JEvents *events);
+   virtual bool      Init(JStrategy *s,JComments *comments);
    virtual void      SetContainer(JSignals *signals){m_signals=signals;}
    virtual bool      Validate(void) const;
    //--- getters and setters
@@ -105,11 +104,10 @@ bool JSignalBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::Init(JStrategy *s,JComments *comments,JEvents *events)
+bool JSignalBase::Init(JStrategy *s,JComments *comments)
   {
    m_strategy=s;
    m_comments=comments;
-   m_events=events;
    return true;
   }
 //+------------------------------------------------------------------+
