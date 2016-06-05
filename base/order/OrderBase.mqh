@@ -26,6 +26,7 @@ protected:
    ENUM_ORDER_TYPE   m_type;
    double            m_volume;
    double            m_volume_initial;
+   string            m_symbol;
    JOrderStops      *m_order_stops;
    JOrderStop       *m_main_stop;
    JOrders          *m_orders;
@@ -55,6 +56,8 @@ public:
    double            Price(void) const {return m_price;}
    void              OrderType(const ENUM_ORDER_TYPE type){m_type=type;}
    ENUM_ORDER_TYPE   OrderType(void) const {return m_type;}
+   void              Symbol(const string symbol) {m_symbol=symbol;}
+   string            Symbol(void) const {return m_symbol;}
    void              Ticket(const ulong ticket) {m_ticket=ticket;}
    ulong             Ticket(void) const {return m_ticket;}
    void              Volume(const double volume){m_volume=volume;}
@@ -102,12 +105,12 @@ JOrderBase::~JOrderBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops,bool recreate=false)
+bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *stops,bool recreate=false)
   {
    m_magic=magic;
    SetContainer(GetPointer(orders));
    EventHandler(GetPointer(events));
-   CreateStops(GetPointer(m_stops));
+   CreateStops(GetPointer(stops));
    if(!recreate)
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SEND_DONE,GetPointer(this));
    return true;
@@ -117,18 +120,24 @@ bool JOrderBase::Init(int magic,JOrders *orders,JEvents *events,JStops *m_stops,
 //+------------------------------------------------------------------+
 void JOrderBase::CreateStops(JStops *stops)
   {
+   //Print(__FUNCTION__+" "+stops.Total());
    if(CheckPointer(stops)==POINTER_INVALID)
       return;
+   //else Print("pointer invalid");
+   //Print("total stops: "+stops.Total());
    if(stops.Total()>0)
      {
       if(CheckPointer(m_order_stops)==POINTER_INVALID)
          m_order_stops=new JOrderStops();
-      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE,GetPointer(this),stops);
+      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE,GetPointer(this),stops);      
       for(int i=0;i<stops.Total();i++)
         {
          JStop *stop=stops.At(i);
          if(CheckPointer(stop)==POINTER_INVALID)
             continue;
+         /*if(StringCompare(Symbol(),stop.SymbolName())!=0)
+            continue;*/
+         Print("creating order stop");
          m_order_stops.NewOrderStop(GetPointer(this),stop,m_order_stops,m_events);
         }
       CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOPS_CREATE_DONE,GetPointer(this),m_order_stops);

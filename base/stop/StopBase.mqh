@@ -51,6 +51,7 @@ protected:
    ENUM_LINE_STYLE   m_stoploss_style;
    ENUM_LINE_STYLE   m_takeprofit_style;
    //--- objects
+   CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
    CAccountInfo     *m_account;
    JTrade           *m_trade;
@@ -62,9 +63,9 @@ public:
                     ~JStopBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOP;}
    //--- initialization
-   virtual bool      Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
+   virtual bool      Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
-   virtual bool      InitSymbol(CSymbolInfo *symbolinfo=NULL);
+   virtual bool      InitSymbol(CSymbolManager *symbolmanager);
    virtual bool      InitTrade(JTrade *trade=NULL);
    virtual bool      InitEvent(JEvent *event);
    virtual void      SetContainer(JStops *stops){m_stops=stops;}
@@ -72,6 +73,7 @@ public:
    //--- getters and setters
    bool              Active(void) {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
+   bool              Broker() const {return m_stop_type==STOP_TYPE_BROKER;}
    void              Comment(string comment) {m_comment=comment;}
    string            Comment(void) const {return m_comment;}
    int               DigitsAdjust(void) const {return m_digits_adjust;}
@@ -80,7 +82,7 @@ public:
    void              EntryStyle(const ENUM_LINE_STYLE style) {m_entry_style=style;}
    void              Magic(const int magic) {m_magic=magic;}
    int               Magic(void) const {return m_magic;}
-   void              Main(const bool main) {m_main=main;}
+   void              Main(const bool main) {m_main=main; m_oco=true;}
    bool              Main(void) const {return m_main;}
    void              Name(const string name) {m_name=name;}
    string            Name(void) const{return m_name;}
@@ -98,6 +100,7 @@ public:
    void              StopLossStyle(const ENUM_LINE_STYLE style) {m_stoploss_style=style;}
    void              StopType(const ENUM_STOP_TYPE stop_type);
    ENUM_STOP_TYPE    StopType(void) const {return m_stop_type;}
+   //string            SymbolName(void) {return m_symbol.Name();}
    void              TakeProfit(const double tp) {m_takeprofit=tp;}
    double            TakeProfit(void) const {return m_takeprofit;}
    void              TakeProfitColor(const color clr) {m_takeprofit_color=clr;}
@@ -122,25 +125,25 @@ public:
    virtual JStopLine *CreateStopLossObject(const long id,const string name,const int window,const double price);
    virtual JStopLine *CreateTakeProfitObject(const long id,const string name,const int window,const double price);
    //--- stop order price calculation   
-   virtual bool      Refresh(void);
-   virtual double    StopLossCalculate(const ENUM_ORDER_TYPE type,const double price);
+   virtual bool      Refresh(const string symbol);
+   virtual double    StopLossCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price);
    virtual double    StopLossCustom(const ENUM_ORDER_TYPE type,const double price) {return 0;}
    virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop){return 0;}
    virtual double    StopLossTicks(const ENUM_ORDER_TYPE type,const double price) {return m_stoploss;}
-   virtual double    TakeProfitCalculate(const ENUM_ORDER_TYPE type,const double price);
+   virtual double    TakeProfitCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price);
    virtual double    TakeProfitCustom(const ENUM_ORDER_TYPE type,const double price) {return 0;}
    virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop) {return 0;}
    virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE type,const double price) {return m_takeprofit;}
    //--- trailing   
    virtual bool      Add(JTrails *trails);
-   virtual double    CheckTrailing(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
+   virtual double    CheckTrailing(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
 protected:
    //--- object creation
    virtual JStopLine *CreateObject(const long id,const string name,const int window,const double price);
    //--- stop order price calculation
    virtual double    LotSizeCalculate(JOrder *order,JOrderStop *orderstop);
    //--- stop order entry   
-   virtual bool      GetClosePrice(const ENUM_ORDER_TYPE type,double &price);
+   virtual bool      GetClosePrice(const string symbol,const ENUM_ORDER_TYPE type,double &price);
    //--- stop order exit
    virtual bool      CloseStop(JOrder *order,JOrderStop *orderstop,const double price);
    //--- deinitialization
@@ -209,25 +212,26 @@ bool JStopBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopBase::Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
+bool JStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   if(symbolinfo==NULL || accountinfo==NULL) return false;
-   InitSymbol(symbolinfo);
+   if(symbolmanager==NULL || accountinfo==NULL) return false;
+   InitSymbol(symbolmanager);
    InitAccount(accountinfo);
    //m_points_adjust = s.PointsAdjust();
    //m_digits_adjust = s.DigitsAdjust();
    InitTrade();
    if(CheckPointer(m_trails)==POINTER_DYNAMIC)
-      m_trails.Init(symbolinfo,GetPointer(this));
+      m_trails.Init(symbolmanager,GetPointer(this));
    return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopBase::InitSymbol(CSymbolInfo *symbolinfo=NULL)
+bool JStopBase::InitSymbol(CSymbolManager *symbolmanager)
   {
-   if(symbolinfo==NULL) return false;
-   m_symbol=symbolinfo;
+   //if(symbolinfo==NULL) return false;
+   //m_symbol=symbolinfo;
+   m_symbol_man = symbolmanager;
    return true;
   }
 //+------------------------------------------------------------------+
@@ -254,7 +258,7 @@ bool JStopBase::InitTrade(JTrade *trade=NULL)
    else m_trade=trade;
    m_trade.SetSymbol(GetPointer(m_symbol));
    m_trade.SetExpertMagicNumber(m_magic);
-   m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
+   //m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
    return true;
   }
 //+------------------------------------------------------------------+
@@ -280,7 +284,7 @@ void JStopBase::Volume(JOrderStop *orderstop,double &volume_fixed,double &volume
      {
       orderstop.VolumeFixed(0);
       orderstop.VolumePercent(m_volume_percent);
-     }
+     }   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -305,6 +309,8 @@ bool JStopBase::CloseStop(JOrder *order,JOrderStop *orderstop,const double price
   {
    bool res=false;
    ENUM_ORDER_TYPE type=order.OrderType();
+   m_symbol = m_symbol_man.Get(order.Symbol());
+   m_trade.SetSymbol(m_symbol);
    if(m_stop_type==STOP_TYPE_VIRTUAL)
      {
       double lotsize=MathMin(order.Volume(),LotSizeCalculate(order,orderstop));
@@ -319,31 +325,33 @@ bool JStopBase::CloseStop(JOrder *order,JOrderStop *orderstop,const double price
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStopBase::StopLossCalculate(const ENUM_ORDER_TYPE type,const double price)
+double JStopBase::StopLossCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price)
   {
+   if(!Refresh(symbol)) return 0;
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
-      return price-m_stoploss*m_points_adjust;
+      return price-m_stoploss*/*m_points_adjust*/m_symbol.Point();
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
-      return price+m_stoploss*m_points_adjust;
+      return price+m_stoploss*/*m_points_adjust*/m_symbol.Point();
    return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStopBase::TakeProfitCalculate(const ENUM_ORDER_TYPE type,const double price)
+double JStopBase::TakeProfitCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price)
   {
+   if(!Refresh(symbol)) return 0;
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
-      return price+m_takeprofit*m_points_adjust;
+      return price+m_takeprofit*/*m_points_adjust*/m_symbol.Point();
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
-      return price-m_takeprofit*m_points_adjust;
+      return price-m_takeprofit*/*m_points_adjust*/m_symbol.Point();
    return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopBase::GetClosePrice(const ENUM_ORDER_TYPE type,double &price)
+bool JStopBase::GetClosePrice(const string symbol,const ENUM_ORDER_TYPE type,double &price)
   {
-   if(!Refresh()) return false;
+   if(!Refresh(symbol)) return false;
    if(type==ORDER_TYPE_BUY)
       price=m_symbol.Bid();
    else if(type==ORDER_TYPE_SELL)
@@ -355,11 +363,12 @@ bool JStopBase::GetClosePrice(const ENUM_ORDER_TYPE type,double &price)
 //+------------------------------------------------------------------+
 bool JStopBase::CheckStopLoss(JOrder *order,JOrderStop *orderstop)
   {
+   if(!Refresh(order.Symbol())) return false;
    double stoploss=orderstop.StopLoss();
    if(stoploss<=0.0) return false;
    double price=0.0;
    ENUM_ORDER_TYPE type=order.OrderType();
-   if(!GetClosePrice(type,price)) return false;
+   if(!GetClosePrice(order.Symbol(),type,price)) return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
       if(price<=stoploss) close=true;
@@ -374,11 +383,12 @@ bool JStopBase::CheckStopLoss(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 bool JStopBase::CheckTakeProfit(JOrder *order,JOrderStop *orderstop)
   {
+   if(!Refresh(order.Symbol())) return false;
    double takeprofit=orderstop.TakeProfit();
    if(takeprofit<=0.0) return false;
    double price=0.0;
    ENUM_ORDER_TYPE type=order.OrderType();
-   if(!GetClosePrice(type,price)) return false;
+   if(!GetClosePrice(order.Symbol(),type,price)) return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
       if(price>=takeprofit) close=true;
@@ -391,8 +401,13 @@ bool JStopBase::CheckTakeProfit(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopBase::Refresh(void)
+bool JStopBase::Refresh(const string symbol)
   {
+   if (m_symbol==NULL || StringCompare(m_symbol.Name(),symbol)!=0)
+   {
+      m_symbol = m_symbol_man.Get(symbol);
+      m_trade.SetSymbol(m_symbol);
+   }   
    if(CheckPointer(m_symbol)==POINTER_DYNAMIC)
       return m_symbol.RefreshRates();
    return false;
@@ -402,7 +417,7 @@ bool JStopBase::Refresh(void)
 //+------------------------------------------------------------------+
 void JStopBase::Deinit(void)
   {
-   DeinitSymbol();
+   //DeinitSymbol();
    DeinitTrade();
    DeinitTrails();
   }
@@ -411,7 +426,7 @@ void JStopBase::Deinit(void)
 //+------------------------------------------------------------------+
 void JStopBase::DeinitSymbol(void)
   {
-   ADT::Delete(m_symbol);
+   //ADT::Delete(m_symbol);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -433,7 +448,6 @@ void JStopBase::DeinitTrails(void)
 void JStopBase::StopType(const ENUM_STOP_TYPE type)
   {
    m_stop_type=type;
-   if(m_main) m_oco=true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -447,11 +461,11 @@ bool JStopBase::Add(JTrails *trails)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStopBase::CheckTrailing(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
+double JStopBase::CheckTrailing(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
    if(!CheckPointer(m_trails)) return 0;
-   if(!Refresh()) return 0;
-   return m_trails.Check(type,entry_price,price,mode);
+   if(!Refresh(symbol)) return 0;
+   return m_trails.Check(symbol,type,entry_price,price,mode);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -475,7 +489,6 @@ JStopLine *JStopBase::CreateEntryObject(const long id,const string name,const in
          obj.Timeframes(OBJ_NO_PERIODS);
       return obj;
      }
-
    return NULL;
   }
 //+------------------------------------------------------------------+

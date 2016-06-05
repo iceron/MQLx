@@ -53,13 +53,14 @@ void COrderManager::OnTradeTransaction(JOrder *order=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManager::TradeOpen(const int res)
+bool COrderManager::TradeOpen(const string symbol,const int res)
   {
    if(res<=0) return false;
    bool ret=false;
    int trades_total = TradesTotal();
    int orders_total = OrdersTotal();
    ENUM_ORDER_TYPE type=JSignal::SignalToOrderType(res);
+   m_symbol = m_symbol_man.Get(symbol);
    if(!IsPositionAllowed(type))
       return true;
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))

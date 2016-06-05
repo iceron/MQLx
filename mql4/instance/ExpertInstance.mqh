@@ -14,17 +14,15 @@ class CExpertInstance : public CExpertInstanceBase
   {
 protected:
 public:
-                     CExpertInstance(string,string,int,bool,bool,int,bool,bool);
+                     CExpertInstance(string,string,int,int,bool);
                     ~CExpertInstance(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 CExpertInstance::CExpertInstance(string name,string symbol,int timeframe,
-                                 bool every_tick,bool one_trade_per_candle,
-                                 int magic,bool position_reverse,bool primary=true) 
-                                 : CExpertInstanceBase(name,symbol,timeframe,every_tick,
-                                 one_trade_per_candle,magic,position_reverse,primary)
+                                 int magic,bool primary=true) 
+                                 : CExpertInstanceBase(name,symbol,timeframe,magic,primary)
   {   
   }
 //+------------------------------------------------------------------+

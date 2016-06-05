@@ -21,13 +21,13 @@ public:
                     ~JTrailsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TRAILS;}   
    //--- initialization
-   virtual bool      Init(CSymbolInfo *symbolinfo,JStop *stop);
+   virtual bool      Init(CSymbolManager *symbolmanager,JStop *stop);
    virtual void      SetContainer(JStop *stop){m_stop=stop;}
    //--- getters and setters
    bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}  
    //--- checking
-   virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
+   virtual double    Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
    //--- recovery
    virtual bool      CreateElement(const int index);
 protected:
@@ -48,13 +48,13 @@ JTrailsBase::~JTrailsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrailsBase::Init(CSymbolInfo *symbolinfo,JStop *stop)
+bool JTrailsBase::Init(CSymbolManager *symbolmanager,JStop *stop)
   {
    if(!Active()) return true;
    for(int i=0;i<Total();i++)
      {
       JTrail *trail=At(i);
-      trail.Init(symbolinfo,GetPointer(this));
+      trail.Init(symbolmanager,GetPointer(this));
      }
    SetContainer(stop);
    return true;
@@ -62,7 +62,7 @@ bool JTrailsBase::Init(CSymbolInfo *symbolinfo,JStop *stop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailsBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
+double JTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
    if(!Active()) return 0;
    double val=0.0,ret=0.0;
@@ -72,7 +72,7 @@ double JTrailsBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,co
       if(!CheckPointer(trail)) continue;
       int trail_target=trail.TrailTarget();
       if (mode!=trail_target) continue;
-      val=trail.Check(type,entry_price,price,mode);
+      val=trail.Check(symbol,type,entry_price,price,mode);
       if((type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_TAKEPROFIT))
          if(val>ret || ret==0.0) ret=val;
       else if((type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_TAKEPROFIT))

@@ -25,7 +25,6 @@ public:
    virtual void      SetContainer(JOrder *order){m_order=order;}
    virtual bool      EventHandler(JEvents *events);
    virtual bool      NewOrderStop(JOrder *order,JStop *stop,JOrderStops *order_stops,JEvents *events=NULL);
-   virtual void      Deinit();
    //--- checking
    virtual void      Check(double &volume);
    virtual bool      CheckNewTicket(JOrderStop *orderstop) {return true;}
@@ -50,13 +49,6 @@ JOrderStopsBase::JOrderStopsBase(void)
 //|                                                                  |
 //+------------------------------------------------------------------+
 JOrderStopsBase::~JOrderStopsBase(void)
-  {
-   Deinit();
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-JOrderStopsBase::Deinit(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -96,6 +88,7 @@ JOrderStopsBase::Check(double &volume)
 //+------------------------------------------------------------------+
 bool JOrderStopsBase::Close(void)
   {
+   Print(__FUNCTION__);
    bool res=true;
    int total=Total();
    if(total>0)

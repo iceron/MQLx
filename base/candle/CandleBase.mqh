@@ -13,6 +13,7 @@
 class JCandleBase : public CObject
   {
 protected:
+   bool              m_new;
    bool              m_wait_for_new;
    bool              m_trade_processed;
    int               m_period;
@@ -24,17 +25,18 @@ public:
                     ~JCandleBase(void);
    virtual bool      Init(CSymbolInfo *symbol,int timeframe,JEvents *events);
    //--- setters and getters
-   datetime          LastTime() const {return m_last.time;}
-   double            LastOpen() const {return m_last.open;}
-   double            LastHigh() const {return m_last.high;}
-   double            LastLow() const {return m_last.low;}
-   double            LastClose() const {return m_last.close;}
-   string            SymbolName() const {return m_symbol.Name();}
-   int               TimeFrame() const {return m_period;}
+   datetime          LastTime(void) const {return m_last.time;}
+   double            LastOpen(void) const {return m_last.open;}
+   double            LastHigh(void) const {return m_last.high;}
+   double            LastLow(void) const {return m_last.low;}
+   double            LastClose(void) const {return m_last.close;}
+   string            SymbolName(void) const {return m_symbol.Name();}
+   int               Timeframe(void) const {return m_period;}
    //--- processing
-   virtual bool      TradeProcessed() const {return m_trade_processed;}
+   virtual bool      TradeProcessed(void) const {return m_trade_processed;}
    virtual void      TradeProcessed(bool processed) {m_trade_processed=processed;}
-   virtual bool      IsNewCandle();
+   virtual void      Check(void);
+   virtual bool      IsNewCandle(void);
    virtual bool      Compare(MqlRates &rates) const;
    //--- recovery
    virtual bool      Save(const int handle);
@@ -68,31 +70,35 @@ JCandleBase::~JCandleBase(void)
 bool JCandleBase::Init(CSymbolInfo *symbol,int timeframe,JEvents *events)
   {
    m_symbol = symbol;
+   m_period = timeframe;
    m_events = events;
    return true;
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JCandleBase::IsNewCandle()
+void JCandleBase::Check(void)
   {
-   bool result=false;
+   m_new = false;
    if(m_symbol!=NULL)
      {
       MqlRates rates[];
       if(CopyRates(m_symbol.Name(),(ENUM_TIMEFRAMES)m_period,1,1,rates)==-1)
-         return false;
+         return;
       if(m_wait_for_new && m_last.time==0)
          m_last=rates[0];
       else if(Compare(rates[0]))
         {
-         result=true;
+         m_new=true;
          m_trade_processed=false;
          m_last=rates[0];
          CreateEvent(EVENT_CLASS_STANDARD,ACTION_CANDLE);
         }
      }
-   return result;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool JCandleBase::IsNewCandle(void)
+  {
+   return m_new;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -16,8 +16,11 @@ protected:
 public:
                      CCandleManagerBase(void);
                     ~CCandleManagerBase(void);
-                    virtual bool IsNewBar(string symbol,int timeframe);
-                    virtual JCandle* Get(string symbol,int timeframe);
+   virtual void      Check(void);
+   virtual bool      IsNewCandle(string symbol,int timeframe);
+   virtual JCandle *Get(string symbol,int timeframe);
+   virtual bool      TradeProcessed(string symbol,int timeframe);
+   virtual void      TradeProcessed(string symbol,int timeframe,bool processed);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -34,10 +37,42 @@ CCandleManagerBase::~CCandleManagerBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CCandleManagerBase::IsNewBar(string symbol,int timeframe)
+void CCandleManagerBase::Check(void)
   {
-   JCandle *candle = Get(symbol,timeframe);
-   return candle.IsNewCandle();
+   for(int i=0;i<Total();i++)
+     {
+      JCandle *candle=At(i);
+      candle.Check();
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleManagerBase::IsNewCandle(string symbol,int timeframe)
+  {
+   JCandle *candle=Get(symbol,timeframe);
+   if(candle!=NULL)
+      return candle.IsNewCandle();
+   return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleManagerBase::TradeProcessed(string symbol,int timeframe)
+  {
+   JCandle *candle=Get(symbol,timeframe);
+   if(candle!=NULL)
+      return candle.TradeProcessed();
+   return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CCandleManagerBase::TradeProcessed(string symbol,int timeframe,bool processed)
+  {
+   JCandle *candle=Get(symbol,timeframe);
+   if(candle!=NULL)
+      candle.TradeProcessed(processed);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -47,8 +82,9 @@ JCandle *CCandleManagerBase::Get(string symbol,int timeframe)
    for(int i=0;i<Total();i++)
      {
       JCandle *candle=At(i);
-      if(StringCompare(symbol,candle.SymbolName())==0 && timeframe==candle.TimeFrame())
-        return candle;
+      if(candle!=NULL)
+         if(StringCompare(symbol,candle.SymbolName())==0 && timeframe==candle.Timeframe())
+            return candle;
      }
    return NULL;
   }

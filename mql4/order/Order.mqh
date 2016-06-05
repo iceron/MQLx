@@ -38,12 +38,13 @@ JOrder::JOrder(void): m_ticket_updated(false)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder(const ulong ticket,const ENUM_ORDER_TYPE type,const double volume,const double price)
+JOrder::JOrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
    if(!m_ticket_current.IsSorted())
       m_ticket_current.Sort();
    m_ticket=ticket;
    m_ticket_current.InsertSort((int)ticket);
+   m_symbol = symbol;
    m_type=type;
    m_volume_initial=volume;
    m_volume= m_volume_initial;

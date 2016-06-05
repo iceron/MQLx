@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                OrderStopBase.mqh |
 //|                                                   Enrico Lambino |
-//|                             https://www.mql5.com/en/users/iceron |
+//|                                   http://www.cyberforexworks.com |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "https://www.mql5.com/en/users/iceron"
+#property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_VOLUME_TYPE.mqh"
 #include <Arrays\ArrayDouble.mqh>
 #include "..\event\EventBase.mqh"
@@ -232,24 +232,30 @@ bool JOrderStopBase::CheckTrailing(void)
 //+------------------------------------------------------------------+
 bool JOrderStopBase::Close(void)
   {
+   Print(__FUNCTION__);
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CLOSE,GetPointer(this));
    bool res1=false,res2=false,result=false;
+   Print(m_stoploss_closed+" "+StopLoss()+" "+m_stoploss_ticket);
    if(m_stoploss_closed || StopLoss()==0 || m_stoploss_ticket==0)
       res1=true;
    else if(m_stoploss_ticket>0 && !m_stoploss_closed)
      {
+      Print(__FUNCTION__+" deleting sl");
       if(m_stop.DeleteStopOrder(m_stoploss_ticket))
          res1=DeleteStopLoss();
      }
+   Print(m_takeprofit_closed+" "+TakeProfit()+" "+m_takeprofit_ticket);
    if(m_takeprofit_closed || TakeProfit()==0 || m_takeprofit_ticket==0)
       res2=true;
    else if(m_takeprofit_ticket>0 && !m_takeprofit_closed)
      {
+      Print(__FUNCTION__+" deleting tp");
       if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
          res2=DeleteTakeProfit();
      }
    if(res1 && res2)
       result=DeleteEntry() && DeleteStopLoss() && DeleteTakeProfit();
-   //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CLOSE,GetPointer(this));
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CLOSE,GetPointer(this));
    return result;
   }
 //+------------------------------------------------------------------+
@@ -274,8 +280,8 @@ bool JOrderStopBase::Update(void)
          stoploss=sl_line;
      }
    result=UpdateOrderStop(stoploss,takeprofit);
-   //if(result)
-      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_UPDATE_DONE,GetPointer(this));
+   if(result)
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_UPDATE_DONE,GetPointer(this));
    return result;
   }
 //+------------------------------------------------------------------+
@@ -283,14 +289,14 @@ bool JOrderStopBase::Update(void)
 //+------------------------------------------------------------------+
 void JOrderStopBase::CheckInit()
   {
-   //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK,GetPointer(this));
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK,GetPointer(this));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void JOrderStopBase::CheckDeinit()
   {
-   //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK_DONE,GetPointer(this));
+   CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK_DONE,GetPointer(this));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -408,30 +414,30 @@ bool JOrderStopBase::Modify(const double stoploss,const double takeprofit)
    double oldsl=StopLoss(),oldtp=TakeProfit();
    if(stoploss>0 && takeprofit>0)
      {
-      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY,GetPointer(this));
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY,GetPointer(this));
       if(ModifyStops(stoploss,takeprofit))
         {
          stoploss_modified=true;
          takeprofit_modified=true;
-         //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY_DONE,GetPointer(this));
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_MODIFY_DONE,GetPointer(this));
         }
-      //else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_MODIFY,GetPointer(this));
+      else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_MODIFY,GetPointer(this));
      }
    else if(stoploss>0 && takeprofit==0)
      {
-      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY,GetPointer(this));
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY,GetPointer(this));
       stoploss_modified=ModifyStopLoss(stoploss);
-      //if(stoploss_modified)
-         //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
-      //else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SL_MODIFY,GetPointer(this));
+      if(stoploss_modified)
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
+      else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SL_MODIFY,GetPointer(this));
      }
    else if(takeprofit>0 && stoploss==0)
      {
-      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY,GetPointer(this));
+      CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY,GetPointer(this));
       takeprofit_modified=ModifyTakeProfit(takeprofit);
-      //if(takeprofit_modified)
-         //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
-      //else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY,GetPointer(this));
+      if(takeprofit_modified)
+         CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
+      else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY,GetPointer(this));
      }
    return stoploss_modified || takeprofit_modified;
   }
@@ -450,17 +456,17 @@ JOrderStopBase::Show(bool show=true)
 //+------------------------------------------------------------------+
 bool JOrderStopBase::Save(const int handle)
   {
-   //ADT::WriteDouble(handle,m_volume);
-   //ADT::WriteDouble(handle,m_volume_fixed);
-   //ADT::WriteDouble(handle,m_volume_percent);
-   //ADT::WriteObject(handle,GetPointer(m_stoploss));
-   //ADT::WriteObject(handle,GetPointer(m_takeprofit));
-   //ADT::WriteLong(handle,m_stoploss_ticket);
-   //ADT::WriteLong(handle,m_takeprofit_ticket);
-   //ADT::WriteBool(handle,m_stoploss_closed);
-   //ADT::WriteBool(handle,m_takeprofit_closed);
-   //ADT::WriteInteger(handle,m_stop_type);
-   //ADT::WriteString(handle,m_stop_name);
+   ADT::WriteDouble(handle,m_volume);
+   ADT::WriteDouble(handle,m_volume_fixed);
+   ADT::WriteDouble(handle,m_volume_percent);
+   ADT::WriteObject(handle,GetPointer(m_stoploss));
+   ADT::WriteObject(handle,GetPointer(m_takeprofit));
+   ADT::WriteLong(handle,m_stoploss_ticket);
+   ADT::WriteLong(handle,m_takeprofit_ticket);
+   ADT::WriteBool(handle,m_stoploss_closed);
+   ADT::WriteBool(handle,m_takeprofit_closed);
+   ADT::WriteInteger(handle,m_stop_type);
+   ADT::WriteString(handle,m_stop_name);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -468,19 +474,19 @@ bool JOrderStopBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool JOrderStopBase::Load(const int handle)
   {
-   //int temp;
-   //ADT::ReadDouble(handle,m_volume);
-   //ADT::ReadDouble(handle,m_volume_fixed);
-   //ADT::ReadDouble(handle,m_volume_percent);
-   //ADT::ReadObject(handle,GetPointer(m_stoploss));
-   //ADT::ReadObject(handle,GetPointer(m_takeprofit));
-   //ADT::ReadLong(handle,m_stoploss_ticket);
-   //ADT::ReadLong(handle,m_takeprofit_ticket);
-   //ADT::ReadBool(handle,m_stoploss_closed);
-   //ADT::ReadBool(handle,m_takeprofit_closed);
-   //ADT::ReadInteger(handle,temp);
-   //m_stop_type=(ENUM_STOP_TYPE) temp;
-   //ADT::ReadString(handle,m_stop_name);
+   int temp;
+   ADT::ReadDouble(handle,m_volume);
+   ADT::ReadDouble(handle,m_volume_fixed);
+   ADT::ReadDouble(handle,m_volume_percent);
+   ADT::ReadObject(handle,GetPointer(m_stoploss));
+   ADT::ReadObject(handle,GetPointer(m_takeprofit));
+   ADT::ReadLong(handle,m_stoploss_ticket);
+   ADT::ReadLong(handle,m_takeprofit_ticket);
+   ADT::ReadBool(handle,m_stoploss_closed);
+   ADT::ReadBool(handle,m_takeprofit_closed);
+   ADT::ReadInteger(handle,temp);
+   m_stop_type=(ENUM_STOP_TYPE) temp;
+   ADT::ReadString(handle,m_stop_name);
    return true;
   }
 //+------------------------------------------------------------------+

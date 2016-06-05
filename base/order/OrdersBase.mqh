@@ -16,7 +16,7 @@ class JOrdersBase : public CArrayObj
 protected:
    bool              m_activate;
    bool              m_clean;
-   int               m_magic;
+   //int               m_magic;
    JStops           *m_stops;
    JEvents          *m_events;
    JStrategy        *m_strategy;
@@ -25,7 +25,7 @@ public:
                     ~JOrdersBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERS;}
    //--- initialization
-   virtual bool      Init(const int magic=0,JStrategy *s=NULL,JStops *stops=NULL,JEvents *events=NULL);
+   virtual bool      Init(/*const int magic=0,*/JStrategy *s=NULL,JStops *stops=NULL,JEvents *events=NULL);
    virtual void      SetContainer(JStrategy *s);
    virtual void      SetStops(JStops *stops);
    //--- getters and setters
@@ -34,12 +34,12 @@ public:
    bool              Clean(void) const {return m_clean;}
    void              Clean(const bool clean) {m_clean=clean;}
    bool              EventHandler(JEvents *events);
-   void              Magic(int magic) {m_magic=magic;}
-   int               Magic() {return m_magic;}
+   //void              Magic(int magic) {m_magic=magic;}
+   //int               Magic() {return m_magic;}
    //--- events                  
    virtual void      OnTick(void);
    //--- order creation
-   virtual bool      NewOrder(const int ticket,const ENUM_ORDER_TYPE type,const double volume,const double price);
+   virtual bool      NewOrder(const int ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price);
    //--- archiving
    virtual bool      CloseStops(void);
    //--- events
@@ -54,8 +54,8 @@ public:
 //|                                                                  |
 //+------------------------------------------------------------------+
 JOrdersBase::JOrdersBase(void) : m_activate(true),
-                                 m_clean(false),
-                                 m_magic(0)
+                                 m_clean(false)
+                                 //m_magic(0)
   {
    if(!IsSorted())
       Sort();
@@ -69,9 +69,9 @@ JOrdersBase::~JOrdersBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::Init(const int magic=0,JStrategy *s=NULL,JStops *stops=NULL,JEvents *events=NULL)
+bool JOrdersBase::Init(/*const int magic=0,*/JStrategy *s=NULL,JStops *stops=NULL,JEvents *events=NULL)
   {
-   m_magic=magic;
+   //m_magic=magic;
    SetContainer(s);
    SetStops(stops);
    EventHandler(events);
@@ -102,12 +102,13 @@ bool JOrdersBase::EventHandler(JEvents *events)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::NewOrder(const int ticket,const ENUM_ORDER_TYPE type,const double volume,const double price)
+bool JOrdersBase::NewOrder(const int ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
-   JOrder *order=new JOrder(ticket,type,volume,price);
+   Print(__FUNCTION__);
+   JOrder *order=new JOrder(ticket,symbol,type,volume,price);
    if(CheckPointer(order)==POINTER_DYNAMIC)
       if(InsertSort(GetPointer(order)))
-         return order.Init(m_magic,GetPointer(this),m_events,m_stops);
+         return order.Init(magic,GetPointer(this),m_events,m_stops);
    return false;
   }
 //+------------------------------------------------------------------+
@@ -157,7 +158,7 @@ void JOrdersBase::CreateEvent(const ENUM_EVENT_CLASS type,const ENUM_ACTION acti
 bool JOrdersBase::CreateElement(const int index)
   {
    JOrder*order=new JOrder();
-   order.Init(m_magic,GetPointer(this),m_events,m_stops,true);
+   order.Init(0,GetPointer(this),m_events,m_stops,true);
    return Insert(GetPointer(order),index);
   }
 //+------------------------------------------------------------------+

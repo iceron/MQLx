@@ -23,6 +23,7 @@ protected:
    double            m_step;
    double            m_points_adjust;
    int               m_digits_adjust;
+   CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
    JTrails          *m_trails;
 public:
@@ -30,7 +31,7 @@ public:
                     ~JTrailBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TRAIL;}
    //--- initialization                    
-   virtual bool      Init(CSymbolInfo *symbolinfo,JTrails *t);
+   virtual bool      Init(CSymbolManager *symbolmanager,JTrails *t);
    virtual void      SetContainer(JTrails *trails){m_trails=trails;}
    virtual bool      Validate(void) const;
    //--- getters and setters    
@@ -52,12 +53,13 @@ public:
    int               TrailTarget(void) const {return m_target;}
    void              TrailTarget(const ENUM_TRAIL_TARGET target) {m_target=target;}
    //--- checking
-   virtual double    Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
+   virtual double    Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
 protected:
    //--- price calculation
    virtual double    ActivationPrice(const ENUM_ORDER_TYPE type,const double entry_price);
    virtual double    DeactivationPrice(const ENUM_ORDER_TYPE type,const double entry_price);
    virtual double    Price(const ENUM_ORDER_TYPE type);
+   virtual void      Refresh(const string symbol);
    //--- deinitialization
    virtual bool      Deinit(void);
   };
@@ -91,12 +93,13 @@ bool JTrailBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrailBase::Init(CSymbolInfo *symbolinfo,JTrails *trail)
+bool JTrailBase::Init(CSymbolManager *symbolmanager,JTrails *trail)
   {
-   if (symbolinfo==NULL || trail==NULL) return false;
-   m_symbol=symbolinfo;
+   if (symbolmanager==NULL || trail==NULL) return false;
+   //m_symbol=symbolinfo;
    //m_points_adjust = symbolinfo.PointsAdjust();
    //m_digits_adjust = symbolinfo.DigitsAdjust();
+   m_symbol_man = symbolmanager;
    SetContainer(trail);
    return true;
   }
@@ -105,7 +108,7 @@ bool JTrailBase::Init(CSymbolInfo *symbolinfo,JTrails *trail)
 //+------------------------------------------------------------------+
 bool JTrailBase::Deinit(void)
   {
-   if(m_symbol!=NULL) delete m_symbol;
+   //if(m_symbol!=NULL) delete m_symbol;
    return true;
   }
 //+------------------------------------------------------------------+
@@ -143,9 +146,10 @@ double JTrailBase::DeactivationPrice(const ENUM_ORDER_TYPE type,const double ent
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailBase::Check(const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
+double JTrailBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
    if(!Active()) return 0;
+   Refresh(symbol);
    if (m_start==0 || m_trail==0) return 0;
    double next_stop=0.0,activation=0.0,deactivation=0.0,new_price=0.0;
    activation=ActivationPrice(type,entry_price);
@@ -187,6 +191,10 @@ double JTrailBase::Price(const ENUM_ORDER_TYPE type)
          return m_symbol.Ask()+m_trail*m_points_adjust;
      }
    return 0;
+  }
+void JTrailBase::Refresh(const string symbol)
+  {
+   m_symbol = m_symbol_man.Get(symbol);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

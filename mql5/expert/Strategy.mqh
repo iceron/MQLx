@@ -42,6 +42,7 @@ bool JStrategy::OnTick(void)
 //+------------------------------------------------------------------+
 void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
+   Print(__FUNCTION__);
    m_order_man.OnTradeTransaction(trans,request,result);
   }  
 //+------------------------------------------------------------------+

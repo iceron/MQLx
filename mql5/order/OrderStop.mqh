@@ -41,7 +41,7 @@ void JOrderStop::Check(double &volume)
    if(m_order.IsClosed())
      {
       bool delete_sl=false,delete_tp=false;
-      if(m_stop.Pending())
+      if(m_stop.Pending() || m_stop.Broker())
         {
          if(m_stoploss_ticket>0 && !m_stoploss_closed)
             if(m_stop.DeleteStopOrder(m_stoploss_ticket))
@@ -67,7 +67,7 @@ void JOrderStop::Check(double &volume)
      }
    if(CheckPointer(m_objsl)==POINTER_DYNAMIC && !m_stoploss_closed)
      {
-      if(m_stop.Pending())
+      if(m_stop.Pending() || m_stop.Broker())
         {
          if(m_stop.CheckStopOrder(volume,m_stoploss_ticket))
             m_stoploss_closed=true;
@@ -82,7 +82,8 @@ void JOrderStop::Check(double &volume)
      }
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC && !m_takeprofit_closed)
      {
-      if(m_stop.Pending())
+      //Print("tp is already closed");
+      if(m_stop.Pending() || m_stop.Broker())
         {
          if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket))
             m_takeprofit_closed=true;
@@ -95,11 +96,12 @@ void JOrderStop::Check(double &volume)
      }
    if(m_stoploss_closed || m_takeprofit_closed)
      {
+      Print("either sl or tp is closed");
       if(m_stop.OCO())
         {
          if(m_stoploss_closed && !m_takeprofit_closed)
            {
-            if(m_stop.Pending())
+            if(m_stop.Pending() || m_stop.Broker())
               {
                if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
                   m_takeprofit_closed=true;
@@ -109,7 +111,7 @@ void JOrderStop::Check(double &volume)
 
          if(m_takeprofit_closed && !m_stoploss_closed)
            {
-            if(m_stop.Pending())
+            if(m_stop.Pending() || m_stop.Broker())
               {
                if(m_stop.DeleteStopOrder(m_stoploss_ticket))
                   m_stoploss_closed=true;
@@ -126,7 +128,10 @@ void JOrderStop::Check(double &volume)
      {
       DeleteStopLines();
       if(m_stop.Main())
+      {
          m_order.IsClosed(true);
+         //m_order.CloseStops();
+      }   
      }
    CheckDeinit();
   }

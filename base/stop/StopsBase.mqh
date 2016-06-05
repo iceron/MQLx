@@ -21,7 +21,7 @@ public:
                     ~JStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPS;}
    //--- initialization
-   virtual bool      Init(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
+   virtual bool      Init(JStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
    virtual void      SetContainer(JStrategy *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- setters and getters
@@ -46,12 +46,12 @@ JStopsBase::~JStopsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopsBase::Init(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
+bool JStopsBase::Init(JStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    for(int i=0;i<Total();i++)
      {
       JStop *stop=At(i);
-      stop.Init(symbolinfo,accountinfo);
+      stop.Init(symbolmanager,accountinfo);
      }
    SetContainer(s);
    return true;

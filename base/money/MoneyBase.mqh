@@ -6,8 +6,9 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include <Object.mqh>
-//#include "..\lib\SymbolInfo.mqh"
+#include "..\lib\SymbolInfo.mqh"
 #include "..\lib\AccountInfo.mqh"
+#include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\enum\ENUM_MONEY_UPDATE_TYPE.mqh"
 class JStrategy;
 //+------------------------------------------------------------------+

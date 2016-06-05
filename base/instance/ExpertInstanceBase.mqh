@@ -18,39 +18,38 @@ protected:
    bool              m_primary;
    string            m_symbol;
    int               m_timeframe;
-   bool              m_every_tick;
-   bool              m_one_trade_per_candle;
+   //bool              m_every_tick;
+   //bool              m_one_trade_per_candle;
    int               m_magic;
-   bool              m_position_reverse;
+   //bool              m_position_reverse;
 public:
-                     CExpertInstanceBase(string,string,int,bool,bool,int,bool,bool);
+                     CExpertInstanceBase(string,string,int,int,bool);
                     ~CExpertInstanceBase(void);
    string            Name() {return m_name;}
    bool              Active() {return m_active;}
    bool              Primary() {return m_primary;}
    string            Symbol() {return m_symbol;}
    int               Timeframe() {return m_timeframe;}
-   bool              EveryTick() {return m_every_tick;}
-   bool              OnTradePerCandle() {return m_one_trade_per_candle;}
+   //bool              EveryTick() {return m_every_tick;}
+   //bool              OnTradePerCandle() {return m_one_trade_per_candle;}
    int               Magic() {return m_magic;}
-   bool              PositionReverse() {return m_position_reverse;}
+   //bool              PositionReverse() {return m_position_reverse;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 CExpertInstanceBase::CExpertInstanceBase(string name,string symbol,int timeframe,
-                                         bool every_tick,bool one_trade_per_candle,
-                                         int magic,bool position_reverse,bool primary=true):
+                                         int magic,bool primary=true):
                                          m_active(true)
   {
    m_name=name;
    m_primary=primary;
    m_symbol=symbol;
    m_timeframe=timeframe;
-   m_every_tick=every_tick;
-   m_one_trade_per_candle=one_trade_per_candle;
+   //m_every_tick=every_tick;
+   //m_one_trade_per_candle=one_trade_per_candle;
    m_magic=magic;
-   m_position_reverse=position_reverse;
+   //m_position_reverse=position_reverse;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

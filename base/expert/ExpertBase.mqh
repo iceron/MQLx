@@ -175,14 +175,8 @@ int JExpertBase::TradesTotal(void) const
 //+------------------------------------------------------------------+
 void JExpertBase::OnDeinit(const int reason=0)
   {
-   m_uninit_reason=reason;
-   for(int i=0;i<Total();i++)
-     {
-      JStrategy *strat=Detach(i);
-      ADT::Delete(strat);
-     }
-   if(m_data_max!=0)
-      Shutdown();
+   m_uninit_reason=reason;   
+   Shutdown();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
