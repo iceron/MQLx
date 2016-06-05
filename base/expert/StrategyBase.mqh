@@ -7,7 +7,6 @@
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_EXECUTION_MODE.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
-#include "..\..\common\enum\ENUM_CHARTEVENT_CUSTOM.mqh"
 #include "..\..\common\class\ADT.mqh"
 #include <Object.mqh>
 #include <Arrays\ArrayInt.mqh>
@@ -25,7 +24,6 @@
 #include "..\comment\CommentsBase.mqh"
 //#include "..\trademanager\TradeManagerBase.mqh"
 #include "..\ordermanager\OrderManagerBase.mqh"
-//#include "..\instance\ExpertInstanceManagerBase.mqh"
 #include "..\candle\CandleManagerBase.mqh"
 class JExpert;
 //+------------------------------------------------------------------+
@@ -86,7 +84,6 @@ public:
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
    virtual bool      InitOrderManager() {return m_order_man.Init(GetPointer(this),GetPointer(m_symbol_man),GetPointer(m_account));}
-   virtual bool      InitCandle(void);
    virtual bool      Validate(void) const;
    //--- container
    virtual JExpert   *GetContainer() const {return GetPointer(m_expert);}
@@ -161,13 +158,10 @@ public:
    virtual void      PositionReverse(const bool position_reverse){m_position_reverse=position_reverse;}
    //--- additional candles
    virtual void      AddCandle(const string,const int);
-   //--- expert instances
-   //virtual bool      AddExpertInstance(string,string,int,int,bool);
    //--- new bar detection
    virtual void      DetectNewBars(void);
    //-- generic events
    virtual bool      OnTick(void);
-   //virtual bool      Process(CExpertInstance *instance);
    virtual void      OnChartEvent(const int,const long&,const double&,const string&);
    //--- recovery
    virtual bool      Save(const int);
@@ -261,9 +255,7 @@ bool JStrategyBase::AddExpertInstance(string name,string symbol,int timeframe,
 bool JStrategyBase::InitComponents(void)
   {
    bool result=InitSignals() && InitAccount() && InitTimes()
-               && InitCandle() && InitOrderManager();
-//if(OfflineMode())
-//EventChartCustom(0,OFFLINE_TICK,0,0,m_symbol.Name());
+               && InitOrderManager();
    return result;
   }
 //+------------------------------------------------------------------+
@@ -273,16 +265,6 @@ bool JStrategyBase::InitSignals(void)
   {
    if(m_signals==NULL) return true;
    return m_signals.Init(GetPointer(this),GetPointer(m_comments));
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JStrategyBase::InitCandle(void)
-  {
-//return m_candle.Init(GetPointer(m_symbol),
-//CheckPointer(m_events)?GetPointer(m_events):NULL);
-//m_candle_man.Init(m_symbol_man);
-   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -412,21 +394,6 @@ bool JStrategyBase::Validate(void) const
 //+------------------------------------------------------------------+
 void JStrategyBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
   {
-/*
-   if(id==CHARTEVENT_CUSTOM+OFFLINE_TICK)
-     {
-      string name=CheckPointer(m_symbol)?m_symbol.Name():Symbol();
-      if(StringCompare(sparam,name)==0)
-        {
-         while(true && !IsStopped())
-           {
-            OnTick();
-            Sleep(m_offline_mode_delay);
-           }
-         EventChartCustom(0,OFFLINE_TICK,0,0,name);
-        }
-     }
-   */
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -477,44 +444,6 @@ bool JStrategyBase::OnTick(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-/*
-bool JStrategyBase::Process(CExpertInstance *instance)
-  {
-   if(!instance.Active()) return false;
-   if(!Refresh(m_symbol_man.Get(instance.Symbol()))) return false;
-   bool ret=false;
-   //bool newtick= m_tick.IsNewTick(m_symbol);
-   bool newbar = IsNewBar(instance.Symbol(),instance.Timeframe());
-   m_order_man.OnTick();
-   ManageOrders();
-   int entry=0,exit=0;
-   CheckSignals(entry,exit);
-   bool newtick = true;
-   //AddComment("last tick: "+TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
-   AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
-   AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
-   if(newbar || (m_every_tick && newtick))
-     {
-      CloseOppositeOrders(entry,exit);
-      ManageOrders();
-      //if(!m_candle.TradeProcessed())
-        {
-         if(!CheckPointer(m_times) || (m_times.Evaluate()))
-            ret=TradeOpen(entry);
-         if(ret)
-           {
-            m_last_trade_data=m_tick.LastTick();
-            //m_candle.TradeProcessed(true);
-           }
-        }
-     }
-   ManageOrdersHistory();
-   if(CheckPointer(m_events)==POINTER_DYNAMIC)
-      m_events.Run();
-   DisplayComment();
-   return ret;
-  }
-  */
 void JStrategyBase::DetectNewBars(void)
   {
    m_candle_man.Check();

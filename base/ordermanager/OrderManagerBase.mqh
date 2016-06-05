@@ -13,7 +13,6 @@ class JStrategy;
 #include "..\..\common\class\ADT.mqh"
 #include "..\order\OrdersBase.mqh"
 #include "..\stop\StopsBase.mqh"
-//#include "..\event\EventsBase.mqh"
 #include "..\signal\SignalsBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
