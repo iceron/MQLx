@@ -49,14 +49,6 @@ protected:
 JCandleBase::JCandleBase(void) : m_wait_for_new(false),
                                  m_trade_processed(false)
   {
-   m_last.time = 0;
-   m_last.open = 0;
-   m_last.high = 0;
-   m_last.low=0;
-   m_last.close=0;
-   m_last.tick_volume=0;
-   m_last.spread=0;
-   m_last.real_volume=0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -74,9 +66,12 @@ bool JCandleBase::Init(CSymbolInfo *symbol,int timeframe,JEvents *events)
    m_events = events;
    return true;
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 void JCandleBase::Check(void)
   {
-   m_new = false;
+   m_new=false;
    if(m_symbol!=NULL)
      {
       MqlRates rates[];
@@ -106,8 +101,8 @@ bool JCandleBase::IsNewCandle(void)
 bool JCandleBase::Compare(MqlRates &rates) const
   {
    return (m_last.time==0 || m_last.time!=rates.time ||
-          (m_last.close/m_symbol.TickSize())!=(rates.close/m_symbol.TickSize()) || 
-          (m_last.open/m_symbol.TickSize())!=(rates.open/m_symbol.TickSize()));
+           (m_last.close/m_symbol.TickSize())!=(rates.close/m_symbol.TickSize()) || 
+           (m_last.open/m_symbol.TickSize())!=(rates.open/m_symbol.TickSize()));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

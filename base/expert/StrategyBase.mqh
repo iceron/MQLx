@@ -114,7 +114,6 @@ public:
    void              ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
    //--- object pointers
    CAccountInfo      *AccountInfo(void) const {return GetPointer(m_account);}
-   //JCandle           *Candle(void) {return GetPointer(m_candle);}
    JComments         *Comments() const {return GetPointer(m_comments);}
    JEvents           *Events(void) const {return m_events;}
    JStop             *MainStop(void) const {return m_order_man.MainStop();}
@@ -130,13 +129,6 @@ public:
    void              AddComment(const string);
    void              ChartComment(JComments *comments) {m_comments=comments;}
    void              DisplayComment();
-   //--- last trade data
-   //void              LastTradeRates(MqlTick &tick) {m_last_trade_data=tick;}
-   //datetime          LastTradeTime(void) const {return m_last_trade_data.time;}
-   //double            LastTradeBid(void) const {return m_last_trade_data.bid;}
-   //double            LastTradeAsk(void) const {return m_last_trade_data.ask;}
-   //double            LastTradeLast(void) const {return m_last_trade_data.last;}
-   //ulong             LastTradeVolume(void) const {return m_last_trade_data.volume;}
    //--- order manager
    virtual bool      AddOtherMagic(const int magic) {return m_order_man.AddOtherMagic(magic);}
    virtual void      AddOtherMagicString(const string &magics[]){m_order_man.AddOtherMagicString(magics);}
