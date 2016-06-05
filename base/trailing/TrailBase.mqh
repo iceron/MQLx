@@ -6,8 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_TRAIL_TARGET.mqh"
-#include <Object.mqh>
-//#include "..\lib\SymbolInfo.mqh"
+#include "..\..\base\symbol\SymbolManagerBase.mqh"
 class JTrails;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -21,8 +20,8 @@ protected:
    double            m_start;
    double            m_end;
    double            m_step;
-   double            m_points_adjust;
-   int               m_digits_adjust;
+   //double            m_points_adjust;
+   //int               m_digits_adjust;
    CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
    JTrails          *m_trails;
@@ -37,12 +36,12 @@ public:
    //--- getters and setters    
    bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
-   int               DigitsAdjust(void) const {return m_digits_adjust;}
-   void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
+   //int               DigitsAdjust(void) const {return m_digits_adjust;}
+   //void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    double            End(void) const {return m_end;}
    void              End(const double end) {m_end=end;}
-   double            PointsAdjust(void) const {return m_points_adjust;}
-   void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
+   //double            PointsAdjust(void) const {return m_points_adjust;}
+   //void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
    void              Set(const double trail,const double st,const double step=1,const double end=0);
    double            Start(void) const {return m_start;}
    void              Start(const double st) {m_start=st;}
@@ -60,8 +59,6 @@ protected:
    virtual double    DeactivationPrice(const ENUM_ORDER_TYPE type,const double entry_price);
    virtual double    Price(const ENUM_ORDER_TYPE type);
    virtual void      Refresh(const string symbol);
-   //--- deinitialization
-   virtual bool      Deinit(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -71,9 +68,9 @@ JTrailBase::JTrailBase(void) : m_activate(true),
                                m_start(0.0),
                                m_end(0.0),
                                m_trail(0.0),
-                               m_step(0.0),
-                               m_points_adjust(0),
-                               m_digits_adjust(0)
+                               m_step(0.0)
+                               //m_points_adjust(0),
+                               //m_digits_adjust(0)
   {
   }
 //+------------------------------------------------------------------+
@@ -81,7 +78,6 @@ JTrailBase::JTrailBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 JTrailBase::~JTrailBase(void)
   {
-   Deinit();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -95,20 +91,9 @@ bool JTrailBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool JTrailBase::Init(CSymbolManager *symbolmanager,JTrails *trail)
   {
-   if (symbolmanager==NULL || trail==NULL) return false;
-   //m_symbol=symbolinfo;
-   //m_points_adjust = symbolinfo.PointsAdjust();
-   //m_digits_adjust = symbolinfo.DigitsAdjust();
-   m_symbol_man = symbolmanager;
+   if(symbolmanager==NULL || trail==NULL) return false;
+   m_symbol_man=symbolmanager;
    SetContainer(trail);
-   return true;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool JTrailBase::Deinit(void)
-  {
-   //if(m_symbol!=NULL) delete m_symbol;
    return true;
   }
 //+------------------------------------------------------------------+
@@ -127,9 +112,9 @@ void JTrailBase::Set(const double trail,const double st,const double step=1,cons
 double JTrailBase::ActivationPrice(const ENUM_ORDER_TYPE type,const double entry_price)
   {
    if(type==ORDER_TYPE_BUY)
-      return entry_price+m_start*m_points_adjust;
+      return entry_price+m_start*m_symbol.Point();
    else if(type==ORDER_TYPE_SELL)
-      return entry_price-m_start*m_points_adjust;
+      return entry_price-m_start*m_symbol.Point();
    return 0;
   }
 //+------------------------------------------------------------------+
@@ -138,9 +123,9 @@ double JTrailBase::ActivationPrice(const ENUM_ORDER_TYPE type,const double entry
 double JTrailBase::DeactivationPrice(const ENUM_ORDER_TYPE type,const double entry_price)
   {
    if(type==ORDER_TYPE_BUY)
-      return m_end==0?0:entry_price+m_end*m_points_adjust;
+      return m_end==0?0:entry_price+m_end*m_symbol.Point();
    else if(type==ORDER_TYPE_SELL)
-      return m_end==0?0:entry_price-m_end*m_points_adjust;
+      return m_end==0?0:entry_price-m_end*m_symbol.Point();
    return 0;
   }
 //+------------------------------------------------------------------+
@@ -150,28 +135,28 @@ double JTrailBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const do
   {
    if(!Active()) return 0;
    Refresh(symbol);
-   if (m_start==0 || m_trail==0) return 0;
-   double next_stop=0.0,activation=0.0,deactivation=0.0,new_price=0.0;
+   if(m_start==0 || m_trail==0) return 0;
+   double next_stop=0.0,activation=0.0,deactivation=0.0,new_price=0.0,point = m_symbol.Point();
    activation=ActivationPrice(type,entry_price);
    deactivation=DeactivationPrice(type,entry_price);
-   new_price=Price(type);
+   new_price=Price(type);   
    if((type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
-      if(m_step>0 && (price>=activation-m_trail*m_points_adjust || activation==0.0) && (new_price>price+m_step*m_points_adjust))
+      if(m_step>0 && (price>=activation-m_trail*point || activation==0.0) && (new_price>price+m_step*point))
          next_stop=new_price;
-      else next_stop=activation-m_trail*m_points_adjust;
+      else next_stop=activation-m_trail*point;
       if((deactivation>0 && next_stop>=deactivation && next_stop>0.0) || (deactivation==0))
          if(next_stop<=new_price)
             return next_stop;
      }
    if((type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_TAKEPROFIT))
      {
-      if(m_step>0 && (price<=activation+m_trail*m_points_adjust || activation==0.0) && (new_price<price-m_step*m_points_adjust))
+      if(m_step>0 && (price<=activation+m_trail*point || activation==0.0) && (new_price<price-m_step*point))
          next_stop=new_price;
-      else next_stop=activation+m_trail*m_points_adjust;
+      else next_stop=activation+m_trail*point;
       if((deactivation>0 && next_stop<=deactivation && next_stop>0.0) || (deactivation==0))
          if(next_stop>=new_price)
-            return next_stop;    
+            return next_stop;
      }
    return 0;
   }
@@ -183,18 +168,22 @@ double JTrailBase::Price(const ENUM_ORDER_TYPE type)
    if(type==ORDER_TYPE_BUY)
      {
       if(m_target==TRAIL_TARGET_STOPLOSS)
-         return m_symbol.Bid()-m_trail*m_points_adjust;
+         return m_symbol.Bid()-m_trail*m_symbol.Point();;
      }
    else if(type==ORDER_TYPE_SELL)
      {
       if(m_target==TRAIL_TARGET_STOPLOSS)
-         return m_symbol.Ask()+m_trail*m_points_adjust;
+         return m_symbol.Ask()+m_trail*m_symbol.Point();;
      }
    return 0;
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 void JTrailBase::Refresh(const string symbol)
   {
-   m_symbol = m_symbol_man.Get(symbol);
+   if(m_symbol==NULL|| StringCompare(m_symbol.Name(),symbol)!=0)
+      m_symbol= m_symbol_man.Get(symbol);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

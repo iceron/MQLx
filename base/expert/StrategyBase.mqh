@@ -16,7 +16,6 @@
 //#include "..\lib\SymbolInfo.mqh"
 #include "..\symbol\SymbolManagerBase.mqh"
 #include "..\event\EventBase.mqh"
-#include "..\tick\TickBase.mqh"
 #include "..\candle\CandleBase.mqh"
 #include "..\signal\SignalsBase.mqh"
 #include "..\trade\TradeBase.mqh"
@@ -53,7 +52,7 @@ protected:
    int               m_digits_adjust;
    double            m_points_adjust;
    //--- tick parameters
-   MqlTick           m_last_trade_data;
+   //MqlTick           m_last_trade_data;
    //--- signal objects
    JSignals         *m_signals;
    //--- trade objects   
@@ -67,8 +66,6 @@ protected:
    JEvents          *m_events;
    //--- comments
    JComments        *m_comments;
-   //--- tick
-   JTick             m_tick;
    //--- candle
    //JCandle           m_candle;
    CCandleManager    m_candle_man;
@@ -128,24 +125,18 @@ public:
    JStops            *Stops(void) const {return m_order_man.Stops();}
    JSignals          *Signals(void) const {return GetPointer(m_signals);}
    //CSymbolInfo       *SymbolInfo(void) const {return GetPointer(m_symbol);}
-   JTick             *Tick(void) {return GetPointer(m_tick);}
    JTimes            *Times(void) const {return GetPointer(m_times);}
    //--- chart comment manager
    void              AddComment(const string);
    void              ChartComment(JComments *comments) {m_comments=comments;}
    void              DisplayComment();
    //--- last trade data
-   void              LastTradeRates(MqlTick &tick) {m_last_trade_data=tick;}
-   datetime          LastTradeTime(void) const {return m_last_trade_data.time;}
-   double            LastTradeBid(void) const {return m_last_trade_data.bid;}
-   double            LastTradeAsk(void) const {return m_last_trade_data.ask;}
-   double            LastTradeLast(void) const {return m_last_trade_data.last;}
-   ulong             LastTradeVolume(void) const {return m_last_trade_data.volume;}
-   datetime          LastTickTime(void) const {return m_tick.Time();}
-   double            LastTickBid(void) const {return m_tick.Bid();}
-   double            LastTickAsk(void) const {return m_tick.Ask();}
-   double            LastTickLast(void) const {return m_tick.Last();}
-   ulong             LastTickVolume(void) const {return m_tick.Volume();}
+   //void              LastTradeRates(MqlTick &tick) {m_last_trade_data=tick;}
+   //datetime          LastTradeTime(void) const {return m_last_trade_data.time;}
+   //double            LastTradeBid(void) const {return m_last_trade_data.bid;}
+   //double            LastTradeAsk(void) const {return m_last_trade_data.ask;}
+   //double            LastTradeLast(void) const {return m_last_trade_data.last;}
+   //ulong             LastTradeVolume(void) const {return m_last_trade_data.volume;}
    //--- order manager
    virtual bool      AddOtherMagic(const int magic) {return m_order_man.AddOtherMagic(magic);}
    virtual void      AddOtherMagicString(const string &magics[]){m_order_man.AddOtherMagicString(magics);}
@@ -495,7 +486,7 @@ bool JStrategyBase::OnTick(void)
             ret=TradeOpen(m_symbol_name,entry);
          if(ret)
            {
-            m_last_trade_data=m_tick.LastTick();
+            //m_last_trade_data=m_tick.LastTick();
             m_candle_man.TradeProcessed(m_symbol_name,m_period,true);
            }
         }
