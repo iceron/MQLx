@@ -84,7 +84,7 @@ double JStop::TakeProfitPrice(JOrder *order,JOrderStop *orderstop)
    if (orderstop.TakeProfit()>0)
       val = orderstop.TakeProfit();
    else
-      val=m_takeprofit>0?TakeProfitCalculate(order.OrderType(),order.Price()):TakeProfitCustom(order.OrderType(),order.Price());
+      val=m_takeprofit>0?TakeProfitCalculate(order.Symbol(),order.OrderType(),order.Price()):TakeProfitCustom(order.OrderType(),order.Price());
    if(m_stop_type==STOP_TYPE_PENDING && val>0.0)
       orderstop.TakeProfitTicket(OpenStop(order,orderstop,val));
    return NormalizeDouble(val,m_symbol.Digits());
@@ -98,7 +98,7 @@ double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
    if (orderstop.StopLoss()>0)
       val = orderstop.StopLoss();
    else
-      val=m_stoploss>0?StopLossCalculate(order.OrderType(),order.Price()):StopLossCustom(order.OrderType(),order.Price());
+      val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.OrderType(),order.Price());
    if(m_stop_type==STOP_TYPE_PENDING && val>0.0)
       orderstop.StopLossTicket(OpenStop(order,orderstop,val));
    return NormalizeDouble(val,m_symbol.Digits());

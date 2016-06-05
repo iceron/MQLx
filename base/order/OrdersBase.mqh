@@ -104,7 +104,6 @@ bool JOrdersBase::EventHandler(JEvents *events)
 //+------------------------------------------------------------------+
 bool JOrdersBase::NewOrder(const int ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
-   Print(__FUNCTION__);
    JOrder *order=new JOrder(ticket,symbol,type,volume,price);
    if(CheckPointer(order)==POINTER_DYNAMIC)
       if(InsertSort(GetPointer(order)))

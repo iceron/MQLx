@@ -625,9 +625,7 @@ void JStrategyBase::DeinitSymbol(void)
   {
 //ADT::Delete(m_symbol);
 //ADT::Delete(m_symbol_man);
-   Print(__FUNCTION__+" called");
    m_symbol_man.Deinit();
-   Print(__FUNCTION__+" called end");
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

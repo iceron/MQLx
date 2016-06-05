@@ -18,7 +18,7 @@ public:
                     ~COrderManager();
    virtual bool      CloseOrder(JOrder*,const int);
    virtual void      OnTradeTransaction(JOrder *order=NULL);
-   virtual bool      TradeOpen(const int res);
+   virtual bool      TradeOpen(const string symbol,const int res);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -46,7 +46,7 @@ void COrderManager::OnTradeTransaction(JOrder *order=NULL)
       if(m_symbol.Name()!=OrderSymbol()) continue;
       temp.Ticket(OrderTicket());
       if(m_orders.Search(temp)>=0) continue;
-      m_orders.NewOrder(OrderTicket(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
+      m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
      }
    delete temp;
   }
@@ -69,8 +69,8 @@ bool COrderManager::TradeOpen(const string symbol,const int res)
       double sl=0,tp=0;
       if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
         {
-         sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(type,price):m_main_stop.StopLossCalculate(type,price);
-         tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(type,price):m_main_stop.TakeProfitCalculate(type,price);
+         sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(type,price):m_main_stop.StopLossCalculate(symbol,type,price);
+         tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(type,price):m_main_stop.TakeProfitCalculate(symbol,type,price);
         }
       double lotsize=LotSizeCalculate(price,type,sl);
       ret=SendOrder(type,lotsize,price,sl,tp);

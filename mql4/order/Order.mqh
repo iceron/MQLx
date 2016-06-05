@@ -16,7 +16,7 @@ protected:
    bool              m_ticket_updated;
 public:
                      JOrder(void);
-                     JOrder(const ulong ticket,const ENUM_ORDER_TYPE type,const double volume,const double price);
+                     JOrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);                     
                     ~JOrder(void);
    virtual bool      IsClosed(void);
    virtual void      Ticket(const ulong ticket) {m_ticket_current.InsertSort((int)ticket);}

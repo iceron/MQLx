@@ -88,7 +88,6 @@ JOrderStopsBase::Check(double &volume)
 //+------------------------------------------------------------------+
 bool JOrderStopsBase::Close(void)
   {
-   Print(__FUNCTION__);
    bool res=true;
    int total=Total();
    if(total>0)
