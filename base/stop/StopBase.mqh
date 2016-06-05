@@ -371,9 +371,11 @@ bool JStopBase::CheckStopLoss(JOrder *order,JOrderStop *orderstop)
    if(!GetClosePrice(order.Symbol(),type,price)) return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
-      if(price<=stoploss) close=true;
+      if(price<=stoploss) 
+         close=true;
    else if(type==ORDER_TYPE_SELL)
-      if(price>=stoploss) close=true;
+      if(price>=stoploss) 
+         close=true;
    if(close)
       return CloseStop(order,orderstop,price);
    return false;
