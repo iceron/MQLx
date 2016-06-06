@@ -50,7 +50,7 @@ protected:
    CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
    CAccountInfo     *m_account;
-   JTrade           *m_trade;
+   CExpertTrade           *m_trade;
    CTrails          *m_trails;
    CStops           *m_stops;
 public:
@@ -61,7 +61,7 @@ public:
    virtual bool      Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
    virtual bool      InitSymbol(CSymbolManager *symbolmanager);
-   virtual bool      InitTrade(JTrade *trade=NULL);
+   virtual bool      InitTrade(CExpertTrade *trade=NULL);
    virtual void      SetContainer(CStops *stops){m_stops=stops;}
    virtual bool      Validate(void) const;
    //--- getters and setters
@@ -234,13 +234,13 @@ bool CStopBase::InitAccount(CAccountInfo *accountinfo=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStopBase::InitTrade(JTrade *trade=NULL)
+bool CStopBase::InitTrade(CExpertTrade *trade=NULL)
   {
    if(m_trade!=NULL)
       delete m_trade;
    if(trade==NULL)
      {
-      if((m_trade=new JTrade)==NULL)
+      if((m_trade=new CExpertTrade)==NULL)
          return false;
      }
    else m_trade=trade;

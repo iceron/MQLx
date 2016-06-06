@@ -10,7 +10,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JTrade : public CObject
+class CExpertTrade : public CObject
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -34,8 +34,8 @@ protected:
    color             m_color_exit;
    CSymbolInfo      *m_symbol;
 public:
-                     JTrade(void);
-                    ~JTrade(void);
+                     CExpertTrade(void);
+                    ~CExpertTrade(void);
    virtual int Type() const {return CLASS_TYPE_TRADE;}
    //--- activation and deactivation
    virtual bool      Activate() const {return m_activate;}
@@ -63,7 +63,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrade::JTrade(void) : m_activate(true),
+CExpertTrade::CExpertTrade(void) : m_activate(true),
                        m_magic(0),
                        m_deviation(10),
                        m_order_type_time(0),
@@ -84,13 +84,13 @@ JTrade::JTrade(void) : m_activate(true),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrade::~JTrade(void)
+CExpertTrade::~CExpertTrade(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::SetSymbol(CSymbolInfo *symbol)
+bool CExpertTrade::SetSymbol(CSymbolInfo *symbol)
   {
    if(symbol!=NULL)
      {
@@ -102,7 +102,7 @@ bool JTrade::SetSymbol(CSymbolInfo *symbol)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderModify(const ulong ticket,const double price,const double sl,const double tp,
+bool CExpertTrade::OrderModify(const ulong ticket,const double price,const double sl,const double tp,
                          const ENUM_ORDER_TYPE_TIME type_time,const datetime expiration,const double stoplimit=0.0)
   {
    return ::OrderModify((int)ticket,price,sl,tp,expiration,m_color_modify);
@@ -110,14 +110,14 @@ bool JTrade::OrderModify(const ulong ticket,const double price,const double sl,c
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderDelete(const ulong ticket)
+bool CExpertTrade::OrderDelete(const ulong ticket)
   {
    return ::OrderDelete((int)ticket);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-ulong JTrade::Buy(const double volume,const double price,const double sl,const double tp,const string comment="")
+ulong CExpertTrade::Buy(const double volume,const double price,const double sl,const double tp,const string comment="")
   {
    if(m_symbol==NULL)
       return false;
@@ -138,7 +138,7 @@ ulong JTrade::Buy(const double volume,const double price,const double sl,const d
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-ulong JTrade::Sell(const double volume,const double price,const double sl,const double tp,const string comment="")
+ulong CExpertTrade::Sell(const double volume,const double price,const double sl,const double tp,const string comment="")
   {
    if(m_symbol==NULL)
       return false;
@@ -159,7 +159,7 @@ ulong JTrade::Sell(const double volume,const double price,const double sl,const 
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,
+ulong CExpertTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,
                         const double limit_price,const double price,const double sl,const double tp,
                         const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,
                         const string comment="")
@@ -209,7 +209,7 @@ ulong JTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,con
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const double price=0.0)
+bool CExpertTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const double price=0.0)
   {
    if(!OrderSelect((int)ticket,SELECT_BY_TICKET))
       return false;
@@ -233,7 +233,7 @@ bool JTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const double
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrade::OrderCloseAll(CArrayInt *other_magic,const bool restrict_symbol=true)
+bool CExpertTrade::OrderCloseAll(CArrayInt *other_magic,const bool restrict_symbol=true)
   {
    bool res=true;
    int total= OrdersTotal();
@@ -262,7 +262,7 @@ bool JTrade::OrderCloseAll(CArrayInt *other_magic,const bool restrict_symbol=tru
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-color JTrade::ArrowColor(const ENUM_ORDER_TYPE type)
+color CExpertTrade::ArrowColor(const ENUM_ORDER_TYPE type)
   {
    switch(type)
      {

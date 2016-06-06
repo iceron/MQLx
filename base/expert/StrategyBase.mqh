@@ -66,7 +66,7 @@ public:
    virtual bool      AddTimes(CTimes*);
    virtual bool      Init(string symbol,int timeframe,int magic,bool every_tick=true,bool one_trade_per_candle=true,bool position_reverse=true);
    virtual bool      InitAccount(CAccountInfo*);
-   virtual bool      InitTrade(JTrade *trade=NULL){return m_order_man.InitTrade(GetPointer(trade));}
+   virtual bool      InitTrade(CExpertTrade *trade=NULL){return m_order_man.InitTrade(GetPointer(trade));}
    virtual bool      InitComponents(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);

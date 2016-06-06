@@ -9,7 +9,6 @@
 class CStrategy;
 #include <Arrays\ArrayInt.mqh>
 #include "..\lib\AccountInfo.mqh"
-//#include "..\lib\SymbolInfo.mqh"
 #include "..\..\common\class\ADT.mqh"
 #include "..\order\OrdersBase.mqh"
 #include "..\stop\StopsBase.mqh"
@@ -37,7 +36,7 @@ protected:
    CArrayInt         m_other_magic;
    CSymbolInfo      *m_symbol;
    CSymbolManager   *m_symbol_man;
-   JTrade           *m_trade;
+   CExpertTrade           *m_trade;
    //CTradeManager    *m_trade_man;
    CMoneys          *m_moneys;
    //--- order objects
@@ -50,7 +49,7 @@ public:
    virtual bool      Init(CStrategy *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
    virtual bool      InitStops(CStrategy *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
    bool              InitMoneys(CStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
-   bool              InitTrade(JTrade*);
+   bool              InitTrade(CExpertTrade*);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
    virtual bool      Validate(void) const;
@@ -196,14 +195,14 @@ bool COrderManagerBase::InitMoneys(CStrategy *s,CSymbolInfo *symbolinfo,CAccount
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitTrade(JTrade *trade=NULL)
+bool COrderManagerBase::InitTrade(CExpertTrade *trade=NULL)
   {
 
    if(m_trade!=NULL)
       delete m_trade;
    if(trade==NULL)
      {
-      if((m_trade=new JTrade)==NULL)
+      if((m_trade=new CExpertTrade)==NULL)
          return false;
      }
    else m_trade=trade;
