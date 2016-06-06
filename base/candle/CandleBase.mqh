@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                   CandleBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include <Files\FileBin.mqh>
 #include "..\lib\SymbolInfo.mqh"
 //+------------------------------------------------------------------+
@@ -118,8 +118,8 @@ bool CCandleBase::Load(const int handle)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\candle\Candle.mqh"
+#include "..\..\MQL5\Candle\Candle.mqh"
 #else
-#include "..\..\mql4\candle\Candle.mqh"
+#include "..\..\MQL4\Candle\Candle.mqh"
 #endif
 //+------------------------------------------------------------------+

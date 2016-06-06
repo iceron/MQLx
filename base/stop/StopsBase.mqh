@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                    StopsBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
 #include "StopBase.mqh"
 class CExpert;
@@ -92,8 +92,8 @@ bool CStopsBase::CreateElement(const int index)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\stop\Stops.mqh"
+#include "..\..\MQL5\Stop\Stops.mqh"
 #else
-#include "..\..\mql4\stop\Stops.mqh"
+#include "..\..\MQL4\Stop\Stops.mqh"
 #endif
 //+------------------------------------------------------------------+

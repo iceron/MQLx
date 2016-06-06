@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                     StopBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include "..\..\Common\Enum\ENUM_TRAIL_TARGET.mqh"
 #include "..\..\Common\Enum\ENUM_STOP_TYPE.mqh"
 #include "..\Stop\StopLineBase.mqh"
@@ -246,7 +246,6 @@ bool CStopBase::InitTrade(CExpertTrade *trade=NULL)
    else m_trade=trade;
    m_trade.SetSymbol(GetPointer(m_symbol));
    m_trade.SetExpertMagicNumber(m_magic);
-   //m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
    return true;
   }
 //+------------------------------------------------------------------+
@@ -518,8 +517,8 @@ CStopLine *CStopBase::CreateObject(const long id,const string name,const int win
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\stop\Stop.mqh"
+#include "..\..\MQL5\Stop\Stop.mqh"
 #else
-#include "..\..\mql4\stop\Stop.mqh"
+#include "..\..\MQL4\Stop\Stop.mqh"
 #endif
 //+------------------------------------------------------------------+

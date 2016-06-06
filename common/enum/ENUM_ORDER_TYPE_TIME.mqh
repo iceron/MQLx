@@ -1,10 +1,13 @@
 //+------------------------------------------------------------------+
-//|                                                        Trade.mqh |
+//|                                         ENUM_ORDER_TYPE_TIME.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 enum ENUM_ORDER_TYPE_TIME
   {
    ORDER_TIME_GTC,
@@ -12,3 +15,4 @@ enum ENUM_ORDER_TYPE_TIME
    ORDER_TIME_SPECIFIED,
    ORDER_TIME_SPECIFIED_DAY
   };
+//+------------------------------------------------------------------+

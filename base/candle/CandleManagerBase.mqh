@@ -90,8 +90,8 @@ CCandle *CCandleManagerBase::Get(string symbol,int timeframe)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\candle\CandleManager.mqh"
+#include "..\..\MQL5\Candle\CandleManager.mqh"
 #else
-#include "..\..\mql4\candle\CandleManager.mqh"
+#include "..\..\MQL4\Candle\CandleManager.mqh"
 #endif
 //+------------------------------------------------------------------+

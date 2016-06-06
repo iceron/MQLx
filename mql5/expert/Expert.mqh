@@ -1,42 +1,47 @@
 //+------------------------------------------------------------------+
 //|                                                       Expert.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CExperts : public CExpertsBase
+class CExpert : public CExpertBase
   {
 public:
-                     CExperts(void);
-                    ~CExperts(void);
-   virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
+                     CExpert(void);
+                    ~CExpert(void);
+   virtual bool      OnTick(void);
+   virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExperts::CExperts(void)
+CExpert::CExpert(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExperts::~CExperts(void)
+CExpert::~CExpert(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExperts::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
+bool CExpert::OnTick(void)
+  {
+   bool ret=CExpertBase::OnTick();
+   return ret;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CExpert::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    Print(__FUNCTION__);
-   for(int i=0;i<Total();i++)
-     {
-      CExpert *strat=At(i);
-      strat.OnTradeTransaction(trans,request,result);
-     }
-  }
+   m_order_man.OnTradeTransaction(trans,request,result);
+  }  
 //+------------------------------------------------------------------+

@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                  CommentBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include <Files\FileBin.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -47,8 +47,8 @@ string CCommentBase::Text(void)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\comment\Comment.mqh"
+#include "..\..\MQL5\Comment\Comment.mqh"
 #else
-#include "..\..\mql4\comment\Comment.mqh"
+#include "..\..\MQL4\Comment\Comment.mqh"
 #endif
 //+------------------------------------------------------------------+

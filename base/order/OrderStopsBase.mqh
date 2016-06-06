@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                               OrderStopsBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
 #include "OrderStopBase.mqh"
 class COrder;
@@ -134,8 +134,8 @@ bool COrderStopsBase::Load(const int handle)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\order\OrderStops.mqh"
+#include "..\..\MQL5\Order\OrderStops.mqh"
 #else
-#include "..\..\mql4\order\OrderStops.mqh"
+#include "..\..\MQL4\Order\OrderStops.mqh"
 #endif
 //+------------------------------------------------------------------+

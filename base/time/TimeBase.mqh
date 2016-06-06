@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                     TimeBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include <Object.mqh>
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 class CExpert;
@@ -61,8 +61,8 @@ bool CTimeBase::Init(CExpert *s,CTimes *times)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\time\Time.mqh"
+#include "..\..\MQL5\Time\Time.mqh"
 #else
-#include "..\..\mql4\time\Time.mqh"
+#include "..\..\MQL4\Time\Time.mqh"
 #endif
 //+------------------------------------------------------------------+

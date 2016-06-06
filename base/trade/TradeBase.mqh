@@ -1,13 +1,13 @@
 //+------------------------------------------------------------------+
 //|                                                    TradeBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #ifdef __MQL5__
-#include "..\..\mql5\trade\Trade.mqh"
+#include "..\..\MQL5\Trade\Trade.mqh"
 #else 
-#include "..\..\mql4\trade\Trade.mqh"
+#include "..\..\MQL4\Trade\Trade.mqh"
 #endif
 //+------------------------------------------------------------------+

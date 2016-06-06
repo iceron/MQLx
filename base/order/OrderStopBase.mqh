@@ -435,8 +435,8 @@ bool COrderStopBase::Load(const int handle)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\order\OrderStop.mqh"
+#include "..\..\MQL5\Order\OrderStop.mqh"
 #else
-#include "..\..\mql4\order\OrderStop.mqh"
+#include "..\..\MQL4\Order\OrderStop.mqh"
 #endif
 //+------------------------------------------------------------------+

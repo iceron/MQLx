@@ -1,29 +1,40 @@
 //+------------------------------------------------------------------+
 //|                                                       Expert.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CExperts : public CExpertsBase
+class CExpert : public CExpertBase
   {
 public:
-                     CExperts(void);
-                    ~CExperts(void);
+                     CExpert(void);
+                    ~CExpert(void);              
+   virtual bool      OnTick(void);
+   virtual void      OnTradeTransaction(void) {m_order_man.OnTradeTransaction();}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExperts::CExperts(void)
+CExpert::CExpert(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExperts::~CExperts(void)
+CExpert::~CExpert(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpert::OnTick(void)
+  {
+   bool ret=CExpertBase::OnTick();
+   if(ret) OnTradeTransaction();
+   return ret;
   }
 //+------------------------------------------------------------------+

@@ -1,11 +1,10 @@
 //+------------------------------------------------------------------+
-//|                                             COrderManagerBase.mqh |
+//|                                             OrderManagerBase.mqh |
 //|                                                   Enrico Lambino |
 //|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#property strict
 class CExpert;
 #include <Arrays\ArrayInt.mqh>
 #include "..\lib\AccountInfo.mqh"
@@ -493,8 +492,8 @@ double COrderManagerBase::LotSizeCalculate(const double price,const ENUM_ORDER_T
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\ordermanager\OrderManager.mqh"
+#include "..\..\MQL5\OrderManager\OrderManager.mqh"
 #else
-#include "..\..\mql4\ordermanager\OrderManager.mqh"
+#include "..\..\MQL4\OrderManager\OrderManager.mqh"
 #endif
 //+------------------------------------------------------------------+

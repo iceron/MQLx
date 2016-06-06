@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                TimeRangeBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include "TimeBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -74,8 +74,8 @@ bool CTimeRangeBase::Evaluate(void)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\time\TimeRange.mqh"
+#include "..\..\MQL5\Time\TimeRange.mqh"
 #else
-#include "..\..\mql4\time\TimeRange.mqh"
+#include "..\..\MQL4\Time\TimeRange.mqh"
 #endif
 //+------------------------------------------------------------------+

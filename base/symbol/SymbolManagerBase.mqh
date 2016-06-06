@@ -5,9 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#property strict
 #include <Arrays\ArrayObj.mqh>
-//#include "SymbolInfoBase.mqh"
 #include "..\lib\SymbolInfo.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -23,8 +21,6 @@ public:
    virtual void      Deinit(void);
    CSymbolInfo      *Get(const string name);
    virtual bool      RefreshRates(void);
-   //virtual bool      Select(const string);
-   //virtual CSymbolInfo* Selected(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -82,35 +78,10 @@ bool CSymbolManagerBase::RefreshRates(void)
      }
    return true;
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CSymbolManagerBase::Select(const string symbol)
-  {
-   for(int i=0;i<Total();i++)
-     {
-      CSymbolInfo *item=At(i);
-      if(StringCompare(symbol,item.Name())==0)
-        {
-         m_symbol=item;
-         return true;
-        }
-     }
-   return false;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-CSymbolInfo *CSymbolManagerBase::Selected(void)
-  {
-   return m_symbol;
-  }
-*/
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\symbol\SymbolManager.mqh"
+#include "..\..\MQL5\Symbol\SymbolManager.mqh"
 #else
-#include "..\..\mql4\symbol\SymbolManager.mqh"
+#include "..\..\MQL4\Symbol\SymbolManager.mqh"
 #endif
 //+------------------------------------------------------------------+

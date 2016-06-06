@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
-//|                                         MoneyFixedMarginBase.mqh |
+//|                                     MoneyFixedFractionalBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include "MoneyBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -61,8 +61,8 @@ void CMoneyFixedFractionalBase::UpdateLotSize(const double price,const ENUM_ORDE
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\money\MoneyFixedFractional.mqh"
+#include "..\..\MQL5\Money\MoneyFixedFractional.mqh"
 #else
-#include "..\..\mql4\money\MoneyFixedFractional.mqh"
+#include "..\..\MQL4\Money\MoneyFixedFractional.mqh"
 #endif
 //+------------------------------------------------------------------+

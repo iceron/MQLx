@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                    TimerBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #define YEAR_SECONDS 31536000
 #define MONTH_SECONDS 2419200
 #define DAY_SECONDS 86400
@@ -114,8 +114,8 @@ bool CTimerBase::Evaluate(void)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\time\Timer.mqh"
+#include "..\..\MQL5\Time\Timer.mqh"
 #else
-#include "..\..\mql4\time\Timer.mqh"
+#include "..\..\MQL4\Time\Timer.mqh"
 #endif
 //+------------------------------------------------------------------+

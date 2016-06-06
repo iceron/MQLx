@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                  SignalsBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
 #include <Arrays\ArrayInt.mqh>
 #include <Files\FileBin.mqh>
@@ -207,8 +207,8 @@ void CSignalsBase::AddComment(const string comment)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\signal\Signals.mqh"
+#include "..\..\MQL5\Signal\Signals.mqh"
 #else
-#include "..\..\mql4\signal\Signals.mqh"
+#include "..\..\MQL4\Signal\Signals.mqh"
 #endif
 //+------------------------------------------------------------------+

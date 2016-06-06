@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                               TimeFilterBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include "TimeBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -144,8 +144,8 @@ void CTimeFilterBase::SetDays(const bool sun=false,const bool mon=true,const boo
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\time\TimeFilter.mqh"
+#include "..\..\MQL5\Time\TimeFilter.mqh"
 #else
-#include "..\..\mql4\time\TimeFilter.mqh"
+#include "..\..\MQL5\Time\TimeFilter.mqh"
 #endif
 //+------------------------------------------------------------------+

@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                 CommentsBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\List.mqh>
 #include "CommentBase.mqh"
 //+------------------------------------------------------------------+
@@ -58,8 +58,8 @@ CCommentsBase::Concatenate(string &str,string comment)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\comment\Comments.mqh"
+#include "..\..\MQL5\Comment\Comments.mqh"
 #else
-#include "..\..\mql4\comment\Comments.mqh"
+#include "..\..\MQL4\Comment\Comments.mqh"
 #endif
 //+------------------------------------------------------------------+

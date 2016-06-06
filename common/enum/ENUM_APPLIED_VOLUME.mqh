@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
-//|                                              ENUM_ALERT_MODE.mqh |
+//|                                          ENUM_APPLIED_VOLUME.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                 StopLineBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include <ChartObjects\ChartObjectsLines.mqh>
 #include <Files\FileBin.mqh>
 class CStop;
@@ -67,8 +67,8 @@ bool CStopLineBase::SetStyle(const ENUM_LINE_STYLE style)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\stop\StopLine.mqh"
+#include "..\..\MQL5\Stop\StopLine.mqh"
 #else
-#include "..\..\mql4\stop\StopLine.mqh"
+#include "..\..\MQL4\Stop\StopLine.mqh"
 #endif
 //+------------------------------------------------------------------+

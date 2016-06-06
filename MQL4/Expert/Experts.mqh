@@ -1,31 +1,29 @@
 //+------------------------------------------------------------------+
-//|                                               SymbolInfoBase.mqh |
+//|                                                      Experts.mqh |
 //|                                                   Enrico Lambino |
 //|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#property strict
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CSymbolInfo : public CSymbolInfoBase
+class CExperts : public CExpertsBase
   {
-protected:
 public:
-                     CSymbolInfo(void);
-                    ~CSymbolInfo(void);
+                     CExperts(void);
+                    ~CExperts(void);
   };
 //+------------------------------------------------------------------+
-//| Constructor                                                      |
+//|                                                                  |
 //+------------------------------------------------------------------+
-CSymbolInfo::CSymbolInfo(void)
+CExperts::CExperts(void)
   {
   }
 //+------------------------------------------------------------------+
-//| Destructor                                                       |
+//|                                                                  |
 //+------------------------------------------------------------------+
-CSymbolInfo::~CSymbolInfo(void)
+CExperts::~CExperts(void)
   {
   }
 //+------------------------------------------------------------------+

@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                   MoneysBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
 #include "MoneyFixedFractionalBase.mqh"
 //+------------------------------------------------------------------+
@@ -81,8 +81,8 @@ double CMoneysBase::Volume(const double price,const ENUM_ORDER_TYPE type,const d
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\money\Moneys.mqh"
+#include "..\..\MQL5\Money\Moneys.mqh"
 #else
-#include "..\..\mql4\money\Moneys.mqh"
+#include "..\..\MQL4\Money\Moneys.mqh"
 #endif
 //+------------------------------------------------------------------+

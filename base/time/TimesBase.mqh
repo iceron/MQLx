@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
 //|                                                    TimesBase.mqh |
 //|                                                   Enrico Lambino |
-//|                                   http://www.cyberforexworks.com |
+//|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
-#property link      "http://www.cyberforexworks.com"
+#property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
 #include <Files\FileBin.mqh>
 #include "TimeFilterBase.mqh"
@@ -101,8 +101,8 @@ bool CTimesBase::CreateElement(const int index)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\time\Times.mqh"
+#include "..\..\MQL5\Time\Times.mqh"
 #else
-#include "..\..\mql4\time\Times.mqh"
+#include "..\..\MQL4\Time\Times.mqh"
 #endif
 //+------------------------------------------------------------------+
