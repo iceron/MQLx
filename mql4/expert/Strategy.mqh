@@ -8,32 +8,32 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CStrategy : public CStrategyBase
+class CExpert : public CExpertBase
   {
 public:
-                     CStrategy(void);
-                    ~CStrategy(void);              
+                     CExpert(void);
+                    ~CExpert(void);              
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void) {m_order_man.OnTradeTransaction();}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CStrategy::CStrategy(void)
+CExpert::CExpert(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CStrategy::~CStrategy(void)
+CExpert::~CExpert(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategy::OnTick(void)
+bool CExpert::OnTick(void)
   {
-   bool ret=CStrategyBase::OnTick();
+   bool ret=CExpertBase::OnTick();
    if(ret) OnTradeTransaction();
    return ret;
   }

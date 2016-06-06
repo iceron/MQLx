@@ -7,7 +7,7 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
 #include "OrderBase.mqh"
-class CStrategy;
+class CExpert;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -17,14 +17,14 @@ protected:
    bool              m_activate;
    bool              m_clean;
    CStops           *m_stops;
-   CStrategy        *m_strategy;
+   CExpert        *m_strategy;
 public:
                      COrdersBase(void);
                     ~COrdersBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERS;}
    //--- initialization
-   virtual bool      Init(CStrategy *s=NULL,CStops *stops=NULL);
-   virtual void      SetContainer(CStrategy *s);
+   virtual bool      Init(CExpert *s=NULL,CStops *stops=NULL);
+   virtual void      SetContainer(CExpert *s);
    virtual void      SetStops(CStops *stops);
    //--- getters and setters
    bool              Activate(void) const {return m_activate;}
@@ -63,7 +63,7 @@ COrdersBase::~COrdersBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrdersBase::Init(CStrategy *s=NULL,CStops *stops=NULL)
+bool COrdersBase::Init(CExpert *s=NULL,CStops *stops=NULL)
   {
    SetContainer(s);
    SetStops(stops);
@@ -72,7 +72,7 @@ bool COrdersBase::Init(CStrategy *s=NULL,CStops *stops=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrdersBase::SetContainer(CStrategy *s)
+COrdersBase::SetContainer(CExpert *s)
   {
    if(s!=NULL) m_strategy=s;
   }
