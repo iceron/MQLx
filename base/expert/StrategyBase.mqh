@@ -5,7 +5,6 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include "..\..\common\enum\ENUM_EXECUTION_MODE.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\class\ADT.mqh"
 #include <Object.mqh>
@@ -35,7 +34,6 @@ protected:
    string            m_name;
    //--- signal parameters
    bool              m_every_tick;
-   ENUM_EXECUTION_MODE m_exec_mode;
    bool              m_one_trade_per_candle;
    string            m_symbol_name;
    int               m_period;
@@ -87,8 +85,6 @@ public:
    void              OfflineMode(const bool mode) {m_offline_mode=mode;}
    int               OfflineModeDelay() const {return m_offline_mode_delay;}
    void              OfflineModeDelay(const int delay){m_offline_mode_delay=delay;}
-   ENUM_EXECUTION_MODE ExecutionMode(void) const {return m_exec_mode;}
-   void              ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
    //--- object pointers
    CAccountInfo      *AccountInfo(void) const {return GetPointer(m_account);}
    JComments         *Comments() const {return GetPointer(m_comments);}
@@ -177,7 +173,6 @@ protected:
 //+------------------------------------------------------------------+
 JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_every_tick(true),
-                                     m_exec_mode(MODE_TRADE),
                                      m_one_trade_per_candle(true),
                                      m_period(PERIOD_CURRENT),
                                      m_position_reverse(true),
