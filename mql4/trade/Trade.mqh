@@ -16,7 +16,6 @@ class CExpertTrade : public CObject
 //+------------------------------------------------------------------+
   {
 protected:
-   bool              m_activate;
    int               m_magic;
    ulong             m_deviation;
    ENUM_ORDER_TYPE_TIME m_order_type_time;
@@ -37,9 +36,6 @@ public:
                      CExpertTrade(void);
                     ~CExpertTrade(void);
    virtual int Type() const {return CLASS_TYPE_TRADE;}
-   //--- activation and deactivation
-   virtual bool      Activate() const {return m_activate;}
-   virtual void      Activate(const bool activate) {m_activate=activate;}
    //--- setters and getters
    color             ArrowColor(const ENUM_ORDER_TYPE type);
    uint               Retry() {return m_retry;}
@@ -63,22 +59,21 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpertTrade::CExpertTrade(void) : m_activate(true),
-                       m_magic(0),
-                       m_deviation(10),
-                       m_order_type_time(0),
-                       m_symbol(NULL),
-                       m_async_mode(0),
-                       m_retry(3),
-                       m_sleep(100),
-                       m_color_long(clrGreen),
-                       m_color_buystop(clrGreen),
-                       m_color_buylimit(clrGreen),
-                       m_color_sellstop(clrRed),
-                       m_color_selllimit(clrRed),
-                       m_color_short(clrRed),
-                       m_color_modify(clrNONE),
-                       m_color_exit(clrNONE)
+CExpertTrade::CExpertTrade(void) : m_magic(0),
+                                   m_deviation(10),
+                                   m_order_type_time(0),
+                                   m_symbol(NULL),
+                                   m_async_mode(0),
+                                   m_retry(3),
+                                   m_sleep(100),
+                                   m_color_long(clrGreen),
+                                   m_color_buystop(clrGreen),
+                                   m_color_buylimit(clrGreen),
+                                   m_color_sellstop(clrRed),
+                                   m_color_selllimit(clrRed),
+                                   m_color_short(clrRed),
+                                   m_color_modify(clrNONE),
+                                   m_color_exit(clrNONE)
   {
   }
 //+------------------------------------------------------------------+
@@ -103,7 +98,7 @@ bool CExpertTrade::SetSymbol(CSymbolInfo *symbol)
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CExpertTrade::OrderModify(const ulong ticket,const double price,const double sl,const double tp,
-                         const ENUM_ORDER_TYPE_TIME type_time,const datetime expiration,const double stoplimit=0.0)
+                               const ENUM_ORDER_TYPE_TIME type_time,const datetime expiration,const double stoplimit=0.0)
   {
    return ::OrderModify((int)ticket,price,sl,tp,expiration,m_color_modify);
   }
@@ -160,12 +155,12 @@ ulong CExpertTrade::Sell(const double volume,const double price,const double sl,
 //|                                                                  |
 //+------------------------------------------------------------------+
 ulong CExpertTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,
-                        const double limit_price,const double price,const double sl,const double tp,
-                        const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,
-                        const string comment="")
+                              const double limit_price,const double price,const double sl,const double tp,
+                              const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,
+                              const string comment="")
   {
    bool res;
-   ulong ticket = 0;
+   ulong ticket=0;
    color arrowcolor=ArrowColor(order_type);
    datetime expire=0;
    if(order_type>1 && expiration>0) expire=expiration*1000+TimeCurrent();
@@ -187,7 +182,7 @@ ulong CExpertTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_ty
          ::Sleep(m_sleep);
          for(uint j=0;j<m_retry;j++)
            {
-            if (res) break;
+            if(res) break;
             if(ticket>0 && (sl>0 || tp>0))
               {
                if(OrderSelect((int)ticket,SELECT_BY_TICKET))
