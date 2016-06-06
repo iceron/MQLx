@@ -8,24 +8,24 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrder : public JOrderBase
+class COrder : public COrderBase
   {
 public:
-                     JOrder(void);
-                     JOrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);
-                    ~JOrder(void);
+                     COrder(void);
+                     COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);
+                    ~COrder(void);
    virtual bool      IsClosed(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder(void)
+COrder::COrder(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price)
+COrder::COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
    m_ticket=ticket;
    m_symbol = symbol;
@@ -37,13 +37,13 @@ JOrder::JOrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::~JOrder(void)
+COrder::~COrder(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrder::IsClosed(void)
+bool COrder::IsClosed(void)
   {
    if(m_closed)
      {

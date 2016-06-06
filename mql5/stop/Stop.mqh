@@ -9,42 +9,42 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStop : public JStopBase
+class CStop : public CStopBase
   {
 public:
-                     JStop(void);
-                     JStop(const string name);
-                    ~JStop(void);
+                     CStop(void);
+                     CStop(const string name);
+                    ~CStop(void);
    virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const;
    virtual bool      DeleteStopOrder(const ulong ticket) const;
-   virtual bool      OpenStop(JOrder *order,JOrderStop *orderstop,double val);
-   virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop);
-   virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop);
+   virtual bool      OpenStop(COrder *order,COrderStop *orderstop,double val);
+   virtual double    StopLossPrice(COrder *order,COrderStop *orderstop);
+   virtual double    TakeProfitPrice(COrder *order,COrderStop *orderstop);
 
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStop::JStop(void)
+CStop::CStop(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStop::JStop(const string name)
+CStop::CStop(const string name)
   {
    m_name=name;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStop::~JStop(void)
+CStop::~CStop(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
+bool CStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
   {
    COrderInfo ord;
    CHistoryOrderInfo h_ord;
@@ -90,7 +90,7 @@ bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::DeleteStopOrder(const ulong ticket) const
+bool CStop::DeleteStopOrder(const ulong ticket) const
   {
    if(ticket<=0) return true;
    if(m_trade.OrderDelete(ticket))
@@ -104,7 +104,7 @@ bool JStop::DeleteStopOrder(const ulong ticket) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::TakeProfitPrice(JOrder *order,JOrderStop *orderstop)
+double CStop::TakeProfitPrice(COrder *order,COrderStop *orderstop)
   {
    double val=m_takeprofit>0?TakeProfitCalculate(order.Symbol(),order.OrderType(),order.Price()):TakeProfitCustom(order.OrderType(),order.Price());
    if((m_stop_type==STOP_TYPE_PENDING || m_main) && (val>0.0))
@@ -115,7 +115,7 @@ double JStop::TakeProfitPrice(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
+double CStop::StopLossPrice(COrder *order,COrderStop *orderstop)
   {
    double val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.OrderType(),order.Price());
    if((m_stop_type==STOP_TYPE_PENDING || m_main) && (val>0.0))
@@ -126,7 +126,7 @@ double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::OpenStop(JOrder *order,JOrderStop *orderstop,double val)
+bool CStop::OpenStop(COrder *order,COrderStop *orderstop,double val)
   {
    if(val==0) return false;
    bool res=false;

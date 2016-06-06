@@ -8,22 +8,22 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrderStops : public JOrderStopsBase
+class COrderStops : public COrderStopsBase
   {
 public:
-                     JOrderStops(void);
-                    ~JOrderStops(void);
+                     COrderStops(void);
+                    ~COrderStops(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStops::JOrderStops(void)
+COrderStops::COrderStops(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStops::~JOrderStops(void)
+COrderStops::~COrderStops(void)
   {
   }
 //+------------------------------------------------------------------+

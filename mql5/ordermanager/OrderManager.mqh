@@ -16,7 +16,7 @@ protected:
 public:
                      COrderManager();
                     ~COrderManager();
-   virtual bool      CloseOrder(JOrder*,const int);
+   virtual bool      CloseOrder(COrder*,const int);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
    virtual bool      TradeOpen(const string,const int res);
   };
@@ -53,7 +53,7 @@ bool COrderManager::TradeOpen(const string symbol,const int res)
    double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();
    int orders_total = OrdersTotal();
-   ENUM_ORDER_TYPE type=JSignal::SignalToOrderType(res);
+   ENUM_ORDER_TYPE type=CSignal::SignalToOrderType(res);
    m_symbol = m_symbol_man.Get(symbol);
    if(!IsPositionAllowed(type))
       return true;
@@ -69,7 +69,7 @@ bool COrderManager::TradeOpen(const string symbol,const int res)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManager::CloseOrder(JOrder *order,const int index)
+bool COrderManager::CloseOrder(COrder *order,const int index)
   {
    bool closed=false;
    COrderInfo ord;
@@ -79,9 +79,9 @@ bool COrderManager::CloseOrder(JOrder *order,const int index)
          closed=m_trade.OrderDelete(order.Ticket());
       else
         {
-         if(JOrder::IsOrderTypeLong(order.OrderType()))
+         if(COrder::IsOrderTypeLong(order.OrderType()))
             closed=m_trade.Sell(order.Volume(),0,0,0);
-         else if(JOrder::IsOrderTypeShort(order.OrderType()))
+         else if(COrder::IsOrderTypeShort(order.OrderType()))
             closed=m_trade.Buy(order.Volume(),0,0,0);
         }
       if(closed)

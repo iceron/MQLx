@@ -8,22 +8,22 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JMoneyFixedFractional : public JMoneyFixedFractionalBase
+class CMoneyFixedFractional : public CMoneyFixedFractionalBase
   {
 public:
-                     JMoneyFixedFractional(void);
-                    ~JMoneyFixedFractional(void);
+                     CMoneyFixedFractional(void);
+                    ~CMoneyFixedFractional(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedFractional::JMoneyFixedFractional(void)
+CMoneyFixedFractional::CMoneyFixedFractional(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedFractional::~JMoneyFixedFractional(void)
+CMoneyFixedFractional::~CMoneyFixedFractional(void)
   {
   }
 //+------------------------------------------------------------------+

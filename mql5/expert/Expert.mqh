@@ -8,34 +8,34 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JExpert : public JExpertBase
+class CExperts : public CExpertsBase
   {
 public:
-                     JExpert(void);
-                    ~JExpert(void);
+                     CExperts(void);
+                    ~CExperts(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JExpert::JExpert(void)
+CExperts::CExperts(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JExpert::~JExpert(void)
+CExperts::~CExperts(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JExpert::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
+void CExperts::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    Print(__FUNCTION__);
    for(int i=0;i<Total();i++)
      {
-      JStrategy *strat=At(i);
+      CStrategy *strat=At(i);
       strat.OnTradeTransaction(trans,request,result);
      }
   }

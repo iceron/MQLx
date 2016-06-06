@@ -8,11 +8,11 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStrategy : public JStrategyBase
+class CStrategy : public CStrategyBase
   {
 public:
-                     JStrategy(void);
-                    ~JStrategy(void);
+                     CStrategy(void);
+                    ~CStrategy(void);
    //virtual bool      CloseOrder(JOrder *order,const int index);
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
@@ -20,27 +20,27 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::JStrategy(void)
+CStrategy::CStrategy(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::~JStrategy(void)
+CStrategy::~CStrategy(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::OnTick(void)
+bool CStrategy::OnTick(void)
   {
-   bool ret=JStrategyBase::OnTick();
+   bool ret=CStrategyBase::OnTick();
    return ret;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
+void CStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    Print(__FUNCTION__);
    m_order_man.OnTradeTransaction(trans,request,result);

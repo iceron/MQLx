@@ -8,11 +8,11 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrderStop : public JOrderStopBase
+class COrderStop : public COrderStopBase
   {
 public:
-                     JOrderStop(void);
-                    ~JOrderStop(void);
+                     COrderStop(void);
+                    ~COrderStop(void);
    virtual void      Check(double &volume);
 protected:
    virtual bool      ModifyStops(const double stoploss,const double takeprofit);
@@ -22,19 +22,19 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStop::JOrderStop(void)
+COrderStop::COrderStop(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStop::~JOrderStop(void)
+COrderStop::~COrderStop(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStop::Check(double &volume)
+void COrderStop::Check(double &volume)
   {
    if(m_stop==NULL) return;
    CheckInit();
@@ -138,14 +138,14 @@ void JOrderStop::Check(double &volume)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::ModifyStops(const double stoploss,const double takeprofit)
+bool COrderStop::ModifyStops(const double stoploss,const double takeprofit)
   {
    return ModifyStopLoss(stoploss) && ModifyTakeProfit(takeprofit);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::ModifyStopLoss(const double stoploss)
+bool COrderStop::ModifyStopLoss(const double stoploss)
   {
    bool modify=false;
    if(m_stop.Pending() || m_stop.Main())
@@ -158,7 +158,7 @@ bool JOrderStop::ModifyStopLoss(const double stoploss)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::ModifyTakeProfit(const double takeprofit)
+bool COrderStop::ModifyTakeProfit(const double takeprofit)
   {
    bool modify=false;
    if(m_stop.Pending() || m_stop.Main())
