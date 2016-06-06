@@ -10,7 +10,7 @@
 #include "TimeFilterBase.mqh"
 #include "TimeRangeBase.mqh"
 #include "TimerBase.mqh"
-class CStrategy;
+class CExpert;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -19,14 +19,14 @@ class CTimesBase : public CArrayObj
 protected:
    bool              m_activate;
    int               m_selected;
-   CStrategy        *m_strategy;
+   CExpert        *m_strategy;
 public:
                      CTimesBase(void);
                     ~CTimesBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIMES;}
    //-- initialization
-   virtual bool      Init(CStrategy *s);
-   virtual void      SetContainer(CStrategy *s){m_strategy=s;}
+   virtual bool      Init(CExpert *s);
+   virtual void      SetContainer(CExpert *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation
    bool              Active(void) const {return m_activate;}
@@ -53,7 +53,7 @@ CTimesBase::~CTimesBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimesBase::Init(CStrategy *s)
+bool CTimesBase::Init(CExpert *s)
   {
    for(int i=0;i<Total();i++)
      {

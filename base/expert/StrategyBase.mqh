@@ -26,7 +26,7 @@ class CExperts;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CStrategyBase : public CObject
+class CExpertBase : public CObject
   {
 protected:
    //--- trade parameters
@@ -55,8 +55,8 @@ protected:
    //--- container
    CExperts          *m_expert;
 public:
-                     CStrategyBase(void);
-                    ~CStrategyBase(void);
+                     CExpertBase(void);
+                    ~CExpertBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STRATEGY;}
    //--- initialization
    virtual bool      Add(CObject*);
@@ -171,7 +171,7 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CStrategyBase::CStrategyBase(void) : m_activate(true),
+CExpertBase::CExpertBase(void) : m_activate(true),
                                      m_every_tick(true),
                                      m_one_trade_per_candle(true),
                                      m_period(PERIOD_CURRENT),
@@ -183,14 +183,14 @@ CStrategyBase::CStrategyBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CStrategyBase::~CStrategyBase(void)
+CExpertBase::~CExpertBase(void)
   {
    Deinit();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::Init(string symbol,int period,int magic,bool every_tick=true,bool one_trade_per_candle=true,bool position_reverse=true)
+bool CExpertBase::Init(string symbol,int period,int magic,bool every_tick=true,bool one_trade_per_candle=true,bool position_reverse=true)
   {
    CSymbolInfo *instrument;
    if((instrument=new CSymbolInfo)==NULL)
@@ -216,7 +216,7 @@ bool CStrategyBase::Init(string symbol,int period,int magic,bool every_tick=true
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::InitComponents(void)
+bool CExpertBase::InitComponents(void)
   {
    bool result=InitSignals() && InitAccount() && InitTimes()
                && InitOrderManager();
@@ -225,7 +225,7 @@ bool CStrategyBase::InitComponents(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::InitSignals(void)
+bool CExpertBase::InitSignals(void)
   {
    if(m_signals==NULL) return true;
    return m_signals.Init(GetPointer(this),GetPointer(m_comments));
@@ -233,7 +233,7 @@ bool CStrategyBase::InitSignals(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::InitTimes(void)
+bool CExpertBase::InitTimes(void)
   {
    if(m_times==NULL) return true;
    return m_times.Init(GetPointer(this));
@@ -241,7 +241,7 @@ bool CStrategyBase::InitTimes(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::InitAccount(CAccountInfo *account=NULL)
+bool CExpertBase::InitAccount(CAccountInfo *account=NULL)
   {
    if(m_account!=NULL)
       delete m_account;
@@ -256,7 +256,7 @@ bool CStrategyBase::InitAccount(CAccountInfo *account=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategyBase::AddComment(const string comment)
+void CExpertBase::AddComment(const string comment)
   {
    if(CheckPointer(m_comments)==POINTER_DYNAMIC)
       m_comments.Add(new CComment(comment));
@@ -264,7 +264,7 @@ void CStrategyBase::AddComment(const string comment)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategyBase::DisplayComment()
+void CExpertBase::DisplayComment()
   {
    if(CheckPointer(m_comments)==POINTER_DYNAMIC)
       m_comments.Display();
@@ -272,7 +272,7 @@ void CStrategyBase::DisplayComment()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::Add(CObject *object)
+bool CExpertBase::Add(CObject *object)
   {
    bool result=false;
    switch(object.Type())
@@ -288,7 +288,7 @@ bool CStrategyBase::Add(CObject *object)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::AddSignals(CSignals *signals)
+bool CExpertBase::AddSignals(CSignals *signals)
   {
    if(CheckPointer(signals)==POINTER_DYNAMIC)
      {
@@ -300,14 +300,14 @@ bool CStrategyBase::AddSignals(CSignals *signals)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::AddMoneys(CMoneys *moneys)
+bool CExpertBase::AddMoneys(CMoneys *moneys)
   {
    return m_order_man.AddMoneys(GetPointer(moneys));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::AddStops(CStops *stops)
+bool CExpertBase::AddStops(CStops *stops)
   {
    m_order_man.AddStops(GetPointer(stops));
    return false;
@@ -315,7 +315,7 @@ bool CStrategyBase::AddStops(CStops *stops)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::AddTimes(CTimes *times)
+bool CExpertBase::AddTimes(CTimes *times)
   {
    if(CheckPointer(times)==POINTER_DYNAMIC)
      {
@@ -327,7 +327,7 @@ bool CStrategyBase::AddTimes(CTimes *times)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CStrategyBase::AddCandle(const string symbol,const int timeframe)
+CExpertBase::AddCandle(const string symbol,const int timeframe)
   {
    CSymbolInfo *instrument=new CSymbolInfo();
    instrument.Name(symbol);
@@ -339,7 +339,7 @@ CStrategyBase::AddCandle(const string symbol,const int timeframe)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::Validate(void) const
+bool CExpertBase::Validate(void) const
   {
    if(CheckPointer(m_signals)==POINTER_DYNAMIC)
      {
@@ -356,13 +356,13 @@ bool CStrategyBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategyBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
+void CExpertBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::OnTick(void)
+bool CExpertBase::OnTick(void)
   {
    if(!Active()) return false;
    if(!RefreshRates()) return false;
@@ -408,14 +408,14 @@ bool CStrategyBase::OnTick(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategyBase::DetectNewBars(void)
+void CExpertBase::DetectNewBars(void)
   {
    m_candle_man.Check();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::CheckSignals(int &entry,int &exit) const
+bool CExpertBase::CheckSignals(int &entry,int &exit) const
   {
    if(CheckPointer(m_signals)==POINTER_DYNAMIC)
       return m_signals.CheckSignals(entry,exit);
@@ -424,21 +424,21 @@ bool CStrategyBase::CheckSignals(int &entry,int &exit) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::RefreshRates()
+bool CExpertBase::RefreshRates()
   {
    return m_symbol_man.RefreshRates();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::IsNewBar(const string symbol,const int period)
+bool CExpertBase::IsNewBar(const string symbol,const int period)
   {
    return m_candle_man.IsNewCandle(symbol,period);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategyBase::Deinit(const int reason=0)
+void CExpertBase::Deinit(const int reason=0)
   {
    DeinitSymbol();
    DeinitSignals();
@@ -450,14 +450,14 @@ void CStrategyBase::Deinit(const int reason=0)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategyBase::DeinitSignals(void)
+void CExpertBase::DeinitSignals(void)
   {
    ADT::Delete(m_signals);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategyBase::DeinitSymbol(void)
+void CExpertBase::DeinitSymbol(void)
   {
 //ADT::Delete(m_symbol);
 //ADT::Delete(m_symbol_man);
@@ -466,28 +466,28 @@ void CStrategyBase::DeinitSymbol(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategyBase::DeinitAccount(void)
+void CExpertBase::DeinitAccount(void)
   {
    ADT::Delete(m_account);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategyBase::DeinitComments(void)
+void CExpertBase::DeinitComments(void)
   {
    ADT::Delete(m_comments);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategyBase::DeinitTimes(void)
+void CExpertBase::DeinitTimes(void)
   {
    ADT::Delete(m_times);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::Save(const int handle)
+bool CExpertBase::Save(const int handle)
   {
 //ADT::WriteStruct(handle,m_last_trade_data);
 //ADT::WriteObject(handle,GetPointer(m_orders));
@@ -499,7 +499,7 @@ bool CStrategyBase::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategyBase::Load(const int handle)
+bool CExpertBase::Load(const int handle)
   {
 //ADT::ReadStruct(handle,m_last_trade_data);
 //ADT::ReadObject(handle,GetPointer(m_orders));

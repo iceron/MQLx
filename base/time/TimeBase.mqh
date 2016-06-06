@@ -7,7 +7,7 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Object.mqh>
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
-class CStrategy;
+class CExpert;
 class CTimes;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -25,7 +25,7 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_TIME;}
    virtual bool      Validate() {return true;}
    //--- initialization
-   virtual bool      Init(CStrategy *s,CTimes *times);
+   virtual bool      Init(CExpert *s,CTimes *times);
    virtual void      SetContainer(CTimes *times){m_times=times;}
    //--- setters and getters
    bool              Active(void) const {return m_activate;}
@@ -54,7 +54,7 @@ CTimeBase::~CTimeBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeBase::Init(CStrategy *s,CTimes *times)
+bool CTimeBase::Init(CExpert *s,CTimes *times)
   {
    SetContainer(times);
    return true;

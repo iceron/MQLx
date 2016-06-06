@@ -15,15 +15,15 @@ class CMoneysBase : public CArrayObj
 protected:
    bool              m_activate;
    int               m_selected;
-   CStrategy        *m_strategy;
+   CExpert        *m_strategy;
 public:
                      CMoneysBase(void);
                     ~CMoneysBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}
    virtual bool      Validate(void) const;
    //--- initialization
-   virtual bool      Init(CStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
-   virtual void      SetContainer(CStrategy *s) {m_strategy=s;}
+   virtual bool      Init(CExpert *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
+   virtual void      SetContainer(CExpert *s) {m_strategy=s;}
    //--- setters and getters
    virtual bool      Active(void) const {return m_activate;}
    virtual void      Active(const bool activate) {m_activate=activate;}
@@ -47,7 +47,7 @@ CMoneysBase::~CMoneysBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CMoneysBase::Init(CStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
+bool CMoneysBase::Init(CExpert *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
   {
    for(int i=0;i<Total();i++)
      {

@@ -35,7 +35,7 @@ void CExperts::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTrad
    Print(__FUNCTION__);
    for(int i=0;i<Total();i++)
      {
-      CStrategy *strat=At(i);
+      CExpert *strat=At(i);
       strat.OnTradeTransaction(trans,request,result);
      }
   }

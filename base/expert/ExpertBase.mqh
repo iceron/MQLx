@@ -63,7 +63,7 @@ bool CExpertsBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      CStrategy *strat=At(i);
+      CExpert *strat=At(i);
       if(!strat.Validate())
          return false;
      }
@@ -83,7 +83,7 @@ bool CExpertsBase::InitComponents(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      CStrategy *strat=At(i);
+      CExpert *strat=At(i);
       if (CheckPointer(m_comments))
          strat.ChartComment(GetPointer(m_comments));
       strat.InitComponents();
@@ -98,7 +98,7 @@ int CExpertsBase::OrdersTotal(void) const
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      CStrategy *strat=At(i);
+      CExpert *strat=At(i);
       total+=strat.OrdersTotal();
      }
    return total;
@@ -111,7 +111,7 @@ void CExpertsBase::OnTick(void)
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
-      CStrategy *strat=At(i);
+      CExpert *strat=At(i);
       strat.OnTick();
      }
    DisplayComment();
@@ -140,7 +140,7 @@ void CExpertsBase::OnChartEvent(const int id,const long &lparam,const double &dp
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
-      CStrategy *strat=At(i);
+      CExpert *strat=At(i);
       strat.OnChartEvent(id,lparam,dparam,sparam);
      }
   }
@@ -152,7 +152,7 @@ int CExpertsBase::OrdersHistoryTotal(void) const
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      CStrategy *strat=At(i);
+      CExpert *strat=At(i);
       total+=strat.OrdersHistoryTotal();
      }
    return total;
@@ -165,7 +165,7 @@ int CExpertsBase::TradesTotal(void) const
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      CStrategy *strat=At(i);
+      CExpert *strat=At(i);
       total+=strat.TradesTotal();
      }
    return total;
@@ -183,7 +183,7 @@ void CExpertsBase::OnDeinit(const int reason=0)
 //+------------------------------------------------------------------+
 bool CExpertsBase::CreateElement(const int index)
   {
-   CStrategy*strat=new CStrategy();
+   CExpert*strat=new CExpert();
    strat.SetContainer(GetPointer(this));
    return Insert(GetPointer(strat),index);
   }

@@ -7,7 +7,7 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
 #include "StopBase.mqh"
-class CStrategy;
+class CExpert;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -15,14 +15,14 @@ class CStopsBase : public CArrayObj
   {
 protected:
    bool              m_activate;
-   CStrategy        *m_strategy;
+   CExpert        *m_strategy;
 public:
                      CStopsBase(void);
                     ~CStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPS;}
    //--- initialization
-   virtual bool      Init(CStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
-   virtual void      SetContainer(CStrategy *s){m_strategy=s;}
+   virtual bool      Init(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
+   virtual void      SetContainer(CExpert *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- setters and getters
    virtual bool      Active(void) const {return m_activate;}
@@ -46,7 +46,7 @@ CStopsBase::~CStopsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStopsBase::Init(CStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool CStopsBase::Init(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    for(int i=0;i<Total();i++)
      {

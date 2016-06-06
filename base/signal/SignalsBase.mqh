@@ -9,7 +9,7 @@
 #include <Arrays\ArrayInt.mqh>
 #include <Files\FileBin.mqh>
 #include "SignalBase.mqh"
-class CStrategy;
+class CExpert;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -21,15 +21,15 @@ protected:
    int               m_last_exit;
    bool              m_new_signal;
    bool              m_reverse;
-   CStrategy        *m_strategy;
+   CExpert        *m_strategy;
    CComments        *m_comments;
 public:
                      CSignalsBase(void);
                     ~CSignalsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_SIGNALS;}
    //--- initialization
-   virtual bool      Init(CStrategy *s,CComments *comments);
-   virtual void      SetContainer(CStrategy *s){m_strategy=s;}
+   virtual bool      Init(CExpert *s,CComments *comments);
+   virtual void      SetContainer(CExpert *s){m_strategy=s;}
    virtual bool      Validate() const;
    //--- checking   
    virtual bool      Active(void) const{return m_activate;}
@@ -72,7 +72,7 @@ CSignalsBase::~CSignalsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CSignalsBase::Init(CStrategy *s,CComments *comments)
+bool CSignalsBase::Init(CExpert *s,CComments *comments)
   {
    for(int i=0;i<Total();i++)
      {

@@ -6,7 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #property strict
-class CStrategy;
+class CExpert;
 #include <Arrays\ArrayInt.mqh>
 #include "..\lib\AccountInfo.mqh"
 #include "..\..\common\class\ADT.mqh"
@@ -46,9 +46,9 @@ public:
                      COrderManagerBase();
                     ~COrderManagerBase();
    //--- initialization
-   virtual bool      Init(CStrategy *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
-   virtual bool      InitStops(CStrategy *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
-   bool              InitMoneys(CStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
+   virtual bool      Init(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
+   virtual bool      InitStops(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
+   bool              InitMoneys(CExpert *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
    bool              InitTrade(CExpertTrade*);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
@@ -148,7 +148,7 @@ COrderManagerBase::~COrderManagerBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::Init(CStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool COrderManagerBase::Init(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
 
    InitStops(s,symbolmanager,accountinfo);
@@ -187,7 +187,7 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitMoneys(CStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
+bool COrderManagerBase::InitMoneys(CExpert *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
   {
    if(m_moneys==NULL) return true;
    return m_moneys.Init(s,symbolinfo,accountinfo);
@@ -429,7 +429,7 @@ void COrderManagerBase::AddOtherMagicString(const string &magics[])
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitStops(CStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool COrderManagerBase::InitStops(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    if(m_stops!=NULL)
       return m_stops.Init(s,symbolmanager,accountinfo);

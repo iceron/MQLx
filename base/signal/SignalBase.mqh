@@ -8,7 +8,7 @@
 #include "..\..\common\enum\ENUM_CMD.mqh"
 #include <Arrays\ArrayDouble.mqh>
 #include "..\comment\CommentsBase.mqh"
-class CStrategy;
+class CExpert;
 class CSignals;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -23,7 +23,7 @@ protected:
    bool              m_new_signal;
    bool              m_reverse;
    bool              m_exit;
-   CStrategy        *m_strategy;
+   CExpert        *m_strategy;
    CArrayDouble      m_empty_value;
    CSignals         *m_signals;
    CComments        *m_comments;
@@ -32,7 +32,7 @@ public:
                     ~CSignalBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_SIGNAL;}
    //--- initialization
-   virtual bool      Init(CStrategy *s,CComments *comments);
+   virtual bool      Init(CExpert *s,CComments *comments);
    virtual void      SetContainer(CSignals *signals){m_signals=signals;}
    virtual bool      Validate(void) const;
    //--- getters and setters
@@ -99,7 +99,7 @@ bool CSignalBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CSignalBase::Init(CStrategy *s,CComments *comments)
+bool CSignalBase::Init(CExpert *s,CComments *comments)
   {
    m_strategy=s;
    m_comments=comments;

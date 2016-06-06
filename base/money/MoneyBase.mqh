@@ -10,7 +10,7 @@
 #include "..\lib\AccountInfo.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\enum\ENUM_MONEY_UPDATE_TYPE.mqh"
-class CStrategy;
+class CExpert;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -31,7 +31,7 @@ protected:
    bool              m_equity;
    CSymbolInfo      *m_symbol;
    CAccountInfo     *m_account;
-   CStrategy        *m_strategy;
+   CExpert        *m_strategy;
 public:
                      CMoneyBase(void);
                     ~CMoneyBase(void);
@@ -40,7 +40,7 @@ public:
    virtual bool      Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
    virtual bool      InitAccount(CAccountInfo *account);
    virtual bool      InitSymbol(CSymbolInfo *symbol);
-   virtual void      SetContainer(CStrategy *s){m_strategy=s;}
+   virtual void      SetContainer(CExpert *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- getters and setters
    bool      Active(void) const {return m_activate;}

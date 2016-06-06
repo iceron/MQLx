@@ -8,38 +8,38 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CStrategy : public CStrategyBase
+class CExpert : public CExpertBase
   {
 public:
-                     CStrategy(void);
-                    ~CStrategy(void);
+                     CExpert(void);
+                    ~CExpert(void);
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CStrategy::CStrategy(void)
+CExpert::CExpert(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CStrategy::~CStrategy(void)
+CExpert::~CExpert(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStrategy::OnTick(void)
+bool CExpert::OnTick(void)
   {
-   bool ret=CStrategyBase::OnTick();
+   bool ret=CExpertBase::OnTick();
    return ret;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStrategy::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
+void CExpert::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    Print(__FUNCTION__);
    m_order_man.OnTradeTransaction(trans,request,result);
