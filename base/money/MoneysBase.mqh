@@ -10,20 +10,20 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JMoneysBase : public CArrayObj
+class CMoneysBase : public CArrayObj
   {
 protected:
    bool              m_activate;
    int               m_selected;
-   JStrategy        *m_strategy;
+   CStrategy        *m_strategy;
 public:
-                     JMoneysBase(void);
-                    ~JMoneysBase(void);
+                     CMoneysBase(void);
+                    ~CMoneysBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}
    virtual bool      Validate(void) const;
    //--- initialization
-   virtual bool      Init(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
-   virtual void      SetContainer(JStrategy *s) {m_strategy=s;}
+   virtual bool      Init(CStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
+   virtual void      SetContainer(CStrategy *s) {m_strategy=s;}
    //--- setters and getters
    virtual bool      Active(void) const {return m_activate;}
    virtual void      Active(const bool activate) {m_activate=activate;}
@@ -35,23 +35,23 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneysBase::JMoneysBase() : m_activate(true)
+CMoneysBase::CMoneysBase() : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneysBase::~JMoneysBase()
+CMoneysBase::~CMoneysBase()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneysBase::Init(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
+bool CMoneysBase::Init(CStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
   {
    for(int i=0;i<Total();i++)
      {
-      JMoney *money=At(i);
+      CMoney *money=At(i);
       money.Init(GetPointer(symbolinfo),GetPointer(accountinfo));
      }
    SetContainer(s);
@@ -60,11 +60,11 @@ bool JMoneysBase::Init(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accoun
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneysBase::Validate(void) const
+bool CMoneysBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      JMoney *money=At(i);
+      CMoney *money=At(i);
       if (money==NULL) continue;
       if(!money.Validate())
          return false;
@@ -74,9 +74,9 @@ bool JMoneysBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JMoneysBase::Volume(const double price,const ENUM_ORDER_TYPE type,const double sl)
+double CMoneysBase::Volume(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
-   JMoney *money=m_data[m_selected];
+   CMoney *money=m_data[m_selected];
    return money==NULL?0:money.Volume(price,type,sl);
   }
 //+------------------------------------------------------------------+

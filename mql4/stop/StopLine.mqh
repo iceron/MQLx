@@ -8,29 +8,29 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStopLine : public JStopLineBase
+class CStopLine : public CStopLineBase
   {
 public:
-                     JStopLine(void);
-                    ~JStopLine(void);
+                     CStopLine(void);
+                    ~CStopLine(void);
    bool              Create(long chart_id,const string name,const int window,const double price);
   };
 //+------------------------------------------------------------------+
-JStopLine::JStopLine(void)
+CStopLine::CStopLine(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopLine::~JStopLine(void)
+CStopLine::~CStopLine(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopLine::Create(long chart_id,const string name,const int window,const double price)
+bool CStopLine::Create(long chart_id,const string name,const int window,const double price)
   {
-   JStopLineBase::Create(chart_id,name,window,price);
+   CStopLineBase::Create(chart_id,name,window,price);
    if (IsTesting() || IsOptimization())
       m_chart_id = 0;
    return true;

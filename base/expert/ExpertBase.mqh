@@ -11,15 +11,15 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JExpertBase : public CArrayObj
+class CExpertsBase : public CArrayObj
   {
 protected:
    bool              m_activate;
    int               m_uninit_reason;
-   JComments        *m_comments;
+   CComments        *m_comments;
 public:
-                     JExpertBase(void);
-                    ~JExpertBase(void);
+                     CExpertsBase(void);
+                    ~CExpertsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_EXPERT;}
    //--- getters and setters
    bool              Active(void) const {return m_activate;}
@@ -47,23 +47,23 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JExpertBase::JExpertBase(void) : m_activate(true)
+CExpertsBase::CExpertsBase(void) : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JExpertBase::~JExpertBase(void)
+CExpertsBase::~CExpertsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JExpertBase::Validate(void) const
+bool CExpertsBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      JStrategy *strat=At(i);
+      CStrategy *strat=At(i);
       if(!strat.Validate())
          return false;
      }
@@ -72,18 +72,18 @@ bool JExpertBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JExpertBase::ChartComment(const bool enable=true)
+void CExpertsBase::ChartComment(const bool enable=true)
   {
-   if(enable) m_comments=new JComments();     
+   if(enable) m_comments=new CComments();     
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JExpertBase::InitComponents(void) const
+bool CExpertsBase::InitComponents(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      JStrategy *strat=At(i);
+      CStrategy *strat=At(i);
       if (CheckPointer(m_comments))
          strat.ChartComment(GetPointer(m_comments));
       strat.InitComponents();
@@ -93,12 +93,12 @@ bool JExpertBase::InitComponents(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JExpertBase::OrdersTotal(void) const
+int CExpertsBase::OrdersTotal(void) const
   {
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      JStrategy *strat=At(i);
+      CStrategy *strat=At(i);
       total+=strat.OrdersTotal();
      }
    return total;
@@ -106,12 +106,12 @@ int JExpertBase::OrdersTotal(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JExpertBase::OnTick(void)
+void CExpertsBase::OnTick(void)
   {
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
-      JStrategy *strat=At(i);
+      CStrategy *strat=At(i);
       strat.OnTick();
      }
    DisplayComment();
@@ -119,15 +119,15 @@ void JExpertBase::OnTick(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JExpertBase::AddComment(const string comment)
+void CExpertsBase::AddComment(const string comment)
   {
    if(CheckPointer(m_comments)==POINTER_DYNAMIC)
-      m_comments.Add(new JComment(comment));
+      m_comments.Add(new CComment(comment));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JExpertBase::DisplayComment(void) const
+void CExpertsBase::DisplayComment(void) const
   {
    if(CheckPointer(m_comments)==POINTER_DYNAMIC)
       m_comments.Display();
@@ -135,24 +135,24 @@ void JExpertBase::DisplayComment(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JExpertBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
+void CExpertsBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
   {
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
-      JStrategy *strat=At(i);
+      CStrategy *strat=At(i);
       strat.OnChartEvent(id,lparam,dparam,sparam);
      }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JExpertBase::OrdersHistoryTotal(void) const
+int CExpertsBase::OrdersHistoryTotal(void) const
   {
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      JStrategy *strat=At(i);
+      CStrategy *strat=At(i);
       total+=strat.OrdersHistoryTotal();
      }
    return total;
@@ -160,12 +160,12 @@ int JExpertBase::OrdersHistoryTotal(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JExpertBase::TradesTotal(void) const
+int CExpertsBase::TradesTotal(void) const
   {
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      JStrategy *strat=At(i);
+      CStrategy *strat=At(i);
       total+=strat.TradesTotal();
      }
    return total;
@@ -173,7 +173,7 @@ int JExpertBase::TradesTotal(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JExpertBase::OnDeinit(const int reason=0)
+void CExpertsBase::OnDeinit(const int reason=0)
   {
    m_uninit_reason=reason;   
    Shutdown();
@@ -181,16 +181,16 @@ void JExpertBase::OnDeinit(const int reason=0)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JExpertBase::CreateElement(const int index)
+bool CExpertsBase::CreateElement(const int index)
   {
-   JStrategy*strat=new JStrategy();
+   CStrategy*strat=new CStrategy();
    strat.SetContainer(GetPointer(this));
    return Insert(GetPointer(strat),index);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JExpertBase::Save(const int handle)
+bool CExpertsBase::Save(const int handle)
   {
    CArrayObj::Save(handle);
    ADT::WriteInteger(handle,m_uninit_reason);
@@ -199,7 +199,7 @@ bool JExpertBase::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JExpertBase::Load(const int handle)
+bool CExpertsBase::Load(const int handle)
   {
    CArrayObj::Load(handle);
    ADT::ReadInteger(handle,m_uninit_reason);

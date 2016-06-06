@@ -6,7 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #property strict
-class JStrategy;
+class CStrategy;
 #include <Arrays\ArrayInt.mqh>
 #include "..\lib\AccountInfo.mqh"
 //#include "..\lib\SymbolInfo.mqh"
@@ -21,8 +21,8 @@ class COrderManagerBase : public CObject
   {
 protected:
    double            m_lotsize;
-   JOrders           m_orders;
-   JOrders           m_orders_history;
+   COrders           m_orders;
+   COrders           m_orders_history;
    string            m_comment;
    int               m_magic;
    int               m_expiration;
@@ -39,17 +39,17 @@ protected:
    CSymbolManager   *m_symbol_man;
    JTrade           *m_trade;
    //CTradeManager    *m_trade_man;
-   JMoneys          *m_moneys;
+   CMoneys          *m_moneys;
    //--- order objects
-   JStops           *m_stops;
-   JStop            *m_main_stop;
+   CStops           *m_stops;
+   CStop            *m_main_stop;
 public:
                      COrderManagerBase();
                     ~COrderManagerBase();
    //--- initialization
-   virtual bool      Init(JStrategy *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
-   virtual bool      InitStops(JStrategy *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
-   bool              InitMoneys(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
+   virtual bool      Init(CStrategy *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
+   virtual bool      InitStops(CStrategy *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
+   bool              InitMoneys(CStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
    bool              InitTrade(JTrade*);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
@@ -79,29 +79,29 @@ public:
    int               OrdersTotal(void) const {return m_orders.Total();}
    int               OrdersHistoryTotal(void) const {return m_orders_history.Total();}
    //--- object pointers
-   JStop             *MainStop(void) const {return m_main_stop;}
-   JMoneys           *Moneys(void) const {return GetPointer(m_moneys);}
-   JOrders           *Orders() {return GetPointer(m_orders);}
-   JOrders           *OrdersHistory() {return GetPointer(m_orders_history);}
-   JStops            *Stops(void) const {return GetPointer(m_stops);}
+   CStop             *MainStop(void) const {return m_main_stop;}
+   CMoneys           *Moneys(void) const {return GetPointer(m_moneys);}
+   COrders           *Orders() {return GetPointer(m_orders);}
+   COrders           *OrdersHistory() {return GetPointer(m_orders_history);}
+   CStops            *Stops(void) const {return GetPointer(m_stops);}
    CArrayInt         *OtherMagic() {return GetPointer(m_other_magic);}
    //--- current orders
    virtual void      ArchiveOrders(void);
-   virtual bool      ArchiveOrder(JOrder*);
+   virtual bool      ArchiveOrder(COrder*);
    virtual void      CheckClosedOrders(void);
    virtual void      CheckOldStops(void);
    virtual void      CloseOrders(const int,const int);
    virtual bool      CloseStops(void);
    virtual void      CloseOppositeOrders(const int,const int);
    virtual void      ManageOrders(void);
-   virtual bool      CloseOrder(JOrder*,const int) {return true;}
+   virtual bool      CloseOrder(COrder*,const int) {return true;}
    //--- orders history
    virtual void      ManageOrdersHistory(void);
    //--- money manager
    virtual double    LotSizeCalculate(double,ENUM_ORDER_TYPE,double);
-   virtual bool      AddMoneys(JMoneys*);
+   virtual bool      AddMoneys(CMoneys*);
    //--- stop levels  
-   virtual bool      AddStops(JStops*);
+   virtual bool      AddStops(CStops*);
    //--- symbol manager
    virtual bool      SetSymbol(CSymbolInfo*);
    //--- trade manager
@@ -111,7 +111,7 @@ public:
    virtual void      AddOtherMagicString(const string&[]);
    virtual bool      TradeOpen(const string,const int) {return true;}
    //--- events
-   virtual void      OnTradeTransaction(JOrder *){}
+   virtual void      OnTradeTransaction(COrder *){}
    virtual void      OnTick();
 protected:
    //--- trade manager
@@ -149,7 +149,7 @@ COrderManagerBase::~COrderManagerBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::Init(JStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool COrderManagerBase::Init(CStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
 
    InitStops(s,symbolmanager,accountinfo);
@@ -179,16 +179,16 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
    bool ret=0;
    if (CheckPointer(GetPointer(m_symbol))==POINTER_DYNAMIC)
       m_trade.SetSymbol(GetPointer(m_symbol));
-   if(JOrder::IsOrderTypeLong(type))
+   if(COrder::IsOrderTypeLong(type))
       ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
-   if(JOrder::IsOrderTypeShort(type))
+   if(COrder::IsOrderTypeShort(type))
       ret=m_trade.Sell(lotsize,price,sl,tp,m_comment);
    return ret;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitMoneys(JStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
+bool COrderManagerBase::InitMoneys(CStrategy *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
   {
    if(m_moneys==NULL) return true;
    return m_moneys.Init(s,symbolinfo,accountinfo);
@@ -258,7 +258,7 @@ void COrderManagerBase::ArchiveOrders(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::ArchiveOrder(JOrder *order)
+bool COrderManagerBase::ArchiveOrder(COrder *order)
   {
    bool result=m_orders_history.Add(order);
    if(result)
@@ -273,7 +273,7 @@ void COrderManagerBase::CheckClosedOrders(void)
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
      {
-      JOrder *order=m_orders.At(i);
+      COrder *order=m_orders.At(i);
       ulong ticket = order.Ticket();
       if(order.IsClosed())
          ArchiveOrder(m_orders.Detach(i));
@@ -289,7 +289,7 @@ void COrderManagerBase::CheckOldStops(void)
    bool status=true;
    for(int i=m_orders_history.Total()-1;i>=0;i--)
      {
-      JOrder *order=m_orders_history.At(i);
+      COrder *order=m_orders_history.At(i);
       if(order.Clean())
          continue;
       if(order.CloseStops())
@@ -310,9 +310,9 @@ void COrderManagerBase::CloseOrders(const int entry,const int exit)
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
      {
-      JOrder *order=m_orders.At(i);
-      if((JSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) entry) && m_position_reverse) ||
-         (JSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) exit)))
+      COrder *order=m_orders.At(i);
+      if((CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) entry) && m_position_reverse) ||
+         (CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) exit)))
         {
          CloseOrder(order,i);
         }
@@ -365,8 +365,8 @@ void COrderManagerBase::OnTick(void)
 //+------------------------------------------------------------------+
 bool COrderManagerBase::IsPositionAllowed(ENUM_ORDER_TYPE type) const
   {
-   return EnableTrade() && ((JOrder::IsOrderTypeLong(type) && EnableLong())
-                      || (JOrder::IsOrderTypeShort(type) && EnableShort()));
+   return EnableTrade() && ((COrder::IsOrderTypeLong(type) && EnableLong())
+                      || (COrder::IsOrderTypeShort(type) && EnableShort()));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -430,7 +430,7 @@ void COrderManagerBase::AddOtherMagicString(const string &magics[])
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitStops(JStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool COrderManagerBase::InitStops(CStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    if(m_stops!=NULL)
       return m_stops.Init(s,symbolmanager,accountinfo);
@@ -439,7 +439,7 @@ bool COrderManagerBase::InitStops(JStrategy *s,CSymbolManager *symbolmanager,CAc
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::AddStops(JStops *stops)
+bool COrderManagerBase::AddStops(CStops *stops)
   {
    if(CheckPointer(stops)==POINTER_DYNAMIC)
      {
@@ -474,7 +474,7 @@ void COrderManagerBase::DeinitTrade()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::AddMoneys(JMoneys *moneys)
+bool COrderManagerBase::AddMoneys(CMoneys *moneys)
   {
    if(CheckPointer(moneys)==POINTER_DYNAMIC)
      {

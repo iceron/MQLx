@@ -16,8 +16,8 @@ protected:
 public:
                      COrderManager();
                     ~COrderManager();
-   virtual bool      CloseOrder(JOrder*,const int);
-   virtual void      OnTradeTransaction(JOrder *order=NULL);
+   virtual bool      CloseOrder(COrder*,const int);
+   virtual void      OnTradeTransaction(COrder *order=NULL);
    virtual bool      TradeOpen(const string symbol,const int res);
   };
 //+------------------------------------------------------------------+
@@ -35,9 +35,9 @@ COrderManager::~COrderManager()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void COrderManager::OnTradeTransaction(JOrder *order=NULL)
+void COrderManager::OnTradeTransaction(COrder *order=NULL)
   {
-   JOrder *temp=new JOrder();
+   COrder *temp=new COrder();
    int total= ::OrdersTotal();
    for(int i=0;i<total;i++)
      {
@@ -59,7 +59,7 @@ bool COrderManager::TradeOpen(const string symbol,const int res)
    bool ret=false;
    int trades_total = TradesTotal();
    int orders_total = OrdersTotal();
-   ENUM_ORDER_TYPE type=JSignal::SignalToOrderType(res);
+   ENUM_ORDER_TYPE type=CSignal::SignalToOrderType(res);
    m_symbol = m_symbol_man.Get(symbol);
    if(!IsPositionAllowed(type))
       return true;
@@ -82,7 +82,7 @@ bool COrderManager::TradeOpen(const string symbol,const int res)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManager::CloseOrder(JOrder *order,const int index)
+bool COrderManager::CloseOrder(COrder *order,const int index)
   {
    bool closed=false;
    if(CheckPointer(order)==POINTER_DYNAMIC)

@@ -8,35 +8,35 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStop : public JStopBase
+class CStop : public CStopBase
   {
 public:
-                     JStop(void);
-                     JStop(const string name);
-                    ~JStop(void);
+                     CStop(void);
+                     CStop(const string name);
+                    ~CStop(void);
    virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const;
    virtual bool      DeleteStopOrder(const ulong ticket) const;
-   virtual double    TakeProfitPrice(JOrder *order,JOrderStop *orderstop);
-   virtual double    StopLossPrice(JOrder *order,JOrderStop *orderstop);
-   virtual ulong     OpenStop(JOrder *order,JOrderStop *orderstop,const double val);
-   virtual bool      CloseStop(JOrder *order,JOrderStop *orderstop,const double price);
+   virtual double    TakeProfitPrice(COrder *order,COrderStop *orderstop);
+   virtual double    StopLossPrice(COrder *order,COrderStop *orderstop);
+   virtual ulong     OpenStop(COrder *order,COrderStop *orderstop,const double val);
+   virtual bool      CloseStop(COrder *order,COrderStop *orderstop,const double price);
    virtual bool      Move(const ulong ticket,const double stoploss,const double takeprofit);
    virtual bool      MoveStopLoss(const ulong ticket,const double stoploss);
    virtual bool      MoveTakeProfit(const ulong ticket,const double stoploss);
 protected:
-   virtual ulong     GetNewTicket(JOrder *order,JOrderStop *orderstop);
+   virtual ulong     GetNewTicket(COrder *order,COrderStop *orderstop);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStop::JStop(void)
+CStop::CStop(void)
   {
    m_entry_visible = false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStop::JStop(const string name)
+CStop::CStop(const string name)
   {
    m_name=name;
    m_entry_visible = false;
@@ -44,13 +44,13 @@ JStop::JStop(const string name)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStop::~JStop(void)
+CStop::~CStop(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
+bool CStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
   {
    if(ticket<=0)
       return false;
@@ -66,7 +66,7 @@ bool JStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::DeleteStopOrder(const ulong ticket) const
+bool CStop::DeleteStopOrder(const ulong ticket) const
   {
    if(ticket<=0) return true;
    if(!OrderSelect((int)ticket,SELECT_BY_TICKET))
@@ -78,7 +78,7 @@ bool JStop::DeleteStopOrder(const ulong ticket) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::TakeProfitPrice(JOrder *order,JOrderStop *orderstop)
+double CStop::TakeProfitPrice(COrder *order,COrderStop *orderstop)
   {
    double val = 0;
    if (orderstop.TakeProfit()>0)
@@ -92,7 +92,7 @@ double JStop::TakeProfitPrice(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
+double CStop::StopLossPrice(COrder *order,COrderStop *orderstop)
   {
    double val = 0;
    if (orderstop.StopLoss()>0)
@@ -106,7 +106,7 @@ double JStop::StopLossPrice(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-ulong JStop::OpenStop(JOrder *order,JOrderStop *orderstop,const double val)
+ulong CStop::OpenStop(COrder *order,COrderStop *orderstop,const double val)
   {
    ulong res=0;
    double lotsize=LotSizeCalculate(order,orderstop);
@@ -123,7 +123,7 @@ ulong JStop::OpenStop(JOrder *order,JOrderStop *orderstop,const double val)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::CloseStop(JOrder *order,JOrderStop *orderstop,const double price)
+bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
   {
    bool res=false;
    ENUM_ORDER_TYPE type=order.OrderType();
@@ -144,7 +144,7 @@ bool JStop::CloseStop(JOrder *order,JOrderStop *orderstop,const double price)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-ulong JStop::GetNewTicket(JOrder *order,JOrderStop *orderstop)
+ulong CStop::GetNewTicket(COrder *order,COrderStop *orderstop)
   {
    int total= ::OrdersTotal();
    for(int i=0;i<total;i++)
@@ -157,7 +157,7 @@ ulong JStop::GetNewTicket(JOrder *order,JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::Move(const ulong ticket,const double stoploss,const double takeprofit)
+bool CStop::Move(const ulong ticket,const double stoploss,const double takeprofit)
   {
    if(OrderSelect((int)ticket,SELECT_BY_TICKET))
      {
@@ -170,7 +170,7 @@ bool JStop::Move(const ulong ticket,const double stoploss,const double takeprofi
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::MoveStopLoss(const ulong ticket,const double stoploss)
+bool CStop::MoveStopLoss(const ulong ticket,const double stoploss)
   {
    if(OrderSelect((int)ticket,SELECT_BY_TICKET))
      {
@@ -183,7 +183,7 @@ bool JStop::MoveStopLoss(const ulong ticket,const double stoploss)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStop::MoveTakeProfit(const ulong ticket,const double takeprofit)
+bool CStop::MoveTakeProfit(const ulong ticket,const double takeprofit)
   {
    if(OrderSelect((int)ticket,SELECT_BY_TICKET))
      {

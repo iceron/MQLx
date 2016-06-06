@@ -10,11 +10,11 @@
 #include "..\lib\AccountInfo.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\enum\ENUM_MONEY_UPDATE_TYPE.mqh"
-class JStrategy;
+class CStrategy;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JMoneyBase : public CObject
+class CMoneyBase : public CObject
   {
 protected:
    bool              m_activate;
@@ -31,16 +31,16 @@ protected:
    bool              m_equity;
    CSymbolInfo      *m_symbol;
    CAccountInfo     *m_account;
-   JStrategy        *m_strategy;
+   CStrategy        *m_strategy;
 public:
-                     JMoneyBase(void);
-                    ~JMoneyBase(void);
+                     CMoneyBase(void);
+                    ~CMoneyBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_MONEY;}
    //--- initialization
    virtual bool      Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
    virtual bool      InitAccount(CAccountInfo *account);
    virtual bool      InitSymbol(CSymbolInfo *symbol);
-   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   virtual void      SetContainer(CStrategy *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- getters and setters
    bool      Active(void) const {return m_activate;}
@@ -76,7 +76,7 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyBase::JMoneyBase(void) : m_activate(true),
+CMoneyBase::CMoneyBase(void) : m_activate(true),
                                m_update(MONEY_UPDATE_ALWAYS),
                                m_volume(0.2),
                                m_percent(0.0),
@@ -92,13 +92,13 @@ JMoneyBase::JMoneyBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyBase::~JMoneyBase(void)
+CMoneyBase::~CMoneyBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyBase::Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
+bool CMoneyBase::Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
   {
    InitSymbol(symbolinfo);
    InitAccount(accountinfo);
@@ -107,7 +107,7 @@ bool JMoneyBase::Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyBase::Validate(void) const
+bool CMoneyBase::Validate(void) const
   {
    if(m_volume_base>0)
      {
@@ -119,7 +119,7 @@ bool JMoneyBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyBase::InitSymbol(CSymbolInfo *symbol)
+bool CMoneyBase::InitSymbol(CSymbolInfo *symbol)
   {
    if(symbol==NULL) return false;
    m_symbol=symbol;
@@ -128,7 +128,7 @@ bool JMoneyBase::InitSymbol(CSymbolInfo *symbol)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyBase::InitAccount(CAccountInfo *account)
+bool CMoneyBase::InitAccount(CAccountInfo *account)
   {
    if(account==NULL)
      {
@@ -141,7 +141,7 @@ bool JMoneyBase::InitAccount(CAccountInfo *account)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const double sl)
+double CMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    if(!Active()) return 0;
    if(m_volume==0.0) UpdateLotSize(price,type,sl);
@@ -159,7 +159,7 @@ double JMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const do
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JMoneyBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
+void CMoneyBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    double balance=m_equity==false?m_account.Balance():m_account.Equity();
    m_volume=m_volume_base+((int)(balance/m_balance_inc))*m_volume_inc;
@@ -169,7 +169,7 @@ void JMoneyBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,con
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyBase::UpdateByMargin(void)
+bool CMoneyBase::UpdateByMargin(void)
   {
    double balance=m_equity==false?m_account.Balance():m_account.Equity();
    if(balance>=m_balance+m_balance_inc || balance<=m_balance-m_balance_inc)
@@ -179,7 +179,7 @@ bool JMoneyBase::UpdateByMargin(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyBase::UpdateByPeriod(void)
+bool CMoneyBase::UpdateByPeriod(void)
   {
    if(TimeCurrent()>=m_last_update+m_period)
       return true;
@@ -188,7 +188,7 @@ bool JMoneyBase::UpdateByPeriod(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JMoneyBase::OnLotSizeUpdated(void)
+void CMoneyBase::OnLotSizeUpdated(void)
   {
    double maxvol=m_symbol.LotsMax();
    double minvol=m_symbol.LotsMin();

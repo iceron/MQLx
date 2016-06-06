@@ -9,14 +9,14 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JTimeRangeBase : public JTime
+class CTimeRangeBase : public CTime
   {
 protected:
    datetime          m_begin;
    datetime          m_end;
 public:
-                     JTimeRangeBase(void);
-                    ~JTimeRangeBase(void);
+                     CTimeRangeBase(void);
+                    ~CTimeRangeBase(void);
    //--- initialization                    
    virtual bool      Init(datetime begin,datetime end);
    virtual bool      Validate(void);
@@ -31,20 +31,20 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeRangeBase::JTimeRangeBase(void) : m_begin(0),
+CTimeRangeBase::CTimeRangeBase(void) : m_begin(0),
                                        m_end(0)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeRangeBase::~JTimeRangeBase(void)
+CTimeRangeBase::~CTimeRangeBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeRangeBase::Init(datetime begin,datetime end)
+bool CTimeRangeBase::Init(datetime begin,datetime end)
   {
    m_begin=begin;
    m_end=end;
@@ -53,7 +53,7 @@ bool JTimeRangeBase::Init(datetime begin,datetime end)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeRangeBase::Validate(void)
+bool CTimeRangeBase::Validate(void)
   {
    if (m_end>m_begin)
    {
@@ -65,7 +65,7 @@ bool JTimeRangeBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeRangeBase::Evaluate(void)
+bool CTimeRangeBase::Evaluate(void)
   {
    if(!Active()) return true;
    datetime current=TimeCurrent();

@@ -11,21 +11,21 @@ class JStrategy;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrdersBase : public CArrayObj
+class COrdersBase : public CArrayObj
   {
 protected:
    bool              m_activate;
    bool              m_clean;
-   JStops           *m_stops;
+   CStops           *m_stops;
    JStrategy        *m_strategy;
 public:
-                     JOrdersBase(void);
-                    ~JOrdersBase(void);
+                     COrdersBase(void);
+                    ~COrdersBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERS;}
    //--- initialization
-   virtual bool      Init(JStrategy *s=NULL,JStops *stops=NULL);
+   virtual bool      Init(JStrategy *s=NULL,CStops *stops=NULL);
    virtual void      SetContainer(JStrategy *s);
-   virtual void      SetStops(JStops *stops);
+   virtual void      SetStops(CStops *stops);
    //--- getters and setters
    bool              Activate(void) const {return m_activate;}
    void              Activate(const bool activate) {m_activate=activate;}
@@ -47,7 +47,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrdersBase::JOrdersBase(void) : m_activate(true),
+COrdersBase::COrdersBase(void) : m_activate(true),
                                  m_clean(false)
                                  //m_magic(0)
   {
@@ -57,13 +57,13 @@ JOrdersBase::JOrdersBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrdersBase::~JOrdersBase(void)
+COrdersBase::~COrdersBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::Init(JStrategy *s=NULL,JStops *stops=NULL)
+bool COrdersBase::Init(JStrategy *s=NULL,CStops *stops=NULL)
   {
    SetContainer(s);
    SetStops(stops);
@@ -72,23 +72,23 @@ bool JOrdersBase::Init(JStrategy *s=NULL,JStops *stops=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrdersBase::SetContainer(JStrategy *s)
+COrdersBase::SetContainer(JStrategy *s)
   {
    if(s!=NULL) m_strategy=s;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrdersBase::SetStops(JStops *stops)
+COrdersBase::SetStops(CStops *stops)
   {
    if(stops!=NULL) m_stops=stops;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::NewOrder(const int ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
+bool COrdersBase::NewOrder(const int ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
-   JOrder *order=new JOrder(ticket,symbol,type,volume,price);
+   COrder *order=new COrder(ticket,symbol,type,volume,price);
    if(CheckPointer(order)==POINTER_DYNAMIC)
       if(InsertSort(GetPointer(order)))
          return order.Init(magic,GetPointer(this),m_stops);
@@ -97,11 +97,11 @@ bool JOrdersBase::NewOrder(const int ticket,const string symbol,const int magic,
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrdersBase::OnTick(void)
+void COrdersBase::OnTick(void)
   {
    for(int i=0;i<Total();i++)
      {
-      JOrder *order=At(i);
+      COrder *order=At(i);
       if(CheckPointer(order))
          order.CheckStops();
      }
@@ -109,12 +109,12 @@ void JOrdersBase::OnTick(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::CloseStops(void)
+bool COrdersBase::CloseStops(void)
   {
    bool res=true;
    for(int i=0;i<Total();i++)
      {
-      JOrder *order=At(i);
+      COrder *order=At(i);
       if(CheckPointer(order))
          if(!order.CloseStops())
             res=false;
@@ -124,16 +124,16 @@ bool JOrdersBase::CloseStops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::CreateElement(const int index)
+bool COrdersBase::CreateElement(const int index)
   {
-   JOrder*order=new JOrder();
+   COrder*order=new COrder();
    order.Init(0,GetPointer(this),m_stops,true);
    return Insert(GetPointer(order),index);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::Save(const int handle)
+bool COrdersBase::Save(const int handle)
   {
    CArrayObj::Save(handle);
    ADT::WriteBool(handle,m_clean);
@@ -142,7 +142,7 @@ bool JOrdersBase::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrdersBase::Load(const int handle)
+bool COrdersBase::Load(const int handle)
   {
    CArrayObj::Load(handle);
    ADT::ReadBool(handle,m_clean);

@@ -7,19 +7,19 @@
 #property link      "http://www.cyberforexworks.com"
 #include <ChartObjects\ChartObjectsLines.mqh>
 #include <Files\FileBin.mqh>
-class JStop;
+class CStop;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStopLineBase : public CChartObjectHLine
+class CStopLineBase : public CChartObjectHLine
   {
 protected:
-   JStop            *m_stop;
+   CStop            *m_stop;
 public:
-                     JStopLineBase(void);
-                    ~JStopLineBase(void);
+                     CStopLineBase(void);
+                    ~CStopLineBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPLINE;}
-   virtual void      SetContainer(JStop *stop){m_stop=stop;}
+   virtual void      SetContainer(CStop *stop){m_stop=stop;}
    virtual double    GetPrice(const int point=0);
    virtual bool      Move(const double price);
    virtual bool      SetStyle(const ENUM_LINE_STYLE style);
@@ -28,40 +28,40 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopLineBase::JStopLineBase(void)
+CStopLineBase::CStopLineBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopLineBase::~JStopLineBase(void)
+CStopLineBase::~CStopLineBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopLineBase::Move(const double price)
+bool CStopLineBase::Move(const double price)
   {
    return ObjectSetDouble(0,m_name,OBJPROP_PRICE,0,price);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JStopLineBase::GetPrice(const int point=0)
+double CStopLineBase::GetPrice(const int point=0)
   {
    return ObjectGetDouble(0,m_name,OBJPROP_PRICE,point);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopLineBase::SetColor(const color clr)
+bool CStopLineBase::SetColor(const color clr)
   {
    return ObjectSetInteger(0,m_name,OBJPROP_COLOR,clr);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopLineBase::SetStyle(const ENUM_LINE_STYLE style)
+bool CStopLineBase::SetStyle(const ENUM_LINE_STYLE style)
   {
    return ObjectSetInteger(0,m_name,OBJPROP_STYLE,style);
   }

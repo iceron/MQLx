@@ -9,11 +9,11 @@
 #include <Arrays\ArrayInt.mqh>
 #include <Files\FileBin.mqh>
 #include "SignalBase.mqh"
-class JStrategy;
+class CStrategy;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JSignalsBase: public CArrayObj
+class CSignalsBase: public CArrayObj
   {
 protected:
    bool              m_activate;
@@ -21,15 +21,15 @@ protected:
    int               m_last_exit;
    bool              m_new_signal;
    bool              m_reverse;
-   JStrategy        *m_strategy;
-   JComments        *m_comments;
+   CStrategy        *m_strategy;
+   CComments        *m_comments;
 public:
-                     JSignalsBase(void);
-                    ~JSignalsBase(void);
+                     CSignalsBase(void);
+                    ~CSignalsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_SIGNALS;}
    //--- initialization
-   virtual bool      Init(JStrategy *s,JComments *comments);
-   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   virtual bool      Init(CStrategy *s,CComments *comments);
+   virtual void      SetContainer(CStrategy *s){m_strategy=s;}
    virtual bool      Validate() const;
    //--- checking   
    virtual bool      Active(void) const{return m_activate;}
@@ -56,7 +56,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignalsBase::JSignalsBase(void) : m_activate(true),
+CSignalsBase::CSignalsBase(void) : m_activate(true),
                                    m_last_entry(0),
                                    m_last_exit(0),
                                    m_new_signal(false),
@@ -66,17 +66,17 @@ JSignalsBase::JSignalsBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignalsBase::~JSignalsBase(void)
+CSignalsBase::~CSignalsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalsBase::Init(JStrategy *s,JComments *comments)
+bool CSignalsBase::Init(CStrategy *s,CComments *comments)
   {
    for(int i=0;i<Total();i++)
      {
-      JSignal *signal=At(i);
+      CSignal *signal=At(i);
       signal.Init(GetPointer(s),GetPointer(comments));
      }
    SetContainer(s);
@@ -85,11 +85,11 @@ bool JSignalsBase::Init(JStrategy *s,JComments *comments)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalsBase::Validate(void) const
+bool CSignalsBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      JSignal *signal=At(i);
+      CSignal *signal=At(i);
       if(!signal.Validate())
          return false;
      }
@@ -98,22 +98,22 @@ bool JSignalsBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalsBase::CheckSignals(int &entry,int &exit)
+bool CSignalsBase::CheckSignals(int &entry,int &exit)
   {
    if(!Active()) return false;
    entry= CheckEntry();
    exit = CheckExit();
    if(m_reverse)
      {
-      entry = JSignal::SignalReverse(entry);
-      exit = JSignal::SignalReverse(exit);
+      entry = CSignal::SignalReverse(entry);
+      exit = CSignal::SignalReverse(exit);
      }
    if(m_new_signal)
       if(entry==m_last_entry)
          entry=CMD_NEUTRAL;
    if(entry>0)
       m_last_entry=entry;      
-   if((entry>0 && entry==JSignal::SignalReverse(exit)) || exit==CMD_VOID)
+   if((entry>0 && entry==CSignal::SignalReverse(exit)) || exit==CMD_VOID)
      {      
       entry= CMD_VOID;
       exit = CMD_VOID;
@@ -123,12 +123,12 @@ bool JSignalsBase::CheckSignals(int &entry,int &exit)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JSignalsBase::CheckEntry() const
+int CSignalsBase::CheckEntry() const
   {
    int res=CMD_NEUTRAL;
    for(int i=0;i<Total();i++)
      {
-      JSignal *signal=At(i);
+      CSignal *signal=At(i);
       if(signal==NULL) continue;
       if(signal.ExitSignal()) continue;
       int ret=signal.CheckSignal();
@@ -148,12 +148,12 @@ int JSignalsBase::CheckEntry() const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JSignalsBase::CheckExit() const
+int CSignalsBase::CheckExit() const
   {
    int res=CMD_NEUTRAL;
    for(int i=0;i<Total();i++)
      {
-      JSignal *signal=At(i);
+      CSignal *signal=At(i);
       if(signal==NULL) continue;
       if(!signal.ExitSignal()) continue;
       int ret=signal.CheckSignal();
@@ -173,16 +173,16 @@ int JSignalsBase::CheckExit() const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalsBase::CreateElement(const int index)
+bool CSignalsBase::CreateElement(const int index)
   {
-   JSignal * signal = new JSignal();
+   CSignal * signal = new CSignal();
    signal.SetContainer(GetPointer(this));
    return Insert(GetPointer(signal),index);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalsBase::Save(const int handle)
+bool CSignalsBase::Save(const int handle)
   {
    ADT::WriteInteger(handle,m_last_entry);
    ADT::WriteInteger(handle,m_last_exit);
@@ -191,7 +191,7 @@ bool JSignalsBase::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalsBase::Load(const int handle)
+bool CSignalsBase::Load(const int handle)
   {
    ADT::ReadInteger(handle,m_last_entry);
    ADT::ReadInteger(handle,m_last_exit);
@@ -200,10 +200,10 @@ bool JSignalsBase::Load(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JSignalsBase::AddComment(const string comment)
+void CSignalsBase::AddComment(const string comment)
   {
    if(CheckPointer(m_comments)==POINTER_DYNAMIC)
-      m_comments.Add(new JComment(comment));
+      m_comments.Add(new CComment(comment));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -9,30 +9,30 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JMoneyFixedFractionalBase : public JMoney
+class CMoneyFixedFractionalBase : public CMoney
   {
 public:
-                     JMoneyFixedFractionalBase(void);
-                    ~JMoneyFixedFractionalBase(void);
+                     CMoneyFixedFractionalBase(void);
+                    ~CMoneyFixedFractionalBase(void);
    virtual void      UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl);
    virtual bool      Validate(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedFractionalBase::JMoneyFixedFractionalBase(void)
+CMoneyFixedFractionalBase::CMoneyFixedFractionalBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JMoneyFixedFractionalBase::~JMoneyFixedFractionalBase(void)
+CMoneyFixedFractionalBase::~CMoneyFixedFractionalBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JMoneyFixedFractionalBase::Validate(void)
+bool CMoneyFixedFractionalBase::Validate(void)
   {
    if (m_percent<=0)
    {
@@ -44,7 +44,7 @@ bool JMoneyFixedFractionalBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JMoneyFixedFractionalBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
+void CMoneyFixedFractionalBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    if(m_symbol==NULL || m_account==NULL)
       return;

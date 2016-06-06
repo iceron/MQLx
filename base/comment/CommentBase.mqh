@@ -9,39 +9,39 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JCommentBase : public CObject
+class CCommentBase : public CObject
   {
 protected:
    string            m_comment;
 public:
-                     JCommentBase(void);
-                    ~JCommentBase(void);
+                     CCommentBase(void);
+                    ~CCommentBase(void);
    virtual void      Init(string comment);
    string            Text();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCommentBase::JCommentBase(void)
+CCommentBase::CCommentBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCommentBase::~JCommentBase(void)
+CCommentBase::~CCommentBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCommentBase::Init(string comment)
+CCommentBase::Init(string comment)
   {
    m_comment=comment;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-string JCommentBase::Text(void)
+string CCommentBase::Text(void)
   {
    return m_comment;
   }

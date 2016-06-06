@@ -7,22 +7,22 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
 #include "TrailBase.mqh"
-class JStop;
+class CStop;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JTrailsBase : public CArrayObj
+class CTrailsBase : public CArrayObj
   {
 protected:
    bool              m_activate;
-   JStop            *m_stop;
+   CStop            *m_stop;
 public:
-                     JTrailsBase(void);
-                    ~JTrailsBase(void);
+                     CTrailsBase(void);
+                    ~CTrailsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TRAILS;}   
    //--- initialization
-   virtual bool      Init(CSymbolManager *symbolmanager,JStop *stop);
-   virtual void      SetContainer(JStop *stop){m_stop=stop;}
+   virtual bool      Init(CSymbolManager *symbolmanager,CStop *stop);
+   virtual void      SetContainer(CStop *stop){m_stop=stop;}
    //--- getters and setters
    bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}  
@@ -36,24 +36,24 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrailsBase::JTrailsBase(void) : m_activate(true)
+CTrailsBase::CTrailsBase(void) : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrailsBase::~JTrailsBase(void)
+CTrailsBase::~CTrailsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrailsBase::Init(CSymbolManager *symbolmanager,JStop *stop)
+bool CTrailsBase::Init(CSymbolManager *symbolmanager,CStop *stop)
   {
    if(!Active()) return true;
    for(int i=0;i<Total();i++)
      {
-      JTrail *trail=At(i);
+      CTrail *trail=At(i);
       trail.Init(symbolmanager,GetPointer(this));
      }
    SetContainer(stop);
@@ -62,13 +62,13 @@ bool JTrailsBase::Init(CSymbolManager *symbolmanager,JStop *stop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
+double CTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
    if(!Active()) return 0;
    double val=0.0,ret=0.0;
    for(int i=0;i<Total();i++)
      {
-      JTrail *trail=At(i);
+      CTrail *trail=At(i);
       if(!CheckPointer(trail)) continue;
       int trail_target=trail.TrailTarget();
       if (mode!=trail_target) continue;
@@ -83,9 +83,9 @@ double JTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const d
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrailsBase::CreateElement(const int index)
+bool CTrailsBase::CreateElement(const int index)
   {
-   JTrail * trail = new JTrail();
+   CTrail * trail = new CTrail();
    trail.SetContainer(GetPointer(this));
    return Insert(GetPointer(trail),index);
   }

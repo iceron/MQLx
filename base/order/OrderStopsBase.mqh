@@ -7,24 +7,24 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
 #include "OrderStopBase.mqh"
-class JOrder;
+class COrder;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrderStopsBase : public CArrayObj
+class COrderStopsBase : public CArrayObj
   {
 protected:
-   JOrder           *m_order;
+   COrder           *m_order;
 public:
-                     JOrderStopsBase(void);
-                    ~JOrderStopsBase(void);
+                     COrderStopsBase(void);
+                    ~COrderStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOPS;}
    //--- initialization
-   virtual void      SetContainer(JOrder *order){m_order=order;}
-   virtual bool      NewOrderStop(JOrder *order,JStop *stop,JOrderStops *order_stops);
+   virtual void      SetContainer(COrder *order){m_order=order;}
+   virtual bool      NewOrderStop(COrder *order,CStop *stop,COrderStops *order_stops);
    //--- checking
    virtual void      Check(double &volume);
-   virtual bool      CheckNewTicket(JOrderStop *orderstop) {return true;}
+   virtual bool      CheckNewTicket(COrderStop *orderstop) {return true;}
    virtual bool      Close(void);
    //--- hiding and showing of stop lines
    virtual void      Show(bool show=true);
@@ -36,35 +36,35 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopsBase::JOrderStopsBase(void)
+COrderStopsBase::COrderStopsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopsBase::~JOrderStopsBase(void)
+COrderStopsBase::~COrderStopsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopsBase::NewOrderStop(JOrder *order,JStop *stop,JOrderStops *order_stops)
+bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop,COrderStops *order_stops)
   {
-   JOrderStop *order_stop=new JOrderStop();
+   COrderStop *order_stop=new COrderStop();
    order_stop.Init(order,stop,order_stops);
    return Add(order_stop);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopsBase::Check(double &volume)
+COrderStopsBase::Check(double &volume)
   {
    int total=Total();
    if(total>0)
      {
       for(int i=0;i<Total();i++)
         {
-         JOrderStop *order_stop=At(i);
+         COrderStop *order_stop=At(i);
          if(CheckPointer(order_stop))
            {
             order_stop.CheckTrailing();
@@ -78,7 +78,7 @@ JOrderStopsBase::Check(double &volume)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopsBase::Close(void)
+bool COrderStopsBase::Close(void)
   {
    bool res=true;
    int total=Total();
@@ -86,7 +86,7 @@ bool JOrderStopsBase::Close(void)
      {
       for(int i=0;i<total;i++)
         {
-         JOrderStop *order_stop=At(i);
+         COrderStop *order_stop=At(i);
          if(CheckPointer(order_stop))
            {
             if(!order_stop.Close())
@@ -99,27 +99,27 @@ bool JOrderStopsBase::Close(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopsBase::Show(bool show=true)
+COrderStopsBase::Show(bool show=true)
   {
    for (int i=0;i<Total();i++)
    {
-      JOrderStop *orderstop = At(i);
+      COrderStop *orderstop = At(i);
       orderstop.Show(show);
    }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopsBase::CreateElement(const int index)
+bool COrderStopsBase::CreateElement(const int index)
   {
-   JOrderStop * orderstop = new JOrderStop();
+   COrderStop * orderstop = new COrderStop();
    orderstop.SetContainer(GetPointer(this));
    return Insert(GetPointer(orderstop),index);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopsBase::Save(const int handle)
+bool COrderStopsBase::Save(const int handle)
   {  
    CArrayObj::Save(handle);
    return true;
@@ -127,7 +127,7 @@ bool JOrderStopsBase::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopsBase::Load(const int handle)
+bool COrderStopsBase::Load(const int handle)
   {
    CArrayObj::Load(handle);
    return true;

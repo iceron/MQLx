@@ -8,11 +8,11 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrderStop : public JOrderStopBase
+class COrderStop : public COrderStopBase
   {
 public:
-                     JOrderStop(void);
-                    ~JOrderStop(void);
+                     COrderStop(void);
+                    ~COrderStop(void);
    virtual void      Check(double &volume);
    virtual bool      NewTicket(void);
    virtual void      NewTicket(const bool value);
@@ -27,40 +27,40 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStop::JOrderStop(void)
+COrderStop::COrderStop(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStop::~JOrderStop(void)
+COrderStop::~COrderStop(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::NewTicket(void)
+bool COrderStop::NewTicket(void)
   {
    return m_order.NewTicket();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStop::NewTicket(const bool value)
+void COrderStop::NewTicket(const bool value)
   {
    m_order.NewTicket(value);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStop::UpdateTicket(const ulong ticket)
+void COrderStop::UpdateTicket(const ulong ticket)
   {
    m_order.Ticket(ticket);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::Recreate(void)
+bool COrderStop::Recreate(void)
   {
    if(m_order.IsClosed()) return true;
    if(DeleteStopLines())
@@ -84,7 +84,7 @@ bool JOrderStop::Recreate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::UpdateOrderStop(const double stoploss,const double takeprofit)
+bool COrderStop::UpdateOrderStop(const double stoploss,const double takeprofit)
   {
    bool modify_sl=false,modify_tp=false;
    if(stoploss>0)
@@ -109,7 +109,7 @@ bool JOrderStop::UpdateOrderStop(const double stoploss,const double takeprofit)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStop::Check(double &volume)
+void COrderStop::Check(double &volume)
   {
    if(m_stop==NULL) return;
    CheckInit();
@@ -199,7 +199,7 @@ void JOrderStop::Check(double &volume)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::ModifyStopLoss(const double stoploss)
+bool COrderStop::ModifyStopLoss(const double stoploss)
   {
    bool modify=false;
    if(m_stop.Pending())
@@ -214,7 +214,7 @@ bool JOrderStop::ModifyStopLoss(const double stoploss)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::ModifyTakeProfit(const double takeprofit)
+bool COrderStop::ModifyTakeProfit(const double takeprofit)
   {
    bool modify=false;
    if(m_stop.Pending())
@@ -229,7 +229,7 @@ bool JOrderStop::ModifyTakeProfit(const double takeprofit)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStop::ModifyStops(const double stoploss,const double takeprofit)
+bool COrderStop::ModifyStops(const double stoploss,const double takeprofit)
   {
    bool modify=false;
    if(m_stop.Pending())

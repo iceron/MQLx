@@ -10,23 +10,23 @@
 #include "TimeFilterBase.mqh"
 #include "TimeRangeBase.mqh"
 #include "TimerBase.mqh"
-class JStrategy;
+class CStrategy;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JTimesBase : public CArrayObj
+class CTimesBase : public CArrayObj
   {
 protected:
    bool              m_activate;
    int               m_selected;
-   JStrategy        *m_strategy;
+   CStrategy        *m_strategy;
 public:
-                     JTimesBase(void);
-                    ~JTimesBase(void);
+                     CTimesBase(void);
+                    ~CTimesBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIMES;}
    //-- initialization
-   virtual bool      Init(JStrategy *s);
-   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   virtual bool      Init(CStrategy *s);
+   virtual void      SetContainer(CStrategy *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation
    bool              Active(void) const {return m_activate;}
@@ -40,24 +40,24 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimesBase::JTimesBase(void) : m_activate(true),
+CTimesBase::CTimesBase(void) : m_activate(true),
                                m_selected(-1)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimesBase::~JTimesBase(void)
+CTimesBase::~CTimesBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimesBase::Init(JStrategy *s)
+bool CTimesBase::Init(CStrategy *s)
   {
    for(int i=0;i<Total();i++)
      {
-      JTime *time=At(i);
+      CTime *time=At(i);
       time.Init(s,GetPointer(this));
      }
    SetContainer(s);
@@ -66,11 +66,11 @@ bool JTimesBase::Init(JStrategy *s)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimesBase::Validate(void) const
+bool CTimesBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      JTime *time=At(i);
+      CTime *time=At(i);
       if(!time.Validate())
          return false;
      }
@@ -79,12 +79,12 @@ bool JTimesBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimesBase::Evaluate(void) const
+bool CTimesBase::Evaluate(void) const
   {
    if(!Active()) return true;
    for(int i=0;i<Total();i++)
      {
-      JTime *time=At(i);
+      CTime *time=At(i);
       if(CheckPointer(time))
          if(!time.Evaluate()) return false;
      }
@@ -93,9 +93,9 @@ bool JTimesBase::Evaluate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimesBase::CreateElement(const int index)
+bool CTimesBase::CreateElement(const int index)
   {
-   JTime*time=new JTime();
+   CTime*time=new CTime();
    time.SetContainer(GetPointer(this));
    return Insert(GetPointer(time),index);
   }

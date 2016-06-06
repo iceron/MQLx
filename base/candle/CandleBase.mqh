@@ -10,7 +10,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JCandleBase : public CObject
+class CCandleBase : public CObject
   {
 protected:
    bool              m_new;
@@ -20,8 +20,8 @@ protected:
    MqlRates          m_last;
    CSymbolInfo      *m_symbol;
 public:
-                     JCandleBase(void);
-                    ~JCandleBase(void);
+                     CCandleBase(void);
+                    ~CCandleBase(void);
    virtual bool      Init(CSymbolInfo *symbol,int timeframe);
    //--- setters and getters
    datetime          LastTime(void) const {return m_last.time;}
@@ -42,20 +42,20 @@ public:
    virtual bool      Load(const int handle);
   };
 //+------------------------------------------------------------------+
-JCandleBase::JCandleBase(void) : m_wait_for_new(false),
+CCandleBase::CCandleBase(void) : m_wait_for_new(false),
                                  m_trade_processed(false)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCandleBase::~JCandleBase(void)
+CCandleBase::~CCandleBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JCandleBase::Init(CSymbolInfo *symbol,int timeframe)
+bool CCandleBase::Init(CSymbolInfo *symbol,int timeframe)
   {
    m_symbol = symbol;
    m_period = timeframe;
@@ -64,7 +64,7 @@ bool JCandleBase::Init(CSymbolInfo *symbol,int timeframe)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JCandleBase::Check(void)
+void CCandleBase::Check(void)
   {
    m_new=false;
    if(m_symbol!=NULL)
@@ -85,14 +85,14 @@ void JCandleBase::Check(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JCandleBase::IsNewCandle(void)
+bool CCandleBase::IsNewCandle(void)
   {
    return m_new;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JCandleBase::Compare(MqlRates &rates) const
+bool CCandleBase::Compare(MqlRates &rates) const
   {
    return (m_last.time==0 || m_last.time!=rates.time ||
            (m_last.close/m_symbol.TickSize())!=(rates.close/m_symbol.TickSize()) || 
@@ -101,7 +101,7 @@ bool JCandleBase::Compare(MqlRates &rates) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JCandleBase::Save(const int handle)
+bool CCandleBase::Save(const int handle)
   {
    ADT::WriteBool(handle,m_trade_processed);
    ADT::WriteStruct(handle,m_last);
@@ -110,7 +110,7 @@ bool JCandleBase::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JCandleBase::Load(const int handle)
+bool CCandleBase::Load(const int handle)
   {
    ADT::ReadBool(handle,m_trade_processed);
    ADT::ReadStruct(handle,m_last);

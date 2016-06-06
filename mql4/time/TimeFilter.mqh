@@ -8,22 +8,22 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JTimeFilter : public JTimeFilterBase
+class CTimeFilter : public CTimeFilterBase
   {
 public:
-                     JTimeFilter(void);
-                    ~JTimeFilter(void);
+                     CTimeFilter(void);
+                    ~CTimeFilter(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeFilter::JTimeFilter(void)
+CTimeFilter::CTimeFilter(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeFilter::~JTimeFilter(void)
+CTimeFilter::~CTimeFilter(void)
   {
   }
 //+------------------------------------------------------------------+

@@ -8,12 +8,12 @@
 #include <Arrays\ArrayObj.mqh>
 #include <Files\FileBin.mqh>
 #include "OrderStopsBase.mqh"
-class JOrders;
-class JStops;
+class COrders;
+class CStops;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrderBase : public CObject
+class COrderBase : public CObject
   {
 protected:
    bool              m_activate;
@@ -26,29 +26,29 @@ protected:
    double            m_volume;
    double            m_volume_initial;
    string            m_symbol;
-   JOrderStops      *m_order_stops;
-   JOrderStop       *m_main_stop;
-   JOrders          *m_orders;
+   COrderStops      *m_order_stops;
+   COrderStop       *m_main_stop;
+   COrders          *m_orders;
 public:
-                     JOrderBase(void);
-                    ~JOrderBase(void);
+                     COrderBase(void);
+                    ~COrderBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDER;}
    //--- initialization
-   virtual void      SetContainer(JOrders *orders){m_orders=orders;}
+   virtual void      SetContainer(COrders *orders){m_orders=orders;}
    //--- getters and setters       
    bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
    bool              Clean(void) const {return m_clean;}
    void              Clean(const bool clean) {m_clean=clean;}
-   void              CreateStops(JStops *stops);
+   void              CreateStops(CStops *stops);
    void              CheckStops(void);
-   bool              Init(int magic,JOrders *orders,JStops *m_stops,bool recreate=false);
+   bool              Init(int magic,COrders *orders,CStops *m_stops,bool recreate=false);
    void              IsClosed(const bool closed) {m_closed=closed;}
    bool              IsClosed(void) const {return false;}
    void              Magic(const int magic){m_magic=magic;}
    int               Magic(void) const {return m_magic;}
-   void              MainStop(JOrderStop *order_stop){m_main_stop=order_stop;}
-   JOrderStop       *MainStop(void) const {return m_main_stop;}
+   void              MainStop(COrderStop *order_stop){m_main_stop=order_stop;}
+   COrderStop       *MainStop(void) const {return m_main_stop;}
    void              Price(const double price){m_price=price;}
    double            Price(void) const {return m_price;}
    void              OrderType(const ENUM_ORDER_TYPE type){m_type=type;}
@@ -78,7 +78,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderBase::JOrderBase(void) : m_activate(true),
+COrderBase::COrderBase(void) : m_activate(true),
                                m_closed(false),
                                m_clean(false),
                                m_magic(0),
@@ -92,14 +92,14 @@ JOrderBase::JOrderBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderBase::~JOrderBase(void)
+COrderBase::~COrderBase(void)
   {
    ADT::Delete(m_order_stops);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderBase::Init(int magic,JOrders *orders,JStops *stops,bool recreate=false)
+bool COrderBase::Init(int magic,COrders *orders,CStops *stops,bool recreate=false)
   {
    m_magic=magic;
    SetContainer(GetPointer(orders));
@@ -109,17 +109,17 @@ bool JOrderBase::Init(int magic,JOrders *orders,JStops *stops,bool recreate=fals
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderBase::CreateStops(JStops *stops)
+void COrderBase::CreateStops(CStops *stops)
   {
    if(CheckPointer(stops)==POINTER_INVALID)
       return;
    if(stops.Total()>0)
      {
       if(CheckPointer(m_order_stops)==POINTER_INVALID)
-         m_order_stops=new JOrderStops();  
+         m_order_stops=new COrderStops();  
       for(int i=0;i<stops.Total();i++)
         {
-         JStop *stop=stops.At(i);
+         CStop *stop=stops.At(i);
          if(CheckPointer(stop)==POINTER_INVALID)
             continue;
          m_order_stops.NewOrderStop(GetPointer(this),stop,m_order_stops);
@@ -129,7 +129,7 @@ void JOrderBase::CreateStops(JStops *stops)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderBase::CheckStops(void)
+void COrderBase::CheckStops(void)
   {
    if(m_order_stops!=NULL)
       m_order_stops.Check(m_volume);
@@ -137,7 +137,7 @@ void JOrderBase::CheckStops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderBase::CloseStops(void)
+bool COrderBase::CloseStops(void)
   {
    if(m_order_stops!=NULL)
       return m_order_stops.Close();
@@ -146,9 +146,9 @@ bool JOrderBase::CloseStops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JOrderBase::Compare(const CObject *node,const int mode=0) const
+int COrderBase::Compare(const CObject *node,const int mode=0) const
   {
-   const JOrder *order=node;
+   const COrder *order=node;
    if(Ticket()>order.Ticket())
       return 1;
    if(Ticket()<order.Ticket())
@@ -158,7 +158,7 @@ int JOrderBase::Compare(const CObject *node,const int mode=0) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-string JOrderBase::OrderTypeToString(void) const
+string COrderBase::OrderTypeToString(void) const
   {
    switch(OrderType())
      {
@@ -174,21 +174,21 @@ string JOrderBase::OrderTypeToString(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderBase::IsOrderTypeLong(const ENUM_ORDER_TYPE type)
+bool COrderBase::IsOrderTypeLong(const ENUM_ORDER_TYPE type)
   {
    return type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_LIMIT || type==ORDER_TYPE_BUY_STOP;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
+bool COrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
   {
    return type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_LIMIT || type==ORDER_TYPE_SELL_STOP;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderBase::Save(const int handle)
+bool COrderBase::Save(const int handle)
   {
    ADT::WriteBool(handle,m_closed);
    ADT::WriteBool(handle,m_clean);
@@ -204,7 +204,7 @@ bool JOrderBase::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderBase::Load(const int handle)
+bool COrderBase::Load(const int handle)
   {
    ADT::ReadBool(handle,m_closed);
    ADT::ReadBool(handle,m_clean);

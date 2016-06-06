@@ -9,7 +9,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JTimeFilterBase : public JTime
+class CTimeFilterBase : public CTime
   {
 protected:
    MqlDateTime       m_filter_start;
@@ -22,8 +22,8 @@ protected:
    bool              m_fri;
    bool              m_sat;
 public:
-                     JTimeFilterBase(void);
-                    ~JTimeFilterBase(void);
+                     CTimeFilterBase(void);
+                    ~CTimeFilterBase(void);
    //--- initialization                    
    virtual bool      Validate(void);
    virtual bool      Evaluate(void);
@@ -48,7 +48,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeFilterBase::JTimeFilterBase(void) : m_sun(false),
+CTimeFilterBase::CTimeFilterBase(void) : m_sun(false),
                                          m_mon(true),
                                          m_tue(true),
                                          m_wed(true),
@@ -60,13 +60,13 @@ JTimeFilterBase::JTimeFilterBase(void) : m_sun(false),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeFilterBase::~JTimeFilterBase(void)
+CTimeFilterBase::~CTimeFilterBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeFilterBase::Validate(void)
+bool CTimeFilterBase::Validate(void)
   {
    datetime t_start=StructToTime(m_filter_start);
    datetime t_end=StructToTime(m_filter_end);
@@ -80,7 +80,7 @@ bool JTimeFilterBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeFilterBase::Init(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0)
+bool CTimeFilterBase::Init(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0)
   {
    m_filter_start.hour=starthour+gmt;
    m_filter_start.min=startminute;
@@ -93,7 +93,7 @@ bool JTimeFilterBase::Init(const int gmt,const int starthour,const int endhour,c
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeFilterBase::Evaluate(void)
+bool CTimeFilterBase::Evaluate(void)
   {
    if(!Active()) return true;
    bool result=true;
@@ -132,7 +132,7 @@ bool JTimeFilterBase::Evaluate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JTimeFilterBase::SetDays(const bool sun=false,const bool mon=true,const bool tue=true,const bool wed=true,const bool thu=true,const bool fri=true,const bool sat=false)
+void CTimeFilterBase::SetDays(const bool sun=false,const bool mon=true,const bool tue=true,const bool wed=true,const bool thu=true,const bool fri=true,const bool sat=false)
   {
    m_sun = sun;
    m_mon = mon;

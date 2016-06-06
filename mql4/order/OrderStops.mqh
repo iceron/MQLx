@@ -8,31 +8,31 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrderStops : public JOrderStopsBase
+class COrderStops : public COrderStopsBase
   {
 public:
-                     JOrderStops(void);
-                    ~JOrderStops(void);
-   virtual bool      CheckNewTicket(JOrderStop *orderstop);
-   virtual ulong     GetNewTicket(JOrderStop *orderstop);
+                     COrderStops(void);
+                    ~COrderStops(void);
+   virtual bool      CheckNewTicket(COrderStop *orderstop);
+   virtual ulong     GetNewTicket(COrderStop *orderstop);
    virtual bool      UpdateStopsByTicket(const ulong ticket);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStops::JOrderStops(void)
+COrderStops::COrderStops(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStops::~JOrderStops(void)
+COrderStops::~COrderStops(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStops::CheckNewTicket(JOrderStop *orderstop)
+bool COrderStops::CheckNewTicket(COrderStop *orderstop)
   {
    if(orderstop.NewTicket())
       return UpdateStopsByTicket(GetNewTicket(orderstop));
@@ -41,10 +41,10 @@ bool JOrderStops::CheckNewTicket(JOrderStop *orderstop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStops::UpdateStopsByTicket(const ulong ticket)
+bool COrderStops::UpdateStopsByTicket(const ulong ticket)
   {
    bool res=true;
-   JOrderStop *order_stop;
+   COrderStop *order_stop;
    for(int i=0;i<Total();i++)
      {
       order_stop=At(i);
@@ -57,7 +57,7 @@ bool JOrderStops::UpdateStopsByTicket(const ulong ticket)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-ulong JOrderStops::GetNewTicket(JOrderStop *orderstop)
+ulong COrderStops::GetNewTicket(COrderStop *orderstop)
   {
    int total= OrdersTotal();
    for(int i=0;i<total;i++)

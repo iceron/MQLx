@@ -14,7 +14,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JTimerBase : public JTime
+class CTimerBase : public CTime
   {
 protected:
    uint              m_years;
@@ -26,8 +26,8 @@ protected:
    int               m_total;
    int               m_elapsed;
 public:
-                     JTimerBase(void);
-                    ~JTimerBase(void);
+                     CTimerBase(void);
+                    ~CTimerBase(void);
    //--- initialization
    virtual bool      Init(const uint years,const uint months,const uint days,const uint hours,const uint minutes,const uint seconds);
    virtual bool      Validate(void);
@@ -53,7 +53,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimerBase::JTimerBase(void) : m_years(0),
+CTimerBase::CTimerBase(void) : m_years(0),
                                m_months(0),
                                m_days(0),
                                m_hours(0),
@@ -65,13 +65,13 @@ JTimerBase::JTimerBase(void) : m_years(0),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimerBase::~JTimerBase(void)
+CTimerBase::~CTimerBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimerBase::Init(const uint years,const uint months,const uint days,const uint hours,const uint minutes,const uint seconds)
+bool CTimerBase::Init(const uint years,const uint months,const uint days,const uint hours,const uint minutes,const uint seconds)
   {
    m_years=years;
    m_months=months;
@@ -85,7 +85,7 @@ bool JTimerBase::Init(const uint years,const uint months,const uint days,const u
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimerBase::Validate(void)
+bool CTimerBase::Validate(void)
   {
    if(m_total<=0)
      {
@@ -97,14 +97,14 @@ bool JTimerBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JTimerBase::RecalculateTotal(void)
+void CTimerBase::RecalculateTotal(void)
   {
    m_total=(int)((m_years*YEAR_SECONDS)+(m_months*MONTH_SECONDS)+(m_days*DAY_SECONDS)+(m_hours*HOUR_SECONDS)+(m_minutes*MINUTE_SECONDS));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimerBase::Evaluate(void)
+bool CTimerBase::Evaluate(void)
   {
    if(!Active()) return true;
    bool result=true;

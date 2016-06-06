@@ -10,13 +10,13 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JCommentsBase : public CList
+class CCommentsBase : public CList
   {
 protected:
    bool              m_activate;
 public:
-                     JCommentsBase(void);
-                    ~JCommentsBase(void);
+                     CCommentsBase(void);
+                    ~CCommentsBase(void);
    bool              Active(){return m_activate;}
    void              Active(bool active){m_activate = active;}
    virtual void      Display(void);
@@ -25,23 +25,23 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCommentsBase::JCommentsBase(void) : m_activate(true)
+CCommentsBase::CCommentsBase(void) : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCommentsBase::~JCommentsBase(void)
+CCommentsBase::~CCommentsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCommentsBase::Display(void)
+CCommentsBase::Display(void)
   {
    Comment("");
    string str="";
-   JComment *comment=GetFirstNode();
+   CComment *comment=GetFirstNode();
    while(CheckPointer(comment)==POINTER_DYNAMIC)
      {
       Concatenate(str,comment.Text());
@@ -53,7 +53,7 @@ JCommentsBase::Display(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCommentsBase::Concatenate(string &str,string comment)
+CCommentsBase::Concatenate(string &str,string comment)
   {
   }
 //+------------------------------------------------------------------+

@@ -7,11 +7,11 @@
 #property link      "http://www.cyberforexworks.com"
 #include "..\..\common\enum\ENUM_TRAIL_TARGET.mqh"
 #include "..\..\base\symbol\SymbolManagerBase.mqh"
-class JTrails;
+class CTrails;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JTrailBase : public CObject
+class CTrailBase : public CObject
   {
 protected:
    bool              m_activate;
@@ -22,14 +22,14 @@ protected:
    double            m_step;
    CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
-   JTrails          *m_trails;
+   CTrails          *m_trails;
 public:
-                     JTrailBase(void);
-                    ~JTrailBase(void);
+                     CTrailBase(void);
+                    ~CTrailBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TRAIL;}
    //--- initialization                    
-   virtual bool      Init(CSymbolManager *symbolmanager,JTrails *t);
-   virtual void      SetContainer(JTrails *trails){m_trails=trails;}
+   virtual bool      Init(CSymbolManager *symbolmanager,CTrails *t);
+   virtual void      SetContainer(CTrails *trails){m_trails=trails;}
    virtual bool      Validate(void) const;
    //--- getters and setters    
    bool              Active(void) const {return m_activate;}
@@ -61,7 +61,7 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrailBase::JTrailBase(void) : m_activate(true),
+CTrailBase::CTrailBase(void) : m_activate(true),
                                m_target(TRAIL_TARGET_STOPLOSS),
                                m_start(0.0),
                                m_end(0.0),
@@ -74,20 +74,20 @@ JTrailBase::JTrailBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTrailBase::~JTrailBase(void)
+CTrailBase::~CTrailBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrailBase::Validate(void) const
+bool CTrailBase::Validate(void) const
   {
    return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTrailBase::Init(CSymbolManager *symbolmanager,JTrails *trail)
+bool CTrailBase::Init(CSymbolManager *symbolmanager,CTrails *trail)
   {
    if(symbolmanager==NULL || trail==NULL) return false;
    m_symbol_man=symbolmanager;
@@ -97,7 +97,7 @@ bool JTrailBase::Init(CSymbolManager *symbolmanager,JTrails *trail)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JTrailBase::Set(const double trail,const double st,const double step=1,const double end=0)
+void CTrailBase::Set(const double trail,const double st,const double step=1,const double end=0)
   {
    m_trail=trail;
    m_start=st;
@@ -107,7 +107,7 @@ void JTrailBase::Set(const double trail,const double st,const double step=1,cons
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailBase::ActivationPrice(const ENUM_ORDER_TYPE type,const double entry_price)
+double CTrailBase::ActivationPrice(const ENUM_ORDER_TYPE type,const double entry_price)
   {
    if(type==ORDER_TYPE_BUY)
       return entry_price+m_start*m_symbol.Point();
@@ -118,7 +118,7 @@ double JTrailBase::ActivationPrice(const ENUM_ORDER_TYPE type,const double entry
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailBase::DeactivationPrice(const ENUM_ORDER_TYPE type,const double entry_price)
+double CTrailBase::DeactivationPrice(const ENUM_ORDER_TYPE type,const double entry_price)
   {
    if(type==ORDER_TYPE_BUY)
       return m_end==0?0:entry_price+m_end*m_symbol.Point();
@@ -129,7 +129,7 @@ double JTrailBase::DeactivationPrice(const ENUM_ORDER_TYPE type,const double ent
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
+double CTrailBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
    if(!Active()) return 0;
    Refresh(symbol);
@@ -161,7 +161,7 @@ double JTrailBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const do
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double JTrailBase::Price(const ENUM_ORDER_TYPE type)
+double CTrailBase::Price(const ENUM_ORDER_TYPE type)
   {
    if(type==ORDER_TYPE_BUY)
      {
@@ -178,7 +178,7 @@ double JTrailBase::Price(const ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JTrailBase::Refresh(const string symbol)
+void CTrailBase::Refresh(const string symbol)
   {
    if(m_symbol==NULL|| StringCompare(m_symbol.Name(),symbol)!=0)
       m_symbol= m_symbol_man.Get(symbol);

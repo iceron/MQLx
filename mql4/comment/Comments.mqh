@@ -8,29 +8,29 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JComments : public JCommentsBase
+class CComments : public CCommentsBase
   {
 public:
-                     JComments();
-                    ~JComments(void);
+                     CComments();
+                    ~CComments(void);
    virtual void      Concatenate(string &str,string comment);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JComments::JComments()
+CComments::CComments()
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JComments::~JComments(void)
+CComments::~CComments(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JComments::Concatenate(string &str,string comment)
+CComments::Concatenate(string &str,string comment)
   {
    str=StringConcatenate(str,comment,"\n");
   }

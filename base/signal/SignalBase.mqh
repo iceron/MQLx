@@ -8,12 +8,12 @@
 #include "..\..\common\enum\ENUM_CMD.mqh"
 #include <Arrays\ArrayDouble.mqh>
 #include "..\comment\CommentsBase.mqh"
-class JStrategy;
-class JSignals;
+class CStrategy;
+class CSignals;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JSignalBase : public CObject
+class CSignalBase : public CObject
   {
 protected:
    bool              m_activate;
@@ -23,17 +23,17 @@ protected:
    bool              m_new_signal;
    bool              m_reverse;
    bool              m_exit;
-   JStrategy        *m_strategy;
+   CStrategy        *m_strategy;
    CArrayDouble      m_empty_value;
-   JSignals         *m_signals;
-   JComments        *m_comments;
+   CSignals         *m_signals;
+   CComments        *m_comments;
 public:
-                     JSignalBase();
-                    ~JSignalBase(void);
+                     CSignalBase();
+                    ~CSignalBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_SIGNAL;}
    //--- initialization
-   virtual bool      Init(JStrategy *s,JComments *comments);
-   virtual void      SetContainer(JSignals *signals){m_signals=signals;}
+   virtual bool      Init(CStrategy *s,CComments *comments);
+   virtual void      SetContainer(CSignals *signals){m_signals=signals;}
    virtual bool      Validate(void) const;
    //--- getters and setters
    virtual bool      Active(void) const {return m_activate;}
@@ -70,7 +70,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignalBase::JSignalBase() : m_activate(true),
+CSignalBase::CSignalBase() : m_activate(true),
                              m_name(NULL),
                              m_signal(CMD_NEUTRAL),
                              m_signal_valid(CMD_VOID),
@@ -86,20 +86,20 @@ JSignalBase::JSignalBase() : m_activate(true),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JSignalBase::~JSignalBase(void)
+CSignalBase::~CSignalBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::Validate(void) const
+bool CSignalBase::Validate(void) const
   {
    return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::Init(JStrategy *s,JComments *comments)
+bool CSignalBase::Init(CStrategy *s,CComments *comments)
   {
    m_strategy=s;
    m_comments=comments;
@@ -108,21 +108,21 @@ bool JSignalBase::Init(JStrategy *s,JComments *comments)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JSignalBase::AddEmptyValue(double val)
+void CSignalBase::AddEmptyValue(double val)
   {
    m_empty_value.InsertSort(val);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::IsEmpty(double val)
+bool CSignalBase::IsEmpty(double val)
   {
    return m_empty_value.Search(val)>=0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JSignalBase::CheckSignal(void)
+int CSignalBase::CheckSignal(void)
   {
    if(!Active()) return CMD_ALL;
    int res=CMD_NEUTRAL;
@@ -134,7 +134,7 @@ int JSignalBase::CheckSignal(void)
       if(long_cond) res=CMD_LONG;
       else if(short_cond) res=CMD_SHORT;
      }
-   if(m_reverse) res=JSignalBase::SignalReverse(res);
+   if(m_reverse) res=CSignalBase::SignalReverse(res);
    if(res>CMD_NEUTRAL) m_signal_valid=res;
    if (m_new_signal)
    {
@@ -148,7 +148,7 @@ int JSignalBase::CheckSignal(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD res,const bool exact=false)
+bool CSignalBase::IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD res,const bool exact=false)
   {
    if(exact)
      {
@@ -163,28 +163,28 @@ bool JSignalBase::IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD
          default: PrintFormat(__FUNCTION__+": unknown order type");
         }
      }
-   return (IsSignalTypeShort((ENUM_CMD) res) && JOrder::IsOrderTypeLong(type))
-          ||(IsSignalTypeLong((ENUM_CMD)res) && JOrder::IsOrderTypeShort(type))
+   return (IsSignalTypeShort((ENUM_CMD) res) && COrder::IsOrderTypeLong(type))
+          ||(IsSignalTypeLong((ENUM_CMD)res) && COrder::IsOrderTypeShort(type))
           || (res==CMD_VOID);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::IsSignalTypeLong(const ENUM_CMD type)
+bool CSignalBase::IsSignalTypeLong(const ENUM_CMD type)
   {
    return type==CMD_LONG || type==CMD_BUY || type==CMD_BUYLIMIT || type==CMD_BUYSTOP;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::IsSignalTypeShort(const ENUM_CMD type)
+bool CSignalBase::IsSignalTypeShort(const ENUM_CMD type)
   {
    return type==CMD_SHORT || type==CMD_SELL || type==CMD_SELLLIMIT || type==CMD_SELLSTOP;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-string JSignalBase::ToString(bool last_valid=false) const
+string CSignalBase::ToString(bool last_valid=false) const
   {
    int signal=last_valid?m_signal_valid:m_signal;
    switch(signal)
@@ -210,7 +210,7 @@ string JSignalBase::ToString(bool last_valid=false) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int JSignalBase::SignalReverse(const int signal)
+int CSignalBase::SignalReverse(const int signal)
   {
    switch(signal)
      {
@@ -235,7 +235,7 @@ int JSignalBase::SignalReverse(const int signal)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-ENUM_ORDER_TYPE JSignalBase::SignalToOrderType(const int signal)
+ENUM_ORDER_TYPE CSignalBase::SignalToOrderType(const int signal)
   {
    switch(signal)
      {
@@ -251,7 +251,7 @@ ENUM_ORDER_TYPE JSignalBase::SignalToOrderType(const int signal)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::Save(const int handle)
+bool CSignalBase::Save(const int handle)
   {
    ADT::WriteInteger(handle,m_signal);
    ADT::WriteInteger(handle,m_signal_valid);
@@ -260,7 +260,7 @@ bool JSignalBase::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JSignalBase::Load(const int handle)
+bool CSignalBase::Load(const int handle)
   {
    ADT::ReadInteger(handle,m_signal);
    ADT::ReadInteger(handle,m_signal_valid);
@@ -269,10 +269,10 @@ bool JSignalBase::Load(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JSignalBase::AddComment(const string comment)
+void CSignalBase::AddComment(const string comment)
   {
    if(CheckPointer(m_comments)==POINTER_DYNAMIC)
-      m_comments.Add(new JComment(comment));
+      m_comments.Add(new CComment(comment));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

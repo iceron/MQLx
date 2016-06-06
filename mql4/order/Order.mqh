@@ -9,15 +9,15 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrder : public JOrderBase
+class COrder : public COrderBase
   {
 protected:
    CArrayInt         m_ticket_current;
    bool              m_ticket_updated;
 public:
-                     JOrder(void);
-                     JOrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);                     
-                    ~JOrder(void);
+                     COrder(void);
+                     COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);                     
+                    ~COrder(void);
    virtual bool      IsClosed(void);
    virtual void      Ticket(const ulong ticket) {m_ticket_current.InsertSort((int)ticket);}
    virtual ulong     Ticket(void) const {return m_ticket_current.At(m_ticket_current.Total()-1);}
@@ -30,7 +30,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder(void): m_ticket_updated(false)
+COrder::COrder(void): m_ticket_updated(false)
   {
    if(!m_ticket_current.IsSorted())
       m_ticket_current.Sort();
@@ -38,7 +38,7 @@ JOrder::JOrder(void): m_ticket_updated(false)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::JOrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price)
+COrder::COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
    if(!m_ticket_current.IsSorted())
       m_ticket_current.Sort();
@@ -53,13 +53,13 @@ JOrder::JOrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrder::~JOrder(void)
+COrder::~COrder(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrder::IsClosed(void)
+bool COrder::IsClosed(void)
   {
    if(m_closed) return true;
    if(Volume()<=0.0)
@@ -83,9 +83,9 @@ bool JOrder::IsClosed(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrder::Save(const int handle)
+bool COrder::Save(const int handle)
   {
-   JOrderBase::Save(handle);
+   COrderBase::Save(handle);
    ADT::WriteObject(handle,GetPointer(m_ticket_current));
    ADT::WriteBool(handle,m_ticket_updated);
    return true;
@@ -93,9 +93,9 @@ bool JOrder::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrder::Load(const int handle)
+bool COrder::Load(const int handle)
   {
-   JOrderBase::Save(handle);
+   COrderBase::Save(handle);
    ADT::ReadObject(handle,GetPointer(m_ticket_current));
    ADT::WriteBool(handle,m_ticket_updated);
    return true;

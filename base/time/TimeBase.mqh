@@ -7,26 +7,26 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Object.mqh>
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
-class JStrategy;
-class JTimes;
+class CStrategy;
+class CTimes;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JTimeBase : public CObject
+class CTimeBase : public CObject
   {
 protected:
    bool              m_activate;
    bool              m_reverse;
    datetime          m_time_start;
-   JTimes           *m_times;
+   CTimes           *m_times;
 public:
-                     JTimeBase(void);
-                    ~JTimeBase(void);
+                     CTimeBase(void);
+                    ~CTimeBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIME;}
    virtual bool      Validate() {return true;}
    //--- initialization
-   virtual bool      Init(JStrategy *s,JTimes *times);
-   virtual void      SetContainer(JTimes *times){m_times=times;}
+   virtual bool      Init(CStrategy *s,CTimes *times);
+   virtual void      SetContainer(CTimes *times){m_times=times;}
    //--- setters and getters
    bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
@@ -40,7 +40,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeBase::JTimeBase(void) : m_activate(true),
+CTimeBase::CTimeBase(void) : m_activate(true),
                              m_reverse(false),
                              m_time_start(TimeCurrent())
   {
@@ -48,13 +48,13 @@ JTimeBase::JTimeBase(void) : m_activate(true),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JTimeBase::~JTimeBase(void)
+CTimeBase::~CTimeBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JTimeBase::Init(JStrategy *s,JTimes *times)
+bool CTimeBase::Init(CStrategy *s,CTimes *times)
   {
    SetContainer(times);
    return true;

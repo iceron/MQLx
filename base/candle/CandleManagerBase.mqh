@@ -18,7 +18,7 @@ public:
                     ~CCandleManagerBase(void);
    virtual void      Check(void);
    virtual bool      IsNewCandle(string symbol,int timeframe);
-   virtual JCandle *Get(string symbol,int timeframe);
+   virtual CCandle  *Get(string symbol,int timeframe);
    virtual bool      TradeProcessed(string symbol,int timeframe);
    virtual void      TradeProcessed(string symbol,int timeframe,bool processed);
   };
@@ -41,7 +41,7 @@ void CCandleManagerBase::Check(void)
   {
    for(int i=0;i<Total();i++)
      {
-      JCandle *candle=At(i);
+      CCandle *candle=At(i);
       candle.Check();
      }
   }
@@ -50,7 +50,7 @@ void CCandleManagerBase::Check(void)
 //+------------------------------------------------------------------+
 bool CCandleManagerBase::IsNewCandle(string symbol,int timeframe)
   {
-   JCandle *candle=Get(symbol,timeframe);
+   CCandle *candle=Get(symbol,timeframe);
    if(candle!=NULL)
       return candle.IsNewCandle();
    return false;
@@ -60,7 +60,7 @@ bool CCandleManagerBase::IsNewCandle(string symbol,int timeframe)
 //+------------------------------------------------------------------+
 bool CCandleManagerBase::TradeProcessed(string symbol,int timeframe)
   {
-   JCandle *candle=Get(symbol,timeframe);
+   CCandle *candle=Get(symbol,timeframe);
    if(candle!=NULL)
       return candle.TradeProcessed();
    return false;
@@ -70,18 +70,18 @@ bool CCandleManagerBase::TradeProcessed(string symbol,int timeframe)
 //+------------------------------------------------------------------+
 void CCandleManagerBase::TradeProcessed(string symbol,int timeframe,bool processed)
   {
-   JCandle *candle=Get(symbol,timeframe);
+   CCandle *candle=Get(symbol,timeframe);
    if(candle!=NULL)
       candle.TradeProcessed(processed);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JCandle *CCandleManagerBase::Get(string symbol,int timeframe)
+CCandle *CCandleManagerBase::Get(string symbol,int timeframe)
   {
    for(int i=0;i<Total();i++)
      {
-      JCandle *candle=At(i);
+      CCandle *candle=At(i);
       if(candle!=NULL)
          if(StringCompare(symbol,candle.SymbolName())==0 && timeframe==candle.Timeframe())
             return candle;

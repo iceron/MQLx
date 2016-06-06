@@ -8,32 +8,32 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStrategy : public JStrategyBase
+class CStrategy : public CStrategyBase
   {
 public:
-                     JStrategy(void);
-                    ~JStrategy(void);              
+                     CStrategy(void);
+                    ~CStrategy(void);              
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void) {m_order_man.OnTradeTransaction();}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::JStrategy(void)
+CStrategy::CStrategy(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStrategy::~JStrategy(void)
+CStrategy::~CStrategy(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStrategy::OnTick(void)
+bool CStrategy::OnTick(void)
   {
-   bool ret=JStrategyBase::OnTick();
+   bool ret=CStrategyBase::OnTick();
    if(ret) OnTradeTransaction();
    return ret;
   }

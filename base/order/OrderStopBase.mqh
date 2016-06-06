@@ -11,12 +11,12 @@
 #include "..\trade\TradeBase.mqh"
 #include "..\stop\StopBase.mqh"
 #include "..\stop\StopLineBase.mqh"
-class JOrder;
-class JOrderStops;
+class COrder;
+class COrderStops;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JOrderStopBase : public CObject
+class COrderStopBase : public CObject
   {
 protected:
    //--- stop parameters
@@ -34,27 +34,27 @@ protected:
    ENUM_STOP_TYPE    m_stop_type;
    string            m_stop_name;
    //--- main order object
-   JOrder           *m_order;
+   COrder           *m_order;
    //--- stop objects
-   JStop            *m_stop;
-   JStopLine        *m_objentry;
-   JStopLine        *m_objsl;
-   JStopLine        *m_objtp;
-   JOrderStops      *m_order_stops;
+   CStop            *m_stop;
+   CStopLine        *m_objentry;
+   CStopLine        *m_objsl;
+   CStopLine        *m_objtp;
+   COrderStops      *m_order_stops;
 public:
-                     JOrderStopBase(void);
-                    ~JOrderStopBase(void);
+                     COrderStopBase(void);
+                    ~COrderStopBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOP;}
    //--- initialization
-   virtual void      Init(JOrder *order,JStop *stop,JOrderStops *order_stops);
-   virtual void      SetContainer(JOrderStops *orderstops){m_order_stops=orderstops;}
+   virtual void      Init(COrder *order,CStop *stop,COrderStops *order_stops);
+   virtual void      SetContainer(COrderStops *orderstops){m_order_stops=orderstops;}
    //--- getters and setters  
    string            EntryName(void) const {return m_stop.Name()+"."+(string)m_order.Ticket();}
    ulong             MainMagic(void) const {return m_order.Magic();}
    ulong             MainTicket(void) const {return m_order.Ticket();}
    double            MainTicketPrice() const {return m_order.Price();}
    ENUM_ORDER_TYPE   MainTicketType(void) const {return m_order.OrderType();}
-   JOrder            *Order() {return GetPointer(m_order);}
+   COrder            *Order() {return GetPointer(m_order);}
    void              StopLoss(const double stoploss) {m_stoploss.Add(stoploss);}
    double            StopLoss(void) const {return m_stoploss.Total()>0?m_stoploss.At(m_stoploss.Total()-1):0;}
    double            StopLoss(const int index) const {return m_stoploss.Total()>index?m_stoploss.At(index):0;}
@@ -110,7 +110,7 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopBase::JOrderStopBase(void) : m_volume(0.0),
+COrderStopBase::COrderStopBase(void) : m_volume(0.0),
                                        m_volume_fixed(0.0),
                                        m_volume_percent(0.0),
                                        m_stoploss_ticket(0),
@@ -124,14 +124,14 @@ JOrderStopBase::JOrderStopBase(void) : m_volume(0.0),
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopBase::~JOrderStopBase(void)
+COrderStopBase::~COrderStopBase(void)
   {
    Deinit();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStopBase::Init(JOrder *order,JStop *stop,JOrderStops *order_stops)
+void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
   {
    if(stop==NULL || order==NULL) return;
    if(!stop.Active()) return;
@@ -155,7 +155,7 @@ void JOrderStopBase::Init(JOrder *order,JStop *stop,JOrderStops *order_stops)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::Deinit(void)
+bool COrderStopBase::Deinit(void)
   {
    ADT::Delete(m_objentry);
    ADT::Delete(m_objsl);
@@ -165,21 +165,21 @@ bool JOrderStopBase::Deinit(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::IsStopLossValid(const double stoploss) const
+bool COrderStopBase::IsStopLossValid(const double stoploss) const
   {
    return (stoploss>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && stoploss>StopLoss()) || (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<StopLoss())));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::IsTakeProfitValid(const double takeprofit) const
+bool COrderStopBase::IsTakeProfitValid(const double takeprofit) const
   {
    return (takeprofit>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && takeprofit<TakeProfit()) || (m_order.OrderType()==ORDER_TYPE_SELL && takeprofit>TakeProfit())));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::CheckTrailing(void)
+bool COrderStopBase::CheckTrailing(void)
   {
    if(m_stop==NULL || m_order.IsClosed() || (m_stoploss_closed && m_takeprofit_closed))
       return false;
@@ -205,7 +205,7 @@ bool JOrderStopBase::CheckTrailing(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::Close(void)
+bool COrderStopBase::Close(void)
   {
    bool res1=false,res2=false,result=false;
    if(m_stoploss_closed || StopLoss()==0 || m_stoploss_ticket==0)
@@ -230,7 +230,7 @@ bool JOrderStopBase::Close(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::Update(void)
+bool COrderStopBase::Update(void)
   {
    if(m_stop==NULL) return true;
    if(m_order.IsClosed()) return false;
@@ -256,28 +256,28 @@ bool JOrderStopBase::Update(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStopBase::CheckInit()
+void COrderStopBase::CheckInit()
   {
    //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK,GetPointer(this));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStopBase::CheckDeinit()
+void COrderStopBase::CheckDeinit()
   {
    //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK_DONE,GetPointer(this));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::DeleteChartObject(string name)
+bool COrderStopBase::DeleteChartObject(string name)
   {
    return ObjectDelete(0,name);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::DeleteStopLoss(void)
+bool COrderStopBase::DeleteStopLoss(void)
   {
    if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
      {
@@ -293,7 +293,7 @@ bool JOrderStopBase::DeleteStopLoss(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::DeleteTakeProfit(void)
+bool COrderStopBase::DeleteTakeProfit(void)
   {
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
      {
@@ -309,7 +309,7 @@ bool JOrderStopBase::DeleteTakeProfit(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::DeleteEntry(void)
+bool COrderStopBase::DeleteEntry(void)
   {
    if(CheckPointer(m_objentry)==POINTER_DYNAMIC)
      {
@@ -325,7 +325,7 @@ bool JOrderStopBase::DeleteEntry(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::DeleteStopLines(void)
+bool COrderStopBase::DeleteStopLines(void)
   {
    if(DeleteStopLoss() && DeleteTakeProfit())
       return DeleteEntry();
@@ -334,7 +334,7 @@ bool JOrderStopBase::DeleteStopLines(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStopBase::MoveStopLoss(const double stoploss)
+void COrderStopBase::MoveStopLoss(const double stoploss)
   {
    if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
       if(m_objsl.Move(stoploss))
@@ -343,7 +343,7 @@ void JOrderStopBase::MoveStopLoss(const double stoploss)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JOrderStopBase::MoveTakeProfit(const double takeprofit)
+void COrderStopBase::MoveTakeProfit(const double takeprofit)
   {
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
       if(m_objtp.Move(takeprofit))
@@ -352,7 +352,7 @@ void JOrderStopBase::MoveTakeProfit(const double takeprofit)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::Modify(const double stoploss,const double takeprofit)
+bool COrderStopBase::Modify(const double stoploss,const double takeprofit)
   {
    bool stoploss_modified=false,takeprofit_modified=false;
    double oldsl=StopLoss(),oldtp=TakeProfit();
@@ -388,7 +388,7 @@ bool JOrderStopBase::Modify(const double stoploss,const double takeprofit)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JOrderStopBase::Show(bool show=true)
+COrderStopBase::Show(bool show=true)
   {
    int setting=show?OBJ_ALL_PERIODS:OBJ_NO_PERIODS;
    if(CheckPointer(m_objentry)) m_objentry.Timeframes(setting);
@@ -398,7 +398,7 @@ JOrderStopBase::Show(bool show=true)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::Save(const int handle)
+bool COrderStopBase::Save(const int handle)
   {
    //ADT::WriteDouble(handle,m_volume);
    //ADT::WriteDouble(handle,m_volume_fixed);
@@ -416,7 +416,7 @@ bool JOrderStopBase::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JOrderStopBase::Load(const int handle)
+bool COrderStopBase::Load(const int handle)
   {
    //int temp;
    //ADT::ReadDouble(handle,m_volume);

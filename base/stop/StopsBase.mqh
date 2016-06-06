@@ -7,50 +7,50 @@
 #property link      "http://www.cyberforexworks.com"
 #include <Arrays\ArrayObj.mqh>
 #include "StopBase.mqh"
-class JStrategy;
+class CStrategy;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class JStopsBase : public CArrayObj
+class CStopsBase : public CArrayObj
   {
 protected:
    bool              m_activate;
-   JStrategy        *m_strategy;
+   CStrategy        *m_strategy;
 public:
-                     JStopsBase(void);
-                    ~JStopsBase(void);
+                     CStopsBase(void);
+                    ~CStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPS;}
    //--- initialization
-   virtual bool      Init(JStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
-   virtual void      SetContainer(JStrategy *s){m_strategy=s;}
+   virtual bool      Init(CStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
+   virtual void      SetContainer(CStrategy *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- setters and getters
    virtual bool      Active(void) const {return m_activate;}
    virtual void      Active(const bool activate) {m_activate=activate;}
-   virtual JStop    *Main();
+   virtual CStop    *Main();
    //--- recovery
    virtual bool      CreateElement(const int index);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopsBase::JStopsBase(void) : m_activate(true)
+CStopsBase::CStopsBase(void) : m_activate(true)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStopsBase::~JStopsBase(void)
+CStopsBase::~CStopsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopsBase::Init(JStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool CStopsBase::Init(CStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    for(int i=0;i<Total();i++)
      {
-      JStop *stop=At(i);
+      CStop *stop=At(i);
       stop.Init(symbolmanager,accountinfo);
      }
    SetContainer(s);
@@ -59,11 +59,11 @@ bool JStopsBase::Init(JStrategy *s,CSymbolManager *symbolmanager,CAccountInfo *a
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopsBase::Validate(void) const
+bool CStopsBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      JStop *stop=At(i);
+      CStop *stop=At(i);
       if(!stop.Validate())
          return false;
      }
@@ -72,11 +72,11 @@ bool JStopsBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-JStop *JStopsBase::Main()
+CStop *CStopsBase::Main()
   {
    for(int i=0;i<Total();i++)
      {
-      JStop *stop=At(i);
+      CStop *stop=At(i);
       if(stop.Main()) return stop;
      }
    return NULL;
@@ -84,9 +84,9 @@ JStop *JStopsBase::Main()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool JStopsBase::CreateElement(const int index)
+bool CStopsBase::CreateElement(const int index)
   {
-   JStop * stop = new JStop();
+   CStop * stop = new CStop();
    stop.SetContainer(GetPointer(this));
    return Insert(GetPointer(stop),index);
   }
