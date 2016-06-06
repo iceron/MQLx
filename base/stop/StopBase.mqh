@@ -36,9 +36,6 @@ protected:
    double            m_volume_percent;
    int               m_magic;
    string            m_comment;
-   //--- stop order market parameters
-   double            m_points_adjust;
-   int               m_digits_adjust;
    //--- stop order objects parameters
    bool              m_entry_visible;
    bool              m_stoploss_visible;
@@ -73,8 +70,6 @@ public:
    bool              Broker() const {return m_stop_type==STOP_TYPE_BROKER;}
    void              Comment(string comment) {m_comment=comment;}
    string            Comment(void) const {return m_comment;}
-   int               DigitsAdjust(void) const {return m_digits_adjust;}
-   void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    void              EntryColor(const color clr) {m_entry_color=clr;}
    void              EntryStyle(const ENUM_LINE_STYLE style) {m_entry_style=style;}
    void              Magic(const int magic) {m_magic=magic;}
@@ -86,8 +81,6 @@ public:
    void              OCO(const bool oco) {if(!Main())m_oco=oco;}
    bool              OCO(void) const{return m_oco;}
    bool              Pending() const {return m_stop_type==STOP_TYPE_PENDING;}
-   double            PointsAdjust(void) const {return m_points_adjust;}
-   void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
    void              StopLoss(const double sl) {m_stoploss=sl;}
    double            StopLoss(void) const {return m_stoploss;}
    void              StopLossColor(const color clr) {m_stoploss_color=clr;}
@@ -97,7 +90,7 @@ public:
    void              StopLossStyle(const ENUM_LINE_STYLE style) {m_stoploss_style=style;}
    void              StopType(const ENUM_STOP_TYPE stop_type);
    ENUM_STOP_TYPE    StopType(void) const {return m_stop_type;}
-   //string            SymbolName(void) {return m_symbol.Name();}
+   string            SymbolName(void) {return m_symbol.Name();}
    void              TakeProfit(const double tp) {m_takeprofit=tp;}
    double            TakeProfit(void) const {return m_takeprofit;}
    void              TakeProfitColor(const color clr) {m_takeprofit_color=clr;}
@@ -162,8 +155,6 @@ JStopBase::JStopBase(void) : m_activate(true),
                              m_volume_fixed(0),
                              m_volume_percent(0),
                              m_comment(NULL),
-                             m_points_adjust(0),
-                             m_digits_adjust(0),
                              m_stop_type(STOP_TYPE_VIRTUAL),
                              m_stoploss_name(".sl."),
                              m_takeprofit_name(".tp."),

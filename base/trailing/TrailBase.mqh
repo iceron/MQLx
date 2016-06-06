@@ -20,8 +20,6 @@ protected:
    double            m_start;
    double            m_end;
    double            m_step;
-   //double            m_points_adjust;
-   //int               m_digits_adjust;
    CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
    JTrails          *m_trails;

@@ -8,7 +8,6 @@
 #include "..\..\common\enum\ENUM_CMD.mqh"
 #include <Arrays\ArrayDouble.mqh>
 #include "..\comment\CommentsBase.mqh"
-#include "..\indicator\IndicatorsBase.mqh"
 class JStrategy;
 class JSignals;
 //+------------------------------------------------------------------+
@@ -24,7 +23,6 @@ protected:
    bool              m_new_signal;
    bool              m_reverse;
    bool              m_exit;
-   JIndicators      *m_indicators;
    JStrategy        *m_strategy;
    CArrayDouble      m_empty_value;
    JSignals         *m_signals;
@@ -51,9 +49,6 @@ public:
    virtual int       LastEntry(void) const {return m_signal;}
    virtual int       LastValidSignal(void) const {return m_signal_valid;}
    virtual string    ToString(bool last_valid=false) const;
-   //--- indicators
-   JIndicator       *IndicatorAt(const int idx) const;
-   void              AddIndicator(JIndicator *indicator);
    //--- signal methods
    virtual void      AddEmptyValue(const double val);
    virtual int       CheckSignal(void);
@@ -109,20 +104,6 @@ bool JSignalBase::Init(JStrategy *s,JComments *comments)
    m_strategy=s;
    m_comments=comments;
    return true;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void JSignalBase::AddIndicator(JIndicator *indicator)
-  {
-   m_indicators.Add(indicator);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-JIndicator *JSignalBase::IndicatorAt(const int idx) const
-  {
-   return m_indicators.At(idx);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

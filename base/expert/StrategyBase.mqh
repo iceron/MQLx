@@ -12,7 +12,6 @@
 #include <Arrays\ArrayInt.mqh>
 #include <Files\FileBin.mqh>
 #include "..\lib\AccountInfo.mqh"
-//#include "..\lib\SymbolInfo.mqh"
 #include "..\symbol\SymbolManagerBase.mqh"
 #include "..\candle\CandleBase.mqh"
 #include "..\signal\SignalsBase.mqh"
@@ -22,7 +21,6 @@
 #include "..\money\MoneysBase.mqh"
 #include "..\time\TimesBase.mqh"
 #include "..\comment\CommentsBase.mqh"
-//#include "..\trademanager\TradeManagerBase.mqh"
 #include "..\ordermanager\OrderManagerBase.mqh"
 #include "..\candle\CandleManagerBase.mqh"
 class JExpert;
@@ -44,16 +42,10 @@ protected:
    bool              m_position_reverse;
    bool              m_offline_mode;
    int               m_offline_mode_delay;
-   //--- market parameters
-   int               m_digits_adjust;
-   double            m_points_adjust;
-   //--- tick parameters
-   //MqlTick           m_last_trade_data;
    //--- signal objects
    JSignals         *m_signals;
    //--- trade objects   
    CAccountInfo     *m_account;
-   //CSymbolInfo      *m_symbol;
    CSymbolManager    m_symbol_man;
    COrderManager     m_order_man;
    //--- trading time objects
@@ -61,10 +53,7 @@ protected:
    //--- comments
    JComments        *m_comments;
    //--- candle
-   //JCandle           m_candle;
    CCandleManager    m_candle_man;
-   //--- expert instances
-   //CExpertInstanceManager m_instance_man;
    //--- container
    JExpert          *m_expert;
 public:
@@ -92,16 +81,12 @@ public:
    virtual bool      Active(void) const {return m_activate;}
    virtual void      Active(const bool activate) {m_activate=activate;}
    //--- setters and getters       
-   int               DigitsAdjust(void) const {return m_digits_adjust;}
-   void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    string            Name() const {return m_name;}
    void              Name(const string name) {m_name = name;}
    bool              OfflineMode(void) const {return m_offline_mode;}
    void              OfflineMode(const bool mode) {m_offline_mode=mode;}
    int               OfflineModeDelay() const {return m_offline_mode_delay;}
    void              OfflineModeDelay(const int delay){m_offline_mode_delay=delay;}
-   double            PointsAdjust(void) const {return m_points_adjust;}
-   void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
    ENUM_EXECUTION_MODE ExecutionMode(void) const {return m_exec_mode;}
    void              ExecutionMode(const ENUM_EXECUTION_MODE mode) {m_exec_mode=mode;}
    //--- object pointers
@@ -197,9 +182,7 @@ JStrategyBase::JStrategyBase(void) : m_activate(true),
                                      m_period(PERIOD_CURRENT),
                                      m_position_reverse(true),
                                      m_offline_mode(false),
-                                     m_offline_mode_delay(500),
-                                     m_digits_adjust(0),
-                                     m_points_adjust(0.0)
+                                     m_offline_mode_delay(500)
   {
   }
 //+------------------------------------------------------------------+

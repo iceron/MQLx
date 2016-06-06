@@ -26,8 +26,6 @@ protected:
    string            m_comment;
    int               m_magic;
    int               m_expiration;
-   int               m_digits_adjust;
-   double            m_points_adjust;
    int               m_history_count;
    bool              m_position_reverse;
    int               m_max_orders_history;
@@ -80,8 +78,6 @@ public:
    void              AsyncMode(const bool async) {m_trade.SetAsyncMode(async);}
    int               OrdersTotal(void) const {return m_orders.Total();}
    int               OrdersHistoryTotal(void) const {return m_orders_history.Total();}
-   double            PointsAdjust(void) const {return m_points_adjust;}
-   void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
    //--- object pointers
    JStop             *MainStop(void) const {return m_main_stop;}
    JMoneys           *Moneys(void) const {return GetPointer(m_moneys);}
