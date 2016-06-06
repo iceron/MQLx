@@ -5,12 +5,12 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "http://www.cyberforexworks.com"
-#include "..\..\common\enum\ENUM_TRAIL_TARGET.mqh"
-#include "..\..\common\enum\ENUM_STOP_TYPE.mqh"
-#include "..\stop\StopLineBase.mqh"
-#include "..\trade\TradeBase.mqh"
-#include "..\trailing\TrailsBase.mqh"
-#include "..\order\OrderStopBase.mqh"
+#include "..\..\Common\Enum\ENUM_TRAIL_TARGET.mqh"
+#include "..\..\Common\Enum\ENUM_STOP_TYPE.mqh"
+#include "..\Stop\StopLineBase.mqh"
+#include "..\Trade\TradeBase.mqh"
+#include "..\Trail\TrailsBase.mqh"
+#include "..\Order\OrderStopBase.mqh"
 class JOrder;
 class JOrderStop;
 class JStops;

@@ -185,8 +185,8 @@ void JTrailBase::Refresh(const string symbol)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\trailing\Trail.mqh"
+#include "..\..\MQL5\Trail\Trail.mqh"
 #else
-#include "..\..\mql4\trailing\Trail.mqh"
+#include "..\..\MQL4\Trail\Trail.mqh"
 #endif
 //+------------------------------------------------------------------+

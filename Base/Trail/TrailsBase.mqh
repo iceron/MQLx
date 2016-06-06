@@ -91,8 +91,8 @@ bool JTrailsBase::CreateElement(const int index)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\mql5\trailing\Trails.mqh"
+#include "..\..\MQL5\Trail\Trails.mqh"
 #else
-#include "..\..\mql4\trailing\Trails.mqh"
+#include "..\..\MQL4\Trail\Trails.mqh"
 #endif
 //+------------------------------------------------------------------+
