@@ -16,7 +16,7 @@ public:
                      COrderManager();
                     ~COrderManager();
    virtual bool      CloseOrder(COrder*,const int);
-   virtual void      OnTradeTransaction(COrder *order=NULL);
+   virtual void      OnTradeTransaction();
    virtual bool      TradeOpen(const string symbol,const int res);
   };
 //+------------------------------------------------------------------+
@@ -34,7 +34,7 @@ COrderManager::~COrderManager()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void COrderManager::OnTradeTransaction(COrder *order=NULL)
+void COrderManager::OnTradeTransaction()
   {
    COrder *temp=new COrder();
    int total= ::OrdersTotal();
@@ -42,7 +42,8 @@ void COrderManager::OnTradeTransaction(COrder *order=NULL)
      {
       if(!OrderSelect(i,SELECT_BY_POS)) continue;
       if(OrderMagicNumber()!=m_magic && m_other_magic.Search(OrderMagicNumber())<0) continue;
-      if(m_symbol.Name()!=OrderSymbol()) continue;
+      //if(m_symbol.Name()!=OrderSymbol()) continue; //only good for single currency EAs
+      if (!m_symbol_man.Search(OrderSymbol())) continue;
       temp.Ticket(OrderTicket());
       if(m_orders.Search(temp)>=0) continue;
       m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());

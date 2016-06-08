@@ -1,46 +1,71 @@
 //+------------------------------------------------------------------+
-//|                                                       Expert.mqh |
+//|                                             TradeManagerBase.mqh |
 //|                                                   Enrico Lambino |
 //|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
+#include <Arrays\ArrayObj.mqh>
+#include "ExpertTradeXBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CExpert : public CExpertBase
+class CTradeManagerBase : public CArrayObj
   {
 public:
-                     CExpert(void);
-                    ~CExpert(void);
-   virtual bool      OnTick(void);
-   virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
+                     CTradeManagerBase(void);
+                    ~CTradeManagerBase(void);
+   virtual bool      Add(CExpertTrade*);
+   virtual void      Deinit(void);
+   CExpertTrade      *Get(const string);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpert::CExpert(void)
+CTradeManagerBase::CTradeManagerBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpert::~CExpert(void)
+CTradeManagerBase::~CTradeManagerBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpert::OnTick(void)
+CTradeManagerBase::Deinit(void)
   {
-   bool ret=CExpertBase::OnTick();
-   return ret;
+   Shutdown();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpert::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
+bool CTradeManagerBase::Add(CExpertTrade *node)
   {
-   m_order_man.OnTradeTransaction(trans,request,result);
-  }  
+   if(Search(node)==-1)
+      return CArrayObj::Add(node);
+   return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertTrade *CTradeManagerBase::Get(const string name=NULL)
+  {
+   if(name==NULL && Total()>0)
+      return At(0);
+   for(int i=0;i<Total();i++)
+     {
+      CExpertTradeX *item=At(i);
+      if(StringCompare(item.Name(),name)==0)
+         return item;
+     }
+   return NULL;
+  }
+//+------------------------------------------------------------------+
+#ifdef __MQL5__
+#include "..\..\MQL5\Trade\TradeManager.mqh"
+#else
+#include "..\..\MQL4\Trade\TradeManager.mqh"
+#endif
 //+------------------------------------------------------------------+

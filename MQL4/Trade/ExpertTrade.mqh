@@ -35,10 +35,10 @@ protected:
 public:
                      CExpertTrade(void);
                     ~CExpertTrade(void);
-   virtual int Type() const {return CLASS_TYPE_TRADE;}
+   virtual int       Type() const {return CLASS_TYPE_TRADE;}
    //--- setters and getters
    color             ArrowColor(const ENUM_ORDER_TYPE type);
-   uint               Retry() {return m_retry;}
+   uint              Retry() {return m_retry;}
    void              Retry(uint retry){m_retry=retry;}
    int               Sleep() {return m_sleep;}
    void              Sleep(int sleep){m_sleep=sleep;}

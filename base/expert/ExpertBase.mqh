@@ -14,7 +14,7 @@
 #include "..\symbol\SymbolManagerBase.mqh"
 #include "..\candle\CandleBase.mqh"
 #include "..\signal\SignalsBase.mqh"
-#include "..\trade\TradeBase.mqh"
+#include "..\trade\ExpertTradeBase.mqh"
 #include "..\order\OrdersBase.mqh"
 #include "..\stop\StopsBase.mqh"
 #include "..\money\MoneysBase.mqh"
@@ -53,7 +53,7 @@ protected:
    //--- candle
    CCandleManager    m_candle_man;
    //--- container
-   CExperts          *m_expert;
+   CExperts         *m_expert;
 public:
                      CExpertBase(void);
                     ~CExpertBase(void);
@@ -63,10 +63,11 @@ public:
    virtual bool      AddMoneys(CMoneys*);
    virtual bool      AddSignals(CSignals*);
    virtual bool      AddStops(CStops*);
+   virtual bool      AddSymbol(const string);
    virtual bool      AddTimes(CTimes*);
    virtual bool      Init(string symbol,int timeframe,int magic,bool every_tick=true,bool one_trade_per_candle=true,bool position_reverse=true);
    virtual bool      InitAccount(CAccountInfo*);
-   virtual bool      InitTrade(CExpertTrade *trade=NULL){return m_order_man.InitTrade(GetPointer(trade));}
+   //virtual bool      InitTrade(/*CExpertTrade *trade=NULL*/){return m_order_man.InitTrade(/*GetPointer(trade)*/);}
    virtual bool      InitComponents(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
@@ -172,12 +173,12 @@ protected:
 //|                                                                  |
 //+------------------------------------------------------------------+
 CExpertBase::CExpertBase(void) : m_activate(true),
-                                     m_every_tick(true),
-                                     m_one_trade_per_candle(true),
-                                     m_period(PERIOD_CURRENT),
-                                     m_position_reverse(true),
-                                     m_offline_mode(false),
-                                     m_offline_mode_delay(500)
+                                 m_every_tick(true),
+                                 m_one_trade_per_candle(true),
+                                 m_period(PERIOD_CURRENT),
+                                 m_position_reverse(true),
+                                 m_offline_mode(false),
+                                 m_offline_mode_delay(500)
   {
   }
 //+------------------------------------------------------------------+
@@ -205,12 +206,11 @@ bool CExpertBase::Init(string symbol,int period,int magic,bool every_tick=true,b
    m_order_man.Magic(magic);
    m_position_reverse=position_reverse;
    m_one_trade_per_candle=one_trade_per_candle;
-   m_order_man.InitTrade();
+//InitTrade();
    CCandle *candle=new CCandle();
    candle.Init(instrument,m_period);
    m_candle_man.Add(candle);
    Magic(magic);
-
    return false;
   }
 //+------------------------------------------------------------------+
@@ -309,8 +309,22 @@ bool CExpertBase::AddMoneys(CMoneys *moneys)
 //+------------------------------------------------------------------+
 bool CExpertBase::AddStops(CStops *stops)
   {
-   m_order_man.AddStops(GetPointer(stops));
+   return m_order_man.AddStops(GetPointer(stops));
    return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertBase::AddSymbol(string symbol)
+  {
+   CSymbolInfo *instrument;
+   if((instrument=new CSymbolInfo)==NULL)
+      return false;
+   if(symbol==NULL) symbol=Symbol();
+   if(!instrument.Name(symbol))
+      return false;
+   instrument.Refresh();
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

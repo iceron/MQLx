@@ -12,8 +12,6 @@
 //+------------------------------------------------------------------+
 class CSymbolManagerBase : public CArrayObj
   {
-protected:
-   CSymbolInfo      *m_symbol;
 public:
                      CSymbolManagerBase(void);
                     ~CSymbolManagerBase(void);
@@ -21,6 +19,7 @@ public:
    virtual void      Deinit(void);
    CSymbolInfo      *Get(const string name);
    virtual bool      RefreshRates(void);
+   virtual bool      Search(const string symbol);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -77,6 +76,19 @@ bool CSymbolManagerBase::RefreshRates(void)
          return false;
      }
    return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CSymbolManagerBase::Search(const string symbol)
+  {
+   for(int i=0;i<Total();i++)
+     {
+      CSymbolInfo *item=At(i);
+      if(StringCompare(item.Name(),symbol)==0)
+         return true;
+     }
+   return false;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

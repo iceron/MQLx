@@ -8,7 +8,7 @@
 #include "..\..\Common\Enum\ENUM_TRAIL_TARGET.mqh"
 #include "..\..\Common\Enum\ENUM_STOP_TYPE.mqh"
 #include "..\Stop\StopLineBase.mqh"
-#include "..\Trade\TradeBase.mqh"
+#include "..\Trade\TradeManagerBase.mqh"
 #include "..\Trail\TrailsBase.mqh"
 #include "..\Order\OrderStopBase.mqh"
 class COrder;
@@ -50,7 +50,8 @@ protected:
    CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
    CAccountInfo     *m_account;
-   CExpertTrade           *m_trade;
+   CTradeManager     m_trade_man;
+   CExpertTradeX    *m_trade;
    CTrails          *m_trails;
    CStops           *m_stops;
 public:
@@ -61,7 +62,7 @@ public:
    virtual bool      Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
    virtual bool      InitSymbol(CSymbolManager *symbolmanager);
-   virtual bool      InitTrade(CExpertTrade *trade=NULL);
+   virtual bool      InitTrade(/*CExpertTradeX *trade=NULL*/);
    virtual void      SetContainer(CStops *stops){m_stops=stops;}
    virtual bool      Validate(void) const;
    //--- getters and setters
@@ -234,18 +235,32 @@ bool CStopBase::InitAccount(CAccountInfo *accountinfo=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStopBase::InitTrade(CExpertTrade *trade=NULL)
+bool CStopBase::InitTrade(/*CExpertTradeX *trade=NULL*/)
   {
+   /*
    if(m_trade!=NULL)
       delete m_trade;
    if(trade==NULL)
      {
-      if((m_trade=new CExpertTrade)==NULL)
+      if((m_trade=new CExpertTradeX)==NULL)
          return false;
      }
    else m_trade=trade;
-   m_trade.SetSymbol(GetPointer(m_symbol));
-   m_trade.SetExpertMagicNumber(m_magic);
+   //m_trade.SetSymbol(GetPointer(m_symbol));
+   //m_trade.SetExpertMagicNumber(m_magic);
+   */
+   for (int i=0;i<m_symbol_man.Total();i++)
+   {
+      CSymbolInfo *symbol = m_symbol_man.At(i);
+      CExpertTradeX *trade = new CExpertTradeX();
+      if (trade!=NULL)
+      {
+         trade.SetSymbol(GetPointer(symbol));
+         trade.SetExpertMagicNumber(m_magic);
+         trade.SetDeviationInPoints((ulong)(30/symbol.Point()));
+         m_trade_man.Add(trade);
+      }   
+   }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -288,16 +303,20 @@ bool CStopBase::CloseStop(COrder *order,COrderStop *orderstop,const double price
    bool res=false;
    ENUM_ORDER_TYPE type=order.OrderType();
    m_symbol = m_symbol_man.Get(order.Symbol());
-   m_trade.SetSymbol(m_symbol);
-   if(m_stop_type==STOP_TYPE_VIRTUAL)
-     {
-      double lotsize=MathMin(order.Volume(),LotSizeCalculate(order,orderstop));
-      if(type==ORDER_TYPE_BUY)
-         res=m_trade.Sell(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
-      else if(type==ORDER_TYPE_SELL)
-         res=m_trade.Buy(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
-      if(res) order.Volume(order.Volume()-lotsize);
-     }
+   //m_trade.SetSymbol(m_symbol);
+   m_trade = m_trade_man.Get(m_symbol.Name());
+   if (m_trade!=NULL)
+   {
+      if(m_stop_type==STOP_TYPE_VIRTUAL)
+        {
+         double lotsize=MathMin(order.Volume(),LotSizeCalculate(order,orderstop));
+         if(type==ORDER_TYPE_BUY)
+            res=m_trade.Sell(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
+         else if(type==ORDER_TYPE_SELL)
+            res=m_trade.Buy(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
+         if(res) order.Volume(order.Volume()-lotsize);
+        }
+   }
    return res;
   }
 //+------------------------------------------------------------------+
@@ -386,7 +405,8 @@ bool CStopBase::Refresh(const string symbol)
    if (m_symbol==NULL || StringCompare(m_symbol.Name(),symbol)!=0)
    {
       m_symbol = m_symbol_man.Get(symbol);
-      m_trade.SetSymbol(m_symbol);
+      //m_trade.SetSymbol(m_symbol);
+      m_trade = m_trade_man.Get(symbol);
    }   
    if(CheckPointer(m_symbol)==POINTER_DYNAMIC)
       return m_symbol.RefreshRates();
@@ -413,7 +433,8 @@ void CStopBase::DeinitSymbol(void)
 //+------------------------------------------------------------------+
 void CStopBase::DeinitTrade(void)
   {
-   ADT::Delete(m_trade);
+   //ADT::Delete(m_trade);
+   m_trade_man.Shutdown();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -8,7 +8,7 @@
 #include "..\..\common\enum\ENUM_VOLUME_TYPE.mqh"
 #include <Arrays\ArrayDouble.mqh>
 //#include "..\lib\SymbolInfo.mqh"
-#include "..\trade\TradeBase.mqh"
+#include "..\trade\ExpertTradeBase.mqh"
 #include "..\stop\StopBase.mqh"
 #include "..\stop\StopLineBase.mqh"
 class COrder;

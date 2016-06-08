@@ -12,6 +12,7 @@ class CExpert;
 #include "..\order\OrdersBase.mqh"
 #include "..\stop\StopsBase.mqh"
 #include "..\signal\SignalsBase.mqh"
+#include "..\trade\TradeManagerBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -35,7 +36,8 @@ protected:
    CArrayInt         m_other_magic;
    CSymbolInfo      *m_symbol;
    CSymbolManager   *m_symbol_man;
-   CExpertTrade           *m_trade;
+   CTradeManager     m_trade_man;
+   CExpertTradeX    *m_trade;
    //CTradeManager    *m_trade_man;
    CMoneys          *m_moneys;
    //--- order objects
@@ -48,7 +50,7 @@ public:
    virtual bool      Init(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
    virtual bool      InitStops(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
    bool              InitMoneys(CExpert *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
-   bool              InitTrade(CExpertTrade*);
+   bool              InitTrade(/*CExpertTradeX**/);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
    virtual bool      Validate(void) const;
@@ -77,12 +79,12 @@ public:
    int               OrdersTotal(void) const {return m_orders.Total();}
    int               OrdersHistoryTotal(void) const {return m_orders_history.Total();}
    //--- object pointers
-   CStop             *MainStop(void) const {return m_main_stop;}
-   CMoneys           *Moneys(void) const {return GetPointer(m_moneys);}
-   COrders           *Orders() {return GetPointer(m_orders);}
-   COrders           *OrdersHistory() {return GetPointer(m_orders_history);}
-   CStops            *Stops(void) const {return GetPointer(m_stops);}
-   CArrayInt         *OtherMagic() {return GetPointer(m_other_magic);}
+   CStop            *MainStop(void) const {return m_main_stop;}
+   CMoneys          *Moneys(void) const {return GetPointer(m_moneys);}
+   COrders          *Orders() {return GetPointer(m_orders);}
+   COrders          *OrdersHistory() {return GetPointer(m_orders_history);}
+   CStops           *Stops(void) const {return GetPointer(m_stops);}
+   CArrayInt        *OtherMagic() {return GetPointer(m_other_magic);}
    //--- current orders
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(COrder*);
@@ -149,14 +151,12 @@ COrderManagerBase::~COrderManagerBase()
 //+------------------------------------------------------------------+
 bool COrderManagerBase::Init(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-
+   m_symbol_man=symbolmanager;
    InitStops(s,symbolmanager,accountinfo);
    //InitMoneys(s,symbolinfo,accountinfo);
    InitTrade();
    InitOrders();
-   InitOrdersHistory();
-   
-   m_symbol_man=symbolmanager;
+   InitOrdersHistory();  
 //m_account = accountinfo;
    return true;
   }
@@ -175,12 +175,18 @@ bool COrderManagerBase::SetSymbol(CSymbolInfo *symbol)
 bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,const double price,const double sl,const double tp)
   {
    bool ret=0;
-   if (CheckPointer(GetPointer(m_symbol))==POINTER_DYNAMIC)
-      m_trade.SetSymbol(GetPointer(m_symbol));
-   if(COrder::IsOrderTypeLong(type))
-      ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
-   if(COrder::IsOrderTypeShort(type))
-      ret=m_trade.Sell(lotsize,price,sl,tp,m_comment);
+   if (CheckPointer(m_symbol)==POINTER_DYNAMIC)
+   {
+      //m_trade.SetSymbol(GetPointer(m_symbol));
+      m_trade = m_trade_man.Get(m_symbol.Name());
+   }   
+   if (m_trade!=NULL)
+   {
+      if(COrder::IsOrderTypeLong(type))
+         ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
+      if(COrder::IsOrderTypeShort(type))
+         ret=m_trade.Sell(lotsize,price,sl,tp,m_comment);
+   }   
    return ret;
   }
 //+------------------------------------------------------------------+
@@ -194,22 +200,35 @@ bool COrderManagerBase::InitMoneys(CExpert *s,CSymbolInfo *symbolinfo,CAccountIn
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitTrade(CExpertTrade *trade=NULL)
+bool COrderManagerBase::InitTrade(/*CExpertTradeX *trade=NULL*/)
   {
-
+   /*
    if(m_trade!=NULL)
       delete m_trade;
    if(trade==NULL)
      {
-      if((m_trade=new CExpertTrade)==NULL)
+      if((m_trade=new CExpertTradeX)==NULL)
          return false;
      }
    else m_trade=trade;
+   */
    //m_trade.SetSymbol(GetPointer(m_symbol));
-   m_trade.SetExpertMagicNumber(m_magic);
+   //m_trade.SetExpertMagicNumber(m_magic);
    //m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
    //m_trade.SetOrderExpiration(m_expiration);
-   
+   for (int i=0;i<m_symbol_man.Total();i++)
+   {
+      CSymbolInfo *symbol = m_symbol_man.At(i);
+      CExpertTradeX *trade = new CExpertTradeX();
+      if (trade!=NULL)
+      {
+         trade.SetSymbol(GetPointer(symbol));
+         trade.SetExpertMagicNumber(m_magic);
+         trade.SetDeviationInPoints((ulong)(30/symbol.Point()));
+         trade.SetOrderExpiration(m_expiration);
+         m_trade_man.Add(trade);
+      }   
+   }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -467,7 +486,8 @@ void COrderManagerBase::DeinitStops()
 //+------------------------------------------------------------------+
 void COrderManagerBase::DeinitTrade()
   {
-   ADT::Delete(m_trade);
+   //ADT::Delete(m_trade);
+   m_trade_man.Shutdown();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

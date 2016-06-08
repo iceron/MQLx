@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                                       Expert.mqh |
+//|                                             ExpertTradeXBase.mqh |
 //|                                                   Enrico Lambino |
 //|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
@@ -8,39 +8,29 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CExpert : public CExpertBase
+class CExpertTradeXBase : public CExpertTrade
   {
 public:
-                     CExpert(void);
-                    ~CExpert(void);
-   virtual bool      OnTick(void);
-   virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
+                     CExpertTradeXBase(void);
+                    ~CExpertTradeXBase(void);
+   string            Name() {return m_symbol.Name();}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpert::CExpert(void)
+CExpertTradeXBase::CExpertTradeXBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpert::~CExpert(void)
+CExpertTradeXBase::~CExpertTradeXBase(void)
   {
   }
 //+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CExpert::OnTick(void)
-  {
-   bool ret=CExpertBase::OnTick();
-   return ret;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void CExpert::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
-  {
-   m_order_man.OnTradeTransaction(trans,request,result);
-  }  
+#ifdef __MQL5__
+#include "..\..\MQL5\Trade\ExpertTradeX.mqh"
+#else 
+#include "..\..\MQL4\Trade\ExpertTradeX.mqh"
+#endif
 //+------------------------------------------------------------------+

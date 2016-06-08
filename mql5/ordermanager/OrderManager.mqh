@@ -36,8 +36,7 @@ COrderManager::~COrderManager()
 //+------------------------------------------------------------------+
 void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
-   Print(__FUNCTION__);
-   if(request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0)
+   if((request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0) && m_symbol_man.Search(request.symbol))
    {
       m_orders.NewOrder((int)result.order,request.symbol,(int)request.magic,request.type,result.volume,result.price);
    }   
@@ -60,7 +59,6 @@ bool COrderManager::TradeOpen(const string symbol,const int res)
      {
       price=PriceCalculate(type);
       lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
-      Print("current symbol name: "+m_symbol.Name());
       ret=SendOrder(type,lotsize,price,0,0);
      }
    return ret;
