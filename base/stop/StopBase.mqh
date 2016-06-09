@@ -63,7 +63,7 @@ public:
    virtual bool      Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
    virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
    virtual bool      InitSymbol(CSymbolManager *symbolmanager);
-   virtual bool      InitTrade(/*CExpertTradeX *trade=NULL*/);
+   virtual bool      InitTrade();
    virtual void      SetContainer(CStops *stops){m_stops=stops;}
    virtual bool      Validate(void) const;
    //--- getters and setters
@@ -210,8 +210,6 @@ bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
    if(symbolmanager==NULL || accountinfo==NULL) return false;
    InitSymbol(symbolmanager);
    InitAccount(accountinfo);
-   //m_points_adjust = s.PointsAdjust();
-   //m_digits_adjust = s.DigitsAdjust();
    InitTrade();
    if(CheckPointer(m_trails)==POINTER_DYNAMIC)
       m_trails.Init(symbolmanager,GetPointer(this));
@@ -239,20 +237,8 @@ bool CStopBase::InitAccount(CAccountInfo *accountinfo=NULL)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStopBase::InitTrade(/*CExpertTradeX *trade=NULL*/)
+bool CStopBase::InitTrade()
   {
-   /*
-   if(m_trade!=NULL)
-      delete m_trade;
-   if(trade==NULL)
-     {
-      if((m_trade=new CExpertTradeX)==NULL)
-         return false;
-     }
-   else m_trade=trade;
-   //m_trade.SetSymbol(GetPointer(m_symbol));
-   //m_trade.SetExpertMagicNumber(m_magic);
-   */
    for (int i=0;i<m_symbol_man.Total();i++)
    {
       CSymbolInfo *symbol = m_symbol_man.At(i);
@@ -307,7 +293,6 @@ bool CStopBase::CloseStop(COrder *order,COrderStop *orderstop,const double price
    bool res=false;
    ENUM_ORDER_TYPE type=order.OrderType();
    m_symbol = m_symbol_man.Get(order.Symbol());
-   //m_trade.SetSymbol(m_symbol);
    m_trade = m_trade_man.Get(m_symbol.Name());
    if (m_trade!=NULL)
    {
@@ -409,7 +394,6 @@ bool CStopBase::Refresh(const string symbol)
    if (m_symbol==NULL || StringCompare(m_symbol.Name(),symbol)!=0)
    {
       m_symbol = m_symbol_man.Get(symbol);
-      //m_trade.SetSymbol(m_symbol);
       m_trade = m_trade_man.Get(symbol);
    }   
    if(CheckPointer(m_symbol)==POINTER_DYNAMIC)

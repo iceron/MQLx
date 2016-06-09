@@ -38,7 +38,6 @@ protected:
    CSymbolManager   *m_symbol_man;
    CTradeManager     m_trade_man;
    CExpertTradeX    *m_trade;
-   //CTradeManager    *m_trade_man;
    CMoneys          *m_moneys;
    //--- order objects
    CStops           *m_stops;
@@ -50,7 +49,7 @@ public:
    virtual bool      Init(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
    virtual bool      InitStops(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
    bool              InitMoneys(CExpert *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
-   bool              InitTrade(/*CExpertTradeX**/);
+   bool              InitTrade();
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
    virtual bool      Validate(void) const;
@@ -177,7 +176,6 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
    bool ret=0;
    if (CheckPointer(m_symbol)==POINTER_DYNAMIC)
    {
-      //m_trade.SetSymbol(GetPointer(m_symbol));
       m_trade = m_trade_man.Get(m_symbol.Name());
    }   
    if (m_trade!=NULL)
@@ -200,22 +198,8 @@ bool COrderManagerBase::InitMoneys(CExpert *s,CSymbolInfo *symbolinfo,CAccountIn
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitTrade(/*CExpertTradeX *trade=NULL*/)
+bool COrderManagerBase::InitTrade()
   {
-   /*
-   if(m_trade!=NULL)
-      delete m_trade;
-   if(trade==NULL)
-     {
-      if((m_trade=new CExpertTradeX)==NULL)
-         return false;
-     }
-   else m_trade=trade;
-   */
-   //m_trade.SetSymbol(GetPointer(m_symbol));
-   //m_trade.SetExpertMagicNumber(m_magic);
-   //m_trade.SetDeviationInPoints((ulong)(3*m_digits_adjust/m_symbol.Point()));
-   //m_trade.SetOrderExpiration(m_expiration);
    for (int i=0;i<m_symbol_man.Total();i++)
    {
       CSymbolInfo *symbol = m_symbol_man.At(i);

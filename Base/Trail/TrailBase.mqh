@@ -34,12 +34,8 @@ public:
    //--- getters and setters    
    bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
-   //int               DigitsAdjust(void) const {return m_digits_adjust;}
-   //void              DigitsAdjust(const int adjust) {m_digits_adjust=adjust;}
    double            End(void) const {return m_end;}
    void              End(const double end) {m_end=end;}
-   //double            PointsAdjust(void) const {return m_points_adjust;}
-   //void              PointsAdjust(const double adjust) {m_points_adjust=adjust;}
    void              Set(const double trail,const double st,const double step=1,const double end=0);
    double            Start(void) const {return m_start;}
    void              Start(const double st) {m_start=st;}
@@ -67,8 +63,6 @@ CTrailBase::CTrailBase(void) : m_activate(true),
                                m_end(0.0),
                                m_trail(0.0),
                                m_step(0.0)
-                               //m_points_adjust(0),
-                               //m_digits_adjust(0)
   {
   }
 //+------------------------------------------------------------------+

@@ -15,7 +15,7 @@ class CMoneysBase : public CArrayObj
 protected:
    bool              m_activate;
    int               m_selected;
-   CExpert        *m_strategy;
+   CExpert          *m_strategy;
 public:
                      CMoneysBase(void);
                     ~CMoneysBase(void);
