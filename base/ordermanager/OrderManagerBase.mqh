@@ -152,11 +152,10 @@ bool COrderManagerBase::Init(CExpert *s,CSymbolManager *symbolmanager,CAccountIn
   {
    m_symbol_man=symbolmanager;
    InitStops(s,symbolmanager,accountinfo);
-   //InitMoneys(s,symbolinfo,accountinfo);
+   InitMoneys(s,symbolmanager,accountinfo);
    InitTrade();
    InitOrders();
    InitOrdersHistory();  
-//m_account = accountinfo;
    return true;
   }
 //+------------------------------------------------------------------+
