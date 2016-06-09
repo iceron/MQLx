@@ -324,7 +324,7 @@ bool CExpertBase::AddSymbol(string symbol)
    if(!instrument.Name(symbol))
       return false;
    instrument.Refresh();
-   return true;
+   return m_symbol_man.Add(instrument);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
