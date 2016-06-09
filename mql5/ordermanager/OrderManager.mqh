@@ -89,8 +89,8 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
         {
          if(ArchiveOrder(m_orders.Detach(index)))
            {
-            order.IsClosed(true);
-            m_orders_history.Clean(false);
+            order.Close();
+            //m_orders_history.Clean(false);
            }
         }
      }
