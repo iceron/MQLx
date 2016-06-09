@@ -281,12 +281,8 @@ bool COrderStopBase::DeleteStopLoss(void)
   {
    if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
      {
-      string name=m_objsl.Name();
+      m_objsl.Delete();
       delete m_objsl;
-      if(ObjectFind(0,name)>=0)
-         DeleteChartObject(name);
-      if(ObjectFind(0,name)>=0)
-         return false;
      }
    return true;
   }
@@ -297,12 +293,8 @@ bool COrderStopBase::DeleteTakeProfit(void)
   {
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
      {
-      string name=m_objtp.Name();
+      m_objtp.Delete();      
       delete m_objtp;
-      if(ObjectFind(0,name)>=0)
-         DeleteChartObject(name);
-      if(ObjectFind(0,name)>=0)
-         return false;
      }
    return true;
   }
@@ -313,12 +305,8 @@ bool COrderStopBase::DeleteEntry(void)
   {
    if(CheckPointer(m_objentry)==POINTER_DYNAMIC)
      {
-      string name=m_objentry.Name();
+      m_objentry.Delete();
       delete m_objentry;
-      if(ObjectFind(0,name)>=0)
-         DeleteChartObject(name);
-      if(ObjectFind(0,name)>=0)
-         return false;
      }
    return true;
   }
