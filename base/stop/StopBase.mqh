@@ -35,6 +35,7 @@ protected:
    double            m_volume_fixed;
    double            m_volume_percent;
    int               m_magic;
+   int               m_deviation;
    string            m_comment;
    //--- stop order objects parameters
    bool              m_entry_visible;
@@ -71,6 +72,8 @@ public:
    bool              Broker() const {return m_stop_type==STOP_TYPE_BROKER;}
    void              Comment(string comment) {m_comment=comment;}
    string            Comment(void) const {return m_comment;}
+   void              SetDeviation(int deviation) {m_deviation=deviation;}
+   int               SetDeviation(void) const {return m_deviation;}
    void              EntryColor(const color clr) {m_entry_color=clr;}
    void              EntryStyle(const ENUM_LINE_STYLE style) {m_entry_style=style;}
    void              Magic(const int magic) {m_magic=magic;}
@@ -155,6 +158,7 @@ CStopBase::CStopBase(void) : m_activate(true),
                              m_volume_type(VOLUME_TYPE_FIXED),
                              m_volume_fixed(0),
                              m_volume_percent(0),
+                             m_deviation(30),
                              m_comment(NULL),
                              m_stop_type(STOP_TYPE_VIRTUAL),
                              m_stoploss_name(".sl."),
@@ -257,7 +261,7 @@ bool CStopBase::InitTrade(/*CExpertTradeX *trade=NULL*/)
       {
          trade.SetSymbol(GetPointer(symbol));
          trade.SetExpertMagicNumber(m_magic);
-         trade.SetDeviationInPoints((ulong)(30/symbol.Point()));
+         trade.SetDeviationInPoints((ulong)(m_deviation/symbol.Point()));
          m_trade_man.Add(trade);
       }   
    }
