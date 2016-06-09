@@ -62,18 +62,16 @@ void COrderStop::UpdateTicket(const ulong ticket)
 //+------------------------------------------------------------------+
 bool COrderStop::Recreate(void)
   {
-   if(m_order.IsClosed()) return true;
-   if(DeleteStopLines())
+   if(!m_order.IsClosed())
      {
       if(!m_takeprofit_closed)
-         m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,TakeProfit());
+         m_objtp.Name(TakeProfitName());
       if(!m_stoploss_closed)
-         m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,StopLoss());
+         m_objsl.Name(StopLossName());
       if(!m_stoploss_closed || !m_takeprofit_closed)
-         m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,m_order.Price());
-      return true;
+         m_objentry.Name(EntryName());
      }
-   return false;
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -182,11 +180,11 @@ void COrderStop::Check(double &volume)
    if(((m_stoploss_closed || m_objsl==NULL) && (m_takeprofit_closed || m_objtp==NULL)) || volume<=0)
      {
       DeleteStopLines();
-      if(m_stop.Main() && m_stop.Virtual() && (StopLoss()>0 || TakeProfit()>0)) 
-      {
+      if(m_stop.Main() && m_stop.Virtual() && (StopLoss()>0 || TakeProfit()>0))
+        {
          m_order.IsClosed(true);
          //m_order.CloseStops();
-      }   
+        }
      }
    CheckDeinit();
   }
@@ -230,7 +228,7 @@ bool COrderStop::ModifyStops(const double stoploss,const double takeprofit)
       return ModifyStopLoss(stoploss) && ModifyTakeProfit(takeprofit);
    if(m_stop.Main() && !m_stop.Virtual())
       modify=m_stop.Move(m_order.Ticket(),stoploss,takeprofit);
-   else modify = true;
+   else modify=true;
    if(modify)
      {
       MoveStopLoss(stoploss);
