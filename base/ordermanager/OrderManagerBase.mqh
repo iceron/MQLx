@@ -48,7 +48,7 @@ public:
    //--- initialization
    virtual bool      Init(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
    virtual bool      InitStops(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
-   bool              InitMoneys(CExpert *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
+   bool              InitMoneys(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
    bool              InitTrade();
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
@@ -175,9 +175,7 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
   {
    bool ret=0;
    if (CheckPointer(m_symbol)==POINTER_DYNAMIC)
-   {
-      m_trade = m_trade_man.Get(m_symbol.Name());
-   }   
+      m_trade = m_trade_man.Get(m_symbol.Name()); 
    if (m_trade!=NULL)
    {
       if(COrder::IsOrderTypeLong(type))
@@ -190,10 +188,10 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitMoneys(CExpert *s,CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
+bool COrderManagerBase::InitMoneys(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    if(m_moneys==NULL) return true;
-   return m_moneys.Init(s,symbolinfo,accountinfo);
+   return m_moneys.Init(s,symbolmanager,accountinfo);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -491,7 +489,7 @@ bool COrderManagerBase::AddMoneys(CMoneys *moneys)
 double COrderManagerBase::LotSizeCalculate(const double price,const ENUM_ORDER_TYPE type,const double stoploss)
   {
    if(CheckPointer(m_moneys))
-      return m_moneys.Volume(0,type,stoploss);
+      return m_moneys.Volume(m_symbol.Name(),0,type,stoploss);
    return m_lotsize;
   }
 //+------------------------------------------------------------------+

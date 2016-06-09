@@ -6,7 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Object.mqh>
-#include "..\lib\SymbolInfo.mqh"
+#include "..\symbol\SymbolManagerBase.mqh"
 #include "..\lib\AccountInfo.mqh"
 #include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\common\enum\ENUM_MONEY_UPDATE_TYPE.mqh"
@@ -29,49 +29,50 @@ protected:
    int               m_period;
    datetime          m_last_update;
    bool              m_equity;
+   CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
    CAccountInfo     *m_account;
-   CExpert        *m_strategy;
+   CExpert          *m_strategy;
 public:
                      CMoneyBase(void);
                     ~CMoneyBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_MONEY;}
    //--- initialization
-   virtual bool      Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo);
+   virtual bool      Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
    virtual bool      InitAccount(CAccountInfo *account);
-   virtual bool      InitSymbol(CSymbolInfo *symbol);
+   virtual bool      InitSymbol(CSymbolManager *symbolmanager);
    virtual void      SetContainer(CExpert *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- getters and setters
-   bool      Active(void) const {return m_activate;}
-   void      Active(const bool activate) {m_activate=activate;}
-   void      Balance(const double balance) {m_balance=balance;}
-   double    Balance(void) const {return m_balance;}
-   void      BalanceIncrement(const double balance) {m_balance_inc=balance;}
-   double    BalanceIncrement(void) const {return m_balance_inc;}
-   void      Equity(const bool equity) {m_equity=equity;}
-   bool      Equity(void) const {return m_equity;}
-   void      LastUpdate(const datetime update) {m_last_update=update;}
-   datetime  LastUpdate(void) const {return m_last_update;}
-   void      Percent(const double percent) {m_percent=percent;}
-   double    Percent(void) const {return m_percent;}
-   void      Period(const int period) {m_period=period;}
-   int       Period(void) const {return m_period;}
-   void      Risk(const double percent) {m_percent=percent;}
-   double    Risk(void) const {return m_percent;}
-   void      UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
-   double            Volume(const double price,const ENUM_ORDER_TYPE type,const double sl);
-   void      VolumeCurrent(const double volume) {m_volume=volume;}
-   double    VolumeCurrent(void) const {return m_volume;}
-   void      VolumeIncrement(const double volume) {m_volume_inc=volume;}
-   double    VolumeIncrement(void) const {return m_volume_inc;}
-   void      VolumeBase(const double volume_base) {m_volume_base=volume_base;}
-   double    VolumeBase(void) const {return m_volume_base;}
+   bool              Active(void) const {return m_activate;}
+   void              Active(const bool activate) {m_activate=activate;}
+   void              Balance(const double balance) {m_balance=balance;}
+   double            Balance(void) const {return m_balance;}
+   void              BalanceIncrement(const double balance) {m_balance_inc=balance;}
+   double            BalanceIncrement(void) const {return m_balance_inc;}
+   void              Equity(const bool equity) {m_equity=equity;}
+   bool              Equity(void) const {return m_equity;}
+   void              LastUpdate(const datetime update) {m_last_update=update;}
+   datetime          LastUpdate(void) const {return m_last_update;}
+   void              Percent(const double percent) {m_percent=percent;}
+   double            Percent(void) const {return m_percent;}
+   void              Period(const int period) {m_period=period;}
+   int               Period(void) const {return m_period;}
+   void              Risk(const double percent) {m_percent=percent;}
+   double            Risk(void) const {return m_percent;}
+   void              UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
+   double            Volume(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl);
+   void              VolumeCurrent(const double volume) {m_volume=volume;}
+   double            VolumeCurrent(void) const {return m_volume;}
+   void              VolumeIncrement(const double volume) {m_volume_inc=volume;}
+   double            VolumeIncrement(void) const {return m_volume_inc;}
+   void              VolumeBase(const double volume_base) {m_volume_base=volume_base;}
+   double            VolumeBase(void) const {return m_volume_base;}
 protected:
    virtual void      OnLotSizeUpdated();
    virtual bool      UpdateByMargin(void);
    virtual bool      UpdateByPeriod(void);
-   virtual void      UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl);   
+   virtual void      UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl);   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -98,9 +99,9 @@ CMoneyBase::~CMoneyBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CMoneyBase::Init(CSymbolInfo *symbolinfo,CAccountInfo *accountinfo)
+bool CMoneyBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   InitSymbol(symbolinfo);
+   InitSymbol(symbolmanager);
    InitAccount(accountinfo);
    return true;
   }
@@ -119,11 +120,11 @@ bool CMoneyBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CMoneyBase::InitSymbol(CSymbolInfo *symbol)
+bool CMoneyBase::InitSymbol(CSymbolManager *symbolmanager)
   {
-   if(symbol==NULL) return false;
-   m_symbol=symbol;
-   return CheckPointer(m_symbol);
+   if(symbolmanager==NULL) return false;
+   m_symbol_man=symbolmanager;
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -141,17 +142,17 @@ bool CMoneyBase::InitAccount(CAccountInfo *account)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double CMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const double sl)
+double CMoneyBase::Volume(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    if(!Active()) return 0;
-   if(m_volume==0.0) UpdateLotSize(price,type,sl);
+   if(m_volume==0.0) UpdateLotSize(symbol,price,type,sl);
    else
      {
       switch(m_update)
         {
-         case(MONEY_UPDATE_ALWAYS):    UpdateLotSize(price,type,sl);                      break;
-         case(MONEY_UPDATE_PERIOD):    if(UpdateByPeriod()) UpdateLotSize(price,type,sl); break;
-         case(MONEY_UPDATE_BALANCE):   if(UpdateByMargin()) UpdateLotSize(price,type,sl); break;
+         case(MONEY_UPDATE_ALWAYS):    UpdateLotSize(symbol,price,type,sl);                      break;
+         case(MONEY_UPDATE_PERIOD):    if(UpdateByPeriod()) UpdateLotSize(symbol,price,type,sl); break;
+         case(MONEY_UPDATE_BALANCE):   if(UpdateByMargin()) UpdateLotSize(symbol,price,type,sl); break;
         }
      }
    return m_volume;
@@ -159,11 +160,12 @@ double CMoneyBase::Volume(const double price,const ENUM_ORDER_TYPE type,const do
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CMoneyBase::UpdateLotSize(const double price,const ENUM_ORDER_TYPE type,const double sl)
+void CMoneyBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    double balance=m_equity==false?m_account.Balance():m_account.Equity();
    m_volume=m_volume_base+((int)(balance/m_balance_inc))*m_volume_inc;
    m_balance=balance;
+   m_symbol = m_symbol_man.Get(symbol);
    OnLotSizeUpdated();   
   }
 //+------------------------------------------------------------------+
@@ -190,12 +192,15 @@ bool CMoneyBase::UpdateByPeriod(void)
 //+------------------------------------------------------------------+
 void CMoneyBase::OnLotSizeUpdated(void)
   {
-   double maxvol=m_symbol.LotsMax();
-   double minvol=m_symbol.LotsMin();
-   if(m_volume<minvol)
-      m_volume=minvol;   
-   if(m_volume>maxvol)
-      m_volume=maxvol;
+   if (m_symbol!=NULL)
+   {
+      double maxvol=m_symbol.LotsMax();
+      double minvol=m_symbol.LotsMin();
+      if(m_volume<minvol)
+         m_volume=minvol;   
+      if(m_volume>maxvol)
+         m_volume=maxvol;
+   }   
    m_last_update=TimeCurrent();
   }
 //+------------------------------------------------------------------+
