@@ -64,6 +64,7 @@ public:
    //--- hiding and showing of stop lines
    virtual void      ShowStops(bool show=true) {m_order_stops.Show(show);}
    //--- archiving
+   virtual bool      Close(void);
    virtual bool      CloseStops(void);
    virtual int       Compare(const CObject *node,const int mode=0) const;
    //--- output
@@ -133,6 +134,15 @@ void COrderBase::CheckStops(void)
   {
    if(m_order_stops!=NULL)
       m_order_stops.Check(m_volume);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderBase::Close(void)
+  {
+   if (CloseStops())
+      IsClosed(true);
+   return IsClosed();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -88,7 +88,7 @@ public:
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(COrder*);
    virtual void      CheckClosedOrders(void);
-   virtual void      CheckOldStops(void);
+   //virtual void      CheckOldStops(void);
    virtual void      CloseOrders(const int,const int);
    virtual bool      CloseStops(void);
    virtual void      CloseOppositeOrders(const int,const int);
@@ -261,8 +261,8 @@ void COrderManagerBase::ArchiveOrders(void)
 bool COrderManagerBase::ArchiveOrder(COrder *order)
   {
    bool result=m_orders_history.Add(order);
-   if(result)
-      m_orders_history.Clean(false);
+   //if(result)
+      //m_orders_history.Clean(false);
    return result;
   }
 //+------------------------------------------------------------------+
@@ -279,6 +279,7 @@ void COrderManagerBase::CheckClosedOrders(void)
          ArchiveOrder(m_orders.Detach(i));
      }
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -302,6 +303,7 @@ void COrderManagerBase::CheckOldStops(void)
      }
    m_orders_history.Clean(status);
   }
+*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -339,14 +341,14 @@ COrderManagerBase::CloseOppositeOrders(const int entry,const int exit)
 void COrderManagerBase::ManageOrders(void)
   {   
    CheckClosedOrders();   
-   CheckOldStops();
+   //CheckOldStops();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrderManagerBase::ManageOrdersHistory(void)
   {
-   if(m_orders_history.Clean())
+   //if(m_orders_history.Clean())
      {
       int excess=m_orders_history.Total()-m_max_orders_history;
       if(excess>0)

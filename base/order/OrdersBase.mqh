@@ -15,9 +15,9 @@ class COrdersBase : public CArrayObj
   {
 protected:
    bool              m_activate;
-   bool              m_clean;
+   //bool              m_clean;
    CStops           *m_stops;
-   CExpert        *m_strategy;
+   CExpert          *m_strategy;
 public:
                      COrdersBase(void);
                     ~COrdersBase(void);
@@ -29,8 +29,8 @@ public:
    //--- getters and setters
    bool              Activate(void) const {return m_activate;}
    void              Activate(const bool activate) {m_activate=activate;}
-   bool              Clean(void) const {return m_clean;}
-   void              Clean(const bool clean) {m_clean=clean;}
+   //bool              Clean(void) const {return m_clean;}
+   //void              Clean(const bool clean) {m_clean=clean;}
    //void              Magic(int magic) {m_magic=magic;}
    //int               Magic() {return m_magic;}
    //--- events                  
@@ -47,8 +47,8 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrdersBase::COrdersBase(void) : m_activate(true),
-                                 m_clean(false)
+COrdersBase::COrdersBase(void) : m_activate(true)
+                                 //m_clean(false)
                                  //m_magic(0)
   {
    if(!IsSorted())
@@ -136,7 +136,7 @@ bool COrdersBase::CreateElement(const int index)
 bool COrdersBase::Save(const int handle)
   {
    CArrayObj::Save(handle);
-   ADT::WriteBool(handle,m_clean);
+   //ADT::WriteBool(handle,m_clean);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -145,7 +145,7 @@ bool COrdersBase::Save(const int handle)
 bool COrdersBase::Load(const int handle)
   {
    CArrayObj::Load(handle);
-   ADT::ReadBool(handle,m_clean);
+   //ADT::ReadBool(handle,m_clean);
    return true;
   }
 //+------------------------------------------------------------------+
