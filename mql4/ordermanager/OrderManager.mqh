@@ -87,6 +87,10 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
    bool closed=false;
    if(CheckPointer(order)==POINTER_DYNAMIC)
      {
+      if (m_symbol==NULL || StringCompare(m_symbol.Name(),order.Symbol())!=0)
+         m_symbol = m_symbol_man.Get(order.Symbol());
+      if (m_symbol!=NULL)
+         m_trade = m_trade_man.Get(order.Symbol());
       if(order.OrderType()==ORDER_TYPE_BUY || order.OrderType()==ORDER_TYPE_SELL)
          closed=m_trade.OrderClose((ulong)order.Ticket());
       else

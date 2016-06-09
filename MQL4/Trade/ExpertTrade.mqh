@@ -116,6 +116,7 @@ ulong CExpertTrade::Buy(const double volume,const double price,const double sl,c
   {
    if(m_symbol==NULL)
       return false;
+   m_symbol.RefreshRates();
    string symbol=m_symbol.Name();
    double stops_level=m_symbol.StopsLevel()*m_symbol.Point();
    double ask=m_symbol.Ask();
@@ -137,6 +138,7 @@ ulong CExpertTrade::Sell(const double volume,const double price,const double sl,
   {
    if(m_symbol==NULL)
       return false;
+   m_symbol.RefreshRates();
    string symbol=m_symbol.Name();
    double stops_level=m_symbol.StopsLevel()*m_symbol.Point();
    double bid=m_symbol.Bid();
@@ -239,7 +241,6 @@ bool CExpertTrade::OrderCloseAll(CArrayInt *other_magic,const bool restrict_symb
       if(OrderSymbol()!=m_symbol.Name() && restrict_symbol) continue;
       if(OrderMagicNumber()!=m_magic && other_magic.Search(OrderMagicNumber())<0) continue;
       m_symbol.RefreshRates();
-      RefreshRates();
       if(OrderSymbol()==m_symbol.Name())
         {
          bid = m_symbol.Bid();

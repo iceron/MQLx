@@ -102,7 +102,7 @@ public:
    //--- stop levels  
    virtual bool      AddStops(CStops*);
    //--- symbol manager
-   virtual bool      SetSymbol(CSymbolInfo*);
+   //virtual bool      SetSymbol(CSymbolInfo*);
    //--- trade manager
    int               Expiration(void) const {return m_expiration;}
    void              Expiration(const int expiration) {m_expiration=expiration;}
@@ -158,6 +158,7 @@ bool COrderManagerBase::Init(CExpert *s,CSymbolManager *symbolmanager,CAccountIn
    InitOrdersHistory();  
    return true;
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -167,6 +168,7 @@ bool COrderManagerBase::SetSymbol(CSymbolInfo *symbol)
       m_symbol=symbol;
    return true;
   }
+*/  
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
