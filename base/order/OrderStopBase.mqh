@@ -241,14 +241,20 @@ bool COrderStopBase::Update(void)
      {
       double tp_line=m_objtp.GetPrice();
       if(tp_line!=TakeProfit())
-         takeprofit=tp_line;
+         if (m_stop.Pending() || m_stop.Broker())
+            Sleep(m_stop.Delay());
      }
    if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
      {
       double sl_line=m_objsl.GetPrice();
       if(sl_line!=StopLoss())
-         stoploss=sl_line;
+         if (m_stop.Pending() || m_stop.Broker())
+            Sleep(m_stop.Delay());
      }
+   if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
+      takeprofit=m_objtp.GetPrice();
+   if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
+      stoploss=m_objsl.GetPrice();
    result=UpdateOrderStop(stoploss,takeprofit);
    //if(result)
       //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_UPDATE_DONE,GetPointer(this));

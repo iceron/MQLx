@@ -30,6 +30,7 @@ protected:
    ENUM_STOP_TYPE    m_stop_type;
    double            m_takeprofit;
    string            m_takeprofit_name;
+   int               m_delay;
    //--- stop order trade parameters
    ENUM_VOLUME_TYPE  m_volume_type;
    double            m_volume_fixed;
@@ -72,6 +73,8 @@ public:
    bool              Broker() const {return m_stop_type==STOP_TYPE_BROKER;}
    void              Comment(string comment) {m_comment=comment;}
    string            Comment(void) const {return m_comment;}
+   void              Delay(int delay) {m_delay=delay;}
+   int               Delay(void) const {return m_delay;}
    void              SetDeviation(int deviation) {m_deviation=deviation;}
    int               SetDeviation(void) const {return m_deviation;}
    void              EntryColor(const color clr) {m_entry_color=clr;}
@@ -163,6 +166,7 @@ CStopBase::CStopBase(void) : m_activate(true),
                              m_stop_type(STOP_TYPE_VIRTUAL),
                              m_stoploss_name(".sl."),
                              m_takeprofit_name(".tp."),
+                             m_delay(500),
                              m_entry_visible(true),
                              m_stoploss_visible(true),
                              m_takeprofit_visible(true),
