@@ -6,7 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Object.mqh>
-#include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
+#include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
 class CExpert;
 class CTimes;
 //+------------------------------------------------------------------+

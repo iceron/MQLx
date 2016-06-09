@@ -7,12 +7,12 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 class CExpert;
 #include <Arrays\ArrayInt.mqh>
-#include "..\lib\AccountInfo.mqh"
-#include "..\..\common\class\ADT.mqh"
-#include "..\order\OrdersBase.mqh"
-#include "..\stop\StopsBase.mqh"
-#include "..\signal\SignalsBase.mqh"
-#include "..\trade\TradeManagerBase.mqh"
+#include "..\Lib\AccountInfo.mqh"
+#include "..\..\Common\Class\ADT.mqh"
+#include "..\Order\OrdersBase.mqh"
+#include "..\Stop\StopsBase.mqh"
+#include "..\Signal\SignalsBase.mqh"
+#include "..\Trade\TradeManagerBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

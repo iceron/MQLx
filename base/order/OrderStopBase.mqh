@@ -5,12 +5,11 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#include "..\..\common\enum\ENUM_VOLUME_TYPE.mqh"
+#include "..\..\Common\Enum\ENUM_VOLUME_TYPE.mqh"
 #include <Arrays\ArrayDouble.mqh>
-//#include "..\lib\SymbolInfo.mqh"
-#include "..\trade\ExpertTradeBase.mqh"
-#include "..\stop\StopBase.mqh"
-#include "..\stop\StopLineBase.mqh"
+#include "..\Trade\ExpertTradeBase.mqh"
+#include "..\Stop\StopBase.mqh"
+#include "..\Stop\StopLineBase.mqh"
 class COrder;
 class COrderStops;
 //+------------------------------------------------------------------+

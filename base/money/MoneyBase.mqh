@@ -6,10 +6,10 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Object.mqh>
-#include "..\symbol\SymbolManagerBase.mqh"
-#include "..\lib\AccountInfo.mqh"
-#include "..\..\common\enum\ENUM_CLASS_TYPE.mqh"
-#include "..\..\common\enum\ENUM_MONEY_UPDATE_TYPE.mqh"
+#include "..\Symbol\SymbolManagerBase.mqh"
+#include "..\Lib\AccountInfo.mqh"
+#include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
+#include "..\..\Common\Enum\ENUM_MONEY_UPDATE_TYPE.mqh"
 class CExpert;
 //+------------------------------------------------------------------+
 //|                                                                  |

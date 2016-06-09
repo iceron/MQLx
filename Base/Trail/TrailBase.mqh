@@ -5,8 +5,8 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#include "..\..\common\enum\ENUM_TRAIL_TARGET.mqh"
-#include "..\..\base\symbol\SymbolManagerBase.mqh"
+#include "..\..\Common\Enum\ENUM_TRAIL_TARGET.mqh"
+#include "..\..\Base\Symbol\SymbolManagerBase.mqh"
 class CTrails;
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -5,9 +5,9 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#include "..\..\common\enum\ENUM_CMD.mqh"
+#include "..\..\Common\Enum\ENUM_CMD.mqh"
 #include <Arrays\ArrayDouble.mqh>
-#include "..\comment\CommentsBase.mqh"
+#include "..\Comment\CommentsBase.mqh"
 class CExpert;
 class CSignals;
 //+------------------------------------------------------------------+
