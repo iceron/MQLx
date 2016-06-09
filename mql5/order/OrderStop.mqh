@@ -82,7 +82,6 @@ void COrderStop::Check(double &volume)
      }
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC && !m_takeprofit_closed)
      {
-      //Print("tp is already closed");
       if(m_stop.Pending() || m_stop.Broker())
         {
          if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket))
@@ -96,7 +95,6 @@ void COrderStop::Check(double &volume)
      }
    if(m_stoploss_closed || m_takeprofit_closed)
      {
-      Print("either sl or tp is closed");
       if(m_stop.OCO())
         {
          if(m_stoploss_closed && !m_takeprofit_closed)

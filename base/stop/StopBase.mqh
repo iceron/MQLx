@@ -348,7 +348,7 @@ bool CStopBase::GetClosePrice(const string symbol,const ENUM_ORDER_TYPE type,dou
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
-  {
+  {    
    if(!Refresh(order.Symbol())) return false;
    double stoploss=orderstop.StopLoss();
    if(stoploss<=0.0) return false;
@@ -364,7 +364,7 @@ bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
          close=true;
    if(close)
       return CloseStop(order,orderstop,price);
-   return false;
+   return close;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -384,7 +384,7 @@ bool CStopBase::CheckTakeProfit(COrder *order,COrderStop *orderstop)
       if(price<=takeprofit) close=true;
    if(close)
       return CloseStop(order,orderstop,price);
-   return false;
+   return close;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

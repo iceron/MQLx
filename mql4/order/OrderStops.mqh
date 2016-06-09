@@ -51,7 +51,8 @@ bool COrderStops::UpdateStopsByTicket(const ulong ticket)
       if(CheckPointer(order_stop))
          if(res) res=order_stop.Recreate();
      }
-   if(res) order_stop.NewTicket(false);
+   if(res) 
+      order_stop.NewTicket(false);
    return res;
   }
 //+------------------------------------------------------------------+

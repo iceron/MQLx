@@ -62,6 +62,8 @@ public:
    string            StopLossName(void) const {return m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket();}
    void              StopLossTicket(const ulong ticket) {m_stoploss_ticket=ticket;}
    ulong             StopLossTicket(void) const {return m_stoploss_ticket;}
+   void              StopName(const string stop_name) {m_stop_name = stop_name;}
+   string            StopName(void) const {return m_stop_name;}
    void              TakeProfit(const double takeprofit) {m_takeprofit.Add(takeprofit);}
    double            TakeProfit(void) const {return m_takeprofit.Total()>0?m_takeprofit.At(m_takeprofit.Total()-1):0;}
    double            TakeProfit(const int index) const {return m_takeprofit.Total()>index?m_takeprofit.At(index):0;}

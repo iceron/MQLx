@@ -70,7 +70,8 @@ COrderStopsBase::Check(double &volume)
             order_stop.CheckTrailing();
             order_stop.Update();
             order_stop.Check(volume);
-            if(!CheckNewTicket(order_stop)) return;
+            if(!CheckNewTicket(order_stop)) 
+               return;
            }
         }
      }

@@ -71,13 +71,7 @@ bool COrderStop::Recreate(void)
          m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,StopLoss());
       if(!m_stoploss_closed || !m_takeprofit_closed)
          m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,m_order.Price());
-      ENUM_POINTER_TYPE pointer_entry=CheckPointer(m_objentry);
-      ENUM_POINTER_TYPE pointer_sl = CheckPointer(m_objsl);
-      ENUM_POINTER_TYPE pointer_tp = CheckPointer(m_objtp);
-      if((((!m_takeprofit_closed && pointer_tp==POINTER_DYNAMIC) || (m_takeprofit_closed && pointer_tp==POINTER_INVALID))) && 
-         (((!m_stoploss_closed && pointer_sl==POINTER_DYNAMIC) || (m_stoploss_closed && pointer_sl==POINTER_INVALID))) && 
-         (((!m_takeprofit_closed || !m_stoploss_closed) && CheckPointer(m_objentry)==POINTER_DYNAMIC)))
-         return true;
+      return true;
      }
    return false;
   }
