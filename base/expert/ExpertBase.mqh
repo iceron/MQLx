@@ -86,6 +86,8 @@ public:
    void              OfflineMode(const bool mode) {m_offline_mode=mode;}
    int               OfflineModeDelay() const {return m_offline_mode_delay;}
    void              OfflineModeDelay(const int delay){m_offline_mode_delay=delay;}
+   string            SymbolName() const {return m_symbol_name;}
+   void              SymbolName(const string name) {m_symbol_name = name;}
    //--- object pointers
    CAccountInfo      *AccountInfo(void) const {return GetPointer(m_account);}
    CComments         *Comments() const {return GetPointer(m_comments);}
@@ -152,7 +154,7 @@ protected:
    //--- candle manager   
    virtual bool      IsNewBar(string symbol,int period);
    //--- order manager
-   virtual void      CloseOppositeOrders(const int entry,const int exit) {m_order_man.CloseOppositeOrders(entry,exit);}
+   virtual void      CloseOppositeOrders(const string symbol,const int entry,const int exit) {m_order_man.CloseOppositeOrders(symbol,entry,exit);}
    virtual void      ManageOrders(void) {m_order_man.ManageOrders();}
    virtual void      ManageOrdersHistory(void){m_order_man.ManageOrdersHistory();}
    virtual void      OnTradeTransaction(COrder*) {}
@@ -174,6 +176,7 @@ protected:
 //+------------------------------------------------------------------+
 CExpertBase::CExpertBase(void) : m_activate(true),
                                  m_every_tick(true),
+                                 m_symbol_name(NULL),
                                  m_one_trade_per_candle(true),
                                  m_period(PERIOD_CURRENT),
                                  m_position_reverse(true),
@@ -193,6 +196,7 @@ CExpertBase::~CExpertBase(void)
 //+------------------------------------------------------------------+
 bool CExpertBase::Init(string symbol,int period,int magic,bool every_tick=true,bool one_trade_per_candle=true,bool position_reverse=true)
   {
+   m_symbol_name = symbol;
    CSymbolInfo *instrument;
    if((instrument=new CSymbolInfo)==NULL)
       return false;
@@ -394,7 +398,7 @@ bool CExpertBase::OnTick(void)
    AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
    if(newbar || (m_every_tick && newtick))
      {
-      CloseOppositeOrders(entry,exit);
+      CloseOppositeOrders(m_symbol_name,entry,exit);
       ManageOrders();
       if(!m_candle_man.TradeProcessed(m_symbol_name,m_period))
         {

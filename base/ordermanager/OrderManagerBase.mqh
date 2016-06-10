@@ -91,9 +91,9 @@ public:
    virtual bool      ArchiveOrder(COrder*);
    virtual void      CheckClosedOrders(void);
    //virtual void      CheckOldStops(void);
-   virtual void      CloseOrders(const int,const int);
+   virtual void      CloseOrders(const string,const int,const int);
    virtual bool      CloseStops(void);
-   virtual void      CloseOppositeOrders(const int,const int);
+   virtual void      CloseOppositeOrders(const string,const int,const int);
    virtual void      ManageOrders(void);
    virtual bool      CloseOrder(COrder*,const int) {return true;}
    //--- orders history
@@ -157,9 +157,12 @@ bool COrderManagerBase::Init(CExpert *s,CSymbolManager *symbolmanager,CAccountIn
    InitMoneys(s,symbolmanager,accountinfo);
    InitTrade();
    InitOrders();
-   InitOrdersHistory();  
+   InitOrdersHistory();
    return true;
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 /*
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -170,22 +173,22 @@ bool COrderManagerBase::SetSymbol(CSymbolInfo *symbol)
       m_symbol=symbol;
    return true;
   }
-*/  
+*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,const double price,const double sl,const double tp)
   {
    bool ret=0;
-   if (CheckPointer(m_symbol)==POINTER_DYNAMIC)
-      m_trade = m_trade_man.Get(m_symbol.Name()); 
-   if (m_trade!=NULL)
-   {
+   if(CheckPointer(m_symbol)==POINTER_DYNAMIC)
+      m_trade = m_trade_man.Get(m_symbol.Name());
+   if(m_trade!=NULL)
+     {
       if(COrder::IsOrderTypeLong(type))
          ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
       if(COrder::IsOrderTypeShort(type))
          ret=m_trade.Sell(lotsize,price,sl,tp,m_comment);
-   }   
+     }
    return ret;
   }
 //+------------------------------------------------------------------+
@@ -201,19 +204,19 @@ bool COrderManagerBase::InitMoneys(CExpert *s,CSymbolManager *symbolmanager,CAcc
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitTrade()
   {
-   for (int i=0;i<m_symbol_man.Total();i++)
-   {
-      CSymbolInfo *symbol = m_symbol_man.At(i);
-      CExpertTradeX *trade = new CExpertTradeX();
-      if (trade!=NULL)
-      {
+   for(int i=0;i<m_symbol_man.Total();i++)
+     {
+      CSymbolInfo *symbol=m_symbol_man.At(i);
+      CExpertTradeX *trade=new CExpertTradeX();
+      if(trade!=NULL)
+        {
          trade.SetSymbol(GetPointer(symbol));
          trade.SetExpertMagicNumber(m_magic);
          trade.SetDeviationInPoints((ulong)(30/symbol.Point()));
          trade.SetOrderExpiration(m_expiration);
          m_trade_man.Add(trade);
-      }   
-   }
+        }
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -263,8 +266,8 @@ void COrderManagerBase::ArchiveOrders(void)
 bool COrderManagerBase::ArchiveOrder(COrder *order)
   {
    bool result=m_orders_history.Add(order);
-   //if(result)
-      //m_orders_history.Clean(false);
+//if(result)
+//m_orders_history.Clean(false);
    return result;
   }
 //+------------------------------------------------------------------+
@@ -278,12 +281,15 @@ void COrderManagerBase::CheckClosedOrders(void)
       COrder *order=m_orders.At(i);
       ulong ticket = order.Ticket();
       if(order.IsClosed())
-      {
-         if (CloseOrder(order,i))
+        {
+         if(CloseOrder(order,i))
             ArchiveOrder(m_orders.Detach(i));
-      }   
+        }
      }
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 /*
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -312,16 +318,20 @@ void COrderManagerBase::CheckOldStops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void COrderManagerBase::CloseOrders(const int entry,const int exit)
+void COrderManagerBase::CloseOrders(const string symbol,const int entry,const int exit)
   {
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
      {
       COrder *order=m_orders.At(i);
-      if((CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) entry) && m_position_reverse) ||
-         (CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) exit)))
+      if(order!=NULL)
         {
-         CloseOrder(order,i);
+         if(StringCompare(order.Symbol(),symbol)==0 || symbol==NULL || symbol=="")
+           {
+            if((CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) entry) && m_position_reverse) ||
+               (CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) exit)))
+               CloseOrder(order,i);
+           }
         }
      }
   }
@@ -335,25 +345,25 @@ bool COrderManagerBase::CloseStops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderManagerBase::CloseOppositeOrders(const int entry,const int exit)
+COrderManagerBase::CloseOppositeOrders(const string symbol,const int entry,const int exit)
   {
    if(m_orders.Total()>0)
-      CloseOrders(entry,exit);
+      CloseOrders(symbol,entry,exit);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrderManagerBase::ManageOrders(void)
-  {   
-   CheckClosedOrders();   
-   //CheckOldStops();
+  {
+   CheckClosedOrders();
+//CheckOldStops();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrderManagerBase::ManageOrdersHistory(void)
   {
-   //if(m_orders_history.Clean())
+//if(m_orders_history.Clean())
      {
       int excess=m_orders_history.Total()-m_max_orders_history;
       if(excess>0)
@@ -366,7 +376,7 @@ void COrderManagerBase::ManageOrdersHistory(void)
 void COrderManagerBase::OnTick(void)
   {
    m_orders.OnTick();
-   /*
+/*
    int total= m_orders.Total();
    for(int i=total-1;i>=0;i--)
      {
@@ -376,7 +386,7 @@ void COrderManagerBase::OnTick(void)
          ArchiveOrder(m_orders.Detach(i));
       order.OnTick();
      }
-   */  
+   */
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -406,12 +416,12 @@ double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE type)
 double COrderManagerBase::StopLossCalculate(const int res,const double price)
   {
    if(CheckPointer(m_main_stop))
-   {
+     {
       ENUM_ORDER_TYPE type=ORDER_TYPE_BUY;
       if(res==CMD_BUY) type=ORDER_TYPE_BUY;
       else if(res==CMD_SELL) type=ORDER_TYPE_SELL;
       return m_main_stop.StopLossTicks(ORDER_TYPE_BUY,price);
-   }   
+     }
    return 0;
   }
 //+------------------------------------------------------------------+
@@ -487,7 +497,7 @@ void COrderManagerBase::DeinitStops()
 //+------------------------------------------------------------------+
 void COrderManagerBase::DeinitTrade()
   {
-   //ADT::Delete(m_trade);
+//ADT::Delete(m_trade);
    m_trade_man.Shutdown();
   }
 //+------------------------------------------------------------------+
