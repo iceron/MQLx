@@ -21,21 +21,21 @@ protected:
    int               m_last_exit;
    bool              m_new_signal;
    bool              m_reverse;
-   CExpert        *m_strategy;
+   CExpert          *m_expert;
    CComments        *m_comments;
 public:
                      CSignalsBase(void);
                     ~CSignalsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_SIGNALS;}
    //--- initialization
-   virtual bool      Init(CExpert *s,CComments *comments);
-   virtual void      SetContainer(CExpert *s){m_strategy=s;}
-   virtual bool      Validate() const;
+   virtual bool      Init(CExpert*,CComments*);
+   virtual void      SetContainer(CExpert *s){m_expert=s;}
+   virtual bool      Validate(void) const;
    //--- checking   
    virtual bool      Active(void) const{return m_activate;}
    virtual void      Active(const bool active) {m_activate=active;}
-   virtual int       CheckEntry() const;
-   virtual int       CheckExit() const;
+   virtual int       CheckEntry(void) const;
+   virtual int       CheckExit(void) const;
    virtual bool      CheckSignals(int &entry,int &exit);
    virtual int       NewSignal(void) const {return m_new_signal;}
    virtual void      NewSignal(const int signal) {m_new_signal=signal;}
@@ -47,11 +47,11 @@ public:
    virtual bool      Reverse(void) const{return m_reverse;}
    virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
    //-- comments
-   virtual void AddComment(const string comment);
+   virtual void      AddComment(const string);
    //--- recovery
-   virtual bool      CreateElement(const int index);
-   virtual bool      Save(const int handle);
-   virtual bool      Load(const int handle);   
+   virtual bool      CreateElement(const int);
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

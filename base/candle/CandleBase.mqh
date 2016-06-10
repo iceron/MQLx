@@ -22,7 +22,7 @@ protected:
 public:
                      CCandleBase(void);
                     ~CCandleBase(void);
-   virtual bool      Init(CSymbolInfo *symbol,int timeframe);
+   virtual bool      Init(CSymbolInfo*,const int);
    //--- setters and getters
    datetime          LastTime(void) const {return m_last.time;}
    double            LastOpen(void) const {return m_last.open;}
@@ -35,15 +35,17 @@ public:
    virtual bool      TradeProcessed(void) const {return m_trade_processed;}
    virtual void      TradeProcessed(bool processed) {m_trade_processed=processed;}
    virtual void      Check(void);
-   virtual bool      IsNewCandle(void);
-   virtual bool      Compare(MqlRates &rates) const;
+   virtual bool      IsNewCandle(void) {return m_new;}
+   virtual bool      Compare(MqlRates &) const;
    //--- recovery
-   virtual bool      Save(const int handle);
-   virtual bool      Load(const int handle);
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);
   };
 //+------------------------------------------------------------------+
-CCandleBase::CCandleBase(void) : m_wait_for_new(false),
-                                 m_trade_processed(false)
+CCandleBase::CCandleBase(void) : m_new(false),
+                                 m_wait_for_new(false),
+                                 m_trade_processed(false),
+                                 m_period(0)
   {
   }
 //+------------------------------------------------------------------+
@@ -55,7 +57,7 @@ CCandleBase::~CCandleBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CCandleBase::Init(CSymbolInfo *symbol,int timeframe)
+bool CCandleBase::Init(CSymbolInfo *symbol,const int timeframe)
   {
    m_symbol = symbol;
    m_period = timeframe;
@@ -81,13 +83,6 @@ void CCandleBase::Check(void)
          m_last=rates[0];
         }
      }
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CCandleBase::IsNewCandle(void)
-  {
-   return m_new;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

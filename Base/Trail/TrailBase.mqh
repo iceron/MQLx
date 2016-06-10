@@ -28,7 +28,7 @@ public:
                     ~CTrailBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TRAIL;}
    //--- initialization                    
-   virtual bool      Init(CSymbolManager *symbolmanager,CTrails *t);
+   virtual bool      Init(CSymbolManager *,CTrails *);
    virtual void      SetContainer(CTrails *trails){m_trails=trails;}
    virtual bool      Validate(void) const;
    //--- getters and setters    
@@ -46,13 +46,13 @@ public:
    int               TrailTarget(void) const {return m_target;}
    void              TrailTarget(const ENUM_TRAIL_TARGET target) {m_target=target;}
    //--- checking
-   virtual double    Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
+   virtual double    Check(const string,const ENUM_ORDER_TYPE,const double,const double,const ENUM_TRAIL_TARGET);
 protected:
    //--- price calculation
-   virtual double    ActivationPrice(const ENUM_ORDER_TYPE type,const double entry_price);
-   virtual double    DeactivationPrice(const ENUM_ORDER_TYPE type,const double entry_price);
-   virtual double    Price(const ENUM_ORDER_TYPE type);
-   virtual void      Refresh(const string symbol);
+   virtual double    ActivationPrice(const ENUM_ORDER_TYPE,const double);
+   virtual double    DeactivationPrice(const ENUM_ORDER_TYPE,const double);
+   virtual double    Price(const ENUM_ORDER_TYPE);
+   virtual void      Refresh(const string);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

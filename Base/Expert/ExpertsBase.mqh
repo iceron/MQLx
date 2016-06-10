@@ -36,18 +36,19 @@ public:
    virtual void      OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam);
    //--- chart comments
    virtual void      AddComment(const string comment);
-   virtual void      DisplayComment(void) const;      
+   virtual void      DisplayComment(void) const;
    //--- deinitialization
    virtual void      OnDeinit(const int reason=0);
    //--- recovery
-   virtual bool      CreateElement(const int index);
-   virtual bool      Save(const int handle);
-   virtual bool      Load(const int handle);
+   virtual bool      CreateElement(const int);
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpertsBase::CExpertsBase(void) : m_activate(true)
+CExpertsBase::CExpertsBase(void) : m_activate(true),
+                                   m_uninit_reason(0)
   {
   }
 //+------------------------------------------------------------------+
@@ -74,7 +75,7 @@ bool CExpertsBase::Validate(void) const
 //+------------------------------------------------------------------+
 void CExpertsBase::ChartComment(const bool enable=true)
   {
-   if(enable) m_comments=new CComments();     
+   if(enable) m_comments=new CComments();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -84,7 +85,7 @@ bool CExpertsBase::InitComponents(void) const
    for(int i=0;i<Total();i++)
      {
       CExpert *strat=At(i);
-      if (CheckPointer(m_comments))
+      if(CheckPointer(m_comments))
          strat.ChartComment(GetPointer(m_comments));
       strat.InitComponents();
      }
@@ -175,7 +176,7 @@ int CExpertsBase::TradesTotal(void) const
 //+------------------------------------------------------------------+
 void CExpertsBase::OnDeinit(const int reason=0)
   {
-   m_uninit_reason=reason;   
+   m_uninit_reason=reason;
    Shutdown();
   }
 //+------------------------------------------------------------------+

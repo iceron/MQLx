@@ -46,15 +46,15 @@ public:
    void              SetExpertMagicNumber(const int magic) {m_magic=magic;}
    void              SetDeviationInPoints(const ulong deviation) {m_deviation=deviation;}
    void              SetOrderExpiration(const datetime expire) {m_order_expiration=expire;}
-   bool              SetSymbol(CSymbolInfo *symbol);
+   bool              SetSymbol(CSymbolInfo *);
    //-- trade methods   
-   virtual ulong     Buy(const double volume,const double price,const double sl,const double tp,const string comment="");
-   virtual ulong     Sell(const double volume,const double price,const double sl,const double tp,const string comment="");
-   virtual bool      OrderDelete(const ulong ticket);
-   virtual bool      OrderClose(const ulong ticket,const double lotsize=0,const double price=0);
-   virtual bool      OrderCloseAll(CArrayInt *other_magic,const bool restrict_symbol=true);
-   virtual bool      OrderModify(const ulong ticket,const double price,const double sl,const double tp,const ENUM_ORDER_TYPE_TIME type_time,const datetime expiration,const double stoplimit=0.0);
-   virtual ulong     OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_type,const double volume,const double limit_price,const double price,const double sl,const double tp,const ENUM_ORDER_TYPE_TIME type_time=ORDER_TIME_GTC,const datetime expiration=0,const string comment="");
+   virtual ulong     Buy(const double,const double,const double,const double,const string);
+   virtual ulong     Sell(const double,const double,const double,const double,const string);
+   virtual bool      OrderDelete(const ulong);
+   virtual bool      OrderClose(const ulong,const double,const double);
+   virtual bool      OrderCloseAll(CArrayInt *,const bool);
+   virtual bool      OrderModify(const ulong,const double,const double,const double,const ENUM_ORDER_TYPE_TIME,const datetime,const double);
+   virtual ulong     OrderOpen(const string,const ENUM_ORDER_TYPE,const double,const double,const double,const double,const double,const ENUM_ORDER_TYPE_TIME,const datetime,const string);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

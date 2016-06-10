@@ -20,7 +20,7 @@ public:
    bool              Active(){return m_activate;}
    void              Active(bool active){m_activate = active;}
    virtual void      Display(void);
-   virtual void      Concatenate(string &str,string comment);
+   virtual void      Concatenate(string &,string) const {}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -49,12 +49,6 @@ CCommentsBase::Display(void)
      }
    Comment(str);
    Clear();
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-CCommentsBase::Concatenate(string &str,string comment)
-  {
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

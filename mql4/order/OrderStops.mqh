@@ -13,9 +13,9 @@ class COrderStops : public COrderStopsBase
 public:
                      COrderStops(void);
                     ~COrderStops(void);
-   virtual bool      CheckNewTicket(COrderStop *orderstop);
-   virtual ulong     GetNewTicket(COrderStop *orderstop);
-   virtual bool      UpdateStopsByTicket(const ulong ticket);
+   virtual bool      CheckNewTicket(COrderStop *);
+   virtual ulong     GetNewTicket(COrderStop *);
+   virtual bool      UpdateStopsByTicket(const ulong);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

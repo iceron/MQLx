@@ -38,8 +38,8 @@ protected:
    string            m_symbol_name;
    int               m_period;
    bool              m_position_reverse;
-   bool              m_offline_mode;
-   int               m_offline_mode_delay;
+   //bool              m_offline_mode;
+   //int               m_offline_mode_delay;
    //--- signal objects
    CSignals         *m_signals;
    //--- trade objects   
@@ -65,16 +65,15 @@ public:
    virtual bool      AddStops(CStops*);
    virtual bool      AddSymbol(const string);
    virtual bool      AddTimes(CTimes*);
-   virtual bool      Init(string symbol,int timeframe,int magic,bool every_tick=true,bool one_trade_per_candle=true,bool position_reverse=true);
+   virtual bool      Init(const string,const int,const int,const bool,const bool,const bool);
    virtual bool      InitAccount(CAccountInfo*);
-   //virtual bool      InitTrade(/*CExpertTrade *trade=NULL*/){return m_order_man.InitTrade(/*GetPointer(trade)*/);}
    virtual bool      InitComponents(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
-   virtual bool      InitOrderManager() {return m_order_man.Init(GetPointer(this),GetPointer(m_symbol_man),GetPointer(m_account));}
+   virtual bool      InitOrderManager(void) {return m_order_man.Init(GetPointer(this),GetPointer(m_symbol_man),GetPointer(m_account));}
    virtual bool      Validate(void) const;
    //--- container
-   virtual CExperts  *GetContainer() const {return GetPointer(m_expert);}
+   virtual CExperts *GetContainer(void) const {return GetPointer(m_expert);}
    virtual void      SetContainer(CExperts *e){m_expert=e;}
    //--- activation and deactivation
    virtual bool      Active(void) const {return m_activate;}
@@ -82,28 +81,27 @@ public:
    //--- setters and getters       
    string            Name() const {return m_name;}
    void              Name(const string name) {m_name = name;}
-   bool              OfflineMode(void) const {return m_offline_mode;}
-   void              OfflineMode(const bool mode) {m_offline_mode=mode;}
-   int               OfflineModeDelay() const {return m_offline_mode_delay;}
-   void              OfflineModeDelay(const int delay){m_offline_mode_delay=delay;}
+   //bool              OfflineMode(void) const {return m_offline_mode;}
+   //void              OfflineMode(const bool mode) {m_offline_mode=mode;}
+   //int               OfflineModeDelay() const {return m_offline_mode_delay;}
+   //void              OfflineModeDelay(const int delay){m_offline_mode_delay=delay;}
    string            SymbolName() const {return m_symbol_name;}
    void              SymbolName(const string name) {m_symbol_name = name;}
    //--- object pointers
    CAccountInfo      *AccountInfo(void) const {return GetPointer(m_account);}
-   CComments         *Comments() const {return GetPointer(m_comments);}
+   CComments         *Comments(void) const {return GetPointer(m_comments);}
    CStop             *MainStop(void) const {return m_order_man.MainStop();}
    CMoneys           *Moneys(void) const {return m_order_man.Moneys();}
-   COrders           *Orders() {return m_order_man.Orders();}
-   COrders           *OrdersHistory() {return m_order_man.OrdersHistory();}
-   CArrayInt         *OtherMagic() {return m_order_man.OtherMagic();}
+   COrders           *Orders(void) {return m_order_man.Orders();}
+   COrders           *OrdersHistory(void) {return m_order_man.OrdersHistory();}
+   CArrayInt         *OtherMagic(void) {return m_order_man.OtherMagic();}
    CStops            *Stops(void) const {return m_order_man.Stops();}
    CSignals          *Signals(void) const {return GetPointer(m_signals);}
-   //CSymbolInfo       *SymbolInfo(void) const {return GetPointer(m_symbol);}
    CTimes            *Times(void) const {return GetPointer(m_times);}
    //--- chart comment manager
    void              AddComment(const string);
    void              ChartComment(CComments *comments) {m_comments=comments;}
-   void              DisplayComment();
+   void              DisplayComment(void);
    //--- order manager
    virtual bool      AddOtherMagic(const int magic) {return m_order_man.AddOtherMagic(magic);}
    virtual void      AddOtherMagicString(const string &magics[]){m_order_man.AddOtherMagicString(magics);}
@@ -143,16 +141,16 @@ public:
    //--- additional candles
    virtual void      AddCandle(const string,const int);
    //--- new bar detection
-   virtual void      DetectNewBars(void);
+   virtual void      DetectNewBars(void) const {m_candle_man.Check();}
    //-- generic events
    virtual bool      OnTick(void);
-   virtual void      OnChartEvent(const int,const long&,const double&,const string&);
+   virtual void      OnChartEvent(const int,const long&,const double&,const string&) {}
    //--- recovery
    virtual bool      Save(const int);
    virtual bool      Load(const int);
 protected:
    //--- candle manager   
-   virtual bool      IsNewBar(string symbol,int period);
+   virtual bool      IsNewBar(const string symbol,const int period) const {return m_candle_man.IsNewCandle(symbol,period);}
    //--- order manager
    virtual void      CloseOppositeOrders(const string symbol,const int entry,const int exit) {m_order_man.CloseOppositeOrders(symbol,entry,exit);}
    virtual void      ManageOrders(void) {m_order_man.ManageOrders();}
@@ -179,9 +177,9 @@ CExpertBase::CExpertBase(void) : m_activate(true),
                                  m_symbol_name(NULL),
                                  m_one_trade_per_candle(true),
                                  m_period(PERIOD_CURRENT),
-                                 m_position_reverse(true),
-                                 m_offline_mode(false),
-                                 m_offline_mode_delay(500)
+                                 m_position_reverse(true)
+                                 //m_offline_mode(false)
+                                 //m_offline_mode_delay(500)
   {
   }
 //+------------------------------------------------------------------+
@@ -222,16 +220,15 @@ bool CExpertBase::Init(string symbol,int period,int magic,bool every_tick=true,b
 //+------------------------------------------------------------------+
 bool CExpertBase::InitComponents(void)
   {
-   bool result=InitSignals() && InitAccount() && InitTimes()
-               && InitOrderManager();
-   return result;
+   return InitSignals() && InitAccount() && InitTimes() && InitOrderManager();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CExpertBase::InitSignals(void)
   {
-   if(m_signals==NULL) return true;
+   if(m_signals==NULL) 
+      return true;
    return m_signals.Init(GetPointer(this),GetPointer(m_comments));
   }
 //+------------------------------------------------------------------+
@@ -239,7 +236,8 @@ bool CExpertBase::InitSignals(void)
 //+------------------------------------------------------------------+
 bool CExpertBase::InitTimes(void)
   {
-   if(m_times==NULL) return true;
+   if(m_times==NULL) 
+      return true;
    return m_times.Init(GetPointer(this));
   }
 //+------------------------------------------------------------------+
@@ -314,7 +312,6 @@ bool CExpertBase::AddMoneys(CMoneys *moneys)
 bool CExpertBase::AddStops(CStops *stops)
   {
    return m_order_man.AddStops(GetPointer(stops));
-   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -374,12 +371,6 @@ bool CExpertBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
-  {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool CExpertBase::OnTick(void)
   {
    if(!Active()) return false;
@@ -414,21 +405,6 @@ bool CExpertBase::OnTick(void)
    ManageOrdersHistory();
    DisplayComment();
    return ret;
-/*
-   for (int i=0;i<m_instance_man.Total();i++)
-   {  
-      CExpertInstance *instance = m_instance_man.At(i);
-      Process(instance);
-   }
-   */
-   return 0;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void CExpertBase::DetectNewBars(void)
-  {
-   m_candle_man.Check();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -449,13 +425,6 @@ bool CExpertBase::RefreshRates()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertBase::IsNewBar(const string symbol,const int period)
-  {
-   return m_candle_man.IsNewCandle(symbol,period);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 void CExpertBase::Deinit(const int reason=0)
   {
    DeinitSymbol();
@@ -463,7 +432,6 @@ void CExpertBase::Deinit(const int reason=0)
    DeinitAccount();
    DeinitComments();
    DeinitTimes();
-
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -15,7 +15,6 @@ class COrdersBase : public CArrayObj
   {
 protected:
    bool              m_activate;
-   //bool              m_clean;
    CStops           *m_stops;
    CExpert          *m_strategy;
 public:
@@ -29,27 +28,21 @@ public:
    //--- getters and setters
    bool              Activate(void) const {return m_activate;}
    void              Activate(const bool activate) {m_activate=activate;}
-   //bool              Clean(void) const {return m_clean;}
-   //void              Clean(const bool clean) {m_clean=clean;}
-   //void              Magic(int magic) {m_magic=magic;}
-   //int               Magic() {return m_magic;}
    //--- events                  
    virtual void      OnTick(void);
    //--- order creation
-   virtual bool      NewOrder(const int ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price);
+   virtual bool      NewOrder(const int,const string,const int,const ENUM_ORDER_TYPE,const double,const double);
    //--- archiving
    virtual bool      CloseStops(void);
    //--- recovery
-   virtual bool      CreateElement(const int index);
-   virtual bool      Save(const int handle);
-   virtual bool      Load(const int handle);
+   virtual bool      CreateElement(const int);
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 COrdersBase::COrdersBase(void) : m_activate(true)
-                                 //m_clean(false)
-                                 //m_magic(0)
   {
    if(!IsSorted())
       Sort();

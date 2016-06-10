@@ -43,13 +43,13 @@ protected:
    CStops           *m_stops;
    CStop            *m_main_stop;
 public:
-                     COrderManagerBase();
-                    ~COrderManagerBase();
+                     COrderManagerBase(void);
+                    ~COrderManagerBase(void);
    //--- initialization
    virtual bool      Init(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
    virtual bool      InitStops(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
    bool              InitMoneys(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
-   bool              InitTrade();
+   bool              InitTrade(void);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
    virtual bool      Validate(void) const;
@@ -82,10 +82,10 @@ public:
    //--- object pointers
    CStop            *MainStop(void) const {return m_main_stop;}
    CMoneys          *Moneys(void) const {return GetPointer(m_moneys);}
-   COrders          *Orders() {return GetPointer(m_orders);}
+   COrders          *Orders(void) {return GetPointer(m_orders);}
    COrders          *OrdersHistory() {return GetPointer(m_orders_history);}
    CStops           *Stops(void) const {return GetPointer(m_stops);}
-   CArrayInt        *OtherMagic() {return GetPointer(m_other_magic);}
+   CArrayInt        *OtherMagic(void) {return GetPointer(m_other_magic);}
    //--- current orders
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(COrder*);
@@ -99,7 +99,7 @@ public:
    //--- orders history
    virtual void      ManageOrdersHistory(void);
    //--- money manager
-   virtual double    LotSizeCalculate(double,ENUM_ORDER_TYPE,double);
+   virtual double    LotSizeCalculate(const double,const ENUM_ORDER_TYPE,const double);
    virtual bool      AddMoneys(CMoneys*);
    //--- stop levels  
    virtual bool      AddStops(CStops*);
@@ -112,8 +112,8 @@ public:
    virtual void      AddOtherMagicString(const string&[]);
    virtual bool      TradeOpen(const string,const int) {return true;}
    //--- events
-   virtual void      OnTradeTransaction(COrder *){}
-   virtual void      OnTick();
+   virtual void      OnTradeTransaction(COrder*){}
+   virtual void      OnTick(void);
 protected:
    //--- trade manager
    virtual double    PriceCalculate(ENUM_ORDER_TYPE);
@@ -121,11 +121,10 @@ protected:
    virtual double    StopLossCalculate(const int,const double);
    virtual double    TakeProfitCalculate(const int,const double);
    bool              SendOrder(const ENUM_ORDER_TYPE,const double,const double,const double,const double);
-
    //--- deinitialization  
    virtual void      Deinit(const int);
-   virtual void      DeinitStops();
-   virtual void      DeinitTrade();
+   virtual void      DeinitStops(void);
+   virtual void      DeinitTrade(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -160,20 +159,6 @@ bool COrderManagerBase::Init(CExpert *s,CSymbolManager *symbolmanager,CAccountIn
    InitOrdersHistory();
    return true;
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrderManagerBase::SetSymbol(CSymbolInfo *symbol)
-  {
-   if(CheckPointer(symbol)==POINTER_DYNAMIC)
-      m_symbol=symbol;
-   return true;
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -266,8 +251,6 @@ void COrderManagerBase::ArchiveOrders(void)
 bool COrderManagerBase::ArchiveOrder(COrder *order)
   {
    bool result=m_orders_history.Add(order);
-//if(result)
-//m_orders_history.Clean(false);
    return result;
   }
 //+------------------------------------------------------------------+
@@ -287,34 +270,6 @@ void COrderManagerBase::CheckClosedOrders(void)
         }
      }
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void COrderManagerBase::CheckOldStops(void)
-  {
-   if(m_orders_history.Clean())
-      return;
-   bool status=true;
-   for(int i=m_orders_history.Total()-1;i>=0;i--)
-     {
-      COrder *order=m_orders_history.At(i);
-      if(order.Clean())
-         continue;
-      if(order.CloseStops())
-         order.Clean(true);
-      else
-        {
-         if(status)
-            status=false;
-        }
-     }
-   m_orders_history.Clean(status);
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -356,19 +311,15 @@ COrderManagerBase::CloseOppositeOrders(const string symbol,const int entry,const
 void COrderManagerBase::ManageOrders(void)
   {
    CheckClosedOrders();
-//CheckOldStops();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrderManagerBase::ManageOrdersHistory(void)
   {
-//if(m_orders_history.Clean())
-     {
-      int excess=m_orders_history.Total()-m_max_orders_history;
-      if(excess>0)
-         m_orders_history.DeleteRange(0,excess-1);
-     }
+   int excess=m_orders_history.Total()-m_max_orders_history;
+   if(excess>0)
+      m_orders_history.DeleteRange(0,excess-1);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -376,17 +327,6 @@ void COrderManagerBase::ManageOrdersHistory(void)
 void COrderManagerBase::OnTick(void)
   {
    m_orders.OnTick();
-/*
-   int total= m_orders.Total();
-   for(int i=total-1;i>=0;i--)
-     {
-      COrder *order=m_orders.At(i);
-      ulong ticket = order.Ticket();
-      if(order.IsClosed())
-         ArchiveOrder(m_orders.Detach(i));
-      order.OnTick();
-     }
-   */
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

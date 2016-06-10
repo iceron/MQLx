@@ -12,19 +12,19 @@ class CCandleManager : public CCandleManagerBase
   {
 protected:
 public:
-                     CCandleManager();
-                    ~CCandleManager();
+                     CCandleManager(void);
+                    ~CCandleManager(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CCandleManager::CCandleManager()
+CCandleManager::CCandleManager(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CCandleManager::~CCandleManager()
+CCandleManager::~CCandleManager(void)
   {
   }
 //+------------------------------------------------------------------+

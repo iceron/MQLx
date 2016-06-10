@@ -27,8 +27,8 @@ public:
    //--- initialization                    
    virtual bool      Validate(void);
    virtual bool      Evaluate(void);
-   virtual bool      Init(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0);
-   virtual void      SetDays(const bool sun,const bool mon,const bool tue,const bool wed,const bool thu,const bool fri,const bool sat);
+   virtual bool      Init(const int,const int,const int,const int,const int,const int,const int);
+   virtual void      SetDays(const bool,const bool,const bool,const bool,const bool,const bool,const bool);
    //--- setters and getters
    bool              Sunday(void) const {return m_sun;}
    void              Sunday(const bool t) {m_sun=t;}

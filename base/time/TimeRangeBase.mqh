@@ -18,7 +18,7 @@ public:
                      CTimeRangeBase(void);
                     ~CTimeRangeBase(void);
    //--- initialization                    
-   virtual bool      Init(datetime begin,datetime end);
+   virtual bool      Init(datetime,datetime);
    virtual bool      Validate(void);
    //--- setters and getters
    datetime          Begin(void) const  {return m_begin;}

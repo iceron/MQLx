@@ -12,15 +12,14 @@
 //+------------------------------------------------------------------+
 class CCandleManagerBase : public CArrayObj
   {
-protected:
 public:
                      CCandleManagerBase(void);
                     ~CCandleManagerBase(void);
-   virtual void      Check(void);
-   virtual bool      IsNewCandle(string symbol,int timeframe);
-   virtual CCandle  *Get(string symbol,int timeframe);
-   virtual bool      TradeProcessed(string symbol,int timeframe);
-   virtual void      TradeProcessed(string symbol,int timeframe,bool processed);
+   virtual void      Check(void) const;
+   virtual bool      IsNewCandle(const string,const int) const;
+   virtual CCandle  *Get(const string,const int) const;
+   virtual bool      TradeProcessed(const string,const int) const;
+   virtual void      TradeProcessed(const string,const int,const bool) const;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -37,7 +36,7 @@ CCandleManagerBase::~CCandleManagerBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CCandleManagerBase::Check(void)
+void CCandleManagerBase::Check(void) const
   {
    for(int i=0;i<Total();i++)
      {
@@ -48,7 +47,7 @@ void CCandleManagerBase::Check(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CCandleManagerBase::IsNewCandle(string symbol,int timeframe)
+bool CCandleManagerBase::IsNewCandle(const string symbol,const int timeframe) const
   {
    CCandle *candle=Get(symbol,timeframe);
    if(candle!=NULL)
@@ -58,7 +57,7 @@ bool CCandleManagerBase::IsNewCandle(string symbol,int timeframe)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CCandleManagerBase::TradeProcessed(string symbol,int timeframe)
+bool CCandleManagerBase::TradeProcessed(const string symbol,const int timeframe) const
   {
    CCandle *candle=Get(symbol,timeframe);
    if(candle!=NULL)
@@ -68,7 +67,7 @@ bool CCandleManagerBase::TradeProcessed(string symbol,int timeframe)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CCandleManagerBase::TradeProcessed(string symbol,int timeframe,bool processed)
+void CCandleManagerBase::TradeProcessed(const string symbol,const int timeframe,const bool processed) const
   {
    CCandle *candle=Get(symbol,timeframe);
    if(candle!=NULL)
@@ -77,7 +76,7 @@ void CCandleManagerBase::TradeProcessed(string symbol,int timeframe,bool process
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CCandle *CCandleManagerBase::Get(string symbol,int timeframe)
+CCandle *CCandleManagerBase::Get(const string symbol,const int timeframe) const
   {
    for(int i=0;i<Total();i++)
      {

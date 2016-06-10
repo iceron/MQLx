@@ -15,11 +15,11 @@ class CSymbolManagerBase : public CArrayObj
 public:
                      CSymbolManagerBase(void);
                     ~CSymbolManagerBase(void);
-   virtual bool      Add(CSymbolInfo *symbolinfo);
+   virtual bool      Add(CSymbolInfo *);
    virtual void      Deinit(void);
-   CSymbolInfo      *Get(const string name);
+   CSymbolInfo      *Get(const string);
    virtual bool      RefreshRates(void);
-   virtual bool      Search(const string symbol);
+   virtual bool      Search(const string);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

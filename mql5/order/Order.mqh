@@ -56,25 +56,12 @@ bool COrder::IsClosed(void)
      }
    if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
    {
-      //Print(__FUNCTION__+" objectfind: "+m_main_stop.EntryName()+" "+ObjectFind(0,m_main_stop.EntryName()));
-      //Print(__FUNCTION__+" main order stop exists");
       if(m_main_stop.IsClosed())
         {
-         //Print(__FUNCTION__+" main order stop closed: "+m_main_stop.EntryName());
          m_closed=true;
          return true;
         }
-      //else Print(__FUNCTION__+" main order stop not closed");
    }     
-   /*
-   datetime done = (datetime)HistoryOrderGetInteger(m_ticket,ORDER_TIME_DONE);
-   if (done>0)
-   {
-      m_closed = true;
-      Print(__FUNCTION__+": main order is already in history: "+done);
-      return true;
-   }
-   */
    return false;
   }
 //+------------------------------------------------------------------+

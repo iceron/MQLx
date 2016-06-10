@@ -21,17 +21,17 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOPS;}
    //--- initialization
    virtual void      SetContainer(COrder *order){m_order=order;}
-   virtual bool      NewOrderStop(COrder *order,CStop *stop,COrderStops *order_stops);
+   virtual bool      NewOrderStop(COrder*,CStop*,COrderStops*);
    //--- checking
    virtual void      Check(double &volume);
-   virtual bool      CheckNewTicket(COrderStop *orderstop) {return true;}
+   virtual bool      CheckNewTicket(COrderStop *) {return true;}
    virtual bool      Close(void);
    //--- hiding and showing of stop lines
-   virtual void      Show(bool show=true);
+   virtual void      Show(const bool);
    //--- recovery
-   virtual bool      CreateElement(const int index);
-   virtual bool      Save(const int handle);
-   virtual bool      Load(const int handle);
+   virtual bool      CreateElement(const int);
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -100,7 +100,7 @@ bool COrderStopsBase::Close(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderStopsBase::Show(bool show=true)
+COrderStopsBase::Show(const bool show=true)
   {
    for (int i=0;i<Total();i++)
    {

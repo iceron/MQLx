@@ -11,7 +11,7 @@
 class CComment : public CCommentBase
   {
 public:
-                     CComment(string comment);
+                     CComment(string);
                     ~CComment(void);
   };
 //+------------------------------------------------------------------+

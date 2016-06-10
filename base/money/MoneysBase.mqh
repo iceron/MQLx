@@ -30,7 +30,7 @@ public:
    virtual int       Selected(void) const {return m_selected;}
    virtual void      Selected(const bool select) {m_selected=select;}
    //--- volume calculation
-   virtual double    Volume(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl);
+   virtual double    Volume(const string,const double,const ENUM_ORDER_TYPE,const double);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

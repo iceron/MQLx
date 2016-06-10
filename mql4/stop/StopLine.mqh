@@ -13,7 +13,7 @@ class CStopLine : public CStopLineBase
 public:
                      CStopLine(void);
                     ~CStopLine(void);
-   bool              Create(long chart_id,const string name,const int window,const double price);
+   bool              Create(long,const string,const int,const double);
   };
 //+------------------------------------------------------------------+
 CStopLine::CStopLine(void)

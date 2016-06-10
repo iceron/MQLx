@@ -27,9 +27,9 @@ public:
    bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}  
    //--- checking
-   virtual double    Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
+   virtual double    Check(const string,const ENUM_ORDER_TYPE,const double,const double,const ENUM_TRAIL_TARGET);
    //--- recovery
-   virtual bool      CreateElement(const int index);
+   virtual bool      CreateElement(const int);
 protected:
 
   };

@@ -12,19 +12,19 @@ class CStop : public CStopBase
   {
 public:
                      CStop(void);
-                     CStop(const string name);
+                     CStop(const string);
                     ~CStop(void);
-   virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const;
-   virtual bool      DeleteStopOrder(const ulong ticket) const;
-   virtual double    TakeProfitPrice(COrder *order,COrderStop *orderstop);
-   virtual double    StopLossPrice(COrder *order,COrderStop *orderstop);
-   virtual ulong     OpenStop(COrder *order,COrderStop *orderstop,const double val);
-   virtual bool      CloseStop(COrder *order,COrderStop *orderstop,const double price);
-   virtual bool      Move(const ulong ticket,const double stoploss,const double takeprofit);
-   virtual bool      MoveStopLoss(const ulong ticket,const double stoploss);
-   virtual bool      MoveTakeProfit(const ulong ticket,const double stoploss);
+   virtual bool      CheckStopOrder(double &,const ulong ) const;
+   virtual bool      DeleteStopOrder(const ulong) const;
+   virtual double    TakeProfitPrice(COrder *,COrderStop *);
+   virtual double    StopLossPrice(COrder *,COrderStop *);
+   virtual ulong     OpenStop(COrder *,COrderStop *,const double);
+   virtual bool      CloseStop(COrder *,COrderStop *,const double);
+   virtual bool      Move(const ulong,const double,const double);
+   virtual bool      MoveStopLoss(const ulong,const double);
+   virtual bool      MoveTakeProfit(const ulong,const double);
 protected:
-   virtual ulong     GetNewTicket(COrder *order,COrderStop *orderstop);
+   virtual ulong     GetNewTicket(COrder *,COrderStop *);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

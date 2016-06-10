@@ -13,7 +13,7 @@ class CExpertTradeXBase : public CExpertTrade
 public:
                      CExpertTradeXBase(void);
                     ~CExpertTradeXBase(void);
-   string            Name() {return m_symbol.Name();}
+   string            Name(void) {return m_symbol.Name();}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

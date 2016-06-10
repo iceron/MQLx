@@ -23,14 +23,14 @@ public:
                      CTimeBase(void);
                     ~CTimeBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIME;}
-   virtual bool      Validate() {return true;}
+   virtual bool      Validate(void) {return true;}
    //--- initialization
-   virtual bool      Init(CExpert *s,CTimes *times);
+   virtual bool      Init(CExpert *,CTimes *);
    virtual void      SetContainer(CTimes *times){m_times=times;}
    //--- setters and getters
    bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
-   bool              Reverse() {return m_reverse;}
+   bool              Reverse(void) {return m_reverse;}
    void              Reverse(bool reverse) {m_reverse = reverse;}
    datetime          TimeStart(void) const {return m_time_start;}
    void              TimeStart(const datetime st){m_time_start=st;}

@@ -29,7 +29,7 @@ public:
                      CTimerBase(void);
                     ~CTimerBase(void);
    //--- initialization
-   virtual bool      Init(const uint years,const uint months,const uint days,const uint hours,const uint minutes,const uint seconds);
+   virtual bool      Init(const uint,const uint,const uint,const uint,const uint,const uint);
    virtual bool      Validate(void);
    //--- getters and setters
    uint              Year(void) const {return m_years;}

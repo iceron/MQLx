@@ -13,28 +13,28 @@ class COrderManager : public COrderManagerBase
   {
 protected:
 public:
-                     COrderManager();
-                    ~COrderManager();
+                     COrderManager(void);
+                    ~COrderManager(void);
    virtual bool      CloseOrder(COrder*,const int);
-   virtual void      OnTradeTransaction();
-   virtual bool      TradeOpen(const string symbol,const int res);
+   virtual void      OnTradeTransaction(void);
+   virtual bool      TradeOpen(const string,const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderManager::COrderManager()
+COrderManager::COrderManager(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderManager::~COrderManager()
+COrderManager::~COrderManager(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void COrderManager::OnTradeTransaction()
+void COrderManager::OnTradeTransaction(void)
   {
    COrder *temp=new COrder();
    int total= ::OrdersTotal();
@@ -42,7 +42,6 @@ void COrderManager::OnTradeTransaction()
      {
       if(!OrderSelect(i,SELECT_BY_POS)) continue;
       if(OrderMagicNumber()!=m_magic && m_other_magic.Search(OrderMagicNumber())<0) continue;
-      //if(m_symbol.Name()!=OrderSymbol()) continue; //only good for single currency EAs
       if (!m_symbol_man.Search(OrderSymbol())) continue;
       temp.Ticket(OrderTicket());
       if(m_orders.Search(temp)>=0) continue;
@@ -101,7 +100,6 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
            {
             order.Close();
             order.Volume(0);
-            //m_orders_history.Clean(false);
            }
         }
      }

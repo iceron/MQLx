@@ -61,16 +61,16 @@ public:
                     ~CStopBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOP;}
    //--- initialization
-   virtual bool      Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
-   virtual bool      InitAccount(CAccountInfo *accountinfo=NULL);
-   virtual bool      InitSymbol(CSymbolManager *symbolmanager);
-   virtual bool      InitTrade();
+   virtual bool      Init(CSymbolManager *,CAccountInfo *);
+   virtual bool      InitAccount(CAccountInfo *);
+   virtual bool      InitSymbol(CSymbolManager *);
+   virtual bool      InitTrade(void);
    virtual void      SetContainer(CStops *stops){m_stops=stops;}
    virtual bool      Validate(void) const;
    //--- getters and setters
    bool              Active(void) {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
-   bool              Broker() const {return m_stop_type==STOP_TYPE_BROKER;}
+   bool              Broker(void) const {return m_stop_type==STOP_TYPE_BROKER;}
    void              Comment(string comment) {m_comment=comment;}
    string            Comment(void) const {return m_comment;}
    void              Delay(int delay) {m_delay=delay;}
@@ -87,7 +87,7 @@ public:
    string            Name(void) const{return m_name;}
    void              OCO(const bool oco) {if(!Main())m_oco=oco;}
    bool              OCO(void) const{return m_oco;}
-   bool              Pending() const {return m_stop_type==STOP_TYPE_PENDING;}
+   bool              Pending(void) const {return m_stop_type==STOP_TYPE_PENDING;}
    void              StopLoss(const double sl) {m_stoploss=sl;}
    double            StopLoss(void) const {return m_stoploss;}
    void              StopLossColor(const color clr) {m_stoploss_color=clr;}
@@ -113,36 +113,36 @@ public:
    void              VolumePercent(const double volume) {m_volume_percent=volume;}
    void              VolumeType(const ENUM_VOLUME_TYPE type){m_volume_type=type;}
    //--- stop order checking
-   virtual bool      CheckStopLoss(COrder *order,COrderStop *orderstop);
-   virtual bool      CheckTakeProfit(COrder *order,COrderStop *orderstop);
-   virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const {return false;}
-   virtual bool      OrderModify(const ulong ticket,const double value);
+   virtual bool      CheckStopLoss(COrder *,COrderStop *);
+   virtual bool      CheckTakeProfit(COrder *,COrderStop *);
+   virtual bool      CheckStopOrder(double &,const ulong) const {return false;}
+   virtual bool      OrderModify(const ulong,const double);
    //--- stop order object creation
-   virtual CStopLine *CreateEntryObject(const long id,const string name,const int window,const double price);
-   virtual CStopLine *CreateStopLossObject(const long id,const string name,const int window,const double price);
-   virtual CStopLine *CreateTakeProfitObject(const long id,const string name,const int window,const double price);
+   virtual CStopLine *CreateEntryObject(const long,const string,const int,const double);
+   virtual CStopLine *CreateStopLossObject(const long,const string,const int,const double);
+   virtual CStopLine *CreateTakeProfitObject(const long,const string,const int,const double);
    //--- stop order price calculation   
-   virtual bool      Refresh(const string symbol);
-   virtual double    StopLossCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price);
-   virtual double    StopLossCustom(const ENUM_ORDER_TYPE type,const double price) {return 0;}
-   virtual double    StopLossPrice(COrder *order,COrderStop *orderstop){return 0;}
-   virtual double    StopLossTicks(const ENUM_ORDER_TYPE type,const double price) {return m_stoploss;}
-   virtual double    TakeProfitCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price);
-   virtual double    TakeProfitCustom(const ENUM_ORDER_TYPE type,const double price) {return 0;}
-   virtual double    TakeProfitPrice(COrder *order,COrderStop *orderstop) {return 0;}
-   virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE type,const double price) {return m_takeprofit;}
+   virtual bool      Refresh(const string);
+   virtual double    StopLossCalculate(const string,const ENUM_ORDER_TYPE,const double);
+   virtual double    StopLossCustom(const ENUM_ORDER_TYPE,const double) {return 0;}
+   virtual double    StopLossPrice(COrder *,COrderStop *){return 0;}
+   virtual double    StopLossTicks(const ENUM_ORDER_TYPE,const double) {return m_stoploss;}
+   virtual double    TakeProfitCalculate(const string,const ENUM_ORDER_TYPE,const double price);
+   virtual double    TakeProfitCustom(const ENUM_ORDER_TYPE,const double) {return 0;}
+   virtual double    TakeProfitPrice(COrder *,COrderStop *) {return 0;}
+   virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE,const double) {return m_takeprofit;}
    //--- trailing   
-   virtual bool      Add(CTrails *trails);
-   virtual double    CheckTrailing(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode);
+   virtual bool      Add(CTrails *);
+   virtual double    CheckTrailing(const string,const ENUM_ORDER_TYPE,const double,const double,const ENUM_TRAIL_TARGET);
 protected:
    //--- object creation
-   virtual CStopLine *CreateObject(const long id,const string name,const int window,const double price);
+   virtual CStopLine *CreateObject(const long,const string,const int,const double);
    //--- stop order price calculation
-   virtual double    LotSizeCalculate(COrder *order,COrderStop *orderstop);
+   virtual double    LotSizeCalculate(COrder *,COrderStop *);
    //--- stop order entry   
-   virtual bool      GetClosePrice(const string symbol,const ENUM_ORDER_TYPE type,double &price);
+   virtual bool      GetClosePrice(const string,const ENUM_ORDER_TYPE,double &);
    //--- stop order exit
-   virtual bool      CloseStop(COrder *order,COrderStop *orderstop,const double price);
+   virtual bool      CloseStop(COrder *,COrderStop *,const double );
    //--- deinitialization
    virtual void      Deinit(void);
    virtual void      DeinitSymbol(void);
@@ -224,8 +224,6 @@ bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
 //+------------------------------------------------------------------+
 bool CStopBase::InitSymbol(CSymbolManager *symbolmanager)
   {
-   //if(symbolinfo==NULL) return false;
-   //m_symbol=symbolinfo;
    m_symbol_man = symbolmanager;
    return true;
   }
@@ -319,9 +317,9 @@ double CStopBase::StopLossCalculate(const string symbol,const ENUM_ORDER_TYPE ty
   {
    if(!Refresh(symbol)) return 0;
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
-      return price-m_stoploss*/*m_points_adjust*/m_symbol.Point();
+      return price-m_stoploss*m_symbol.Point();
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
-      return price+m_stoploss*/*m_points_adjust*/m_symbol.Point();
+      return price+m_stoploss*m_symbol.Point();
    return 0;
   }
 //+------------------------------------------------------------------+
@@ -331,9 +329,9 @@ double CStopBase::TakeProfitCalculate(const string symbol,const ENUM_ORDER_TYPE 
   {
    if(!Refresh(symbol)) return 0;
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
-      return price+m_takeprofit*/*m_points_adjust*/m_symbol.Point();
+      return price+m_takeprofit*m_symbol.Point();
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
-      return price-m_takeprofit*/*m_points_adjust*/m_symbol.Point();
+      return price-m_takeprofit*m_symbol.Point();
    return 0;
   }
 //+------------------------------------------------------------------+
@@ -409,7 +407,6 @@ bool CStopBase::Refresh(const string symbol)
 //+------------------------------------------------------------------+
 void CStopBase::Deinit(void)
   {
-   //DeinitSymbol();
    DeinitTrade();
    DeinitTrails();
   }

@@ -13,11 +13,11 @@ class COrderStop : public COrderStopBase
 public:
                      COrderStop(void);
                     ~COrderStop(void);
-   virtual void      Check(double &volume);
+   virtual void      Check(double &);
 protected:
-   virtual bool      ModifyStops(const double stoploss,const double takeprofit);
-   virtual bool      ModifyStopLoss(const double stoploss);
-   virtual bool      ModifyTakeProfit(const double takeprofit);
+   virtual bool      ModifyStops(const double,const double);
+   virtual bool      ModifyStopLoss(const double);
+   virtual bool      ModifyTakeProfit(const double);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

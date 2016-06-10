@@ -52,9 +52,9 @@ public:
    string            EntryName(void) const {return m_stop.Name()+"."+(string)m_order.Ticket();}
    ulong             MainMagic(void) const {return m_order.Magic();}
    ulong             MainTicket(void) const {return m_order.Ticket();}
-   double            MainTicketPrice() const {return m_order.Price();}
+   double            MainTicketPrice(void) const {return m_order.Price();}
    ENUM_ORDER_TYPE   MainTicketType(void) const {return m_order.OrderType();}
-   COrder           *Order() {return GetPointer(m_order);}
+   COrder           *Order(void) {return GetPointer(m_order);}
    void              StopLoss(const double stoploss) {m_stoploss.Add(stoploss);}
    double            StopLoss(void) const {return m_stoploss.Total()>0?m_stoploss.At(m_stoploss.Total()-1):0;}
    double            StopLoss(const int index) const {return m_stoploss.Total()>index?m_stoploss.At(index):0;}
@@ -81,34 +81,33 @@ public:
    virtual void      Show(bool show=true);
    //--- checking   
    virtual void      Check(double &volume) {}
-   virtual void      CheckInit();
-   virtual void      CheckDeinit();
+   virtual void      CheckInit(void);
+   virtual void      CheckDeinit(void);
    virtual bool      Close(void);
    virtual bool      CheckTrailing(void);
-   virtual bool      DeleteChartObject(const string name);
+   virtual bool      DeleteChartObject(const string);
    virtual bool      DeleteEntry(void);
    virtual bool      DeleteStopLines(void);
    virtual bool      DeleteStopLoss(void);
    virtual bool      DeleteTakeProfit(void);
    virtual bool      IsClosed(void);
-   //virtual bool      IsClosed(void) const {return !(CheckPointer(m_objentry)==POINTER_DYNAMIC && m_objentry.ChartId()!=-1);}
    virtual bool      Update(void);
    //--- deinitialization 
    virtual bool      Deinit(void);
    //--- recovery
-   virtual bool      Save(const int handle);
-   virtual bool      Load(const int handle);
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);
 protected:
-   virtual bool      IsStopLossValid(const double stoploss) const;
-   virtual bool      IsTakeProfitValid(const double takeprofit) const;
-   virtual bool      Modify(const double stoploss,const double takeprofit);
-   virtual bool      ModifyStops(const double stoploss,const double takeprofit) {return true;}
-   virtual bool      ModifyStopLoss(const double stoploss) {return true;}
-   virtual bool      ModifyTakeProfit(const double takeprofit) {return true;}
-   virtual bool      UpdateOrderStop(const double stoploss,const double takeprofit) {return true;}
+   virtual bool      IsStopLossValid(const double) const;
+   virtual bool      IsTakeProfitValid(const double) const;
+   virtual bool      Modify(const double,const double);
+   virtual bool      ModifyStops(const double,const double) {return true;}
+   virtual bool      ModifyStopLoss(const double) {return true;}
+   virtual bool      ModifyTakeProfit(const double) {return true;}
+   virtual bool      UpdateOrderStop(const double,const double) {return true;}
    //--- objects
-   virtual void      MoveStopLoss(const double stoploss);
-   virtual void      MoveTakeProfit(const double takeprofit);
+   virtual void      MoveStopLoss(const double);
+   virtual void      MoveTakeProfit(const double);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -238,24 +237,12 @@ bool COrderStopBase::Close(void)
 //+------------------------------------------------------------------+
 bool COrderStopBase::IsClosed(void)
   {
-   //Print(__FUNCTION__);
    if(m_closed)
-   {
-      Print(__FUNCTION__+" already marked as closed");
       return true;
-   }   
-   //else Print("not yet closed");
    if (m_objentry!=NULL && !m_objentry.ChartObjectExists())
-   {
-      Print(__FUNCTION__+" entry exists but chart object does not");
       m_closed = true;
-   }   
-   else Print(__FUNCTION__+" 2: "+EnumToString(CheckPointer(m_objentry))+" "+m_objentry.ChartObjectExists()+" "+m_objentry.Name());
    if (m_stoploss_closed && m_takeprofit_closed)
-   {
-      //Print(__FUNCTION__+" both sl and tp closed");
       m_closed = true;
-   }   
    if (m_closed)
       Close();   
    return m_closed;

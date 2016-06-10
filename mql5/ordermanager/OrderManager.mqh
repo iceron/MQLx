@@ -14,24 +14,24 @@ class COrderManager : public COrderManagerBase
 protected:
    int               m_magic_close;
 public:
-                     COrderManager();
-                    ~COrderManager();
+                     COrderManager(void);
+                    ~COrderManager(void);
    virtual bool      CloseOrder(COrder*,const int);
-   virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
-   virtual bool      TradeOpen(const string,const int res);
+   virtual void      OnTradeTransaction(const MqlTradeTransaction &,const MqlTradeRequest &,const MqlTradeResult &);
+   virtual bool      TradeOpen(const string,const int);
    int               MagicClose(void) const {return m_magic;}
    void              MagicClose(const int magic) {m_magic_close = magic;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderManager::COrderManager() : m_magic_close(0)
+COrderManager::COrderManager(void) : m_magic_close(0)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderManager::~COrderManager()
+COrderManager::~COrderManager(void)
   {
   }
 //+------------------------------------------------------------------+

@@ -23,16 +23,16 @@ protected:
    bool              m_new_signal;
    bool              m_reverse;
    bool              m_exit;
-   CExpert        *m_strategy;
+   CExpert          *m_strategy;
    CArrayDouble      m_empty_value;
    CSignals         *m_signals;
    CComments        *m_comments;
 public:
-                     CSignalBase();
+                     CSignalBase(void);
                     ~CSignalBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_SIGNAL;}
    //--- initialization
-   virtual bool      Init(CExpert *s,CComments *comments);
+   virtual bool      Init(CExpert*,CComments*);
    virtual void      SetContainer(CSignals *signals){m_signals=signals;}
    virtual bool      Validate(void) const;
    //--- getters and setters
@@ -48,24 +48,24 @@ public:
    virtual void      Reverse(const bool reverse) {m_reverse=reverse;}
    virtual int       LastEntry(void) const {return m_signal;}
    virtual int       LastValidSignal(void) const {return m_signal_valid;}
-   virtual string    ToString(bool last_valid=false) const;
+   virtual string    ToString(const bool) const;
    //--- signal methods
-   virtual void      AddEmptyValue(const double val);
+   virtual void      AddEmptyValue(const double);
    virtual int       CheckSignal(void);
-   virtual bool      IsEmpty(const double val);
+   virtual bool      IsEmpty(const double);
    virtual ENUM_CMD  LongCondition(void) {return 0;}
    virtual ENUM_CMD  ShortCondition(void) {return 0;}
    //-- comments
-   virtual void      AddComment(const string comment);
+   virtual void      AddComment(const string);
    //--- static methods
-   static bool       IsOrderAgainstSignal(const ENUM_ORDER_TYPE type,const ENUM_CMD res,const bool exact=false);
-   static bool       IsSignalTypeLong(const ENUM_CMD type);
-   static bool       IsSignalTypeShort(const ENUM_CMD type);
-   static int        SignalReverse(const int signal);
-   static ENUM_ORDER_TYPE SignalToOrderType(const int signal);
+   static bool       IsOrderAgainstSignal(const ENUM_ORDER_TYPE,const ENUM_CMD,const bool);
+   static bool       IsSignalTypeLong(const ENUM_CMD);
+   static bool       IsSignalTypeShort(const ENUM_CMD);
+   static int        SignalReverse(const int);
+   static ENUM_ORDER_TYPE SignalToOrderType(const int);
    //---recovery
-   virtual bool      Save(const int handle);
-   virtual bool      Load(const int handle);
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -184,7 +184,7 @@ bool CSignalBase::IsSignalTypeShort(const ENUM_CMD type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-string CSignalBase::ToString(bool last_valid=false) const
+string CSignalBase::ToString(const bool last_valid=false) const
   {
    int signal=last_valid?m_signal_valid:m_signal;
    switch(signal)

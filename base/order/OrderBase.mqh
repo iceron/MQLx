@@ -68,15 +68,15 @@ public:
    //--- archiving
    virtual bool      Close(void);
    virtual bool      CloseStops(void);
-   virtual int       Compare(const CObject *node,const int mode=0) const;
+   virtual int       Compare(const CObject*,const int) const;
    //--- output
-   virtual string    OrderTypeToString() const;
+   virtual string    OrderTypeToString(void) const;
    //--- static methods
-   static bool       IsOrderTypeLong(const ENUM_ORDER_TYPE type);
-   static bool       IsOrderTypeShort(const ENUM_ORDER_TYPE type);
+   static bool       IsOrderTypeLong(const ENUM_ORDER_TYPE);
+   static bool       IsOrderTypeShort(const ENUM_ORDER_TYPE);
    //--- recovery
-   virtual bool      Save(const int handle);
-   virtual bool      Load(const int handle);
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

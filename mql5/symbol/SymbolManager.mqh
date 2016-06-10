@@ -10,21 +10,20 @@
 //+------------------------------------------------------------------+
 class CSymbolManager : public CSymbolManagerBase
   {
-protected:
 public:
-                     CSymbolManager();
-                    ~CSymbolManager();
+                     CSymbolManager(void);
+                    ~CSymbolManager(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CSymbolManager::CSymbolManager()
+CSymbolManager::CSymbolManager(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CSymbolManager::~CSymbolManager()
+CSymbolManager::~CSymbolManager(void)
   {
   }
 //+------------------------------------------------------------------+

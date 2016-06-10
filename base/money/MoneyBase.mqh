@@ -38,9 +38,9 @@ public:
                     ~CMoneyBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_MONEY;}
    //--- initialization
-   virtual bool      Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
-   virtual bool      InitAccount(CAccountInfo *account);
-   virtual bool      InitSymbol(CSymbolManager *symbolmanager);
+   virtual bool      Init(CSymbolManager*,CAccountInfo*);
+   virtual bool      InitAccount(CAccountInfo*);
+   virtual bool      InitSymbol(CSymbolManager*);
    virtual void      SetContainer(CExpert *s){m_strategy=s;}
    virtual bool      Validate(void) const;
    //--- getters and setters
@@ -69,10 +69,10 @@ public:
    void              VolumeBase(const double volume_base) {m_volume_base=volume_base;}
    double            VolumeBase(void) const {return m_volume_base;}
 protected:
-   virtual void      OnLotSizeUpdated();
+   virtual void      OnLotSizeUpdated(void);
    virtual bool      UpdateByMargin(void);
    virtual bool      UpdateByPeriod(void);
-   virtual void      UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl);   
+   virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

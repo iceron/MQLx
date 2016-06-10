@@ -17,7 +17,7 @@ public:
                     ~CTradeManagerBase(void);
    virtual bool      Add(CExpertTrade*);
    virtual void      Deinit(void);
-   CExpertTrade      *Get(const string);
+   CExpertTrade     *Get(const string);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

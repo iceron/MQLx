@@ -16,13 +16,13 @@ protected:
 public:
                      CCommentBase(void);
                     ~CCommentBase(void);
-   virtual void      Init(string comment);
-   string            Text();
+   virtual void      Init(const string comment) {m_comment = comment;}
+   string            Text(void) const {return m_comment;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CCommentBase::CCommentBase(void)
+CCommentBase::CCommentBase(void) : m_comment(NULL)
   {
   }
 //+------------------------------------------------------------------+
@@ -30,20 +30,6 @@ CCommentBase::CCommentBase(void)
 //+------------------------------------------------------------------+
 CCommentBase::~CCommentBase(void)
   {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-CCommentBase::Init(string comment)
-  {
-   m_comment=comment;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-string CCommentBase::Text(void)
-  {
-   return m_comment;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

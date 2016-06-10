@@ -11,13 +11,13 @@
 class CComment : public CCommentBase
   {
 public:
-                     CComment(string comment);
+                     CComment(const string);
                     ~CComment(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CComment::CComment(string comment)
+CComment::CComment(const string comment)
   {
    Init(comment);
   }

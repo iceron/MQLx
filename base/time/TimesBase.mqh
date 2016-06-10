@@ -19,14 +19,14 @@ class CTimesBase : public CArrayObj
 protected:
    bool              m_activate;
    int               m_selected;
-   CExpert        *m_strategy;
+   CExpert          *m_expert;
 public:
                      CTimesBase(void);
                     ~CTimesBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIMES;}
    //-- initialization
    virtual bool      Init(CExpert *s);
-   virtual void      SetContainer(CExpert *s){m_strategy=s;}
+   virtual void      SetContainer(CExpert *s){m_expert=s;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation
    bool              Active(void) const {return m_activate;}
@@ -35,7 +35,7 @@ public:
    //--- checking
    virtual bool      Evaluate(void) const;
    //--- recovery
-   virtual bool      CreateElement(const int index);
+   virtual bool      CreateElement(const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

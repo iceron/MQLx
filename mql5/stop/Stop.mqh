@@ -13,13 +13,13 @@ class CStop : public CStopBase
   {
 public:
                      CStop(void);
-                     CStop(const string name);
+                     CStop(const string);
                     ~CStop(void);
-   virtual bool      CheckStopOrder(double &volume_remaining,const ulong ticket) const;
-   virtual bool      DeleteStopOrder(const ulong ticket) const;
-   virtual bool      OpenStop(COrder *order,COrderStop *orderstop,double val);
-   virtual double    StopLossPrice(COrder *order,COrderStop *orderstop);
-   virtual double    TakeProfitPrice(COrder *order,COrderStop *orderstop);
+   virtual bool      CheckStopOrder(double &,const ulong) const;
+   virtual bool      DeleteStopOrder(const ulong) const;
+   virtual bool      OpenStop(COrder *,COrderStop *,double);
+   virtual double    StopLossPrice(COrder *,COrderStop *);
+   virtual double    TakeProfitPrice(COrder *,COrderStop *);
 
   };
 //+------------------------------------------------------------------+

@@ -13,7 +13,7 @@ class CComments : public CCommentsBase
 public:
                      CComments(void);
                     ~CComments(void);
-   virtual void      Concatenate(string &str,string comment);
+   virtual void      Concatenate(string &,string);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
