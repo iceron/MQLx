@@ -68,6 +68,8 @@ public:
    virtual void      MaxOrders(const int max_orders) {m_max_orders=max_orders;}
    int               Magic(void) const {return m_magic;}
    void              Magic(const int magic) {m_magic=magic;}
+   int               MagicClose(void) const {return m_magic;}
+   void              MagicClose(const int magic) {}
    double            LotSize(void) const {return m_lotsize;}
    void              LotSize(const double lotsize){m_lotsize=lotsize;}
    string            Comment(void) const {return m_comment;}
@@ -276,7 +278,10 @@ void COrderManagerBase::CheckClosedOrders(void)
       COrder *order=m_orders.At(i);
       ulong ticket = order.Ticket();
       if(order.IsClosed())
-         ArchiveOrder(m_orders.Detach(i));
+      {
+         if (CloseOrder(order,i))
+            ArchiveOrder(m_orders.Detach(i));
+      }   
      }
   }
 /*
@@ -361,6 +366,17 @@ void COrderManagerBase::ManageOrdersHistory(void)
 void COrderManagerBase::OnTick(void)
   {
    m_orders.OnTick();
+   /*
+   int total= m_orders.Total();
+   for(int i=total-1;i>=0;i--)
+     {
+      COrder *order=m_orders.At(i);
+      ulong ticket = order.Ticket();
+      if(order.IsClosed())
+         ArchiveOrder(m_orders.Detach(i));
+      order.OnTick();
+     }
+   */  
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

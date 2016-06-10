@@ -30,6 +30,7 @@ protected:
    ulong             m_takeprofit_ticket;
    bool              m_stoploss_closed;
    bool              m_takeprofit_closed;
+   bool              m_closed;
    ENUM_STOP_TYPE    m_stop_type;
    string            m_stop_name;
    //--- main order object
@@ -61,7 +62,7 @@ public:
    string            StopLossName(void) const {return m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket();}
    void              StopLossTicket(const ulong ticket) {m_stoploss_ticket=ticket;}
    ulong             StopLossTicket(void) const {return m_stoploss_ticket;}
-   void              StopName(const string stop_name) {m_stop_name = stop_name;}
+   void              StopName(const string stop_name) {m_stop_name=stop_name;}
    string            StopName(void) const {return m_stop_name;}
    void              TakeProfit(const double takeprofit) {m_takeprofit.Add(takeprofit);}
    double            TakeProfit(void) const {return m_takeprofit.Total()>0?m_takeprofit.At(m_takeprofit.Total()-1):0;}
@@ -89,7 +90,8 @@ public:
    virtual bool      DeleteStopLines(void);
    virtual bool      DeleteStopLoss(void);
    virtual bool      DeleteTakeProfit(void);
-   virtual bool      IsClosed(void) const {return CheckPointer(m_objentry)!=POINTER_DYNAMIC;}
+   virtual bool      IsClosed(void);
+   //virtual bool      IsClosed(void) const {return !(CheckPointer(m_objentry)==POINTER_DYNAMIC && m_objentry.ChartId()!=-1);}
    virtual bool      Update(void);
    //--- deinitialization 
    virtual bool      Deinit(void);
@@ -118,6 +120,7 @@ COrderStopBase::COrderStopBase(void) : m_volume(0.0),
                                        m_takeprofit_ticket(0),
                                        m_stoploss_closed(false),
                                        m_takeprofit_closed(false),
+                                       m_closed(false),
                                        m_stop_type(0),
                                        m_stop_name("")
   {
@@ -225,8 +228,37 @@ bool COrderStopBase::Close(void)
      }
    if(res1 && res2)
       result=DeleteEntry() && DeleteStopLoss() && DeleteTakeProfit();
-   //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CLOSE,GetPointer(this));
+   if(result)
+      m_closed=true;
+//CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CLOSE,GetPointer(this));
    return result;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStopBase::IsClosed(void)
+  {
+   //Print(__FUNCTION__);
+   if(m_closed)
+   {
+      //Print(__FUNCTION__+" already marked as closed");
+      return true;
+   }   
+   //else Print("not yet closed");
+   if (m_objentry!=NULL && !m_objentry.ChartObjectExists())
+   {
+      Print(__FUNCTION__+" entry exists but chart object does not");
+      m_closed = true;
+   }   
+   //else Print(__FUNCTION__+" 2: "+EnumToString(CheckPointer(m_objentry))+" "+m_objentry.ChartObjectExists()+" "+m_objentry.Name());
+   if (m_stoploss_closed && m_takeprofit_closed)
+   {
+      //Print(__FUNCTION__+" both sl and tp closed");
+      m_closed = true;
+   }   
+   if (m_closed)
+      Close();   
+   return m_closed;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -241,14 +273,14 @@ bool COrderStopBase::Update(void)
      {
       double tp_line=m_objtp.GetPrice();
       if(tp_line!=TakeProfit())
-         if (m_stop.Pending() || m_stop.Broker())
+         if(m_stop.Pending() || m_stop.Broker())
             Sleep(m_stop.Delay());
      }
    if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
      {
       double sl_line=m_objsl.GetPrice();
       if(sl_line!=StopLoss())
-         if (m_stop.Pending() || m_stop.Broker())
+         if(m_stop.Pending() || m_stop.Broker())
             Sleep(m_stop.Delay());
      }
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
@@ -256,8 +288,8 @@ bool COrderStopBase::Update(void)
    if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
       stoploss=m_objsl.GetPrice();
    result=UpdateOrderStop(stoploss,takeprofit);
-   //if(result)
-      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_UPDATE_DONE,GetPointer(this));
+//if(result)
+//CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_UPDATE_DONE,GetPointer(this));
    return result;
   }
 //+------------------------------------------------------------------+
@@ -265,14 +297,14 @@ bool COrderStopBase::Update(void)
 //+------------------------------------------------------------------+
 void COrderStopBase::CheckInit()
   {
-   //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK,GetPointer(this));
+//CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK,GetPointer(this));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrderStopBase::CheckDeinit()
   {
-   //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK_DONE,GetPointer(this));
+//CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CHECK_DONE,GetPointer(this));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -300,7 +332,7 @@ bool COrderStopBase::DeleteTakeProfit(void)
   {
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
      {
-      m_objtp.Delete();      
+      m_objtp.Delete();
       delete m_objtp;
      }
    return true;
@@ -367,7 +399,7 @@ bool COrderStopBase::Modify(const double stoploss,const double takeprofit)
       //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY,GetPointer(this));
       stoploss_modified=ModifyStopLoss(stoploss);
       //if(stoploss_modified)
-         //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
+      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_SL_MODIFY_DONE,GetPointer(this));
       //else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_SL_MODIFY,GetPointer(this));
      }
    else if(takeprofit>0 && stoploss==0)
@@ -375,7 +407,7 @@ bool COrderStopBase::Modify(const double stoploss,const double takeprofit)
       //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY,GetPointer(this));
       takeprofit_modified=ModifyTakeProfit(takeprofit);
       //if(takeprofit_modified)
-         //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
+      //CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_TP_MODIFY_DONE,GetPointer(this));
       //else CreateEvent(EVENT_CLASS_ERROR,ACTION_ORDER_TP_MODIFY,GetPointer(this));
      }
    return stoploss_modified || takeprofit_modified;
@@ -395,17 +427,17 @@ COrderStopBase::Show(bool show=true)
 //+------------------------------------------------------------------+
 bool COrderStopBase::Save(const int handle)
   {
-   //ADT::WriteDouble(handle,m_volume);
-   //ADT::WriteDouble(handle,m_volume_fixed);
-   //ADT::WriteDouble(handle,m_volume_percent);
-   //ADT::WriteObject(handle,GetPointer(m_stoploss));
-   //ADT::WriteObject(handle,GetPointer(m_takeprofit));
-   //ADT::WriteLong(handle,m_stoploss_ticket);
-   //ADT::WriteLong(handle,m_takeprofit_ticket);
-   //ADT::WriteBool(handle,m_stoploss_closed);
-   //ADT::WriteBool(handle,m_takeprofit_closed);
-   //ADT::WriteInteger(handle,m_stop_type);
-   //ADT::WriteString(handle,m_stop_name);
+//ADT::WriteDouble(handle,m_volume);
+//ADT::WriteDouble(handle,m_volume_fixed);
+//ADT::WriteDouble(handle,m_volume_percent);
+//ADT::WriteObject(handle,GetPointer(m_stoploss));
+//ADT::WriteObject(handle,GetPointer(m_takeprofit));
+//ADT::WriteLong(handle,m_stoploss_ticket);
+//ADT::WriteLong(handle,m_takeprofit_ticket);
+//ADT::WriteBool(handle,m_stoploss_closed);
+//ADT::WriteBool(handle,m_takeprofit_closed);
+//ADT::WriteInteger(handle,m_stop_type);
+//ADT::WriteString(handle,m_stop_name);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -413,19 +445,19 @@ bool COrderStopBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool COrderStopBase::Load(const int handle)
   {
-   //int temp;
-   //ADT::ReadDouble(handle,m_volume);
-   //ADT::ReadDouble(handle,m_volume_fixed);
-   //ADT::ReadDouble(handle,m_volume_percent);
-   //ADT::ReadObject(handle,GetPointer(m_stoploss));
-   //ADT::ReadObject(handle,GetPointer(m_takeprofit));
-   //ADT::ReadLong(handle,m_stoploss_ticket);
-   //ADT::ReadLong(handle,m_takeprofit_ticket);
-   //ADT::ReadBool(handle,m_stoploss_closed);
-   //ADT::ReadBool(handle,m_takeprofit_closed);
-   //ADT::ReadInteger(handle,temp);
-   //m_stop_type=(ENUM_STOP_TYPE) temp;
-   //ADT::ReadString(handle,m_stop_name);
+//int temp;
+//ADT::ReadDouble(handle,m_volume);
+//ADT::ReadDouble(handle,m_volume_fixed);
+//ADT::ReadDouble(handle,m_volume_percent);
+//ADT::ReadObject(handle,GetPointer(m_stoploss));
+//ADT::ReadObject(handle,GetPointer(m_takeprofit));
+//ADT::ReadLong(handle,m_stoploss_ticket);
+//ADT::ReadLong(handle,m_takeprofit_ticket);
+//ADT::ReadBool(handle,m_stoploss_closed);
+//ADT::ReadBool(handle,m_takeprofit_closed);
+//ADT::ReadInteger(handle,temp);
+//m_stop_type=(ENUM_STOP_TYPE) temp;
+//ADT::ReadString(handle,m_stop_name);
    return true;
   }
 //+------------------------------------------------------------------+

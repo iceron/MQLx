@@ -100,6 +100,7 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
          if(ArchiveOrder(m_orders.Detach(index)))
            {
             order.Close();
+            order.Volume(0);
             //m_orders_history.Clean(false);
            }
         }

@@ -20,6 +20,7 @@ public:
                     ~CStopLineBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPLINE;}
    virtual void      SetContainer(CStop *stop){m_stop=stop;}
+   virtual bool      ChartObjectExists() {return ObjectFind(0,Name())>=0;}
    virtual double    GetPrice(const int point=0);
    virtual bool      Move(const double price);
    virtual bool      SetStyle(const ENUM_LINE_STYLE style);

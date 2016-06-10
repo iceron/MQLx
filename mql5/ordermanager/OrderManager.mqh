@@ -12,17 +12,20 @@
 class COrderManager : public COrderManagerBase
   {
 protected:
+   int               m_magic_close;
 public:
                      COrderManager();
                     ~COrderManager();
    virtual bool      CloseOrder(COrder*,const int);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
    virtual bool      TradeOpen(const string,const int res);
+   int               MagicClose(void) const {return m_magic;}
+   void              MagicClose(const int magic) {m_magic_close = magic;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderManager::COrderManager()
+COrderManager::COrderManager() : m_magic_close(0)
   {
   }
 //+------------------------------------------------------------------+
@@ -37,9 +40,9 @@ COrderManager::~COrderManager()
 void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    if((request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0) && m_symbol_man.Search(request.symbol))
-   {
+     {
       m_orders.NewOrder((int)result.order,request.symbol,(int)request.magic,request.type,result.volume,result.price);
-   }   
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -52,7 +55,7 @@ bool COrderManager::TradeOpen(const string symbol,const int res)
    int trades_total =TradesTotal();
    int orders_total = OrdersTotal();
    ENUM_ORDER_TYPE type=CSignal::SignalToOrderType(res);
-   m_symbol = m_symbol_man.Get(symbol);
+   m_symbol=m_symbol_man.Get(symbol);
    if(!IsPositionAllowed(type))
       return true;
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
@@ -72,10 +75,12 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
    COrderInfo ord;
    if(CheckPointer(order)==POINTER_DYNAMIC)
      {
-      if (m_symbol==NULL || StringCompare(m_symbol.Name(),order.Symbol())!=0)
+      if (order.Volume()<=0) return true;
+      if(m_symbol==NULL || StringCompare(m_symbol.Name(),order.Symbol())!=0)
          m_symbol = m_symbol_man.Get(order.Symbol());
-      if (m_symbol!=NULL)
-         m_trade = m_trade_man.Get(order.Symbol());
+      if(m_symbol!=NULL)
+         m_trade=m_trade_man.Get(order.Symbol());
+      m_trade.SetExpertMagicNumber(m_magic_close);
       if(ord.Select(order.Ticket()))
          closed=m_trade.OrderDelete(order.Ticket());
       else
@@ -85,11 +90,13 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
          else if(COrder::IsOrderTypeShort(order.OrderType()))
             closed=m_trade.Buy(order.Volume(),0,0,0);
         }
+      m_trade.SetExpertMagicNumber(m_magic);
       if(closed)
         {
          if(ArchiveOrder(m_orders.Detach(index)))
            {
             order.Close();
+            order.Volume(0);
             //m_orders_history.Clean(false);
            }
         }

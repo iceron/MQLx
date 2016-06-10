@@ -103,7 +103,7 @@ void COrdersBase::OnTick(void)
      {
       COrder *order=At(i);
       if(CheckPointer(order))
-         order.CheckStops();
+         order.OnTick();
      }
   }
 //+------------------------------------------------------------------+

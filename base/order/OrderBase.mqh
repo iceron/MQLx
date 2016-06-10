@@ -63,6 +63,8 @@ public:
    double            VolumeInitial(void) const {return m_volume_initial;}
    //--- hiding and showing of stop lines
    virtual void      ShowStops(bool show=true) {m_order_stops.Show(show);}
+   //--- events
+   virtual void      OnTick(void);
    //--- archiving
    virtual bool      Close(void);
    virtual bool      CloseStops(void);
@@ -117,7 +119,7 @@ void COrderBase::CreateStops(CStops *stops)
    if(stops.Total()>0)
      {
       if(CheckPointer(m_order_stops)==POINTER_INVALID)
-         m_order_stops=new COrderStops();  
+         m_order_stops=new COrderStops();
       for(int i=0;i<stops.Total();i++)
         {
          CStop *stop=stops.At(i);
@@ -126,6 +128,13 @@ void COrderBase::CreateStops(CStops *stops)
          m_order_stops.NewOrderStop(GetPointer(this),stop,m_order_stops);
         }
      }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderBase::OnTick(void)
+  {
+   CheckStops();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -140,7 +149,7 @@ void COrderBase::CheckStops(void)
 //+------------------------------------------------------------------+
 bool COrderBase::Close(void)
   {
-   if (CloseStops())
+   if(CloseStops())
       IsClosed(true);
    return IsClosed();
   }

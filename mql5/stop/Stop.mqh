@@ -93,6 +93,8 @@ bool CStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
 bool CStop::DeleteStopOrder(const ulong ticket) const
   {
    if(ticket<=0) return true;
+   //if (OrderGetInteger(ORDER_TIME_DONE)>0) return true;
+   if (OrderGetInteger(ORDER_STATE)==ORDER_STATE_CANCELED) return true;
    if(m_trade.OrderDelete(ticket))
      {
       uint result=m_trade.ResultRetcode();
