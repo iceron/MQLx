@@ -61,24 +61,29 @@ COrder::~COrder(void)
 //+------------------------------------------------------------------+
 bool COrder::IsClosed(void)
   {
-   if(m_closed) return true;
+   if(m_closed) return m_closed;
    if(Volume()<=0.0)
      {
       m_closed=true;
-      return true;
+      return m_closed;
      }
-   else
-     {
       if(OrderSelect((int)Ticket(),SELECT_BY_TICKET))
         {
          if(OrderCloseTime()>0)
            {
             m_closed=true;
-            return true;
+            return m_closed;
            }
         }
-     }
-   return false;
+   if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
+   {
+      if(m_main_stop.IsClosed())
+        {
+         m_closed=true;
+         return m_closed;
+        }
+   } 
+   return m_closed;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

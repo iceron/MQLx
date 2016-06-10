@@ -54,7 +54,7 @@ public:
    ulong             MainTicket(void) const {return m_order.Ticket();}
    double            MainTicketPrice() const {return m_order.Price();}
    ENUM_ORDER_TYPE   MainTicketType(void) const {return m_order.OrderType();}
-   COrder            *Order() {return GetPointer(m_order);}
+   COrder           *Order() {return GetPointer(m_order);}
    void              StopLoss(const double stoploss) {m_stoploss.Add(stoploss);}
    double            StopLoss(void) const {return m_stoploss.Total()>0?m_stoploss.At(m_stoploss.Total()-1):0;}
    double            StopLoss(const int index) const {return m_stoploss.Total()>index?m_stoploss.At(index):0;}
@@ -241,7 +241,7 @@ bool COrderStopBase::IsClosed(void)
    //Print(__FUNCTION__);
    if(m_closed)
    {
-      //Print(__FUNCTION__+" already marked as closed");
+      Print(__FUNCTION__+" already marked as closed");
       return true;
    }   
    //else Print("not yet closed");
@@ -250,7 +250,7 @@ bool COrderStopBase::IsClosed(void)
       Print(__FUNCTION__+" entry exists but chart object does not");
       m_closed = true;
    }   
-   //else Print(__FUNCTION__+" 2: "+EnumToString(CheckPointer(m_objentry))+" "+m_objentry.ChartObjectExists()+" "+m_objentry.Name());
+   else Print(__FUNCTION__+" 2: "+EnumToString(CheckPointer(m_objentry))+" "+m_objentry.ChartObjectExists()+" "+m_objentry.Name());
    if (m_stoploss_closed && m_takeprofit_closed)
    {
       //Print(__FUNCTION__+" both sl and tp closed");
