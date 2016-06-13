@@ -7,6 +7,7 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
 #include "MoneyFixedFractionalBase.mqh"
+#include "MoneyFixedRatioBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -74,7 +75,7 @@ bool CMoneysBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double CMoneysBase::Volume(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
+double CMoneysBase::Volume(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
   {
    CMoney *money=m_data[m_selected];
    return money==NULL?0:money.Volume(symbol,price,type,sl);

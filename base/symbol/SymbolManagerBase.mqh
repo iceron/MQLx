@@ -17,9 +17,9 @@ public:
                     ~CSymbolManagerBase(void);
    virtual bool      Add(CSymbolInfo *);
    virtual void      Deinit(void);
-   CSymbolInfo      *Get(const string);
+   CSymbolInfo      *Get(string);
    virtual bool      RefreshRates(void);
-   virtual bool      Search(const string);
+   virtual bool      Search(string);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -52,14 +52,14 @@ bool CSymbolManagerBase::Add(CSymbolInfo *node)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CSymbolInfo *CSymbolManagerBase::Get(const string name=NULL)
+CSymbolInfo *CSymbolManagerBase::Get(string symbol=NULL)
   {
-   if(name==NULL && Total()>0)
-      return At(0);
+   if (symbol==NULL)
+      symbol = Symbol();
    for(int i=0;i<Total();i++)
      {
       CSymbolInfo *item=At(i);
-      if(StringCompare(item.Name(),name)==0)
+      if(StringCompare(item.Name(),symbol)==0)
          return item;
      }
    return NULL;
@@ -80,8 +80,10 @@ bool CSymbolManagerBase::RefreshRates(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CSymbolManagerBase::Search(const string symbol)
+bool CSymbolManagerBase::Search(string symbol=NULL)
   {
+   if (symbol==NULL)
+      symbol = Symbol();
    for(int i=0;i<Total();i++)
      {
       CSymbolInfo *item=At(i);

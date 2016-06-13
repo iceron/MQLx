@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                     MoneyFixedFractionalBase.mqh |
+//|                                          MoneyFixedRatioBase.mqh |
 //|                                                   Enrico Lambino |
 //|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
@@ -9,38 +9,39 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CMoneyFixedFractionalBase : public CMoney
+class CMoneyFixedRiskPerPointBase : public CMoney
   {
 protected:
-   double            m_risk_percent;
+   double            m_risk;
 public:
-                     CMoneyFixedFractionalBase(void);
-                    ~CMoneyFixedFractionalBase(void);
+                     CMoneyFixedRiskPerPointBase(void);
+                    ~CMoneyFixedRiskPerPointBase(void);
    virtual bool      Validate(void);
    virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
-   void              RiskPercent(const double percent) {m_risk_percent=percent;}
-   double            RiskPercent(void) const {return m_risk_percent;}
+   void              Risk(const double risk) {m_risk=risk;}
+   double            Risk(void) const {return m_risk;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedFractionalBase::CMoneyFixedFractionalBase(void)
+CMoneyFixedRiskPerPointBase::CMoneyFixedRiskPerPointBase(void) :
+
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedFractionalBase::~CMoneyFixedFractionalBase(void)
+CMoneyFixedRiskPerPointBase::~CMoneyFixedRiskPerPointBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CMoneyFixedFractionalBase::Validate(void)
+bool CMoneyFixedRiskPerPointBase::Validate(void)
   {
-   if(m_risk_percent<=0)
+   if(m_risk<=0)
      {
-      PrintFormat(__FUNCTION__+": invalid percentage: "+(string)m_risk_percent);
+      PrintFormat("invalid risk amount: "+(string)m_volume_base);
       return false;
      }
    return true;
@@ -48,29 +49,20 @@ bool CMoneyFixedFractionalBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CMoneyFixedFractionalBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
+CMoneyFixedRiskPerPointBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
   {
    m_symbol = m_symbol_man.Get(symbol);
    if(m_account!=NULL && m_symbol!=NULL)
      {
       double balance=m_equity==false?m_account.Balance():m_account.Equity();
-      double ticks = 0;
-      if(price==0.0)
-        {
-         if(type==ORDER_TYPE_BUY)
-            ticks = MathAbs(m_symbol.Bid()-sl)/m_symbol.TickSize();
-         else if(type==ORDER_TYPE_SELL)
-            ticks = MathAbs(m_symbol.Ask()-sl)/m_symbol.TickSize();
-        }
-      else ticks = MathAbs(price-sl)/m_symbol.TickSize();
-      m_volume = ((balance*(m_risk_percent/100))/ticks)/m_symbol.TickValue();
+      m_volume = (m_risk/m_symbol.TickValue());
       OnLotSizeUpdated();
      }
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\MQL5\Money\MoneyFixedFractional.mqh"
+#include "..\..\MQL5\Money\MoneyFixedRiskPerPoint.mqh"
 #else
-#include "..\..\MQL4\Money\MoneyFixedFractional.mqh"
+#include "..\..\MQL4\Money\MoneyFixedRiskPerPoint.mqh"
 #endif
 //+------------------------------------------------------------------+
