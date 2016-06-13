@@ -26,6 +26,7 @@ protected:
    int               m_period;
    datetime          m_last_update;
    bool              m_equity;
+   string            m_name;
    CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
    CAccountInfo     *m_account;
@@ -51,6 +52,8 @@ public:
    bool              Equity(void) const {return m_equity;}
    void              LastUpdate(const datetime update) {m_last_update=update;}
    datetime          LastUpdate(void) const {return m_last_update;}
+   void              Name(const string name) {m_name=name;}
+   string            Name(void) const {return m_name;}
    void              Period(const int period) {m_period=period;}
    int               Period(void) const {return m_period;}
    void              UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}

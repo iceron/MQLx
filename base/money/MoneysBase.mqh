@@ -30,6 +30,7 @@ public:
    virtual void      Active(const bool activate) {m_activate=activate;}
    virtual int       Selected(void) const {return m_selected;}
    virtual void      Selected(const bool select) {m_selected=select;}
+   virtual bool      Selected(const string select);
    //--- volume calculation
    virtual double    Volume(const string,const double,const ENUM_ORDER_TYPE,const double);
   };
@@ -66,7 +67,7 @@ bool CMoneysBase::Validate(void) const
    for(int i=0;i<Total();i++)
      {
       CMoney *money=At(i);
-      if (money==NULL) continue;
+      if(money==NULL) continue;
       if(!money.Validate())
          return false;
      }
@@ -77,8 +78,28 @@ bool CMoneysBase::Validate(void) const
 //+------------------------------------------------------------------+
 double CMoneysBase::Volume(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
   {
-   CMoney *money=m_data[m_selected];
-   return money==NULL?0:money.Volume(symbol,price,type,sl);
+   CMoney *money=At(m_selected);
+   if(money!=NULL)
+      return money.Volume(symbol,price,type,sl);
+   Print(__FUNCTION__+": currently selected money management method does not exist");
+   return 0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CMoneysBase::Selected(const string select)
+  {
+   for(int i=0;i<Total();i++)
+     {
+      CMoney *money=At(i);
+      if(money==NULL) continue;
+      if(StringCompare(money.Name(),select))
+        {
+         Selected(i);
+         return true;
+        }
+     }
+   return false;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
