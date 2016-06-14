@@ -496,8 +496,8 @@ bool CExpertBase::Load(const int handle)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\MQL5\Expert\Expert.mqh"
+#include "..\..\MQL5\Expert\ExpertAdvisor.mqh"
 #else
-#include "..\..\MQL4\Expert\Expert.mqh"
+#include "..\..\MQL4\Expert\ExpertAdvisor.mqh"
 #endif
 //+------------------------------------------------------------------+

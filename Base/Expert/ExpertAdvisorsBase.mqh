@@ -7,7 +7,7 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
 #include <Files\FileBin.mqh>
-#include "ExpertBase.mqh"
+#include "ExpertAdvisorBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -208,8 +208,8 @@ bool CExpertsBase::Load(const int handle)
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\MQL5\Expert\Experts.mqh"
+#include "..\..\MQL5\Expert\ExpertAdvisors.mqh"
 #else
-#include "..\..\MQL4\Expert\Experts.mqh"
+#include "..\..\MQL4\Expert\ExpertAdvisors.mqh"
 #endif
 //+------------------------------------------------------------------+
