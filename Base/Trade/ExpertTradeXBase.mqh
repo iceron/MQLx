@@ -13,7 +13,7 @@ class CExpertTradeXBase : public CExpertTrade
 public:
                      CExpertTradeXBase(void);
                     ~CExpertTradeXBase(void);
-   string            Name(void) {return m_symbol.Name();}
+   string            Name(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -26,6 +26,15 @@ CExpertTradeXBase::CExpertTradeXBase(void)
 //+------------------------------------------------------------------+
 CExpertTradeXBase::~CExpertTradeXBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CExpertTradeXBase::Name(void)
+  {
+   if(m_symbol!=NULL)
+      return m_symbol.Name();
+   return NULL;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
