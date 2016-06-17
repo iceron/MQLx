@@ -43,7 +43,7 @@ public:
    void              CheckStops(void);
    bool              Init(int magic,COrders *orders,CStops *m_stops,bool recreate=false);
    void              IsClosed(const bool closed) {m_closed=closed;}
-   bool              IsClosed(void) const {return false;}
+   bool              IsClosed(void) const {return m_closed;}
    void              IsSuspended(const bool suspend) {m_suspend=suspend;}
    bool              IsSuspended(void) const {return false;}
    void              Magic(const int magic){m_magic=magic;}

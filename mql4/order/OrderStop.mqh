@@ -62,7 +62,7 @@ void COrderStop::UpdateTicket(const ulong ticket)
 //+------------------------------------------------------------------+
 bool COrderStop::Recreate(void)
   {
-   if(!m_order.IsClosed())
+   if(!m_order.IsClosed() && m_order.IsSuspended())
      {
       if(!m_takeprofit_closed)
          m_objtp.Name(TakeProfitName());
@@ -105,7 +105,7 @@ void COrderStop::Check(double &volume)
   {
    if(m_stop==NULL) return;
    CheckInit();
-   if(m_order.IsClosed())
+   if(m_order.IsClosed() || m_order.IsSuspended())
      {
       bool delete_sl=false,delete_tp=false;
       if(m_stop.Pending() && !m_stop.Main())

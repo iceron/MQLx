@@ -18,7 +18,6 @@ public:
                      COrder(void);
                      COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);
                     ~COrder(void);
-   virtual bool      IsClosed(void);
    virtual bool      IsSuspended(void);
    virtual void      Ticket(const ulong ticket) {m_ticket_current.InsertSort((int)ticket);}
    virtual ulong     Ticket(void) const {return m_ticket_current.At(m_ticket_current.Total()-1);}
@@ -56,35 +55,6 @@ COrder::COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type
 //+------------------------------------------------------------------+
 COrder::~COrder(void)
   {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrder::IsClosed(void)
-  {
-   if(m_closed) return m_closed;
-   if(Volume()<=0.0)
-     {
-      m_closed=true;
-      return m_closed;
-     }
-   if(OrderSelect((int)Ticket(),SELECT_BY_TICKET))
-     {
-      if(OrderCloseTime()>0)
-        {
-         m_closed=true;
-         return m_closed;
-        }
-     }
-   if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
-     {
-      if(m_main_stop.IsClosed())
-        {
-         m_closed=true;
-         return m_closed;
-        }
-     }
-   return m_closed;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

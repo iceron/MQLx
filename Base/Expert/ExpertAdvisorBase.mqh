@@ -45,7 +45,7 @@ protected:
    //CSignals         *m_signals;
    CSignal          *m_signal;
    //--- trade objects   
-   CAccountInfo     *m_account;
+   CAccountInfo      m_account;
    CSymbolManager    m_symbol_man;
    COrderManager     m_order_man;
    //--- trading time objects
@@ -68,7 +68,7 @@ public:
    virtual bool      AddSymbol(const string);
    virtual bool      AddTimes(CTimes*);
    virtual bool      Init(const string,const int,const int,const bool,const bool,const bool);
-   virtual bool      InitAccount(CAccountInfo*);
+   virtual bool      InitAccount(/*CAccountInfo**/);
    virtual bool      InitComponents(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
@@ -270,8 +270,9 @@ bool CExpertAdvisorBase::InitTimes(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertAdvisorBase::InitAccount(CAccountInfo *account=NULL)
+bool CExpertAdvisorBase::InitAccount(/*CAccountInfo *account=NULL*/)
   {
+   /*
    if(m_account!=NULL)
       delete m_account;
    if(account==NULL)
@@ -280,6 +281,7 @@ bool CExpertAdvisorBase::InitAccount(CAccountInfo *account=NULL)
          return false;
      }
    else m_account=account;
+   */
    return true;
   }
 //+------------------------------------------------------------------+

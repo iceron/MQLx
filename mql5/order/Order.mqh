@@ -14,7 +14,6 @@ public:
                      COrder(void);
                      COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);
                     ~COrder(void);
-   virtual bool      IsClosed(void);
    virtual bool      IsSuspended(void);
   };
 //+------------------------------------------------------------------+
@@ -40,30 +39,6 @@ COrder::COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type
 //+------------------------------------------------------------------+
 COrder::~COrder(void)
   {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrder::IsClosed(void)
-  {
-   if(IsClosed())
-     {
-      return true;
-     }
-   if(Volume()<=0.0)
-     {
-      IsPending(true);
-      return true;
-     }
-   if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
-     {
-      if(m_main_stop.IsClosed())
-        {
-         m_closed=true;
-         return true;
-        }
-     }
-   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

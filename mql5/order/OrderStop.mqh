@@ -38,7 +38,7 @@ void COrderStop::Check(double &volume)
   {
    if(m_stop==NULL) return;
    CheckInit();
-   if(m_order.IsClosed())
+   if(m_order.IsClosed() || m_order.IsSuspended())
      {
       bool delete_sl=false,delete_tp=false;
       if(m_stop.Pending() || m_stop.Broker())
@@ -127,7 +127,7 @@ void COrderStop::Check(double &volume)
       DeleteStopLines();
       if(m_stop.Main())
       {
-         m_order.IsClosed(true);
+         m_order.IsSuspended(true);
          //m_order.CloseStops();
       }   
      }

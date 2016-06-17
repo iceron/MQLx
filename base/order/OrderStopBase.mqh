@@ -184,7 +184,7 @@ bool COrderStopBase::IsTakeProfitValid(const double takeprofit) const
 //+------------------------------------------------------------------+
 bool COrderStopBase::CheckTrailing(void)
   {
-   if(m_stop==NULL || m_order.IsClosed() || (m_stoploss_closed && m_takeprofit_closed))
+   if(m_stop==NULL || m_order.IsClosed() || m_order.IsSuspended() || (m_stoploss_closed && m_takeprofit_closed))
       return false;
    bool result=false;
    int action=-1;
@@ -253,7 +253,7 @@ bool COrderStopBase::IsClosed(void)
 bool COrderStopBase::Update(void)
   {
    if(m_stop==NULL) return true;
-   if(m_order.IsClosed()) return false;
+   if(m_order.IsClosed() || m_order.IsSuspended()) return false;
    double stoploss=0.0,takeprofit=0.0;
    bool result=false;
    if(CheckPointer(m_objtp)==POINTER_DYNAMIC)
