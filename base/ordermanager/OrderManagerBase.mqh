@@ -5,13 +5,13 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-class CExpert;
+class CExpertAdvisor;
 #include <Arrays\ArrayInt.mqh>
 #include "..\Lib\AccountInfo.mqh"
 #include "..\..\Common\Class\ADT.mqh"
 #include "..\Order\OrdersBase.mqh"
 #include "..\Stop\StopsBase.mqh"
-#include "..\Signal\SignalsBase.mqh"
+//#include "..\Signal\SignalsBase.mqh"
 #include "..\Trade\TradeManagerBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -46,9 +46,9 @@ public:
                      COrderManagerBase(void);
                     ~COrderManagerBase(void);
    //--- initialization
-   virtual bool      Init(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
-   virtual bool      InitStops(CExpert *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
-   bool              InitMoneys(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
+   virtual bool      Init(CExpertAdvisor *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
+   virtual bool      InitStops(CExpertAdvisor *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
+   bool              InitMoneys(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
    bool              InitTrade(void);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
@@ -149,7 +149,7 @@ COrderManagerBase::~COrderManagerBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::Init(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool COrderManagerBase::Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    m_symbol_man=symbolmanager;
    InitStops(s,symbolmanager,accountinfo);
@@ -179,7 +179,7 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitMoneys(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool COrderManagerBase::InitMoneys(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    if(m_moneys==NULL) return true;
    return m_moneys.Init(s,symbolmanager,accountinfo);
@@ -250,8 +250,7 @@ void COrderManagerBase::ArchiveOrders(void)
 //+------------------------------------------------------------------+
 bool COrderManagerBase::ArchiveOrder(COrder *order)
   {
-   bool result=m_orders_history.Add(order);
-   return result;
+   return m_orders_history.Add(order);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -283,9 +282,12 @@ void COrderManagerBase::CloseOrders(const string symbol,const int entry,const in
         {
          if(StringCompare(order.Symbol(),symbol)==0 || symbol==NULL || symbol=="")
            {
+            /*
             if((CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) entry) && m_position_reverse) ||
                (CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) exit)))
                CloseOrder(order,i);
+            Print();
+            */   
            }
         }
      }
@@ -333,8 +335,10 @@ void COrderManagerBase::OnTick(void)
 //+------------------------------------------------------------------+
 bool COrderManagerBase::IsPositionAllowed(ENUM_ORDER_TYPE type) const
   {
+   
    return EnableTrade() && ((COrder::IsOrderTypeLong(type) && EnableLong())
-                      || (COrder::IsOrderTypeShort(type) && EnableShort()));
+                      || (COrder::IsOrderTypeShort(type) && EnableShort())); 
+   return true;                      
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -398,7 +402,7 @@ void COrderManagerBase::AddOtherMagicString(const string &magics[])
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitStops(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool COrderManagerBase::InitStops(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    if(m_stops!=NULL)
       return m_stops.Init(s,symbolmanager,accountinfo);

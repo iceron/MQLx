@@ -8,7 +8,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CExpert : public CExpertBase
+class CExpertAdvisor : public CExpertAdvisorBase
   {
 public:
                      CExpert(void);

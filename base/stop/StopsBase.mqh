@@ -7,7 +7,7 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
 #include "StopBase.mqh"
-class CExpert;
+class CExpertAdvisor;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -15,14 +15,14 @@ class CStopsBase : public CArrayObj
   {
 protected:
    bool              m_activate;
-   CExpert          *m_expert;
+   CExpertAdvisor   *m_expert;
 public:
                      CStopsBase(void);
                     ~CStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPS;}
    //--- initialization
-   virtual bool      Init(CExpert *,CSymbolManager *,CAccountInfo *);
-   virtual void      SetContainer(CExpert *s){m_expert=s;}
+   virtual bool      Init(CExpertAdvisor *,CSymbolManager *,CAccountInfo *);
+   virtual void      SetContainer(CExpertAdvisor *s){m_expert=s;}
    virtual bool      Validate(void) const;
    //--- setters and getters
    virtual bool      Active(void) const {return m_activate;}
@@ -46,7 +46,7 @@ CStopsBase::~CStopsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStopsBase::Init(CExpert *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool CStopsBase::Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    for(int i=0;i<Total();i++)
      {

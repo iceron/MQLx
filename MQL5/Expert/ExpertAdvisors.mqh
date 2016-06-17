@@ -5,10 +5,11 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
+#include "..\..\common\enum\ENUM_CMD.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CExperts : public CExpertsBase
+class CExpertAdvisors : public CExpertAdvisorsBase
   {
 public:
                      CExperts(void);

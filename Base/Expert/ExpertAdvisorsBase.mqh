@@ -11,15 +11,15 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CExpertsBase : public CArrayObj
+class CExpertAdvisorsBase : public CArrayObj
   {
 protected:
    bool              m_activate;
    int               m_uninit_reason;
    CComments        *m_comments;
 public:
-                     CExpertsBase(void);
-                    ~CExpertsBase(void);
+                     CExpertAdvisorsBase(void);
+                    ~CExpertAdvisorsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_EXPERT;}
    //--- getters and setters
    bool              Active(void) const {return m_activate;}
@@ -47,24 +47,24 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpertsBase::CExpertsBase(void) : m_activate(true),
+CExpertAdvisorsBase::CExpertAdvisorsBase(void) : m_activate(true),
                                    m_uninit_reason(0)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpertsBase::~CExpertsBase(void)
+CExpertAdvisorsBase::~CExpertAdvisorsBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertsBase::Validate(void) const
+bool CExpertAdvisorsBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      CExpert *strat=At(i);
+      CExpertAdvisor *strat=At(i);
       if(!strat.Validate())
          return false;
      }
@@ -73,18 +73,18 @@ bool CExpertsBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertsBase::ChartComment(const bool enable=true)
+void CExpertAdvisorsBase::ChartComment(const bool enable=true)
   {
    if(enable) m_comments=new CComments();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertsBase::InitComponents(void) const
+bool CExpertAdvisorsBase::InitComponents(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      CExpert *strat=At(i);
+      CExpertAdvisor *strat=At(i);
       if(CheckPointer(m_comments))
          strat.ChartComment(GetPointer(m_comments));
       strat.InitComponents();
@@ -94,12 +94,12 @@ bool CExpertsBase::InitComponents(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int CExpertsBase::OrdersTotal(void) const
+int CExpertAdvisorsBase::OrdersTotal(void) const
   {
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      CExpert *strat=At(i);
+      CExpertAdvisor *strat=At(i);
       total+=strat.OrdersTotal();
      }
    return total;
@@ -107,12 +107,12 @@ int CExpertsBase::OrdersTotal(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertsBase::OnTick(void)
+void CExpertAdvisorsBase::OnTick(void)
   {
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
-      CExpert *strat=At(i);
+      CExpertAdvisor *strat=At(i);
       strat.OnTick();
      }
    DisplayComment();
@@ -120,7 +120,7 @@ void CExpertsBase::OnTick(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertsBase::AddComment(const string comment)
+void CExpertAdvisorsBase::AddComment(const string comment)
   {
    if(CheckPointer(m_comments)==POINTER_DYNAMIC)
       m_comments.Add(new CComment(comment));
@@ -128,7 +128,7 @@ void CExpertsBase::AddComment(const string comment)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertsBase::DisplayComment(void) const
+void CExpertAdvisorsBase::DisplayComment(void) const
   {
    if(CheckPointer(m_comments)==POINTER_DYNAMIC)
       m_comments.Display();
@@ -136,24 +136,24 @@ void CExpertsBase::DisplayComment(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertsBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
+void CExpertAdvisorsBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
   {
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
-      CExpert *strat=At(i);
+      CExpertAdvisor *strat=At(i);
       strat.OnChartEvent(id,lparam,dparam,sparam);
      }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int CExpertsBase::OrdersHistoryTotal(void) const
+int CExpertAdvisorsBase::OrdersHistoryTotal(void) const
   {
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      CExpert *strat=At(i);
+      CExpertAdvisor *strat=At(i);
       total+=strat.OrdersHistoryTotal();
      }
    return total;
@@ -161,12 +161,12 @@ int CExpertsBase::OrdersHistoryTotal(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int CExpertsBase::TradesTotal(void) const
+int CExpertAdvisorsBase::TradesTotal(void) const
   {
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      CExpert *strat=At(i);
+      CExpertAdvisor *strat=At(i);
       total+=strat.TradesTotal();
      }
    return total;
@@ -174,7 +174,7 @@ int CExpertsBase::TradesTotal(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertsBase::OnDeinit(const int reason=0)
+void CExpertAdvisorsBase::OnDeinit(const int reason=0)
   {
    m_uninit_reason=reason;
    Shutdown();
@@ -182,16 +182,16 @@ void CExpertsBase::OnDeinit(const int reason=0)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertsBase::CreateElement(const int index)
+bool CExpertAdvisorsBase::CreateElement(const int index)
   {
-   CExpert*strat=new CExpert();
+   CExpertAdvisor*strat=new CExpertAdvisor();
    strat.SetContainer(GetPointer(this));
    return Insert(GetPointer(strat),index);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertsBase::Save(const int handle)
+bool CExpertAdvisorsBase::Save(const int handle)
   {
    CArrayObj::Save(handle);
    ADT::WriteInteger(handle,m_uninit_reason);
@@ -200,7 +200,7 @@ bool CExpertsBase::Save(const int handle)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertsBase::Load(const int handle)
+bool CExpertAdvisorsBase::Load(const int handle)
   {
    CArrayObj::Load(handle);
    ADT::ReadInteger(handle,m_uninit_reason);

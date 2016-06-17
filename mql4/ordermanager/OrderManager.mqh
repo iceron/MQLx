@@ -54,11 +54,11 @@ void COrderManager::OnTradeTransaction(void)
 //+------------------------------------------------------------------+
 bool COrderManager::TradeOpen(const string symbol,const int res)
   {
-   if(res<=0) return false;
+   //if(res<=0) return false;
    bool ret=false;
    int trades_total = TradesTotal();
    int orders_total = OrdersTotal();
-   ENUM_ORDER_TYPE type=CSignal::SignalToOrderType(res);
+   ENUM_ORDER_TYPE type=/*CSignal::SignalToOrderType(res)*/(ENUM_ORDER_TYPE)res; //Print()
    m_symbol = m_symbol_man.Get(symbol);
    if(!IsPositionAllowed(type))
       return true;

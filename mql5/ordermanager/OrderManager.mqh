@@ -49,19 +49,19 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
 //+------------------------------------------------------------------+
 bool COrderManager::TradeOpen(const string symbol,const int res)
   {
-   if(res<=0) return false;
+   //if(res<=0) return false;
    bool ret=false;
    double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();
    int orders_total = OrdersTotal();
-   ENUM_ORDER_TYPE type=CSignal::SignalToOrderType(res);
+   ENUM_ORDER_TYPE type=/*CSignal::SignalToOrderType(res)*/(ENUM_ORDER_TYPE)res; //Print()
    m_symbol=m_symbol_man.Get(symbol);
    if(!IsPositionAllowed(type))
       return true;
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       price=PriceCalculate(type);
-      lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
+      lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));      
       ret=SendOrder(type,lotsize,price,0,0);
      }
    return ret;

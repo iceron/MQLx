@@ -10,7 +10,7 @@
 #include "TimeFilterBase.mqh"
 #include "TimeRangeBase.mqh"
 #include "TimerBase.mqh"
-class CExpert;
+class CExpertAdvisor;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -19,14 +19,14 @@ class CTimesBase : public CArrayObj
 protected:
    bool              m_activate;
    int               m_selected;
-   CExpert          *m_expert;
+   CExpertAdvisor   *m_expert;
 public:
                      CTimesBase(void);
                     ~CTimesBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIMES;}
    //-- initialization
-   virtual bool      Init(CExpert *s);
-   virtual void      SetContainer(CExpert *s){m_expert=s;}
+   virtual bool      Init(CExpertAdvisor *s);
+   virtual void      SetContainer(CExpertAdvisor *s){m_expert=s;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation
    bool              Active(void) const {return m_activate;}
@@ -53,12 +53,12 @@ CTimesBase::~CTimesBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimesBase::Init(CExpert *s)
+bool CTimesBase::Init(CExpertAdvisor *s)
   {
    for(int i=0;i<Total();i++)
      {
       CTime *time=At(i);
-      time.Init(s,GetPointer(this));
+      time.Init(GetPointer(this));
      }
    SetContainer(s);
    return true;

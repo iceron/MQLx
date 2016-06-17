@@ -7,7 +7,6 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Object.mqh>
 #include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
-class CExpert;
 class CTimes;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -25,7 +24,7 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_TIME;}
    virtual bool      Validate(void) {return true;}
    //--- initialization
-   virtual bool      Init(CExpert *,CTimes *);
+   virtual bool      Init(CTimes *);
    virtual void      SetContainer(CTimes *times){m_times=times;}
    //--- setters and getters
    bool              Active(void) const {return m_activate;}
@@ -54,7 +53,7 @@ CTimeBase::~CTimeBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeBase::Init(CExpert *s,CTimes *times)
+bool CTimeBase::Init(CTimes *times)
   {
    SetContainer(times);
    return true;

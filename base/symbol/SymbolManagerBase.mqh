@@ -12,6 +12,8 @@
 //+------------------------------------------------------------------+
 class CSymbolManagerBase : public CArrayObj
   {
+protected:
+   CSymbolInfo      *m_symbol_primary;
 public:
                      CSymbolManagerBase(void);
                     ~CSymbolManagerBase(void);
@@ -20,6 +22,10 @@ public:
    CSymbolInfo      *Get(string);
    virtual bool      RefreshRates(void);
    virtual bool      Search(string);
+   virtual void      SetPrimary(string);
+   virtual void      SetPrimary(const int);
+   virtual CSymbolInfo *GetPrimary(void);
+   virtual string    GetPrimaryName(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -54,8 +60,8 @@ bool CSymbolManagerBase::Add(CSymbolInfo *node)
 //+------------------------------------------------------------------+
 CSymbolInfo *CSymbolManagerBase::Get(string symbol=NULL)
   {
-   if (symbol==NULL)
-      symbol = Symbol();
+   if(symbol==NULL)
+      symbol= Symbol();
    for(int i=0;i<Total();i++)
      {
       CSymbolInfo *item=At(i);
@@ -82,8 +88,8 @@ bool CSymbolManagerBase::RefreshRates(void)
 //+------------------------------------------------------------------+
 bool CSymbolManagerBase::Search(string symbol=NULL)
   {
-   if (symbol==NULL)
-      symbol = Symbol();
+   if(symbol==NULL)
+      symbol= Symbol();
    for(int i=0;i<Total();i++)
      {
       CSymbolInfo *item=At(i);
@@ -91,6 +97,44 @@ bool CSymbolManagerBase::Search(string symbol=NULL)
          return true;
      }
    return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CSymbolManagerBase::SetPrimary(string symbol=NULL)
+  {
+   if(symbol==NULL)
+      symbol= Symbol();
+   m_symbol_primary=Get(symbol);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CSymbolManagerBase::SetPrimary(const int idx)
+  {   
+   m_symbol_primary=At(idx);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CSymbolInfo* CSymbolManagerBase::GetPrimary(void)
+  {
+   if (Total()==1 && m_symbol_primary==NULL)
+   {      
+      m_symbol_primary = At(0);
+   }   
+   return m_symbol_primary;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CSymbolManagerBase::GetPrimaryName(void)
+  {
+   if (Total()==1 && m_symbol_primary==NULL)
+      m_symbol_primary = At(0);
+   if(m_symbol_primary!=NULL)
+      return m_symbol_primary.Name();
+   return NULL;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

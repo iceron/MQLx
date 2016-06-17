@@ -8,32 +8,32 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CExpert : public CExpertBase
+class CExpertAdvisor : public CExpertAdvisorBase
   {
 public:
-                     CExpert(void);
-                    ~CExpert(void);              
+                     CExpertAdvisor(void);
+                    ~CExpertAdvisor(void);              
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(void) {m_order_man.OnTradeTransaction();}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpert::CExpert(void)
+CExpertAdvisor::CExpertAdvisor(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpert::~CExpert(void)
+CExpertAdvisor::~CExpertAdvisor(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpert::OnTick(void)
+bool CExpertAdvisor::OnTick(void)
   {
-   bool ret=CExpertBase::OnTick();
+   bool ret=CExpertAdvisorBase::OnTick();
    if(ret) OnTradeTransaction();
    return ret;
   }
