@@ -96,6 +96,7 @@ public:
    virtual void      CloseOppositeOrders(const string,const int,const int);
    virtual void      ManageOrders(void);
    virtual bool      CloseOrder(COrder*,const int) {return true;}
+   virtual bool      ExitOrder(COrder*,const int);
    //--- orders history
    virtual void      ManageOrdersHistory(void);
    //--- money manager
@@ -282,12 +283,12 @@ void COrderManagerBase::CloseOrders(const string symbol,const int entry,const in
         {
          if(StringCompare(order.Symbol(),symbol)==0 || symbol==NULL || symbol=="")
            {
-            /*
+/*
             if((CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) entry) && m_position_reverse) ||
                (CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) exit)))
                CloseOrder(order,i);
             Print();
-            */   
+            */
            }
         }
      }
@@ -335,10 +336,10 @@ void COrderManagerBase::OnTick(void)
 //+------------------------------------------------------------------+
 bool COrderManagerBase::IsPositionAllowed(ENUM_ORDER_TYPE type) const
   {
-   
+
    return EnableTrade() && ((COrder::IsOrderTypeLong(type) && EnableLong())
-                      || (COrder::IsOrderTypeShort(type) && EnableShort())); 
-   return true;                      
+                      || (COrder::IsOrderTypeShort(type) && EnableShort()));
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -375,6 +376,18 @@ double COrderManagerBase::TakeProfitCalculate(const ENUM_ORDER_TYPE type,const d
       return m_main_stop.TakeProfitTicks(type,price);
      }
    return 0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManagerBase::ExitOrder(COrder *order,const int idx)
+  {
+   if(CloseOrder(order,idx))
+     {
+      if(ArchiveOrder(m_orders.Detach(idx)))
+         return true;
+     }
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
