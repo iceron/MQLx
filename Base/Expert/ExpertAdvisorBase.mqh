@@ -22,7 +22,6 @@
 #include "..\Comment\CommentsBase.mqh"
 #include "..\Ordermanager\OrderManagerBase.mqh"
 #include "..\Candle\CandleManagerBase.mqh"
-#include "..\Signal\ExpertSignalXBase.mqh"
 class CExpertAdvisors;
 //+------------------------------------------------------------------+
 //|                                                                  |
