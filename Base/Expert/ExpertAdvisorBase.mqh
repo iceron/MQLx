@@ -150,8 +150,6 @@ public:
    virtual bool      Save(const int);
    virtual bool      Load(const int);
 
-
-
 protected:
    //--- candle manager   
    virtual bool      IsNewBar(const string symbol,const int period) const {return m_candle_man.IsNewCandle(symbol,period);}
@@ -215,7 +213,6 @@ bool CExpertAdvisorBase::Init(string symbol,int period,int magic,bool every_tick
    m_candle_man.Add(candle);
    Magic(magic);
 
-
    return false;
   }
 //+------------------------------------------------------------------+
@@ -250,7 +247,7 @@ bool CExpertAdvisorBase::InitComponents(void)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::InitSignals(void)
   {
-   /*
+/*
    if(m_signals==NULL)
       return true;
    return m_signals.Init(GetPointer(this),GetPointer(m_comments));
@@ -271,7 +268,7 @@ bool CExpertAdvisorBase::InitTimes(void)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::InitAccount(/*CAccountInfo *account=NULL*/)
   {
-   /*
+/*
    if(m_account!=NULL)
       delete m_account;
    if(account==NULL)
@@ -440,15 +437,22 @@ bool CExpertAdvisorBase::OnTick(void)
    DetectNewBars();
 //m_orders.OnTick();
 //ManageOrders();
-   m_signal.Check();
-   double   price=EMPTY_VALUE;
-   double   sl=0.0;
-   double   tp=0.0;
-   datetime expiration=TimeCurrent();
-   bool checkopenlong=m_signal.CheckOpenLong();
-   bool checkopenshort = m_signal.CheckOpenShort();
-   bool checkcloselong = m_signal.CheckCloseLong();
-   bool checkcloseshort= m_signal.CheckCloseShort();
+   bool checkopenlong=false,
+        checkopenshort=false,
+        checkcloselong=false,
+        checkcloseshort=false;
+   if(m_signal!=NULL)
+     {
+      m_signal.Check();
+      double   price=EMPTY_VALUE;
+      double   sl=0.0;
+      double   tp=0.0;
+      datetime expiration=TimeCurrent();
+      checkopenlong=m_signal.CheckOpenLong();
+      checkopenshort = m_signal.CheckOpenShort();
+      checkcloselong = m_signal.CheckCloseLong();
+      checkcloseshort= m_signal.CheckCloseShort();
+     }
 //bool checkreverselong=m_signal.CheckReverseLong(price,sl,tp,expiration);
 //bool checkreverseshort=m_signal.CheckReverseShort(price,sl,tp,expiration);
    COrders *orders=m_order_man.Orders();
@@ -463,18 +467,18 @@ bool CExpertAdvisorBase::OnTick(void)
       //this is the same as ordermanager manageorders()      
       if(order.IsSuspended())
         {
-         if (m_order_man.ExitOrder(order,i))
+         if(m_order_man.ExitOrder(order,i))
             continue;
         }
       //checking if the order should be closed
       if((checkcloselong && order.OrderType()==ORDER_TYPE_BUY) || 
-      (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL))
+         (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL))
         {
-         if (m_order_man.ExitOrder(order,i))
+         if(m_order_man.ExitOrder(order,i))
             continue;
         }
      }
-   if(!CheckPointer(m_times) || (m_times.Evaluate()))
+   if(m_signal!=NULL && (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)
         {

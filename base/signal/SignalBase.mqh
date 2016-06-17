@@ -59,6 +59,8 @@ CSignalBase::~CSignalBase(void)
 //+------------------------------------------------------------------+
 double CSignalBase::Check(void)
   {
+   if (!Active())
+      return 0;
    double result=m_weight*(LongCondition()-ShortCondition());
    int votes= result==0.0?0:1;
    for(int i=0;i<m_filters.Total();i++)
