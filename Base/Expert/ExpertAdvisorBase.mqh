@@ -162,8 +162,6 @@ protected:
    virtual void      ManageOrdersHistory(void){m_order_man.ManageOrdersHistory();}
    virtual void      OnTradeTransaction(COrder*) {}
    virtual bool      TradeOpen(const string symbol,const ENUM_ORDER_TYPE type) {return m_order_man.TradeOpen(symbol,type);}
-   //--- signal manager
-   virtual bool      CheckSignals(int&,int&) const;
    //--- symbol manager
    virtual bool      RefreshRates(void);
    //--- deinitialization
@@ -452,7 +450,6 @@ bool CExpertAdvisorBase::OnTick(void)
    bool checkcloseshort= m_signal.CheckCloseShort();
 //bool checkreverselong=m_signal.CheckReverseLong(price,sl,tp,expiration);
 //bool checkreverseshort=m_signal.CheckReverseShort(price,sl,tp,expiration);
-//Print(checkopenlong+" "+checkopenshort+" "+checkcloselong+" "+checkcloseshort);
    COrders *orders=m_order_man.Orders();
    for(int i=orders.Total()-1;i>=0;i--)
      {
@@ -492,19 +489,6 @@ bool CExpertAdvisorBase::OnTick(void)
         }
      }
    return ret;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CExpertAdvisorBase::CheckSignals(int &entry,int &exit) const
-  {
-/*
-   if(CheckPointer(m_signals)==POINTER_DYNAMIC)
-      return m_signals.CheckSignals(entry,exit);
-   return false;
-   */
-//Print();
-   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

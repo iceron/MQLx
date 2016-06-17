@@ -49,7 +49,6 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
 //+------------------------------------------------------------------+
 bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
   {
-   //if(res<=0) return false;
    bool ret=false;
    double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();

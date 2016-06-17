@@ -33,7 +33,6 @@ CExperts::~CExperts(void)
 //+------------------------------------------------------------------+
 void CExperts::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
-   Print(__FUNCTION__);
    for(int i=0;i<Total();i++)
      {
       CExpert *strat=At(i);

@@ -81,7 +81,6 @@ double CMoneysBase::Volume(const string symbol,const double price,const ENUM_ORD
    CMoney *money=At(m_selected);
    if(money!=NULL)
       return money.Volume(symbol,price,type,sl);
-   Print(__FUNCTION__+": currently selected money management method does not exist");
    return 0;
   }
 //+------------------------------------------------------------------+
