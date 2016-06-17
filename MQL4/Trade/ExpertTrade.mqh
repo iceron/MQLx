@@ -189,7 +189,7 @@ ulong CExpertTrade::OrderOpen(const string symbol,const ENUM_ORDER_TYPE order_ty
               {
                if(OrderSelect((int)ticket,SELECT_BY_TICKET))
                  {
-                  res=::OrderModify((int)ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
+                  res=OrderModify((int)ticket,OrderOpenPrice(),sl,tp,OrderExpiration());
                   ::Sleep(m_sleep);
                  }
               }

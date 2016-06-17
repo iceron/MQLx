@@ -90,11 +90,10 @@ bool COrderStop::UpdateOrderStop(const double stoploss,const double takeprofit)
    if(takeprofit>0)
      {
       if(m_stop.Pending())
-         modify_tp=m_stop.OrderModify(m_takeprofit_ticket,stoploss);
+         modify_tp=m_stop.OrderModify(m_takeprofit_ticket,takeprofit);
       else if(m_stop.Main() && !m_stop.Virtual())
          modify_tp=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
       else TakeProfit(takeprofit);
-
      }
    return modify_tp||modify_sl;
   }

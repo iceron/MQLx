@@ -163,7 +163,7 @@ bool CStop::Move(const ulong ticket,const double stoploss,const double takeprofi
      {
       if(MathAbs(stoploss-OrderStopLoss())<m_symbol.TickSize()) return false;
       if(MathAbs(takeprofit-OrderTakeProfit())<m_symbol.TickSize()) return false;
-      return m_trade.OrderModify(ticket,OrderOpenPrice(),stoploss,takeprofit,0,OrderExpiration());
+      return m_trade.OrderModify(OrderTicket(),OrderOpenPrice(),stoploss,takeprofit,0,OrderExpiration());
      }
    return false;
   }
@@ -176,7 +176,7 @@ bool CStop::MoveStopLoss(const ulong ticket,const double stoploss)
      {
       if(MathAbs(stoploss-OrderStopLoss())<m_symbol.TickSize())
          return false;
-      return m_trade.OrderModify(ticket,OrderOpenPrice(),stoploss,OrderTakeProfit(),0,OrderExpiration());
+      return m_trade.OrderModify(OrderTicket(),OrderOpenPrice(),stoploss,OrderTakeProfit(),0,OrderExpiration());
      }
    return false;
   }
@@ -188,7 +188,7 @@ bool CStop::MoveTakeProfit(const ulong ticket,const double takeprofit)
    if(OrderSelect((int)ticket,SELECT_BY_TICKET))
      {
       if(MathAbs(takeprofit-OrderTakeProfit())<m_symbol.TickSize()) return false;
-      return m_trade.OrderModify(ticket,OrderOpenPrice(),OrderStopLoss(),takeprofit,0,OrderExpiration());
+      return m_trade.OrderModify(OrderTicket(),OrderOpenPrice(),OrderStopLoss(),takeprofit,0,OrderExpiration());
      }
    return false;
   }
