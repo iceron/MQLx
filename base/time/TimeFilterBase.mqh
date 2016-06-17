@@ -27,7 +27,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CTimeFilterBase::CTimeFilterBase(void)                                       
+CTimeFilterBase::CTimeFilterBase(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -73,23 +73,20 @@ bool CTimeFilterBase::Evaluate(void)
    MqlDateTime time;
    datetime current=TimeCurrent();
    TimeToStruct(current,time);
-   if(result)
-     {
-      m_filter_start.year= time.year;
-      m_filter_start.mon = time.mon;
-      m_filter_start.day = time.day;
-      m_filter_start.day_of_week = time.day_of_week;
-      m_filter_start.day_of_year = time.day_of_year;
-      m_filter_end.year= time.year;
-      m_filter_end.mon = time.mon;
-      m_filter_end.day = time.day;
-      m_filter_end.day_of_week = time.day_of_week;
-      m_filter_end.day_of_year = time.day_of_year;
-      datetime f_start=StructToTime(m_filter_start);
-      datetime f_end=StructToTime(m_filter_end);
-      if(!(current>=f_start && current<=f_end))
-         result=false;
-     }
+   m_filter_start.year= time.year;
+   m_filter_start.mon = time.mon;
+   m_filter_start.day = time.day;
+   m_filter_start.day_of_week = time.day_of_week;
+   m_filter_start.day_of_year = time.day_of_year;
+   m_filter_end.year= time.year;
+   m_filter_end.mon = time.mon;
+   m_filter_end.day = time.day;
+   m_filter_end.day_of_week = time.day_of_week;
+   m_filter_end.day_of_year = time.day_of_year;
+   datetime f_start=StructToTime(m_filter_start);
+   datetime f_end=StructToTime(m_filter_end);
+   if(!(current>=f_start && current<=f_end))
+      result=false;
    return Reverse()?result:!result;
   }
 //+------------------------------------------------------------------+
