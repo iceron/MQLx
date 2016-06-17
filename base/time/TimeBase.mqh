@@ -34,7 +34,7 @@ public:
    datetime          TimeStart(void) const {return m_time_start;}
    void              TimeStart(const datetime st){m_time_start=st;}
    //--- checking
-   virtual bool      Evaluate(void) {return true;}
+   virtual bool      Evaluate(void) {return false;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

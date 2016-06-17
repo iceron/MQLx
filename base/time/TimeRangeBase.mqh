@@ -69,7 +69,7 @@ bool CTimeRangeBase::Evaluate(void)
   {
    if(!Active()) return true;
    datetime current=TimeCurrent();
-   bool result=current>=m_begin && current<=m_end;
+   bool result=current>=m_begin && current<m_end;
    return Reverse()?result:!result;
   }
 //+------------------------------------------------------------------+
