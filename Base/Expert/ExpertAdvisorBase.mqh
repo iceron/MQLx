@@ -154,7 +154,6 @@ protected:
    //--- candle manager   
    virtual bool      IsNewBar(const string symbol,const int period) const {return m_candle_man.IsNewCandle(symbol,period);}
    //--- order manager
-   virtual void      CloseOppositeOrders(const string symbol,const int entry,const int exit) {m_order_man.CloseOppositeOrders(symbol,entry,exit);}
    virtual void      ManageOrders(void) {m_order_man.ManageOrders();}
    virtual void      ManageOrdersHistory(void){m_order_man.ManageOrdersHistory();}
    virtual void      OnTradeTransaction(COrder*) {}
@@ -478,6 +477,7 @@ bool CExpertAdvisorBase::OnTick(void)
             continue;
         }
      }
+   m_order_man.OnTick();
    if(m_signal!=NULL && (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)

@@ -26,7 +26,6 @@ protected:
    int               m_magic;
    int               m_expiration;
    int               m_history_count;
-   bool              m_position_reverse;
    int               m_max_orders_history;
    bool              m_trade_allowed;
    bool              m_long_allowed;
@@ -91,9 +90,7 @@ public:
    virtual bool      ArchiveOrder(COrder*);
    virtual void      CheckClosedOrders(void);
    //virtual void      CheckOldStops(void);
-   virtual void      CloseOrders(const string,const int,const int);
    virtual bool      CloseStops(void);
-   virtual void      CloseOppositeOrders(const string,const int,const int);
    virtual void      ManageOrders(void);
    virtual bool      CloseOrder(COrder*,const int) {return true;}
    virtual bool      ExitOrder(COrder*,const int);
@@ -131,14 +128,20 @@ protected:
 //|                                                                  |
 //+------------------------------------------------------------------+
 COrderManagerBase::COrderManagerBase() : m_lotsize(0.1),
+                                         m_comment(NULL),
+                                         m_magic(0),
+                                         m_expiration(0),
+                                         m_history_count(0),
+                                         m_max_orders_history(1000),
                                          m_trade_allowed(true),
                                          m_long_allowed(true),
                                          m_short_allowed(true),
                                          m_max_orders(1),
                                          m_max_trades(-1)
+                                         
   {
    if(!m_other_magic.IsSorted())
-      m_other_magic.Sort();
+      m_other_magic.Sort();    
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -256,46 +259,6 @@ bool COrderManagerBase::ArchiveOrder(COrder *order)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void COrderManagerBase::CheckClosedOrders(void)
-  {
-   int total= m_orders.Total();
-   for(int i=total-1;i>=0;i--)
-     {
-      COrder *order=m_orders.At(i);
-      ulong ticket = order.Ticket();
-      if(order.IsClosed())
-        {
-         if(CloseOrder(order,i))
-            ArchiveOrder(m_orders.Detach(i));
-        }
-     }
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void COrderManagerBase::CloseOrders(const string symbol,const int entry,const int exit)
-  {
-   int total= m_orders.Total();
-   for(int i=total-1;i>=0;i--)
-     {
-      COrder *order=m_orders.At(i);
-      if(order!=NULL)
-        {
-         if(StringCompare(order.Symbol(),symbol)==0 || symbol==NULL || symbol=="")
-           {
-/*
-            if((CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) entry) && m_position_reverse) ||
-               (CSignal::IsOrderAgainstSignal((ENUM_ORDER_TYPE) order.OrderType(),(ENUM_CMD) exit)))
-               CloseOrder(order,i);
-            Print();
-            */
-           }
-        }
-     }
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool COrderManagerBase::CloseStops(void)
   {
    return m_orders.CloseStops();
@@ -303,17 +266,8 @@ bool COrderManagerBase::CloseStops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderManagerBase::CloseOppositeOrders(const string symbol,const int entry,const int exit)
-  {
-   if(m_orders.Total()>0)
-      CloseOrders(symbol,entry,exit);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 void COrderManagerBase::ManageOrders(void)
   {
-   CheckClosedOrders();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -329,7 +283,7 @@ void COrderManagerBase::ManageOrdersHistory(void)
 //+------------------------------------------------------------------+
 void COrderManagerBase::OnTick(void)
   {
-   m_orders.OnTick();
+   ManageOrdersHistory();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
