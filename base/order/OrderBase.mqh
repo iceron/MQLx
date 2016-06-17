@@ -18,7 +18,8 @@ class COrderBase : public CObject
 protected:
    bool              m_activate;
    bool              m_closed;
-   bool              m_clean;
+   bool              m_suspend;
+   long              m_order_flags;
    int               m_magic;
    double            m_price;
    ulong             m_ticket;
@@ -38,13 +39,13 @@ public:
    //--- getters and setters       
    bool              Active(void) const {return m_activate;}
    void              Active(const bool activate) {m_activate=activate;}
-   bool              Clean(void) const {return m_clean;}
-   void              Clean(const bool clean) {m_clean=clean;}
    void              CreateStops(CStops *stops);
    void              CheckStops(void);
    bool              Init(int magic,COrders *orders,CStops *m_stops,bool recreate=false);
    void              IsClosed(const bool closed) {m_closed=closed;}
    bool              IsClosed(void) const {return false;}
+   void              IsSuspended(const bool suspend) {m_suspend=suspend;}
+   bool              IsSuspended(void) const {return false;}
    void              Magic(const int magic){m_magic=magic;}
    int               Magic(void) const {return m_magic;}
    void              MainStop(COrderStop *order_stop){m_main_stop=order_stop;}
@@ -83,7 +84,8 @@ public:
 //+------------------------------------------------------------------+
 COrderBase::COrderBase(void) : m_activate(true),
                                m_closed(false),
-                               m_clean(false),
+                               m_suspend(false),
+                               m_order_flags(0),
                                m_magic(0),
                                m_price(0.0),
                                m_ticket(0),
@@ -151,6 +153,7 @@ bool COrderBase::Close(void)
   {
    if(CloseStops())
       IsClosed(true);
+   else IsSuspended(true);
    return IsClosed();
   }
 //+------------------------------------------------------------------+
@@ -209,8 +212,8 @@ bool COrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 bool COrderBase::Save(const int handle)
   {
-   ADT::WriteBool(handle,m_closed);
-   ADT::WriteBool(handle,m_clean);
+   //ADT::WriteBool(handle,m_closed);
+   //ADT::WriteBool(handle,m_clean);
    ADT::WriteInteger(handle,m_magic);
    ADT::WriteDouble(handle,m_price);
    ADT::WriteLong(handle,m_ticket);
@@ -225,8 +228,8 @@ bool COrderBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool COrderBase::Load(const int handle)
   {
-   ADT::ReadBool(handle,m_closed);
-   ADT::ReadBool(handle,m_clean);
+   //ADT::ReadBool(handle,m_closed);
+   //ADT::ReadBool(handle,m_clean);
    ADT::ReadInteger(handle,m_magic);
    ADT::ReadDouble(handle,m_price);
    ADT::ReadLong(handle,m_ticket);

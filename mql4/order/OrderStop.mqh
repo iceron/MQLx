@@ -182,7 +182,7 @@ void COrderStop::Check(double &volume)
       DeleteStopLines();
       if(m_stop.Main() && m_stop.Virtual() && (StopLoss()>0 || TakeProfit()>0))
         {
-         m_order.IsClosed(true);
+         m_order.IsSuspended(true);
          //m_order.CloseStops();
         }
      }

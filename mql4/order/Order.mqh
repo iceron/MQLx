@@ -16,9 +16,10 @@ protected:
    bool              m_ticket_updated;
 public:
                      COrder(void);
-                     COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);                     
+                     COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);
                     ~COrder(void);
    virtual bool      IsClosed(void);
+   virtual bool      IsSuspended(void);
    virtual void      Ticket(const ulong ticket) {m_ticket_current.InsertSort((int)ticket);}
    virtual ulong     Ticket(void) const {return m_ticket_current.At(m_ticket_current.Total()-1);}
    virtual void      NewTicket(const bool updated) {m_ticket_updated=updated;}
@@ -44,7 +45,7 @@ COrder::COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type
       m_ticket_current.Sort();
    m_ticket=ticket;
    m_ticket_current.InsertSort((int)ticket);
-   m_symbol = symbol;
+   m_symbol=symbol;
    m_type=type;
    m_volume_initial=volume;
    m_volume= m_volume_initial;
@@ -67,23 +68,51 @@ bool COrder::IsClosed(void)
       m_closed=true;
       return m_closed;
      }
-      if(OrderSelect((int)Ticket(),SELECT_BY_TICKET))
+   if(OrderSelect((int)Ticket(),SELECT_BY_TICKET))
+     {
+      if(OrderCloseTime()>0)
         {
-         if(OrderCloseTime()>0)
-           {
-            m_closed=true;
-            return m_closed;
-           }
+         m_closed=true;
+         return m_closed;
         }
+     }
    if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
-   {
+     {
       if(m_main_stop.IsClosed())
         {
          m_closed=true;
          return m_closed;
         }
-   } 
+     }
    return m_closed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrder::IsSuspended(void)
+  {
+   if(Volume()<=0.0)
+     {
+      IsSuspended(true);
+      return true;
+     }
+   if(OrderSelect((int)Ticket(),SELECT_BY_TICKET))
+     {
+      if(OrderCloseTime()>0)
+        {
+         IsSuspended(true);
+         return true;
+        }
+     }
+   if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
+     {
+      if(m_main_stop.IsClosed())
+        {
+         IsSuspended(true);
+         return true;
+        }
+     }
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
