@@ -18,6 +18,7 @@ class COrderStops;
 class COrderStopBase : public CObject
   {
 protected:
+   bool              m_active;
    //--- stop parameters
    double            m_volume;
    double            m_volume_fixed;
@@ -49,6 +50,8 @@ public:
    virtual void      Init(COrder *order,CStop *stop,COrderStops *order_stops);
    virtual void      SetContainer(COrderStops *orderstops){m_order_stops=orderstops;}
    //--- getters and setters  
+   bool              Active(){return m_active;}
+   void              Active(bool active){m_active=active;}
    string            EntryName(void) const {return m_stop.Name()+"."+(string)m_order.Ticket();}
    ulong             MainMagic(void) const {return m_order.Magic();}
    ulong             MainTicket(void) const {return m_order.Ticket();}
@@ -112,7 +115,8 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderStopBase::COrderStopBase(void) : m_volume(0.0),
+COrderStopBase::COrderStopBase(void) : m_active(true),
+                                       m_volume(0.0),
                                        m_volume_fixed(0.0),
                                        m_volume_percent(0.0),
                                        m_stoploss_ticket(0),
@@ -239,12 +243,12 @@ bool COrderStopBase::IsClosed(void)
   {
    if(m_closed)
       return true;
-   if (m_objentry!=NULL && !m_objentry.ChartObjectExists())
-      m_closed = true;
-   if (m_stoploss_closed && m_takeprofit_closed)
-      m_closed = true;
-   if (m_closed)
-      Close();   
+   if(m_objentry!=NULL && !m_objentry.ChartObjectExists())
+      m_closed=true;
+   if(m_stoploss_closed && m_takeprofit_closed)
+      m_closed=true;
+   if(m_closed)
+      Close();
    return m_closed;
   }
 //+------------------------------------------------------------------+

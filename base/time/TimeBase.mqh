@@ -14,7 +14,7 @@ class CTimes;
 class CTimeBase : public CObject
   {
 protected:
-   bool              m_activate;
+   bool              m_active;
    bool              m_reverse;
    datetime          m_time_start;
    CTimes           *m_times;
@@ -27,8 +27,8 @@ public:
    virtual bool      Init(CTimes *);
    virtual void      SetContainer(CTimes *times){m_times=times;}
    //--- setters and getters
-   bool              Active(void) const {return m_activate;}
-   void              Active(const bool activate) {m_activate=activate;}
+   bool              Active(void) const {return m_active;}
+   void              Active(const bool activate) {m_active=activate;}
    bool              Reverse(void) {return m_reverse;}
    void              Reverse(bool reverse) {m_reverse = reverse;}
    datetime          TimeStart(void) const {return m_time_start;}
@@ -39,7 +39,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CTimeBase::CTimeBase(void) : m_activate(true),
+CTimeBase::CTimeBase(void) : m_active(true),
                              m_reverse(false),
                              m_time_start(TimeCurrent())
   {

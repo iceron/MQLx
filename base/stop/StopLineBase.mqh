@@ -14,22 +14,25 @@ class CStop;
 class CStopLineBase : public CChartObjectHLine
   {
 protected:
+   bool              m_active;
    CStop            *m_stop;
 public:
                      CStopLineBase(void);
                     ~CStopLineBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPLINE;}
    virtual void      SetContainer(CStop *stop){m_stop=stop;}
+   bool              Active(void) {return m_active;}
+   void              Active(const bool activate) {m_active=activate;}
    virtual bool      ChartObjectExists(void) {return ObjectFind(0,Name())>=0;}
    virtual double    GetPrice(const int);
    virtual bool      Move(const double);
    virtual bool      SetStyle(const ENUM_LINE_STYLE);
-   virtual bool      SetColor(const color);   
+   virtual bool      SetColor(const color);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CStopLineBase::CStopLineBase(void)
+CStopLineBase::CStopLineBase(void) : m_active(true)
   {
   }
 //+------------------------------------------------------------------+

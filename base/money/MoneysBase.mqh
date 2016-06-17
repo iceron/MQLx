@@ -14,7 +14,7 @@
 class CMoneysBase : public CArrayObj
   {
 protected:
-   bool              m_activate;
+   bool              m_active;
    int               m_selected;
    CExpertAdvisor   *m_strategy;
 public:
@@ -26,8 +26,8 @@ public:
    virtual bool      Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
    virtual void      SetContainer(CExpertAdvisor *s) {m_strategy=s;}
    //--- setters and getters
-   virtual bool      Active(void) const {return m_activate;}
-   virtual void      Active(const bool activate) {m_activate=activate;}
+   virtual bool      Active(void) const {return m_active;}
+   virtual void      Active(const bool activate) {m_active=activate;}
    virtual int       Selected(void) const {return m_selected;}
    virtual void      Selected(const bool select) {m_selected=select;}
    virtual bool      Selected(const string select);
@@ -37,7 +37,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneysBase::CMoneysBase() : m_activate(true)
+CMoneysBase::CMoneysBase() : m_active(true)
   {
   }
 //+------------------------------------------------------------------+

@@ -103,7 +103,8 @@ bool COrderStop::UpdateOrderStop(const double stoploss,const double takeprofit)
 //+------------------------------------------------------------------+
 void COrderStop::Check(double &volume)
   {
-   if(m_stop==NULL) return;
+   if(m_stop==NULL || !Active()) 
+      return;
    CheckInit();
    if(m_order.IsClosed() || m_order.IsSuspended())
      {

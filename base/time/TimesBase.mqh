@@ -17,7 +17,7 @@ class CExpertAdvisor;
 class CTimesBase : public CArrayObj
   {
 protected:
-   bool              m_activate;
+   bool              m_active;
    int               m_selected;
    CExpertAdvisor   *m_expert;
 public:
@@ -29,8 +29,8 @@ public:
    virtual void      SetContainer(CExpertAdvisor *s){m_expert=s;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation
-   bool              Active(void) const {return m_activate;}
-   void              Active(const bool activate) {m_activate=activate;}
+   bool              Active(void) const {return m_active;}
+   void              Active(const bool activate) {m_active=activate;}
    int               Selected() {return m_selected;}
    //--- checking
    virtual bool      Evaluate(void) const;
@@ -40,7 +40,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CTimesBase::CTimesBase(void) : m_activate(true),
+CTimesBase::CTimesBase(void) : m_active(true),
                                m_selected(-1)
   {
   }

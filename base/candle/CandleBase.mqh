@@ -17,6 +17,7 @@ protected:
    bool              m_wait_for_new;
    bool              m_trade_processed;
    int               m_period;
+   bool              m_active;
    MqlRates          m_last;
    CSymbolInfo      *m_symbol;
 public:
@@ -24,6 +25,8 @@ public:
                     ~CCandleBase(void);
    virtual bool      Init(CSymbolInfo*,const int);
    //--- setters and getters
+   bool              Active(){return m_active;}
+   void              Active(bool active){m_active = active;}
    datetime          LastTime(void) const {return m_last.time;}
    double            LastOpen(void) const {return m_last.open;}
    double            LastHigh(void) const {return m_last.high;}
@@ -45,7 +48,8 @@ public:
 CCandleBase::CCandleBase(void) : m_new(false),
                                  m_wait_for_new(false),
                                  m_trade_processed(false),
-                                 m_period(0)
+                                 m_period(0),
+                                 m_active(true)
   {
   }
 //+------------------------------------------------------------------+
@@ -68,6 +72,8 @@ bool CCandleBase::Init(CSymbolInfo *symbol,const int timeframe)
 //+------------------------------------------------------------------+
 void CCandleBase::Check(void)
   {
+   if (!Active()) 
+      return;
    m_new=false;
    if(m_symbol!=NULL)
      {

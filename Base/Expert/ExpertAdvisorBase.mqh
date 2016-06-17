@@ -30,7 +30,7 @@ class CExpertAdvisorBase : public CObject
   {
 protected:
    //--- trade parameters
-   bool              m_activate;
+   bool              m_active;
    string            m_name;
    //--- signal parameters
    bool              m_every_tick;
@@ -77,8 +77,8 @@ public:
    virtual CExpertAdvisors *GetContainer(void) const {return GetPointer(m_expert);}
    virtual void      SetContainer(CExpertAdvisors *e){m_expert=e;}
    //--- activation and deactivation
-   virtual bool      Active(void) const {return m_activate;}
-   virtual void      Active(const bool activate) {m_activate=activate;}
+   virtual bool      Active(void) const {return m_active;}
+   virtual void      Active(const bool toggle) {m_active=toggle;}
    //--- setters and getters       
    string            Name() const {return m_name;}
    void              Name(const string name) {m_name=name;}
@@ -174,7 +174,7 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpertAdvisorBase::CExpertAdvisorBase(void) : m_activate(true),
+CExpertAdvisorBase::CExpertAdvisorBase(void) : m_active(true),
                                                m_every_tick(true),
                                                m_symbol_name(NULL),
                                                m_one_trade_per_candle(true),

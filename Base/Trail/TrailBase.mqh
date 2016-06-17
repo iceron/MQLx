@@ -14,7 +14,7 @@ class CTrails;
 class CTrailBase : public CObject
   {
 protected:
-   bool              m_activate;
+   bool              m_active;
    ENUM_TRAIL_TARGET m_target;
    double            m_trail;
    double            m_start;
@@ -32,8 +32,8 @@ public:
    virtual void      SetContainer(CTrails *trails){m_trails=trails;}
    virtual bool      Validate(void) const;
    //--- getters and setters    
-   bool              Active(void) const {return m_activate;}
-   void              Active(const bool activate) {m_activate=activate;}
+   bool              Active(void) const {return m_active;}
+   void              Active(const bool activate) {m_active=activate;}
    double            End(void) const {return m_end;}
    void              End(const double end) {m_end=end;}
    void              Set(const double trail,const double st,const double step=1,const double end=0);
@@ -57,7 +57,7 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CTrailBase::CTrailBase(void) : m_activate(true),
+CTrailBase::CTrailBase(void) : m_active(true),
                                m_target(TRAIL_TARGET_STOPLOSS),
                                m_start(0.0),
                                m_end(0.0),

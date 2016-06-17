@@ -12,9 +12,13 @@
 //+------------------------------------------------------------------+
 class CCandleManagerBase : public CArrayObj
   {
+protected:
+   bool              m_active;
 public:
                      CCandleManagerBase(void);
                     ~CCandleManagerBase(void);
+   bool              Active(){return m_active;}
+   void              Active(bool active){m_active = active;}                    
    virtual void      Check(void) const;
    virtual bool      IsNewCandle(const string,const int) const;
    virtual CCandle  *Get(const string,const int) const;
@@ -24,7 +28,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CCandleManagerBase::CCandleManagerBase(void)
+CCandleManagerBase::CCandleManagerBase(void) : m_active(true)
   {
   }
 //+------------------------------------------------------------------+

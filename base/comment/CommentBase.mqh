@@ -12,17 +12,21 @@
 class CCommentBase : public CObject
   {
 protected:
+   bool              m_active;
    string            m_comment;
 public:
                      CCommentBase(void);
                     ~CCommentBase(void);
-   virtual void      Init(const string comment) {m_comment = comment;}
+   bool              Active(){return m_active;}
+   void              Active(bool active){m_active=active;}
+   virtual void      Init(const string comment) {m_comment=comment;}
    string            Text(void) const {return m_comment;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CCommentBase::CCommentBase(void) : m_comment(NULL)
+CCommentBase::CCommentBase(void) : m_active(true),
+                                   m_comment(NULL)
   {
   }
 //+------------------------------------------------------------------+

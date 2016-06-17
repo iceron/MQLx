@@ -16,7 +16,6 @@ class CStops;
 class COrderBase : public CObject
   {
 protected:
-   bool              m_activate;
    bool              m_closed;
    bool              m_suspend;
    long              m_order_flags;
@@ -37,8 +36,6 @@ public:
    //--- initialization
    virtual void      SetContainer(COrders *orders){m_orders=orders;}
    //--- getters and setters       
-   bool              Active(void) const {return m_activate;}
-   void              Active(const bool activate) {m_activate=activate;}
    void              CreateStops(CStops *stops);
    void              CheckStops(void);
    bool              Init(int magic,COrders *orders,CStops *m_stops,bool recreate=false);
@@ -82,8 +79,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderBase::COrderBase(void) : m_activate(true),
-                               m_closed(false),
+COrderBase::COrderBase(void) : m_closed(false),
                                m_suspend(false),
                                m_order_flags(0),
                                m_magic(0),

@@ -14,11 +14,14 @@ class COrder;
 class COrderStopsBase : public CArrayObj
   {
 protected:
+   bool              m_active;
    COrder           *m_order;
 public:
                      COrderStopsBase(void);
                     ~COrderStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOPS;}
+   bool              Active(){return m_active;}
+   void              Active(bool active){m_active = active;}
    //--- initialization
    virtual void      SetContainer(COrder *order){m_order=order;}
    virtual bool      NewOrderStop(COrder*,CStop*,COrderStops*);
@@ -36,7 +39,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderStopsBase::COrderStopsBase(void)
+COrderStopsBase::COrderStopsBase(void) : m_active(true)
   {
   }
 //+------------------------------------------------------------------+
@@ -59,6 +62,8 @@ bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop,COrderStops *order_
 //+------------------------------------------------------------------+
 COrderStopsBase::Check(double &volume)
   {
+   if (!Active()) 
+      return;
    int total=Total();
    if(total>0)
      {
@@ -70,7 +75,7 @@ COrderStopsBase::Check(double &volume)
             order_stop.CheckTrailing();
             order_stop.Update();
             order_stop.Check(volume);
-            if(!CheckNewTicket(order_stop)) 
+            if(!CheckNewTicket(order_stop))
                return;
            }
         }
@@ -102,18 +107,18 @@ bool COrderStopsBase::Close(void)
 //+------------------------------------------------------------------+
 COrderStopsBase::Show(const bool show=true)
   {
-   for (int i=0;i<Total();i++)
-   {
-      COrderStop *orderstop = At(i);
+   for(int i=0;i<Total();i++)
+     {
+      COrderStop *orderstop=At(i);
       orderstop.Show(show);
-   }
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderStopsBase::CreateElement(const int index)
   {
-   COrderStop * orderstop = new COrderStop();
+   COrderStop*orderstop=new COrderStop();
    orderstop.SetContainer(GetPointer(this));
    return Insert(GetPointer(orderstop),index);
   }
@@ -121,7 +126,7 @@ bool COrderStopsBase::CreateElement(const int index)
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderStopsBase::Save(const int handle)
-  {  
+  {
    CArrayObj::Save(handle);
    return true;
   }

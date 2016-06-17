@@ -14,7 +14,7 @@
 class CExpertAdvisorsBase : public CArrayObj
   {
 protected:
-   bool              m_activate;
+   bool              m_active;
    int               m_uninit_reason;
    CComments        *m_comments;
 public:
@@ -22,8 +22,8 @@ public:
                     ~CExpertAdvisorsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_EXPERT;}
    //--- getters and setters
-   bool              Active(void) const {return m_activate;}
-   void              Active(const bool activate) {m_activate=activate;}
+   bool              Active(void) const {return m_active;}
+   void              Active(const bool activate) {m_active=activate;}
    void              ChartComment(const bool enable=true);
    int               OrdersTotal(void) const;
    int               OrdersHistoryTotal(void) const;
@@ -47,7 +47,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpertAdvisorsBase::CExpertAdvisorsBase(void) : m_activate(true),
+CExpertAdvisorsBase::CExpertAdvisorsBase(void) : m_active(true),
                                    m_uninit_reason(0)
   {
   }

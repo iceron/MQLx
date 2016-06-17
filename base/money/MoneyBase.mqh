@@ -17,7 +17,7 @@ class CExpertAdvisor;
 class CMoneyBase : public CObject
   {
 protected:
-   bool              m_activate;
+   bool              m_active;
    ENUM_MONEY_UPDATE_TYPE m_update;
    double            m_volume;
    double            m_risk;
@@ -42,8 +42,8 @@ public:
    virtual void      SetContainer(CExpertAdvisor *s){m_strategy=s;}
    virtual bool      Validate(void) const {return false;}
    //--- getters and setters
-   bool              Active(void) const {return m_activate;}
-   void              Active(const bool activate) {m_activate=activate;}
+   bool              Active(void) const {return m_active;}
+   void              Active(const bool activate) {m_active=activate;}
    void              Balance(const double balance) {m_balance=balance;}
    double            Balance(void) const {return m_balance;}
    void              BalanceIncrement(const double balance) {m_balance_inc=balance;}
@@ -69,7 +69,7 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyBase::CMoneyBase(void) : m_activate(true),
+CMoneyBase::CMoneyBase(void) : m_active(true),
                                m_update(MONEY_UPDATE_ALWAYS),
                                m_volume(0.2),
                                m_period(0),

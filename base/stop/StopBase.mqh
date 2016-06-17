@@ -21,7 +21,7 @@ class CStopBase : public CObject
   {
 protected:
    //--- stop order parameters   
-   bool              m_activate;
+   bool              m_active;
    bool              m_main;
    string            m_name;
    bool              m_oco;
@@ -68,8 +68,8 @@ public:
    virtual void      SetContainer(CStops *stops){m_stops=stops;}
    virtual bool      Validate(void) const;
    //--- getters and setters
-   bool              Active(void) {return m_activate;}
-   void              Active(const bool activate) {m_activate=activate;}
+   bool              Active(void) {return m_active;}
+   void              Active(const bool activate) {m_active=activate;}
    bool              Broker(void) const {return m_stop_type==STOP_TYPE_BROKER;}
    void              Comment(string comment) {m_comment=comment;}
    string            Comment(void) const {return m_comment;}
@@ -152,7 +152,7 @@ protected:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CStopBase::CStopBase(void) : m_activate(true),
+CStopBase::CStopBase(void) : m_active(true),
                              m_magic(INT_MAX),
                              m_main(false),
                              m_oco(true),
@@ -315,7 +315,8 @@ bool CStopBase::CloseStop(COrder *order,COrderStop *orderstop,const double price
 //+------------------------------------------------------------------+
 double CStopBase::StopLossCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price)
   {
-   if(!Refresh(symbol)) return 0;
+   if(!Refresh(symbol)) 
+      return 0;
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
       return price-m_stoploss*m_symbol.Point();
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
@@ -327,7 +328,8 @@ double CStopBase::StopLossCalculate(const string symbol,const ENUM_ORDER_TYPE ty
 //+------------------------------------------------------------------+
 double CStopBase::TakeProfitCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price)
   {
-   if(!Refresh(symbol)) return 0;
+   if(!Refresh(symbol)) 
+      return 0;
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
       return price+m_takeprofit*m_symbol.Point();
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)

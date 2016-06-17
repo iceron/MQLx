@@ -14,7 +14,6 @@ class CExpert;
 class COrdersBase : public CArrayObj
   {
 protected:
-   bool              m_activate;
    CStops           *m_stops;
    CExpert          *m_strategy;
 public:
@@ -25,9 +24,6 @@ public:
    virtual bool      Init(CExpert *s=NULL,CStops *stops=NULL);
    virtual void      SetContainer(CExpert *s);
    virtual void      SetStops(CStops *stops);
-   //--- getters and setters
-   bool              Activate(void) const {return m_activate;}
-   void              Activate(const bool activate) {m_activate=activate;}
    //--- events                  
    virtual void      OnTick(void);
    //--- order creation
@@ -42,7 +38,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrdersBase::COrdersBase(void) : m_activate(true)
+COrdersBase::COrdersBase(void)
   {
    if(!IsSorted())
       Sort();

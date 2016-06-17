@@ -14,7 +14,7 @@ class CExpertAdvisor;
 class CStopsBase : public CArrayObj
   {
 protected:
-   bool              m_activate;
+   bool              m_active;
    CExpertAdvisor   *m_expert;
 public:
                      CStopsBase(void);
@@ -25,8 +25,8 @@ public:
    virtual void      SetContainer(CExpertAdvisor *s){m_expert=s;}
    virtual bool      Validate(void) const;
    //--- setters and getters
-   virtual bool      Active(void) const {return m_activate;}
-   virtual void      Active(const bool activate) {m_activate=activate;}
+   virtual bool      Active(void) const {return m_active;}
+   virtual void      Active(const bool activate) {m_active=activate;}
    virtual CStop    *Main(void);
    //--- recovery
    virtual bool      CreateElement(const int);
@@ -34,7 +34,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CStopsBase::CStopsBase(void) : m_activate(true)
+CStopsBase::CStopsBase(void) : m_active(true)
   {
   }
 //+------------------------------------------------------------------+

@@ -9,24 +9,13 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-/*
-enum ENUM_SIGNAL_FLAGS
-{   
-   SIGNAL_FLAG_DISABLE     =0x1,
-   SIGNAL_FLAG_INVERT      =0x2,
-   SIGNAL_FLAG_INVERT_TOTAL=0x4,
-};
-*/
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 class CSignalBase : public CObject
   {
+   bool              m_active;
    double            m_direction;
    int               m_threshold_open;
    int               m_threshold_close;
    int               m_weight;
-   bool              m_activate;
    bool              m_invert;
    CArrayObj         m_filters;
 public:
@@ -38,6 +27,7 @@ public:
    virtual int       ShortCondition(void);
 
    bool              Active(void);
+   void              Active(const bool);
    bool              Invert(void);
    int               ThresholdOpen(void) {return m_threshold_open;}
    int               ThresholdClose(void){return m_threshold_close;}
@@ -50,11 +40,11 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CSignalBase::CSignalBase(void) : m_direction(0),
+CSignalBase::CSignalBase(void) : m_active(true),
+                                 m_direction(0),
                                  m_threshold_open(50),
                                  m_threshold_close(100),
                                  m_weight(1.0),
-                                 m_activate(true),
                                  m_invert(false)
   {
   }
@@ -106,7 +96,14 @@ int CSignalBase::ShortCondition(void)
 //+------------------------------------------------------------------+
 bool CSignalBase::Active(void)
   {
-   return m_activate;
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CSignalBase::Active(const bool toggle)
+  {
+   m_active=toggle;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
