@@ -16,11 +16,12 @@ protected:
 public:
                      COrderManager(void);
                     ~COrderManager(void);
+   virtual bool      Validate(void) const;
    virtual bool      CloseOrder(COrder*,const int);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &,const MqlTradeRequest &,const MqlTradeResult &);
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    int               MagicClose(void) const {return m_magic;}
-   void              MagicClose(const int magic) {m_magic_close = magic;}
+   void              MagicClose(const int magic) {m_magic_close=magic;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -33,6 +34,15 @@ COrderManager::COrderManager(void) : m_magic_close(0)
 //+------------------------------------------------------------------+
 COrderManager::~COrderManager(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManager::Validate(void)
+  {
+   if (m_magic==m_magic_close || m_other_magic.Search(m_magic_close)>=0)
+      return false;
+   return COrderManagerBase::Validate();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -59,7 +69,7 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       price=PriceCalculate(type);
-      lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));      
+      lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
       ret=SendOrder(type,lotsize,price,0,0);
      }
    return ret;
@@ -73,7 +83,7 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
    COrderInfo ord;
    if(CheckPointer(order)==POINTER_DYNAMIC)
      {
-      if (order.Volume()<=0) return true;
+      if(order.Volume()<=0) return true;
       if(m_symbol==NULL || StringCompare(m_symbol.Name(),order.Symbol())!=0)
          m_symbol = m_symbol_man.Get(order.Symbol());
       if(m_symbol!=NULL)
