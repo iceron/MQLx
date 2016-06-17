@@ -161,7 +161,7 @@ protected:
    virtual void      ManageOrders(void) {m_order_man.ManageOrders();}
    virtual void      ManageOrdersHistory(void){m_order_man.ManageOrdersHistory();}
    virtual void      OnTradeTransaction(COrder*) {}
-   virtual bool      TradeOpen(const string symbol,const int res) {return m_order_man.TradeOpen(symbol,res);}
+   virtual bool      TradeOpen(const string symbol,const ENUM_ORDER_TYPE type) {return m_order_man.TradeOpen(symbol,type);}
    //--- signal manager
    virtual bool      CheckSignals(int&,int&) const;
    //--- symbol manager

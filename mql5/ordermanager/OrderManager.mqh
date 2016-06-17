@@ -18,7 +18,7 @@ public:
                     ~COrderManager(void);
    virtual bool      CloseOrder(COrder*,const int);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &,const MqlTradeRequest &,const MqlTradeResult &);
-   virtual bool      TradeOpen(const string,const int);
+   virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    int               MagicClose(void) const {return m_magic;}
    void              MagicClose(const int magic) {m_magic_close = magic;}
   };
@@ -47,14 +47,13 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManager::TradeOpen(const string symbol,const int res)
+bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
   {
    //if(res<=0) return false;
    bool ret=false;
    double lotsize=0.0,price=0.0;
    int trades_total =TradesTotal();
    int orders_total = OrdersTotal();
-   ENUM_ORDER_TYPE type=/*CSignal::SignalToOrderType(res)*/(ENUM_ORDER_TYPE)res; //Print()
    m_symbol=m_symbol_man.Get(symbol);
    if(!IsPositionAllowed(type))
       return true;

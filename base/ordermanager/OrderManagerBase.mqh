@@ -110,7 +110,7 @@ public:
    void              Expiration(const int expiration) {m_expiration=expiration;}
    virtual bool      AddOtherMagic(const int);
    virtual void      AddOtherMagicString(const string&[]);
-   virtual bool      TradeOpen(const string,const int) {return true;}
+   virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE) {return true;}
    //--- events
    virtual void      OnTradeTransaction(COrder*){}
    virtual void      OnTick(void);
@@ -118,8 +118,8 @@ protected:
    //--- trade manager
    virtual double    PriceCalculate(ENUM_ORDER_TYPE);
    virtual double    PriceCalculateCustom(const int) {return 0;}
-   virtual double    StopLossCalculate(const int,const double);
-   virtual double    TakeProfitCalculate(const int,const double);
+   virtual double    StopLossCalculate(const ENUM_ORDER_TYPE,const double);
+   virtual double    TakeProfitCalculate(const ENUM_ORDER_TYPE,const double);
    bool              SendOrder(const ENUM_ORDER_TYPE,const double,const double,const double,const double);
    //--- deinitialization  
    virtual void      Deinit(const int);
@@ -357,27 +357,21 @@ double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double COrderManagerBase::StopLossCalculate(const int res,const double price)
+double COrderManagerBase::StopLossCalculate(const ENUM_ORDER_TYPE type,const double price)
   {
    if(CheckPointer(m_main_stop))
      {
-      ENUM_ORDER_TYPE type=ORDER_TYPE_BUY;
-      if(res==CMD_BUY) type=ORDER_TYPE_BUY;
-      else if(res==CMD_SELL) type=ORDER_TYPE_SELL;
-      return m_main_stop.StopLossTicks(ORDER_TYPE_BUY,price);
+      return m_main_stop.StopLossTicks(type,price);
      }
    return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double COrderManagerBase::TakeProfitCalculate(const int res,const double price)
+double COrderManagerBase::TakeProfitCalculate(const ENUM_ORDER_TYPE type,const double price)
   {
    if(CheckPointer(m_main_stop))
      {
-      ENUM_ORDER_TYPE type=ORDER_TYPE_BUY;
-      if(res==CMD_BUY) type=ORDER_TYPE_BUY;
-      else if(res==CMD_SELL) type=ORDER_TYPE_SELL;
       return m_main_stop.TakeProfitTicks(type,price);
      }
    return 0;
