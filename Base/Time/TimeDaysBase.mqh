@@ -32,7 +32,7 @@ public:
    //--- initialization                    
    virtual bool      Validate(void);
    virtual bool      Evaluate(void);
-   virtual void      Init(const bool,const bool,const bool,const bool,const bool,const bool,const bool);
+   virtual void      Set(const bool,const bool,const bool,const bool,const bool,const bool,const bool);
    //--- setters and getters
    bool              Sunday(void) const {return(m_day_flags&TIME_DAY_FLAG_SUN)!=0;}
    void              Sunday(const bool);
@@ -163,17 +163,8 @@ bool CTimeDaysBase::Evaluate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CTimeDaysBase::Init(const bool sun=false,const bool mon=true,const bool tue=true,const bool wed=true,const bool thu=true,const bool fri=true,const bool sat=false)
+void CTimeDaysBase::Set(const bool sun=false,const bool mon=true,const bool tue=true,const bool wed=true,const bool thu=true,const bool fri=true,const bool sat=false)
   {
-/*
-   m_sun = sun;
-   m_mon = mon;
-   m_tue = tue;
-   m_wed = wed;
-   m_thu = thu;
-   m_fri = fri;
-   m_sat = sat;
-   */
    if(sun)
       m_day_flags|=TIME_DAY_FLAG_SUN;
    if(mon)

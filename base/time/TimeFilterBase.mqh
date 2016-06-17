@@ -18,11 +18,10 @@ protected:
 public:
                      CTimeFilterBase(void);
                     ~CTimeFilterBase(void);
-   //--- initialization                    
+   virtual bool      Init(CTimes *);
    virtual bool      Validate(void);
    virtual bool      Evaluate(void);
-   virtual bool      Init(const int,const int,const int,const int,const int,const int,const int);
-   virtual void      SetDays(const bool,const bool,const bool,const bool,const bool,const bool,const bool);
+   virtual bool      Set(const int,const int,const int,const int,const int,const int,const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -35,6 +34,20 @@ CTimeFilterBase::CTimeFilterBase(void)
 //+------------------------------------------------------------------+
 CTimeFilterBase::~CTimeFilterBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeFilterBase::Init(CTimes *times)
+  {
+   CTimeFilterBase::Init(times);
+   for(int i=0;i<m_time_filters.Total();i++)
+     {
+      CTimeFilter *filter=m_time_filters.At(i);
+      filter.Reverse(!Reverse());
+      filter.Init(times);
+     }
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -53,7 +66,7 @@ bool CTimeFilterBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeFilterBase::Init(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0)
+bool CTimeFilterBase::Set(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0)
   {
    m_filter_start.hour=starthour+gmt;
    m_filter_start.min=startminute;
@@ -87,7 +100,18 @@ bool CTimeFilterBase::Evaluate(void)
    datetime f_end=StructToTime(m_filter_end);
    if(!(current>=f_start && current<=f_end))
       result=false;
-   return Reverse()?result:!result;
+
+   result=Reverse()?result:!result;
+   if(!result)
+     {
+      for(int i=0;i<m_time_filters.Total();i++)
+        {
+         CTimeFilter *filter=m_time_filters.At(i);
+         if(filter.Evaluate())
+            return true;
+        }
+     }
+   return result;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
