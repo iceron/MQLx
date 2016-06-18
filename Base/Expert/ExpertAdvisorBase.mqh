@@ -246,7 +246,7 @@ bool CExpertAdvisorBase::InitTimes(void)
   {
    if(m_times==NULL)
       return true;
-   return m_times.Init(GetPointer(this));
+   return m_times.Init(GetPointer(m_symbol_man));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

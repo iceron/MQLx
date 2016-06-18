@@ -17,14 +17,15 @@ protected:
    bool              m_active;
    bool              m_reverse;
    datetime          m_time_start;
-   CTimes           *m_times;
+   CSymbolManager   *m_symbol_man;
+   CTimes           *m_times;   
 public:
                      CTimeBase(void);
                     ~CTimeBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIME;}
    virtual bool      Validate(void) {return true;}
    //--- initialization
-   virtual bool      Init(CTimes *);
+   virtual bool      Init(CTimes *,CSymbolManager*);
    virtual void      SetContainer(CTimes *times){m_times=times;}
    //--- setters and getters
    bool              Active(void) const {return m_active;}
@@ -53,9 +54,10 @@ CTimeBase::~CTimeBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeBase::Init(CTimes *times)
+bool CTimeBase::Init(CTimes *times,CSymbolManager* symbol_man)
   {
    SetContainer(times);
+   m_symbol_man = symbol_man;
    return true;
   }
 //+------------------------------------------------------------------+

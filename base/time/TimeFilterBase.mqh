@@ -61,6 +61,16 @@ bool CTimeFilterBase::Validate(void)
       PrintFormat("Invalid setting for start and end times.");
       return false;
      }
+   if (m_symbol_man==NULL)
+   {
+      PrintFormat("NULL pointer: symbol manager");
+      return false;
+   }   
+   if (m_symbol_man.Total()==0)
+   {
+      PrintFormat("no entry under symbol manager");
+      return false;
+   }  
    return true;
   }
 //+------------------------------------------------------------------+
@@ -84,7 +94,8 @@ bool CTimeFilterBase::Evaluate(void)
    if(!Active()) return true;
    bool result=true;
    MqlDateTime time;
-   datetime current=TimeCurrent();
+   CSymbolInfo *symbol = m_symbol_man.GetPrimary();   
+   datetime current=symbol.Time();
    TimeToStruct(current,time);
    m_filter_start.year= time.year;
    m_filter_start.mon = time.mon;

@@ -25,13 +25,13 @@ public:
                     ~CTimesBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIMES;}
    //-- initialization
-   virtual bool      Init(CExpertAdvisor *s);
-   virtual void      SetContainer(CExpertAdvisor *s){m_expert=s;}
+   virtual bool      Init(CSymbolManager*);
+   virtual void      SetContainer(CExpertAdvisor *e){m_expert=e;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation
    bool              Active(void) const {return m_active;}
    void              Active(const bool activate) {m_active=activate;}
-   int               Selected() {return m_selected;}
+   int               Selected(void) {return m_selected;}
    //--- checking
    virtual bool      Evaluate(void) const;
    //--- recovery
@@ -53,14 +53,13 @@ CTimesBase::~CTimesBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimesBase::Init(CExpertAdvisor *s)
+bool CTimesBase::Init(CSymbolManager* symbol_man)
   {
    for(int i=0;i<Total();i++)
      {
       CTime *time=At(i);
-      time.Init(GetPointer(this));
+      time.Init(GetPointer(this),symbol_man);
      }
-   SetContainer(s);
    return true;
   }
 //+------------------------------------------------------------------+
