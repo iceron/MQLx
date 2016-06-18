@@ -21,7 +21,7 @@ public:
    virtual double    StopLossPrice(COrder *,COrderStop *);
    virtual double    TakeProfitPrice(COrder *,COrderStop *);
 protected:
-   virtual bool      CloseStop(COrder *,COrderStop *,const double) {return true;}
+   virtual bool      CloseStop(COrder *,COrderStop *,const double);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -151,7 +151,7 @@ bool CStop::OpenStop(COrder *order,COrderStop *orderstop,double val)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStopBase::CloseStop(COrder *order,COrderStop *orderstop,const double price)
+bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
   {
    bool res=false;
    ENUM_ORDER_TYPE type=order.OrderType();

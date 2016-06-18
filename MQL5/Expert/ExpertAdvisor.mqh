@@ -11,35 +11,35 @@
 class CExpertAdvisor : public CExpertAdvisorBase
   {
 public:
-                     CExpert(void);
-                    ~CExpert(void);
+                     CExpertAdvisor(void);
+                    ~CExpertAdvisor(void);
    virtual bool      OnTick(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpert::CExpert(void)
+CExpertAdvisor::CExpertAdvisor(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpert::~CExpert(void)
+CExpertAdvisor::~CExpertAdvisor(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpert::OnTick(void)
+bool CExpertAdvisor::OnTick(void)
   {
-   bool ret=CExpertBase::OnTick();
+   bool ret=CExpertAdvisorBase::OnTick();
    return ret;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpert::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
+void CExpertAdvisor::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    m_order_man.OnTradeTransaction(trans,request,result);
   }  

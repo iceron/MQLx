@@ -5,38 +5,37 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#include "..\..\common\enum\ENUM_CMD.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 class CExpertAdvisors : public CExpertAdvisorsBase
   {
 public:
-                     CExperts(void);
-                    ~CExperts(void);
+                     CExpertAdvisors(void);
+                    ~CExpertAdvisors(void);
    virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExperts::CExperts(void)
+CExpertAdvisors::CExpertAdvisors(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExperts::~CExperts(void)
+CExpertAdvisors::~CExpertAdvisors(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExperts::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
+void CExpertAdvisors::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    for(int i=0;i<Total();i++)
      {
-      CExpert *strat=At(i);
-      strat.OnTradeTransaction(trans,request,result);
+      CExpertAdvisor *e=At(i);
+      e.OnTradeTransaction(trans,request,result);
      }
   }
 //+------------------------------------------------------------------+

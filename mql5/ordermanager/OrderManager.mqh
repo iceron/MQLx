@@ -38,7 +38,7 @@ COrderManager::~COrderManager(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManager::Validate(void)
+bool COrderManager::Validate(void) const
   {
    if (m_magic==m_magic_close || m_other_magic.Search(m_magic_close)>=0)
       return false;
