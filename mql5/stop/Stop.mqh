@@ -20,7 +20,8 @@ public:
    virtual bool      OpenStop(COrder *,COrderStop *,double);
    virtual double    StopLossPrice(COrder *,COrderStop *);
    virtual double    TakeProfitPrice(COrder *,COrderStop *);
-
+protected:
+   virtual bool      CloseStop(COrder *,COrderStop *,const double) {return true;}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -93,8 +94,8 @@ bool CStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
 bool CStop::DeleteStopOrder(const ulong ticket) const
   {
    if(ticket<=0) return true;
-   //if (OrderGetInteger(ORDER_TIME_DONE)>0) return true;
-   if (OrderGetInteger(ORDER_STATE)==ORDER_STATE_CANCELED) return true;
+//if (OrderGetInteger(ORDER_TIME_DONE)>0) return true;
+   if(OrderGetInteger(ORDER_STATE)==ORDER_STATE_CANCELED) return true;
    if(m_trade.OrderDelete(ticket))
      {
       uint result=m_trade.ResultRetcode();
@@ -143,6 +144,29 @@ bool CStop::OpenStop(COrder *order,COrderStop *orderstop,double val)
       else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
         {
          res=m_trade.Buy(lotsize,val,0,0,m_comment);
+        }
+     }
+   return res;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::CloseStop(COrder *order,COrderStop *orderstop,const double price)
+  {
+   bool res=false;
+   ENUM_ORDER_TYPE type=order.OrderType();
+   m_symbol= m_symbol_man.Get(order.Symbol());
+   m_trade = m_trade_man.Get(m_symbol.Name());
+   if(m_trade!=NULL)
+     {
+      if(m_stop_type==STOP_TYPE_VIRTUAL)
+        {
+         double lotsize=MathMin(order.Volume(),LotSizeCalculate(order,orderstop));
+         if(type==ORDER_TYPE_BUY)
+            res=m_trade.Sell(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
+         else if(type==ORDER_TYPE_SELL)
+            res=m_trade.Buy(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
+         if(res) order.Volume(order.Volume()-lotsize);
         }
      }
    return res;

@@ -138,7 +138,7 @@ protected:
    //--- stop order entry   
    virtual bool      GetClosePrice(const string,const ENUM_ORDER_TYPE,double &);
    //--- stop order exit
-   virtual bool      CloseStop(COrder *,COrderStop *,const double );
+   virtual bool      CloseStop(COrder *,COrderStop *,const double) {return true;}
    //--- deinitialization
    virtual void      Deinit(void);
    virtual void      DeinitSymbol(void);
@@ -265,29 +265,6 @@ double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
    else if(m_volume_type==VOLUME_TYPE_REMAINING)
       lotsize=order.Volume();
    return lotsize;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CStopBase::CloseStop(COrder *order,COrderStop *orderstop,const double price)
-  {
-   bool res=false;
-   ENUM_ORDER_TYPE type=order.OrderType();
-   m_symbol = m_symbol_man.Get(order.Symbol());
-   m_trade = m_trade_man.Get(m_symbol.Name());
-   if (m_trade!=NULL)
-   {
-      if(m_stop_type==STOP_TYPE_VIRTUAL)
-        {
-         double lotsize=MathMin(order.Volume(),LotSizeCalculate(order,orderstop));
-         if(type==ORDER_TYPE_BUY)
-            res=m_trade.Sell(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
-         else if(type==ORDER_TYPE_SELL)
-            res=m_trade.Buy(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
-         if(res) order.Volume(order.Volume()-lotsize);
-        }
-   }
-   return res;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
