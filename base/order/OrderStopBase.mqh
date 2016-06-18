@@ -12,6 +12,7 @@
 #include "..\Stop\StopLineBase.mqh"
 class COrder;
 class COrderStops;
+class CStop;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -54,7 +55,7 @@ public:
    ulong             MainMagic(void) const {return m_order.Magic();}
    ulong             MainTicket(void) const {return m_order.Ticket();}
    double            MainTicketPrice(void) const {return m_order.Price();}
-   ENUM_ORDER_TYPE   MainTicketType(void) const {return m_order.OrderType();}
+   ENUM_ORDER_TYPE   MainTicketType(void) const {return (ENUM_ORDER_TYPE)m_order.OrderType();}
    COrder           *Order(void) {return GetPointer(m_order);}
    void              StopLoss(const double stoploss) {m_stoploss.Add(stoploss);}
    double            StopLoss(void) const {return m_stoploss.Total()>0?m_stoploss.At(m_stoploss.Total()-1):0;}

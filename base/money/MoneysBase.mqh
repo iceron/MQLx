@@ -8,6 +8,7 @@
 #include <Arrays\ArrayObj.mqh>
 #include "MoneyFixedFractionalBase.mqh"
 #include "MoneyFixedRatioBase.mqh"
+#include "MoneyFixedRiskPerPointBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -22,7 +23,7 @@ public:
                     ~CMoneysBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}   
    //--- initialization
-   virtual bool      Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
+   virtual bool      Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const;
    //--- setters and getters
@@ -49,14 +50,13 @@ CMoneysBase::~CMoneysBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CMoneysBase::Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool CMoneysBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    for(int i=0;i<Total();i++)
      {
       CMoney *money=At(i);
       money.Init(GetPointer(symbolmanager),GetPointer(accountinfo));
      }
-   SetContainer(s);
    return true;
   }
 //+------------------------------------------------------------------+

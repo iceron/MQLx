@@ -110,7 +110,7 @@ ulong CStop::OpenStop(COrder *order,COrderStop *orderstop,const double val)
   {
    ulong res=0;
    double lotsize=LotSizeCalculate(order,orderstop);
-   ENUM_ORDER_TYPE type=order.OrderType();
+   ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
    if(m_stop_type==STOP_TYPE_PENDING && !m_main)
      {
       if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
@@ -126,7 +126,7 @@ ulong CStop::OpenStop(COrder *order,COrderStop *orderstop,const double val)
 bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
   {
    bool res=false;
-   ENUM_ORDER_TYPE type=order.OrderType();
+   ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
    int ticket=(int) order.Ticket();
    if(m_stop_type==STOP_TYPE_VIRTUAL)
      {

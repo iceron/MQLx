@@ -5,8 +5,8 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#include <Object.mqh>
 #include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
+#include "..\Symbol\SymbolManagerBase.mqh"
 class CTimes;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -24,7 +24,7 @@ public:
                     ~CTimeBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIME;}   
    //--- initialization
-   virtual bool      Init(CTimes *,CSymbolManager*);
+   virtual bool      Init(CSymbolManager*);
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) {return true;}
    //--- setters and getters
@@ -54,9 +54,8 @@ CTimeBase::~CTimeBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeBase::Init(CTimes *times,CSymbolManager* symbol_man)
+bool CTimeBase::Init(CSymbolManager* symbol_man)
   {
-   SetContainer(times);
    m_symbol_man = symbol_man;
    return true;
   }

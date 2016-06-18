@@ -5,23 +5,14 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#include <Object.mqh>
-#include <Arrays\ArrayInt.mqh>
-#include <Files\FileBin.mqh>
-#include "..\Lib\AccountInfo.mqh"
-//#include "..\Lib\ExpertBase.mqh"
 #include "..\Symbol\SymbolManagerBase.mqh"
-#include "..\Candle\CandleBase.mqh"
+#include "..\Candle\CandleManagerBase.mqh"
 #include "..\Signal\SignalBase.mqh"
-#include "..\Trade\ExpertTradeBase.mqh"
-#include "..\Order\OrdersBase.mqh"
 #include "..\Stop\StopsBase.mqh"
 #include "..\Money\MoneysBase.mqh"
 #include "..\Time\TimesBase.mqh"
 #include "..\Comment\CommentsBase.mqh"
 #include "..\Ordermanager\OrderManagerBase.mqh"
-#include "..\Candle\CandleManagerBase.mqh"
-class CExpertAdvisors;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

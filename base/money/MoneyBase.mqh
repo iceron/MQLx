@@ -5,12 +5,10 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#include <Object.mqh>
-#include "..\Symbol\SymbolManagerBase.mqh"
-#include "..\Lib\AccountInfo.mqh"
 #include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\Common\Enum\ENUM_MONEY_UPDATE_TYPE.mqh"
-class CExpertAdvisor;
+#include "..\Symbol\SymbolManagerBase.mqh"
+#include "..\Lib\AccountInfo.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -40,7 +38,7 @@ public:
    virtual bool      InitAccount(CAccountInfo*);
    virtual bool      InitSymbol(CSymbolManager*);
    virtual void      SetContainer(CObject *container) {m_container=container;}
-   virtual bool      Validate(void) const {return false;}
+   virtual bool      Validate(void) const {return true;}
    //--- getters and setters
    bool              Active(void) const {return m_active;}
    void              Active(const bool activate) {m_active=activate;}

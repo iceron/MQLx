@@ -5,6 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
+#include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\Common\Enum\ENUM_TRAIL_TARGET.mqh"
 #include "..\..\Base\Symbol\SymbolManagerBase.mqh"
 class CTrails;
@@ -22,14 +23,14 @@ protected:
    double            m_step;
    CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
-   CTrails          *m_trails;
+   CObject          *m_container;
 public:
                      CTrailBase(void);
                     ~CTrailBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TRAIL;}
    //--- initialization                    
-   virtual bool      Init(CSymbolManager *,CTrails *);
-   virtual void      SetContainer(CTrails *trails){m_trails=trails;}
+   virtual bool      Init(CSymbolManager *);
+   virtual void      SetContainer(CObject *container){m_container=container;}
    virtual bool      Validate(void) const;
    //--- getters and setters    
    bool              Active(void) const {return m_active;}
@@ -81,11 +82,11 @@ bool CTrailBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTrailBase::Init(CSymbolManager *symbolmanager,CTrails *trail)
+bool CTrailBase::Init(CSymbolManager *symbolmanager)
   {
-   if(symbolmanager==NULL || trail==NULL) return false;
+   if(symbolmanager==NULL) 
+      return false;
    m_symbol_man=symbolmanager;
-   SetContainer(trail);
    return true;
   }
 //+------------------------------------------------------------------+

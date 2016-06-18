@@ -5,11 +5,11 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#include <Arrays\ArrayObj.mqh>
-#include <Files\FileBin.mqh>
+#include "..\Symbol\SymbolManagerBase.mqh"
 #include "OrderStopsBase.mqh"
 class COrders;
 class CStops;
+class CStop;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

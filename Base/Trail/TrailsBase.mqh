@@ -54,7 +54,10 @@ bool CTrailsBase::Init(CSymbolManager *symbolmanager,CStop *stop)
    for(int i=0;i<Total();i++)
      {
       CTrail *trail=At(i);
-      trail.Init(symbolmanager,GetPointer(this));
+      if (trail!=NULL)
+         continue;
+      trail.SetContainer(GetPointer(this));
+      trail.Init(symbolmanager);
      }
    SetContainer(stop);
    return true;

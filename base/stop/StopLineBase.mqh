@@ -7,6 +7,7 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <ChartObjects\ChartObjectsLines.mqh>
 #include <Files\FileBin.mqh>
+#include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
 class CStop;
 //+------------------------------------------------------------------+
 //|                                                                  |

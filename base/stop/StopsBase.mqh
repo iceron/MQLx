@@ -15,14 +15,14 @@ class CStopsBase : public CArrayObj
   {
 protected:
    bool              m_active;
-   CExpertAdvisor   *m_expert;
+   CObject          *m_container;
 public:
                      CStopsBase(void);
                     ~CStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPS;}
    //--- initialization
-   virtual bool      Init(CExpertAdvisor *,CSymbolManager *,CAccountInfo *);
-   virtual void      SetContainer(CExpertAdvisor *s){m_expert=s;}
+   virtual bool      Init(CSymbolManager *,CAccountInfo *);
+   virtual void      SetContainer(CObject *container){m_container=container;}
    virtual bool      Validate(void) const;
    //--- setters and getters
    virtual bool      Active(void) const {return m_active;}
@@ -46,14 +46,13 @@ CStopsBase::~CStopsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStopsBase::Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool CStopsBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
       stop.Init(symbolmanager,accountinfo);
      }
-   SetContainer(s);
    return true;
   }
 //+------------------------------------------------------------------+

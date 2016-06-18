@@ -9,13 +9,11 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CMoneyFixedRiskPerPointBase : public CMoneyFixedRiskPerPoint
+class CMoneyFixedRiskBase : public CMoneyFixedRiskPerPoint
   {
-protected:
-   double            m_risk;
 public:
-                     CMoneyFixedRiskPerPointBase(void);
-                    ~CMoneyFixedRiskPerPointBase(void);
+                     CMoneyFixedRiskBase(void);
+                    ~CMoneyFixedRiskBase(void);
    virtual bool      Validate(void);
    virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
    void              Risk(const double risk) {m_risk=risk;}
@@ -24,32 +22,26 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPointBase::CMoneyFixedRiskPerPointBase(void) :
-
+CMoneyFixedRiskBase::CMoneyFixedRiskBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPointBase::~CMoneyFixedRiskPerPointBase(void)
+CMoneyFixedRiskBase::~CMoneyFixedRiskBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CMoneyFixedRiskPerPointBase::Validate(void)
+bool CMoneyFixedRiskBase::Validate(void)
   {
-   if(m_risk<=0)
-     {
-      PrintFormat("invalid risk amount: "+(string)m_volume_base);
-      return false;
-     }
-   return true;
+   return CMoneyFixedRiskPerPoint::Validate();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPointBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
+CMoneyFixedRiskBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    m_symbol = m_symbol_man.Get(symbol);
    if(m_account!=NULL && m_symbol!=NULL)

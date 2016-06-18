@@ -7,6 +7,7 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 #include "..\..\Common\Enum\ENUM_TRAIL_TARGET.mqh"
 #include "..\..\Common\Enum\ENUM_STOP_TYPE.mqh"
+#include "..\Lib\AccountInfo.mqh"
 #include "..\Stop\StopLineBase.mqh"
 #include "..\Trade\TradeManagerBase.mqh"
 #include "..\Trail\TrailsBase.mqh"
@@ -313,7 +314,7 @@ bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
    double stoploss=orderstop.StopLoss();
    if(stoploss<=0.0) return false;
    double price=0.0;
-   ENUM_ORDER_TYPE type=order.OrderType();
+   ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
    if(!GetClosePrice(order.Symbol(),type,price)) return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
@@ -335,7 +336,7 @@ bool CStopBase::CheckTakeProfit(COrder *order,COrderStop *orderstop)
    double takeprofit=orderstop.TakeProfit();
    if(takeprofit<=0.0) return false;
    double price=0.0;
-   ENUM_ORDER_TYPE type=order.OrderType();
+   ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
    if(!GetClosePrice(order.Symbol(),type,price)) return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)

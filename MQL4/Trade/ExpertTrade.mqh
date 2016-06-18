@@ -5,7 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#include <Object.mqh>
+#include <Arrays\ArrayInt.mqh>
 #include "..\..\Common\Enum\ENUM_ORDER_TYPE_TIME.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -11,8 +11,6 @@
 //+------------------------------------------------------------------+
 class CMoneyFixedRiskPerPointBase : public CMoney
   {
-protected:
-   double            m_risk;
 public:
                      CMoneyFixedRiskPerPointBase(void);
                     ~CMoneyFixedRiskPerPointBase(void);
@@ -24,8 +22,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPointBase::CMoneyFixedRiskPerPointBase(void) :
-
+CMoneyFixedRiskPerPointBase::CMoneyFixedRiskPerPointBase(void)
   {
   }
 //+------------------------------------------------------------------+
@@ -41,7 +38,7 @@ bool CMoneyFixedRiskPerPointBase::Validate(void)
   {
    if(m_risk<=0)
      {
-      PrintFormat("invalid risk amount: "+(string)m_volume_base);
+      PrintFormat("invalid risk amount: "+(string)m_risk);
       return false;
      }
    return true;

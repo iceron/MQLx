@@ -6,7 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
-#include <Files\FileBin.mqh>
+#include "TimeDaysBase.mqh"
 #include "TimeFilterBase.mqh"
 #include "TimeRangeBase.mqh"
 #include "TimerBase.mqh"
@@ -58,7 +58,10 @@ bool CTimesBase::Init(CSymbolManager* symbol_man)
    for(int i=0;i<Total();i++)
      {
       CTime *time=At(i);
-      time.Init(GetPointer(this),symbol_man);
+      if (time==NULL)
+         continue;
+      time.SetContainer(GetPointer(this));
+      time.Init(symbol_man);      
      }
    return true;
   }

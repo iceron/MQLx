@@ -5,9 +5,10 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
+#include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
 #include <Arrays\ArrayObj.mqh>
 #include "OrderBase.mqh"
-class CExpert;
+class CExpertAdvisor;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -15,14 +16,14 @@ class COrdersBase : public CArrayObj
   {
 protected:
    CStops           *m_stops;
-   CExpert          *m_strategy;
+   CObject          *m_container;
 public:
                      COrdersBase(void);
                     ~COrdersBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERS;}
    //--- initialization
-   virtual bool      Init(CExpert *s=NULL,CStops *stops=NULL);
-   virtual void      SetContainer(CExpert *s);
+   virtual bool      Init(CStops *stops=NULL);
+   virtual void      SetContainer(CObject *container) {m_container = container;}
    virtual void      SetStops(CStops *stops);
    //--- events                  
    virtual void      OnTick(void);
@@ -52,18 +53,10 @@ COrdersBase::~COrdersBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrdersBase::Init(CExpert *s=NULL,CStops *stops=NULL)
+bool COrdersBase::Init(CStops *stops=NULL)
   {
-   SetContainer(s);
    SetStops(stops);
    return true;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-COrdersBase::SetContainer(CExpert *s)
-  {
-   if(s!=NULL) m_strategy=s;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

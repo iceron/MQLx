@@ -5,13 +5,11 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-class CExpertAdvisor;
 #include <Arrays\ArrayInt.mqh>
 #include "..\Lib\AccountInfo.mqh"
-#include "..\Order\OrdersBase.mqh"
+#include "..\Money\MoneysBase.mqh"
 #include "..\Stop\StopsBase.mqh"
-//#include "..\Signal\SignalsBase.mqh"
-#include "..\Trade\TradeManagerBase.mqh"
+#include "..\Order\OrdersBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -186,8 +184,10 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitMoneys(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   if(m_moneys==NULL) return true;
-   return m_moneys.Init(s,symbolmanager,accountinfo);
+   if(m_moneys==NULL) 
+      return true;
+   m_moneys.SetContainer(GetPointer(this));
+   return m_moneys.Init(symbolmanager,accountinfo);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -214,14 +214,16 @@ bool COrderManagerBase::InitTrade()
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitOrders(void)
   {
-   return m_orders.Init(NULL,m_stops);
+   m_orders.SetContainer(GetPointer(this));
+   return m_orders.Init(m_stops);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitOrdersHistory(void)
   {
-   return m_orders_history.Init(NULL,m_stops);
+   m_orders_history.SetContainer(GetPointer(this));
+   return m_orders_history.Init(m_stops);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -355,7 +357,10 @@ void COrderManagerBase::AddOtherMagicString(const string &magics[])
 bool COrderManagerBase::InitStops(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    if(m_stops!=NULL)
-      return m_stops.Init(s,symbolmanager,accountinfo);
+   {
+      m_stops.SetContainer(GetPointer(this));
+      return m_stops.Init(symbolmanager,accountinfo);
+   }   
    return true;
   }
 //+------------------------------------------------------------------+
