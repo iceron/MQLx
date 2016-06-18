@@ -14,14 +14,19 @@ class CCandleManagerBase : public CArrayObj
   {
 protected:
    bool              m_active;
+   CSymbolManager   *m_symbol_man;
+   CObject          *m_container;
 public:
                      CCandleManagerBase(void);
                     ~CCandleManagerBase(void);
+   virtual bool      Init(CSymbolManager*);
+   virtual bool      Add(const string,const int);
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    bool              Active(){return m_active;}
-   void              Active(bool active){m_active = active;}                    
+   void              Active(bool active){m_active=active;}
    virtual void      Check(void) const;
    virtual bool      IsNewCandle(const string,const int) const;
-   virtual CCandle  *Get(const string,const int) const;
+   virtual CCandle *Get(const string,const int) const;
    virtual bool      TradeProcessed(const string,const int) const;
    virtual void      TradeProcessed(const string,const int,const bool) const;
   };
@@ -34,8 +39,35 @@ CCandleManagerBase::CCandleManagerBase(void) : m_active(true)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CCandleManagerBase::~CCandleManagerBase(void)
+CCandleManagerBase::~CCandleManagerBase()
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleManagerBase::Init(CSymbolManager *symbol_man)
+  {
+   m_symbol_man=symbol_man;
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleManagerBase::Add(const string symbol,const int period)
+  {
+   if(m_symbol_man!=NULL)
+     {
+      CSymbolInfo *instrument=m_symbol_man.Get(symbol);
+      if(instrument!=NULL)
+        {
+         instrument.Name(symbol);
+         instrument.Refresh();
+         CCandle *candle=new CCandle();
+         candle.Init(instrument,period);
+         return Add(instrument);
+        }
+     }
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

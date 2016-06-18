@@ -18,15 +18,15 @@ protected:
    bool              m_reverse;
    datetime          m_time_start;
    CSymbolManager   *m_symbol_man;
-   CTimes           *m_times;   
+   CObject          *m_container;   
 public:
                      CTimeBase(void);
                     ~CTimeBase(void);
-   virtual int       Type(void) const {return CLASS_TYPE_TIME;}
-   virtual bool      Validate(void) {return true;}
+   virtual int       Type(void) const {return CLASS_TYPE_TIME;}   
    //--- initialization
    virtual bool      Init(CTimes *,CSymbolManager*);
-   virtual void      SetContainer(CTimes *times){m_times=times;}
+   virtual void      SetContainer(CObject *container) {m_container=container;}
+   virtual bool      Validate(void) {return true;}
    //--- setters and getters
    bool              Active(void) const {return m_active;}
    void              Active(const bool activate) {m_active=activate;}

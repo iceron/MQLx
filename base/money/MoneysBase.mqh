@@ -16,15 +16,15 @@ class CMoneysBase : public CArrayObj
 protected:
    bool              m_active;
    int               m_selected;
-   CExpertAdvisor   *m_strategy;
+   CObject          *m_container;
 public:
                      CMoneysBase(void);
                     ~CMoneysBase(void);
-   virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}
-   virtual bool      Validate(void) const;
+   virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}   
    //--- initialization
    virtual bool      Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
-   virtual void      SetContainer(CExpertAdvisor *s) {m_strategy=s;}
+   virtual void      SetContainer(CObject *container) {m_container=container;}
+   virtual bool      Validate(void) const;
    //--- setters and getters
    virtual bool      Active(void) const {return m_active;}
    virtual void      Active(const bool activate) {m_active=activate;}

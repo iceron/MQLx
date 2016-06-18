@@ -30,7 +30,7 @@ protected:
    CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
    CAccountInfo     *m_account;
-   CExpertAdvisor   *m_strategy;
+   CObject          *m_container;
 public:
                      CMoneyBase(void);
                     ~CMoneyBase(void);
@@ -39,7 +39,7 @@ public:
    virtual bool      Init(CSymbolManager*,CAccountInfo*);
    virtual bool      InitAccount(CAccountInfo*);
    virtual bool      InitSymbol(CSymbolManager*);
-   virtual void      SetContainer(CExpertAdvisor *s){m_strategy=s;}
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const {return false;}
    //--- getters and setters
    bool              Active(void) const {return m_active;}

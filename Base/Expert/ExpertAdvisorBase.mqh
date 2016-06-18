@@ -50,7 +50,7 @@ protected:
    //--- candle
    CCandleManager    m_candle_man;
    //--- container
-   CExpertAdvisors *m_expert;
+   CObject          *m_container;
 public:
                      CExpertAdvisorBase(void);
                     ~CExpertAdvisorBase(void);
@@ -63,15 +63,16 @@ public:
    virtual bool      AddSymbol(const string);
    virtual bool      AddTimes(CTimes*);
    virtual bool      Init(const string,const int,const int,const bool,const bool,const bool);
-   virtual bool      InitAccount();
+   virtual bool      InitAccount(void);
+   virtual bool      InitCandleManager(void);
    virtual bool      InitComponents(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
    virtual bool      InitOrderManager(void) {return m_order_man.Init(GetPointer(this),GetPointer(m_symbol_man),GetPointer(m_account));}
    virtual bool      Validate(void) const;
    //--- container
-   virtual CExpertAdvisors *GetContainer(void) const {return GetPointer(m_expert);}
-   virtual void      SetContainer(CExpertAdvisors *e){m_expert=e;}
+   virtual CObject  *GetContainer(void) const {return GetPointer(m_container);}
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    //--- activation and deactivation
    virtual bool      Active(void) const {return m_active;}
    virtual void      Active(const bool toggle) {m_active=toggle;}
@@ -230,6 +231,11 @@ bool CExpertAdvisorBase::InitComponents(void)
       Print("error in order manager initialization");
       return false;
      }
+   if(!InitCandleManager())
+     {
+      Print("error in candle manager initialization");
+      return false;
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -254,6 +260,14 @@ bool CExpertAdvisorBase::InitTimes(void)
 bool CExpertAdvisorBase::InitAccount(void)
   {
    return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::InitCandleManager(void)
+  {
+   m_candle_man.SetContainer(GetPointer(this));
+   return m_candle_man.Init(GetPointer(m_symbol_man));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -344,12 +358,7 @@ bool CExpertAdvisorBase::AddTimes(CTimes *times)
 //+------------------------------------------------------------------+
 CExpertAdvisorBase::AddCandle(const string symbol,const int timeframe)
   {
-   CSymbolInfo *instrument=new CSymbolInfo();
-   instrument.Name(symbol);
-   instrument.Refresh();
-   CCandle *candle=new CCandle();
-   candle.Init(instrument,timeframe);
-   m_candle_man.Add(candle);
+   m_candle_man.Add(symbol,timeframe);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -411,9 +420,9 @@ bool CExpertAdvisorBase::OnTick(void)
 //m_orders.OnTick();
 //ManageOrders();
    bool checkopenlong=false,
-        checkopenshort=false,
-        checkcloselong=false,
-        checkcloseshort=false;
+   checkopenshort=false,
+   checkcloselong=false,
+   checkcloseshort=false;
    if(m_signal!=NULL)
      {
       m_signal.Check();
@@ -438,7 +447,7 @@ bool CExpertAdvisorBase::OnTick(void)
       order.OnTick();
       //checking if the order was closed through external means (flag)
       //this is the same as ordermanager manageorders()      
-      
+
       if(order.IsSuspended())
         {
          if(m_order_man.CloseOrder(order,i))
@@ -512,8 +521,8 @@ void CExpertAdvisorBase::DeinitAccount(void)
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitComments(void)
   {
-   //ADT::Delete(m_comments);
-   if (m_comments!=NULL)
+//ADT::Delete(m_comments);
+   if(m_comments!=NULL)
       delete m_comments;
   }
 //+------------------------------------------------------------------+
@@ -521,8 +530,8 @@ void CExpertAdvisorBase::DeinitComments(void)
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitTimes(void)
   {
-   //ADT::Delete(m_times);
-   if (m_times!=NULL)
+//ADT::Delete(m_times);
+   if(m_times!=NULL)
       delete m_times;
   }
 //+------------------------------------------------------------------+

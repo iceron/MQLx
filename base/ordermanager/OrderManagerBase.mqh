@@ -40,6 +40,8 @@ protected:
    //--- order objects
    CStops           *m_stops;
    CStop            *m_main_stop;
+   //--- container
+   CObject          *m_container;
 public:
                      COrderManagerBase(void);
                     ~COrderManagerBase(void);
@@ -50,6 +52,7 @@ public:
    bool              InitTrade(void);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const;
    //--- setters and getters
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;

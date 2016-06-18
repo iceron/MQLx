@@ -14,9 +14,11 @@ class CCommentBase : public CObject
 protected:
    bool              m_active;
    string            m_comment;
+   CObject          *m_container;
 public:
                      CCommentBase(void);
                     ~CCommentBase(void);
+   virtual void      SetContainer(CObject *container) {m_container=container;}                    
    bool              Active(){return m_active;}
    void              Active(bool active){m_active=active;}
    virtual void      Init(const string comment) {m_comment=comment;}

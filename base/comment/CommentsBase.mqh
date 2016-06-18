@@ -14,9 +14,11 @@ class CCommentsBase : public CList
   {
 protected:
    bool              m_activate;
+   CObject          *m_container;
 public:
                      CCommentsBase(void);
                     ~CCommentsBase(void);
+   virtual void      SetContainer(CObject *container) {m_container=container;}                    
    bool              Active(){return m_activate;}
    void              Active(bool active){m_activate = active;}
    virtual void      Display(void);

@@ -19,14 +19,14 @@ class CTimesBase : public CArrayObj
 protected:
    bool              m_active;
    int               m_selected;
-   CExpertAdvisor   *m_expert;
+   CObject          *m_container;
 public:
                      CTimesBase(void);
                     ~CTimesBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIMES;}
    //-- initialization
    virtual bool      Init(CSymbolManager*);
-   virtual void      SetContainer(CExpertAdvisor *e){m_expert=e;}
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation
    bool              Active(void) const {return m_active;}

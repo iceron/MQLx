@@ -17,10 +17,12 @@ protected:
    bool              m_active;
    int               m_uninit_reason;
    CComments        *m_comments;
+   CObject          *m_container;
 public:
                      CExpertAdvisorsBase(void);
                     ~CExpertAdvisorsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_EXPERT;}
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    //--- getters and setters
    bool              Active(void) const {return m_active;}
    void              Active(const bool activate) {m_active=activate;}

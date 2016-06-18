@@ -20,13 +20,15 @@ protected:
    bool              m_active;
    MqlRates          m_last;
    CSymbolInfo      *m_symbol;
+   CObject          *m_container;
 public:
                      CCandleBase(void);
                     ~CCandleBase(void);
    virtual bool      Init(CSymbolInfo*,const int);
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    //--- setters and getters
    bool              Active(){return m_active;}
-   void              Active(bool active){m_active = active;}
+   void              Active(bool active){m_active=active;}
    datetime          LastTime(void) const {return m_last.time;}
    double            LastOpen(void) const {return m_last.open;}
    double            LastHigh(void) const {return m_last.high;}
@@ -72,7 +74,7 @@ bool CCandleBase::Init(CSymbolInfo *symbol,const int timeframe)
 //+------------------------------------------------------------------+
 void CCandleBase::Check(void)
   {
-   if (!Active()) 
+   if(!Active())
       return;
    m_new=false;
    if(m_symbol!=NULL)
@@ -104,8 +106,8 @@ bool CCandleBase::Compare(MqlRates &rates) const
 //+------------------------------------------------------------------+
 bool CCandleBase::Save(const int handle)
   {
-   //ADT::WriteBool(handle,m_trade_processed);
-   //ADT::WriteStruct(handle,m_last);
+//ADT::WriteBool(handle,m_trade_processed);
+//ADT::WriteStruct(handle,m_last);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -113,8 +115,8 @@ bool CCandleBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool CCandleBase::Load(const int handle)
   {
-   //ADT::ReadBool(handle,m_trade_processed);
-   //ADT::ReadStruct(handle,m_last);
+//ADT::ReadBool(handle,m_trade_processed);
+//ADT::ReadStruct(handle,m_last);
    return true;
   }
 //+------------------------------------------------------------------+

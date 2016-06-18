@@ -14,6 +14,7 @@ class CSymbolManagerBase : public CArrayObj
   {
 protected:
    CSymbolInfo      *m_symbol_primary;
+   CObject          *m_container;
 public:
                      CSymbolManagerBase(void);
                     ~CSymbolManagerBase(void);
@@ -22,6 +23,7 @@ public:
    CSymbolInfo      *Get(string);
    virtual bool      RefreshRates(void);
    virtual bool      Search(string);
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual void      SetPrimary(string);
    virtual void      SetPrimary(const int);
    virtual CSymbolInfo *GetPrimary(void);
