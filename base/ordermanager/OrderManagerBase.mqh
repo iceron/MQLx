@@ -384,7 +384,8 @@ void COrderManagerBase::Deinit(const int reason=0)
 //+------------------------------------------------------------------+
 void COrderManagerBase::DeinitStops()
   {
-   //ADT::Delete(m_stops);
+   if (m_stops!=NULL)
+      delete m_stops;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
