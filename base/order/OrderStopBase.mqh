@@ -164,9 +164,12 @@ void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
 //+------------------------------------------------------------------+
 bool COrderStopBase::Deinit(void)
   {
-   ADT::Delete(m_objentry);
-   ADT::Delete(m_objsl);
-   ADT::Delete(m_objtp);
+   if (m_objentry!=NULL)
+      delete m_objentry;
+   if (m_objsl!=NULL)
+      delete m_objentry;
+   if (m_objtp!=NULL)
+      delete m_objentry;      
    return true;
   }
 //+------------------------------------------------------------------+

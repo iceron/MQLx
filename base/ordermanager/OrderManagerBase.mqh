@@ -8,7 +8,6 @@
 class CExpertAdvisor;
 #include <Arrays\ArrayInt.mqh>
 #include "..\Lib\AccountInfo.mqh"
-#include "..\..\Common\Class\ADT.mqh"
 #include "..\Order\OrdersBase.mqh"
 #include "..\Stop\StopsBase.mqh"
 //#include "..\Signal\SignalsBase.mqh"
@@ -395,14 +394,13 @@ void COrderManagerBase::Deinit(const int reason=0)
 //+------------------------------------------------------------------+
 void COrderManagerBase::DeinitStops()
   {
-   ADT::Delete(m_stops);
+   //ADT::Delete(m_stops);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrderManagerBase::DeinitTrade()
   {
-//ADT::Delete(m_trade);
    m_trade_man.Shutdown();
   }
 //+------------------------------------------------------------------+

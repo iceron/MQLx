@@ -21,6 +21,7 @@ class CSignalBase : public CObject
 public:
                      CSignalBase(void);
                     ~CSignalBase(void);
+   virtual bool      Validate(void);
    virtual double    Check(void);
    virtual double    GetDirection(void) {return m_direction;}
    virtual int       LongCondition(void);
@@ -57,9 +58,16 @@ CSignalBase::~CSignalBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool CSignalBase::Validate(void)
+  {
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 double CSignalBase::Check(void)
   {
-   if (!Active())
+   if(!Active())
       return 0;
    double result=m_weight*(LongCondition()-ShortCondition());
    int votes= result==0.0?0:1;

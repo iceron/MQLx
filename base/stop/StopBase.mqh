@@ -417,14 +417,12 @@ void CStopBase::Deinit(void)
 //+------------------------------------------------------------------+
 void CStopBase::DeinitSymbol(void)
   {
-   //ADT::Delete(m_symbol);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void CStopBase::DeinitTrade(void)
   {
-   //ADT::Delete(m_trade);
    m_trade_man.Shutdown();
   }
 //+------------------------------------------------------------------+
@@ -432,7 +430,8 @@ void CStopBase::DeinitTrade(void)
 //+------------------------------------------------------------------+
 void CStopBase::DeinitTrails(void)
   {
-   ADT::Delete(m_trails);
+   if (m_trails!=NULL)
+      delete m_trails;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

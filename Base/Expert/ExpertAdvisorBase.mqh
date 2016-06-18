@@ -5,7 +5,6 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-#include "..\..\common\class\ADT.mqh"
 #include <Object.mqh>
 #include <Arrays\ArrayInt.mqh>
 #include <Files\FileBin.mqh>
@@ -38,10 +37,7 @@ protected:
    string            m_symbol_name;
    int               m_period;
    bool              m_position_reverse;
-   //bool              m_offline_mode;
-   //int               m_offline_mode_delay;
    //--- signal objects
-   //CSignals         *m_signals;
    CSignal          *m_signal;
    //--- trade objects   
    CAccountInfo      m_account;
@@ -67,7 +63,7 @@ public:
    virtual bool      AddSymbol(const string);
    virtual bool      AddTimes(CTimes*);
    virtual bool      Init(const string,const int,const int,const bool,const bool,const bool);
-   virtual bool      InitAccount(/*CAccountInfo**/);
+   virtual bool      InitAccount();
    virtual bool      InitComponents(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
@@ -82,22 +78,18 @@ public:
    //--- setters and getters       
    string            Name() const {return m_name;}
    void              Name(const string name) {m_name=name;}
-   //bool              OfflineMode(void) const {return m_offline_mode;}
-   //void              OfflineMode(const bool mode) {m_offline_mode=mode;}
-   //int               OfflineModeDelay() const {return m_offline_mode_delay;}
-   //void              OfflineModeDelay(const int delay){m_offline_mode_delay=delay;}
    string            SymbolName() const {return m_symbol_name;}
    void              SymbolName(const string name) {m_symbol_name=name;}
    //--- object pointers
-   //CAccountInfo      *AccountInfo(void) const {return GetPointer(m_account);}
-   CComments         *Comments(void) const {return GetPointer(m_comments);}
-   CStop             *MainStop(void) const {return m_order_man.MainStop();}
-   CMoneys           *Moneys(void) const {return m_order_man.Moneys();}
+   CAccountInfo      *AccountInfo(void) {return GetPointer(m_account);}
+   CComments         *Comments(void) {return GetPointer(m_comments);}
+   CStop             *MainStop(void) {return m_order_man.MainStop();}
+   CMoneys           *Moneys(void) {return m_order_man.Moneys();}
    COrders           *Orders(void) {return m_order_man.Orders();}
    COrders           *OrdersHistory(void) {return m_order_man.OrdersHistory();}
    CArrayInt         *OtherMagic(void) {return m_order_man.OtherMagic();}
-   CStops            *Stops(void) const {return m_order_man.Stops();}
-   //CSignals          *Signals(void) const {return GetPointer(m_signals);}
+   CStops            *Stops(void) {return m_order_man.Stops();}
+   CSignal           *Signal(void) const {return GetPointer(m_signal);}
    CTimes            *Times(void) const {return GetPointer(m_times);}
    //--- chart comment manager
    void              AddComment(const string);
@@ -133,8 +125,8 @@ public:
    //--- signal manager   
    virtual int       Period(void) const {return m_period;}
    virtual void      Period(const int period) {m_period=(ENUM_TIMEFRAMES)period;}
-   //virtual bool      EveryTick(void) const {return m_every_tick;}
-   //virtual void      EveryTick(const bool every_tick) {m_every_tick=every_tick;}
+   virtual bool      EveryTick(void) const {return m_every_tick;}
+   virtual void      EveryTick(const bool every_tick) {m_every_tick=every_tick;}
    virtual bool      OneTradePerCandle(void) const {return m_one_trade_per_candle;}
    virtual void      OneTradePerCandle(const bool one_trade_per_candle){m_one_trade_per_candle=one_trade_per_candle;}
    virtual bool      PositionReverse(void) const {return m_position_reverse;}
@@ -206,7 +198,6 @@ bool CExpertAdvisorBase::Init(string symbol,int period,int magic,bool every_tick
    m_order_man.Magic(magic);
    m_position_reverse=position_reverse;
    m_one_trade_per_candle=one_trade_per_candle;
-//InitTrade();
    CCandle *candle=new CCandle();
    candle.Init(instrument,m_period);
    m_candle_man.Add(candle);
@@ -246,11 +237,6 @@ bool CExpertAdvisorBase::InitComponents(void)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::InitSignals(void)
   {
-/*
-   if(m_signals==NULL)
-      return true;
-   return m_signals.Init(GetPointer(this),GetPointer(m_comments));
-   */
    return true;
   }
 //+------------------------------------------------------------------+
@@ -265,18 +251,8 @@ bool CExpertAdvisorBase::InitTimes(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertAdvisorBase::InitAccount(/*CAccountInfo *account=NULL*/)
+bool CExpertAdvisorBase::InitAccount(void)
   {
-/*
-   if(m_account!=NULL)
-      delete m_account;
-   if(account==NULL)
-     {
-      if((m_account=new CAccountInfo)==NULL)
-         return false;
-     }
-   else m_account=account;
-   */
    return true;
   }
 //+------------------------------------------------------------------+
@@ -380,13 +356,11 @@ CExpertAdvisorBase::AddCandle(const string symbol,const int timeframe)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::Validate(void) const
   {
-/*
-   if(CheckPointer(m_signals)==POINTER_DYNAMIC)
+   if(CheckPointer(m_signal)==POINTER_DYNAMIC)
      {
-      if(!m_signals.Validate())
+      if(!m_signal.Validate())
          return false;
      }
-   */
    if(CheckPointer(m_times)==POINTER_DYNAMIC)
      {
       if(!m_times.Validate())
@@ -514,7 +488,6 @@ void CExpertAdvisorBase::Deinit(const int reason=0)
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitSignals(void)
   {
-//ADT::Delete(m_signals);
    delete m_signal;
   }
 //+------------------------------------------------------------------+
@@ -522,8 +495,6 @@ void CExpertAdvisorBase::DeinitSignals(void)
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitSymbol(void)
   {
-//ADT::Delete(m_symbol);
-//ADT::Delete(m_symbol_man);
    m_symbol_man.Deinit();
   }
 //+------------------------------------------------------------------+
@@ -531,21 +502,24 @@ void CExpertAdvisorBase::DeinitSymbol(void)
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitAccount(void)
   {
-//ADT::Delete(m_account);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitComments(void)
   {
-   ADT::Delete(m_comments);
+   //ADT::Delete(m_comments);
+   if (m_comments!=NULL)
+      delete m_comments;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitTimes(void)
   {
-   ADT::Delete(m_times);
+   //ADT::Delete(m_times);
+   if (m_times!=NULL)
+      delete m_times;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

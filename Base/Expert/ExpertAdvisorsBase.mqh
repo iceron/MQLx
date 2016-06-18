@@ -193,8 +193,8 @@ bool CExpertAdvisorsBase::CreateElement(const int index)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::Save(const int handle)
   {
-   CArrayObj::Save(handle);
-   ADT::WriteInteger(handle,m_uninit_reason);
+   //CArrayObj::Save(handle);
+   //ADT::WriteInteger(handle,m_uninit_reason);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -202,8 +202,8 @@ bool CExpertAdvisorsBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::Load(const int handle)
   {
-   CArrayObj::Load(handle);
-   ADT::ReadInteger(handle,m_uninit_reason);
+   //CArrayObj::Load(handle);
+   //ADT::ReadInteger(handle,m_uninit_reason);
    return true;
   }
 //+------------------------------------------------------------------+
