@@ -34,8 +34,6 @@ protected:
    //--- stop order trade parameters
    ENUM_VOLUME_TYPE  m_volume_type;
    double            m_volume;
-   //double            m_volume_fixed;
-   //double            m_volume_percent;
    int               m_magic;
    int               m_deviation;
    string            m_comment;
@@ -109,10 +107,6 @@ public:
    bool              Virtual(void) const {return m_stop_type==STOP_TYPE_VIRTUAL;}
    void              Volume(double volume) {m_volume = volume;}
    double            Volume(void) const {return m_volume;}
-   //double            VolumeFixed(void) const {return m_volume_fixed;}
-   //void              VolumeFixed(const double volume) {m_volume_fixed=volume;}
-   //double            VolumePercent(void) const {return m_volume_percent;}
-   //void              VolumePercent(const double volume) {m_volume_percent=volume;}
    void              VolumeType(const ENUM_VOLUME_TYPE type){m_volume_type=type;}
    //--- stop order checking
    virtual bool      CheckStopLoss(COrder *,COrderStop *);
@@ -161,8 +155,6 @@ CStopBase::CStopBase(void) : m_active(true),
                              m_stoploss(0),
                              m_takeprofit(0),
                              m_volume_type(VOLUME_TYPE_FIXED),
-                             //m_volume_fixed(0),
-                             //m_volume_percent(0),
                              m_volume(0),
                              m_deviation(30),
                              m_comment(NULL),
