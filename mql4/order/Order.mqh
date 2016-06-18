@@ -61,6 +61,13 @@ COrder::~COrder(void)
 //+------------------------------------------------------------------+
 bool COrder::IsSuspended(void)
   {
+   if(m_suspend==true)
+      return true;
+   if(OrdersTotal()==0)
+     {
+      IsSuspended(true);
+      return true;
+     }
    if(Volume()<=0.0)
      {
       IsSuspended(true);
@@ -89,9 +96,9 @@ bool COrder::IsSuspended(void)
 //+------------------------------------------------------------------+
 bool COrder::Save(const int handle)
   {
-   //COrderBase::Save(handle);
-   //ADT::WriteObject(handle,GetPointer(m_ticket_current));
-   //ADT::WriteBool(handle,m_ticket_updated);
+//COrderBase::Save(handle);
+//ADT::WriteObject(handle,GetPointer(m_ticket_current));
+//ADT::WriteBool(handle,m_ticket_updated);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -99,9 +106,9 @@ bool COrder::Save(const int handle)
 //+------------------------------------------------------------------+
 bool COrder::Load(const int handle)
   {
-   //COrderBase::Save(handle);
-   //ADT::ReadObject(handle,GetPointer(m_ticket_current));
-   //ADT::WriteBool(handle,m_ticket_updated);
+//COrderBase::Save(handle);
+//ADT::ReadObject(handle,GetPointer(m_ticket_current));
+//ADT::WriteBool(handle,m_ticket_updated);
    return true;
   }
 //+------------------------------------------------------------------+

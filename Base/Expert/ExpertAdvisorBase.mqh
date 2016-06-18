@@ -438,17 +438,21 @@ bool CExpertAdvisorBase::OnTick(void)
       order.OnTick();
       //checking if the order was closed through external means (flag)
       //this is the same as ordermanager manageorders()      
+      
       if(order.IsSuspended())
         {
-         if(m_order_man.ExitOrder(order,i))
+         if(m_order_man.CloseOrder(order,i))
             continue;
+         else Print(__FUNCTION__+" failed to close order");
         }
       //checking if the order should be closed
       if((checkcloselong && order.OrderType()==ORDER_TYPE_BUY) || 
          (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL))
         {
-         if(m_order_man.ExitOrder(order,i))
+         Print(__FUNCTION__+" order is against signal: closing..");
+         if(m_order_man.CloseOrder(order,i))
             continue;
+         else Print(__FUNCTION__+" failed to close order");
         }
      }
    m_order_man.OnTick();

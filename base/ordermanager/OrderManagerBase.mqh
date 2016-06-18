@@ -92,7 +92,6 @@ public:
    virtual bool      CloseStops(void);
    virtual void      ManageOrders(void);
    virtual bool      CloseOrder(COrder*,const int) {return true;}
-   virtual bool      ExitOrder(COrder*,const int);
    //--- orders history
    virtual void      ManageOrdersHistory(void);
    //--- money manager
@@ -329,18 +328,6 @@ double COrderManagerBase::TakeProfitCalculate(const ENUM_ORDER_TYPE type,const d
       return m_main_stop.TakeProfitTicks(type,price);
      }
    return 0;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrderManagerBase::ExitOrder(COrder *order,const int idx)
-  {
-   if(CloseOrder(order,idx))
-     {
-      if(ArchiveOrder(m_orders.Detach(idx)))
-         return true;
-     }
-   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

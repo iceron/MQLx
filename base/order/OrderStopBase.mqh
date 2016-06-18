@@ -21,8 +21,8 @@ protected:
    bool              m_active;
    //--- stop parameters
    double            m_volume;
-   double            m_volume_fixed;
-   double            m_volume_percent;
+   //double            m_volume_fixed;
+   //double            m_volume_percent;
    CArrayDouble      m_stoploss;
    CArrayDouble      m_takeprofit;
    double            m_stoploss_initial;
@@ -76,10 +76,10 @@ public:
    ulong             TakeProfitTicket(void) const {return m_takeprofit_ticket;}
    void              Volume(const double volume) {m_volume=volume;}
    double            Volume(void) const {return m_volume;}
-   void              VolumeFixed(const double volume) {m_volume_fixed=volume;}
-   double            VolumeFixed(void) const {return m_volume_fixed;}
-   void              VolumePercent(const double volume) {m_volume_percent=volume;}
-   double            VolumePercent(void) const {return m_volume_percent;}
+   //void              VolumeFixed(const double volume) {m_volume_fixed=volume;}
+   //double            VolumeFixed(void) const {return m_volume_fixed;}
+   //void              VolumePercent(const double volume) {m_volume_percent=volume;}
+   //double            VolumePercent(void) const {return m_volume_percent;}
    //--- hiding and showing of stop lines
    virtual void      Show(bool show=true);
    //--- checking   
@@ -117,8 +117,8 @@ protected:
 //+------------------------------------------------------------------+
 COrderStopBase::COrderStopBase(void) : m_active(true),
                                        m_volume(0.0),
-                                       m_volume_fixed(0.0),
-                                       m_volume_percent(0.0),
+                                       //m_volume_fixed(0.0),
+                                       //m_volume_percent(0.0),                                      
                                        m_stoploss_ticket(0),
                                        m_takeprofit_ticket(0),
                                        m_stoploss_closed(false),
@@ -146,8 +146,7 @@ void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
    m_stop_name=stop.Name();
    m_order=order;
    m_stop=stop;
-   m_stop.Volume(GetPointer(this),m_volume_fixed,m_volume_percent);
-   m_volume=MathMax(m_volume_fixed,m_volume_percent);
+   m_volume=m_stop.Volume();   
    m_stop.Refresh(order.Symbol());
    double stoploss=m_stop.StopLossPrice(order,GetPointer(this));
    double takeprofit=m_stop.TakeProfitPrice(order,GetPointer(this));

@@ -33,8 +33,9 @@ protected:
    int               m_delay;
    //--- stop order trade parameters
    ENUM_VOLUME_TYPE  m_volume_type;
-   double            m_volume_fixed;
-   double            m_volume_percent;
+   double            m_volume;
+   //double            m_volume_fixed;
+   //double            m_volume_percent;
    int               m_magic;
    int               m_deviation;
    string            m_comment;
@@ -106,11 +107,12 @@ public:
    string            TakeProfitName(void) const {return m_takeprofit_name;}
    void              TakeProfitStyle(const ENUM_LINE_STYLE style) {m_takeprofit_style=style;}
    bool              Virtual(void) const {return m_stop_type==STOP_TYPE_VIRTUAL;}
-   void              Volume(COrderStop *orderstop,double &volume_fixed,double &volume_percent);
-   double            VolumeFixed(void) const {return m_volume_fixed;}
-   void              VolumeFixed(const double volume) {m_volume_fixed=volume;}
-   double            VolumePercent(void) const {return m_volume_percent;}
-   void              VolumePercent(const double volume) {m_volume_percent=volume;}
+   void              Volume(double volume) {m_volume = volume;}
+   double            Volume(void) const {return m_volume;}
+   //double            VolumeFixed(void) const {return m_volume_fixed;}
+   //void              VolumeFixed(const double volume) {m_volume_fixed=volume;}
+   //double            VolumePercent(void) const {return m_volume_percent;}
+   //void              VolumePercent(const double volume) {m_volume_percent=volume;}
    void              VolumeType(const ENUM_VOLUME_TYPE type){m_volume_type=type;}
    //--- stop order checking
    virtual bool      CheckStopLoss(COrder *,COrderStop *);
@@ -159,8 +161,9 @@ CStopBase::CStopBase(void) : m_active(true),
                              m_stoploss(0),
                              m_takeprofit(0),
                              m_volume_type(VOLUME_TYPE_FIXED),
-                             m_volume_fixed(0),
-                             m_volume_percent(0),
+                             //m_volume_fixed(0),
+                             //m_volume_percent(0),
+                             m_volume(0),
                              m_deviation(30),
                              m_comment(NULL),
                              m_stop_type(STOP_TYPE_VIRTUAL),
@@ -258,34 +261,18 @@ bool CStopBase::InitTrade()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CStopBase::Volume(COrderStop *orderstop,double &volume_fixed,double &volume_percent)
-  {
-   if(m_volume_type==VOLUME_TYPE_FIXED || m_volume_type==VOLUME_TYPE_REMAINING)
-     {
-      orderstop.VolumeFixed(m_volume_fixed);
-      orderstop.VolumePercent(0);
-     }
-   else if(m_volume_type==VOLUME_TYPE_PERCENT_REMAINING || m_volume_type==VOLUME_TYPE_PERCENT_TOTAL)
-     {
-      orderstop.VolumeFixed(0);
-      orderstop.VolumePercent(m_volume_percent);
-     }   
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
   {
-   double lotsize=0.0;
+   double lotsize=0.0;   
    if(m_volume_type==VOLUME_TYPE_FIXED)
-      return orderstop.Volume();
+      lotsize=orderstop.Volume();
    else if(m_volume_type==VOLUME_TYPE_PERCENT_REMAINING)
-      return orderstop.Volume()*order.Volume();
+      lotsize=orderstop.Volume()*order.Volume();
    if(m_volume_type==VOLUME_TYPE_PERCENT_TOTAL)
       lotsize=orderstop.Volume()*order.VolumeInitial();
    else if(m_volume_type==VOLUME_TYPE_REMAINING)
       lotsize=order.Volume();
-   return 0;
+   return lotsize;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

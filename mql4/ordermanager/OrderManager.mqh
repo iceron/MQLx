@@ -81,7 +81,7 @@ bool COrderManager::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 bool COrderManager::CloseOrder(COrder *order,const int index)
   {
-   bool closed=false;
+   bool closed=true;
    if(CheckPointer(order)==POINTER_DYNAMIC)
      {
       if (m_symbol==NULL || StringCompare(m_symbol.Name(),order.Symbol())!=0)

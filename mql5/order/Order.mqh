@@ -47,14 +47,14 @@ bool COrder::IsSuspended(void)
   {
    if(Volume()<=0.0)
      {
-      IsPending(true);
+      IsSuspended(true);
       return true;
      }
    if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
      {
       if(m_main_stop.IsClosed())
         {
-         IsPending(true);
+         IsSuspended(true);
          return true;
         }
      }
