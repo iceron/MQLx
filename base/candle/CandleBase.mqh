@@ -81,9 +81,7 @@ void CCandleBase::Check(void)
       MqlRates rates[];
       if(CopyRates(m_symbol.Name(),(ENUM_TIMEFRAMES)m_period,1,1,rates)==-1)
          return;
-      if(m_wait_for_new && m_last.time==0)
-         m_last=rates[0];
-      else if(Compare(rates[0]))
+      if(Compare(rates[0]))
         {
          m_new=true;
          m_trade_processed=false;
@@ -96,8 +94,8 @@ void CCandleBase::Check(void)
 //+------------------------------------------------------------------+
 bool CCandleBase::Compare(MqlRates &rates) const
   {
-   return (m_last.time==0 || m_last.time!=rates.time ||
-           (m_last.close/m_symbol.TickSize())!=(rates.close/m_symbol.TickSize()) || 
+   return ((m_wait_for_new && m_last.time==0) ||
+            m_last.time!=rates.time ||
            (m_last.open/m_symbol.TickSize())!=(rates.open/m_symbol.TickSize()));
   }
 //+------------------------------------------------------------------+
