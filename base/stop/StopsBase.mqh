@@ -21,7 +21,7 @@ public:
                     ~CStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPS;}
    //--- initialization
-   virtual bool      Init(CSymbolManager *,CAccountInfo *);
+   virtual bool      Init(CSymbolManager*,CAccountInfo*);
    virtual void      SetContainer(CObject *container){m_container=container;}
    virtual bool      Validate(void) const;
    //--- setters and getters
@@ -51,7 +51,9 @@ bool CStopsBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
-      stop.Init(symbolmanager,accountinfo);
+      if (stop!=NULL)
+         if (!stop.Init(symbolmanager,accountinfo))
+            return false;
      }
    return true;
   }

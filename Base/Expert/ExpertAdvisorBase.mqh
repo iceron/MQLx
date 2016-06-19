@@ -209,24 +209,25 @@ bool CExpertAdvisorBase::InitComponents(void)
      }
    if(!InitAccount())
      {
-      Print("error in account initialization");
+      Print(__FUNCTION__+" error in account initialization");
       return false;
      }
    if(!InitTimes())
      {
-      Print("error in time initialization");
+      Print(__FUNCTION__+" error in time initialization");
       return false;
      }
    if(!InitOrderManager())
      {
-      Print("error in order manager initialization");
+      Print(__FUNCTION__+" error in order manager initialization");
       return false;
      }
    if(!InitCandleManager())
      {
-      Print("error in candle manager initialization");
+      Print(__FUNCTION__+" error in candle manager initialization");
       return false;
      }
+   Print(__FUNCTION__+" components initialization complete");
    return true;
   }
 //+------------------------------------------------------------------+

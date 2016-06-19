@@ -53,7 +53,7 @@ protected:
    virtual double    ActivationPrice(const ENUM_ORDER_TYPE,const double);
    virtual double    DeactivationPrice(const ENUM_ORDER_TYPE,const double);
    virtual double    Price(const ENUM_ORDER_TYPE);
-   virtual void      Refresh(const string);
+   virtual bool      Refresh(const string);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -85,7 +85,10 @@ bool CTrailBase::Validate(void) const
 bool CTrailBase::Init(CSymbolManager *symbolmanager)
   {
    if(symbolmanager==NULL) 
+   {
+      Print(__FUNCTION__+": symbol object is NULL");
       return false;
+   }   
    m_symbol_man=symbolmanager;
    return true;
   }
@@ -126,9 +129,12 @@ double CTrailBase::DeactivationPrice(const ENUM_ORDER_TYPE type,const double ent
 //+------------------------------------------------------------------+
 double CTrailBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
-   if(!Active()) return 0;
-   Refresh(symbol);
-   if(m_start==0 || m_trail==0) return 0;
+   if(!Active()) 
+      return 0;
+   if (!Refresh(symbol))
+      return 0;
+   if(m_start==0 || m_trail==0) 
+      return 0;
    double next_stop=0.0,activation=0.0,deactivation=0.0,new_price=0.0,point = m_symbol.Point();
    activation=ActivationPrice(type,entry_price);
    deactivation=DeactivationPrice(type,entry_price);
@@ -173,10 +179,14 @@ double CTrailBase::Price(const ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CTrailBase::Refresh(const string symbol)
+bool CTrailBase::Refresh(const string symbol)
   {
-   if(m_symbol==NULL|| StringCompare(m_symbol.Name(),symbol)!=0)
-      m_symbol= m_symbol_man.Get(symbol);
+   if(m_symbol==NULL || StringCompare(m_symbol.Name(),symbol)!=0)
+   {
+      if (m_symbol_man!=NULL)
+         m_symbol= m_symbol_man.Get(symbol);
+   }   
+   return (m_symbol!=NULL);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

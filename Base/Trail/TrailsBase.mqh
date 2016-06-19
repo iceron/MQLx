@@ -50,16 +50,18 @@ CTrailsBase::~CTrailsBase(void)
 //+------------------------------------------------------------------+
 bool CTrailsBase::Init(CSymbolManager *symbolmanager,CStop *stop)
   {
-   if(!Active()) return true;
+   if(!Active()) 
+      return true;
+   SetContainer(stop);
    for(int i=0;i<Total();i++)
      {
       CTrail *trail=At(i);
       if (trail!=NULL)
-         continue;
-      trail.SetContainer(GetPointer(this));
-      trail.Init(symbolmanager);
-     }
-   SetContainer(stop);
+      {
+         trail.SetContainer(GetPointer(this));
+         trail.Init(symbolmanager);
+      }
+     }   
    return true;
   }  
 //+------------------------------------------------------------------+

@@ -208,12 +208,19 @@ bool CStopBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   if(symbolmanager==NULL || accountinfo==NULL) return false;
+   if(symbolmanager==NULL || accountinfo==NULL) 
+      return false;
    InitSymbol(symbolmanager);
    InitAccount(accountinfo);
    InitTrade();
-   if(CheckPointer(m_trails)==POINTER_DYNAMIC)
-      m_trails.Init(symbolmanager,GetPointer(this));
+   if(m_trails!=NULL)
+   {
+      if (!m_trails.Init(symbolmanager,GetPointer(this)))
+      {
+         Print(__FUNCTION__+": error in trailing manager initialization");
+         return false;
+      }
+   }   
    return true;
   }
 //+------------------------------------------------------------------+

@@ -155,11 +155,32 @@ COrderManagerBase::~COrderManagerBase()
 bool COrderManagerBase::Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    m_symbol_man=symbolmanager;
-   InitStops(s,symbolmanager,accountinfo);
-   InitMoneys(s,symbolmanager,accountinfo);
-   InitTrade();
-   InitOrders();
-   InitOrdersHistory();
+   
+   if (!InitStops(s,symbolmanager,accountinfo))
+   {
+      Print(__FUNCTION__+": error in stops manager initialization");
+      return false;
+   }
+   if (!InitMoneys(s,symbolmanager,accountinfo))
+   {
+      Print(__FUNCTION__+": error in money manager initialization");
+      return false;
+   }
+   if (!InitTrade())
+   {
+      Print(__FUNCTION__+": error in trade object initialization");
+      return false;
+   }
+   if (!InitOrders())
+   {
+      Print(__FUNCTION__+": error in orders initialization");
+      return false;
+   }
+   if (!InitOrdersHistory())
+   {
+      Print(__FUNCTION__+": error in orders history initialization");
+      return false;
+   }
    return true;
   }
 //+------------------------------------------------------------------+
