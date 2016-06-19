@@ -191,13 +191,14 @@ bool CStopBase::Validate(void) const
       PrintFormat(__FUNCTION__+": Empty name for stop.");
       return false;
      }
-   if(CheckPointer(m_trails))
+   if(m_trails!=NULL)
      {
       for(int i=0;i<m_trails.Total();i++)
         {
          CTrail *trail=m_trails.At(i);
-         if(!trail.Validate())
-            return false;
+         if (trail!=NULL)
+            if(!trail.Validate())
+               return false;
         }
      }
    return true;
