@@ -49,6 +49,7 @@ COrderStopsBase::COrderStopsBase(void) : m_active(true)
 //+------------------------------------------------------------------+
 COrderStopsBase::~COrderStopsBase(void)
   {
+   Shutdown();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -133,9 +134,10 @@ COrderStopsBase::Show(const bool show=true)
 //+------------------------------------------------------------------+
 bool COrderStopsBase::CreateElement(const int index)
   {
-   COrderStop*orderstop=new COrderStop();
-   orderstop.SetContainer(GetPointer(this));
-   return Insert(GetPointer(orderstop),index);
+   //COrderStop*orderstop=new COrderStop();
+   //orderstop.SetContainer(GetPointer(this));
+   //return Insert(GetPointer(orderstop),index);
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

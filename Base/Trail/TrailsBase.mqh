@@ -19,13 +19,14 @@ protected:
 public:
                      CTrailsBase(void);
                     ~CTrailsBase(void);
-   virtual int       Type(void) const {return CLASS_TYPE_TRAILS;}   
+   virtual int       Type(void) const {return CLASS_TYPE_TRAILS;}
    //--- initialization
    virtual bool      Init(CSymbolManager *symbolmanager,CStop *stop);
    virtual void      SetContainer(CStop *stop){m_stop=stop;}
+   virtual bool      Validate(void) const;
    //--- getters and setters
    bool              Active(void) const {return m_active;}
-   void              Active(const bool activate) {m_active=activate;}  
+   void              Active(const bool activate) {m_active=activate;}
    //--- checking
    virtual double    Check(const string,const ENUM_ORDER_TYPE,const double,const double,const ENUM_TRAIL_TARGET);
    //--- recovery
@@ -50,37 +51,51 @@ CTrailsBase::~CTrailsBase(void)
 //+------------------------------------------------------------------+
 bool CTrailsBase::Init(CSymbolManager *symbolmanager,CStop *stop)
   {
-   if(!Active()) 
-      return true;
    SetContainer(stop);
    for(int i=0;i<Total();i++)
      {
       CTrail *trail=At(i);
-      if (CheckPointer(trail))
-      {
+      if(CheckPointer(trail))
+        {
          trail.SetContainer(GetPointer(this));
          trail.Init(symbolmanager);
-      }
-     }   
+        }
+     }
    return true;
-  }  
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTrailsBase::Validate(void) const
+  {
+   for(int i=0;i<Total();i++)
+     {
+      CTrail *trail=At(i);
+      if(CheckPointer(trail))
+        {
+         if(!trail.Validate())
+            return false;
+        }
+     }
+   return true;
+  }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 double CTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
-   if(!Active()) 
+   if(!Active())
       return 0;
    double val=0.0,ret=0.0;
    for(int i=0;i<Total();i++)
      {
       CTrail *trail=At(i);
-      if(!CheckPointer(trail)) 
+      if(!CheckPointer(trail))
          continue;
-      if (!trail.Active())
+      if(!trail.Active())
          continue;
       int trail_target=trail.TrailTarget();
-      if (mode!=trail_target) 
+      if(mode!=trail_target)
          continue;
       val=trail.Check(symbol,type,entry_price,price,mode);
       if((type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_TAKEPROFIT))
@@ -95,7 +110,7 @@ double CTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const d
 //+------------------------------------------------------------------+
 bool CTrailsBase::CreateElement(const int index)
   {
-   CTrail * trail = new CTrail();
+   CTrail*trail=new CTrail();
    trail.SetContainer(GetPointer(this));
    return Insert(GetPointer(trail),index);
   }

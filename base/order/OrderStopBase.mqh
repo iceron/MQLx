@@ -98,8 +98,8 @@ protected:
    virtual bool      IsTakeProfitValid(const double) const;
    virtual bool      Modify(const double,const double);
    virtual bool      ModifyStops(const double,const double);
-   virtual bool      ModifyStopLoss(const double) {return true;}
-   virtual bool      ModifyTakeProfit(const double) {return true;}
+   virtual bool      ModifyStopLoss(const double)=0;
+   virtual bool      ModifyTakeProfit(const double)=0;
    virtual bool      UpdateOrderStop(const double,const double) {return true;}
    //--- objects
    virtual bool      MoveStopLoss(const double);
@@ -141,11 +141,17 @@ void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
    m_stop.Refresh(order.Symbol());
    double stoploss=m_stop.StopLossPrice(order,GetPointer(this));
    double takeprofit=m_stop.TakeProfitPrice(order,GetPointer(this));
-   m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,stoploss);
-   m_stoploss.Add(stoploss);
-   m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,takeprofit);
-   m_takeprofit.Add(takeprofit);
-   m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
+   if(MQLInfoInteger(MQL_OPTIMIZATION) || (MQLInfoInteger(MQL_TESTER) && !MQLInfoInteger(MQL_VISUAL_MODE)))
+     {
+     }
+   else
+     {
+      m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,stoploss);
+      m_stoploss.Add(stoploss);
+      m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,takeprofit);
+      m_takeprofit.Add(takeprofit);
+      m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
+     }
    if(stop.Main())
       order.MainStop(GetPointer(this));
   }
@@ -157,9 +163,9 @@ bool COrderStopBase::Deinit(void)
    if(CheckPointer(m_objentry))
       delete m_objentry;
    if(CheckPointer(m_objsl))
-      delete m_objentry;
+      delete m_objsl;
    if(CheckPointer(m_objtp))
-      delete m_objentry;
+      delete m_objtp;
    return true;
   }
 //+------------------------------------------------------------------+
@@ -167,16 +173,16 @@ bool COrderStopBase::Deinit(void)
 //+------------------------------------------------------------------+
 bool COrderStopBase::IsStopLossValid(const double stoploss) const
   {
-   return (stoploss>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && stoploss>StopLoss()) || 
-          (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<StopLoss())));
+   return (stoploss>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && stoploss>StopLoss()) ||
+           (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<StopLoss())));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderStopBase::IsTakeProfitValid(const double takeprofit) const
   {
-   return (takeprofit>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && takeprofit<TakeProfit()) || 
-          (m_order.OrderType()==ORDER_TYPE_SELL && takeprofit>TakeProfit())));
+   return (takeprofit>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && takeprofit<TakeProfit()) ||
+           (m_order.OrderType()==ORDER_TYPE_SELL && takeprofit>TakeProfit())));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -184,10 +190,8 @@ bool COrderStopBase::IsTakeProfitValid(const double takeprofit) const
 bool COrderStopBase::CheckTrailing(void)
   {
    if(!CheckPointer(m_stop) || m_order.IsClosed() || m_order.IsSuspended() || 
-     (m_stoploss_closed && m_takeprofit_closed))
+      (m_stoploss_closed && m_takeprofit_closed))
       return false;
-   bool result=false;
-   int action=-1;
    double stoploss=0,takeprofit=0;
    if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_order.Symbol(),m_order.OrderType(),m_order.Price(),StopLoss(),TRAIL_TARGET_STOPLOSS);
    if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.Symbol(),m_order.OrderType(),m_order.Price(),TakeProfit(),TRAIL_TARGET_TAKEPROFIT);
@@ -195,15 +199,7 @@ bool COrderStopBase::CheckTrailing(void)
       stoploss=0;
    if(!IsTakeProfitValid(takeprofit))
       takeprofit=0;
-   if(stoploss>0 && takeprofit>0)
-      action=0;
-   else if(stoploss>0 && takeprofit==0)
-      action=1;
-   else if(takeprofit>0 && stoploss==0)
-      action=2;
-   if(action!=-1)
-      result=Modify(stoploss,takeprofit);
-   return result;
+   return Modify(stoploss,takeprofit);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -305,11 +301,11 @@ bool COrderStopBase::DeleteStopLines(void)
 bool COrderStopBase::MoveStopLoss(const double stoploss)
   {
    if(CheckPointer(m_objsl))
-   {
+     {
       if(m_objsl.Move(stoploss))
          StopLoss(stoploss);
       else return false;
-   }         
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -318,11 +314,11 @@ bool COrderStopBase::MoveStopLoss(const double stoploss)
 bool COrderStopBase::MoveTakeProfit(const double takeprofit)
   {
    if(CheckPointer(m_objtp))
-   {
+     {
       if(m_objtp.Move(takeprofit))
          TakeProfit(takeprofit);
       else return false;
-   }      
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -331,7 +327,6 @@ bool COrderStopBase::MoveTakeProfit(const double takeprofit)
 bool COrderStopBase::Modify(const double stoploss,const double takeprofit)
   {
    bool stoploss_modified=false,takeprofit_modified=false;
-   double oldsl=StopLoss(),oldtp=TakeProfit();
    if(stoploss>0 && takeprofit>0)
      {
       if(ModifyStops(stoploss,takeprofit))

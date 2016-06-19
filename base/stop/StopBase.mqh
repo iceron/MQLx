@@ -106,7 +106,7 @@ public:
    string            TakeProfitName(void) const {return m_takeprofit_name;}
    void              TakeProfitStyle(const ENUM_LINE_STYLE style) {m_takeprofit_style=style;}
    bool              Virtual(void) const {return m_stop_type==STOP_TYPE_VIRTUAL;}
-   void              Volume(double volume) {m_volume = volume;}
+   void              Volume(double volume) {m_volume=volume;}
    double            Volume(void) const {return m_volume;}
    void              VolumeType(const ENUM_VOLUME_TYPE type){m_volume_type=type;}
    //--- stop order checking
@@ -191,26 +191,21 @@ bool CStopBase::Validate(void) const
       PrintFormat(__FUNCTION__+": empty name for stop");
       return false;
      }
-   if (Virtual() && Pending())
-   {
-      PrintFormat(__FUNCTION__+": stop cannot be both pending and virtual");
-      return false;
-   }
-   if (Virtual() && Broker())
-   {
-      PrintFormat(__FUNCTION__+": stop cannot be both broker-based and virtual");
-      return false;
-   }
-   if (CheckPointer(m_trails))
+   if(Virtual())
      {
-      for(int i=0;i<m_trails.Total();i++)
+      if(Pending())
         {
-         CTrail *trail=m_trails.At(i);
-         if (CheckPointer(trail))
-            if(!trail.Validate())
-               return false;
+         PrintFormat(__FUNCTION__+": stop cannot be both pending and virtual");
+         return false;
+        }
+      if(Broker())
+        {
+         PrintFormat(__FUNCTION__+": stop cannot be both broker-based and virtual");
+         return false;
         }
      }
+   if(CheckPointer(m_trails))
+      return m_trails.Validate();
    return true;
   }
 //+------------------------------------------------------------------+
@@ -218,19 +213,19 @@ bool CStopBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   if (!CheckPointer(accountinfo))
+   if(!CheckPointer(accountinfo))
       return false;
    InitSymbol(symbolmanager);
    InitAccount(accountinfo);
    InitTrade();
-   if (CheckPointer(m_trails))
-   {
-      if (!m_trails.Init(symbolmanager,GetPointer(this)))
-      {
+   if(CheckPointer(m_trails))
+     {
+      if(!m_trails.Init(symbolmanager,GetPointer(this)))
+        {
          Print(__FUNCTION__+": error in trailing manager initialization");
          return false;
-      }
-   }   
+        }
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -238,7 +233,7 @@ bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
 //+------------------------------------------------------------------+
 bool CStopBase::InitSymbol(CSymbolManager *symbolmanager)
   {
-   m_symbol_man = symbolmanager;
+   m_symbol_man=symbolmanager;
    return true;
   }
 //+------------------------------------------------------------------+
@@ -246,7 +241,7 @@ bool CStopBase::InitSymbol(CSymbolManager *symbolmanager)
 //+------------------------------------------------------------------+
 bool CStopBase::InitAccount(CAccountInfo *accountinfo=NULL)
   {
-   if (CheckPointer(accountinfo))
+   if(CheckPointer(accountinfo))
       m_account=accountinfo;
    return CheckPointer(m_account);
   }
@@ -255,18 +250,18 @@ bool CStopBase::InitAccount(CAccountInfo *accountinfo=NULL)
 //+------------------------------------------------------------------+
 bool CStopBase::InitTrade()
   {
-   for (int i=0;i<m_symbol_man.Total();i++)
-   {
-      CSymbolInfo *symbol = m_symbol_man.At(i);
-      CExpertTradeX *trade = new CExpertTradeX();
-      if (CheckPointer(trade))
-      {
+   for(int i=0;i<m_symbol_man.Total();i++)
+     {
+      CSymbolInfo *symbol=m_symbol_man.At(i);
+      CExpertTradeX *trade=new CExpertTradeX();
+      if(CheckPointer(trade))
+        {
          trade.SetSymbol(GetPointer(symbol));
          trade.SetExpertMagicNumber(m_magic);
          trade.SetDeviationInPoints((ulong)(m_deviation/symbol.Point()));
          m_trade_man.Add(trade);
-      }   
-   }
+        }
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -274,7 +269,7 @@ bool CStopBase::InitTrade()
 //+------------------------------------------------------------------+
 double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
   {
-   double lotsize=0.0;   
+   double lotsize=0.0;
    if(m_volume_type==VOLUME_TYPE_FIXED)
       lotsize=orderstop.Volume();
    else if(m_volume_type==VOLUME_TYPE_PERCENT_REMAINING)
@@ -290,7 +285,7 @@ double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
 //+------------------------------------------------------------------+
 double CStopBase::StopLossCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price)
   {
-   if(!Refresh(symbol)) 
+   if(!Refresh(symbol))
       return 0;
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
       return price-m_stoploss*m_symbol.Point();
@@ -303,7 +298,7 @@ double CStopBase::StopLossCalculate(const string symbol,const ENUM_ORDER_TYPE ty
 //+------------------------------------------------------------------+
 double CStopBase::TakeProfitCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price)
   {
-   if(!Refresh(symbol)) 
+   if(!Refresh(symbol))
       return 0;
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
       return price+m_takeprofit*m_symbol.Point();
@@ -327,7 +322,7 @@ bool CStopBase::GetClosePrice(const string symbol,const ENUM_ORDER_TYPE type,dou
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
-  {    
+  {
    if(!Refresh(order.Symbol())) return false;
    double stoploss=orderstop.StopLoss();
    if(stoploss<=0.0) return false;
@@ -336,11 +331,11 @@ bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
    if(!GetClosePrice(order.Symbol(),type,price)) return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
-      if(price<=stoploss) 
+      if(price<=stoploss)
          close=true;
    else if(type==ORDER_TYPE_SELL)
-      if(price>=stoploss) 
-         close=true;
+   if(price>=stoploss)
+             close=true;
    if(close)
       return CloseStop(order,orderstop,price);
    return close;
@@ -370,11 +365,11 @@ bool CStopBase::CheckTakeProfit(COrder *order,COrderStop *orderstop)
 //+------------------------------------------------------------------+
 bool CStopBase::Refresh(const string symbol)
   {
-   if (!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),symbol)!=0)
-   {
-      m_symbol = m_symbol_man.Get(symbol);
+   if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),symbol)!=0)
+     {
+      m_symbol= m_symbol_man.Get(symbol);
       m_trade = m_trade_man.Get(symbol);
-   }   
+     }
    if(CheckPointer(m_symbol))
       return m_symbol.RefreshRates();
    return false;
@@ -405,7 +400,7 @@ void CStopBase::DeinitTrade(void)
 //+------------------------------------------------------------------+
 void CStopBase::DeinitTrails(void)
   {
-   if (CheckPointer(m_trails))
+   if(CheckPointer(m_trails)==POINTER_DYNAMIC)
       delete m_trails;
   }
 //+------------------------------------------------------------------+
@@ -430,7 +425,6 @@ bool CStopBase::Add(CTrails *trails)
 double CStopBase::CheckTrailing(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
    if(!CheckPointer(m_trails)) return 0;
-   if(!Refresh(symbol)) return 0;
    return m_trails.Check(symbol,type,entry_price,price,mode);
   }
 //+------------------------------------------------------------------+
@@ -480,15 +474,15 @@ CStopLine *CStopBase::CreateStopLossObject(const long id,const string name,const
 CStopLine *CStopBase::CreateTakeProfitObject(const long id,const string name,const int window,const double price)
   {
    CStopLine *obj=CreateObject(id,name,window,price);
-      if(CheckPointer(obj)==POINTER_DYNAMIC)
-        {
-         obj.Selectable(true);
-         obj.SetStyle(m_takeprofit_style);
-         obj.SetColor(m_takeprofit_color);
-         if(!m_takeprofit_visible)
-            obj.Timeframes(OBJ_NO_PERIODS);
-         return obj;
-        }
+   if(CheckPointer(obj)==POINTER_DYNAMIC)
+     {
+      obj.Selectable(true);
+      obj.SetStyle(m_takeprofit_style);
+      obj.SetColor(m_takeprofit_color);
+      if(!m_takeprofit_visible)
+         obj.Timeframes(OBJ_NO_PERIODS);
+      return obj;
+     }
    return NULL;
   }
 //+------------------------------------------------------------------+

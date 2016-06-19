@@ -443,16 +443,13 @@ bool CExpertAdvisorBase::OnTick(void)
         {
          if(m_order_man.CloseOrder(order,i))
             continue;
-         else Print(__FUNCTION__+" failed to close order");
         }
       //checking if the order should be closed
       if((checkcloselong && order.OrderType()==ORDER_TYPE_BUY) || 
          (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL))
         {
-         Print(__FUNCTION__+" order is against signal: closing..");
          if(m_order_man.CloseOrder(order,i))
             continue;
-         else Print(__FUNCTION__+" failed to close order");
         }
      }
    m_order_man.OnTick();

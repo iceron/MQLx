@@ -151,10 +151,7 @@ bool COrderBase::Close(void)
    if(CloseStops())
       IsClosed(true);
    else 
-   {
-      Print(__FUNCTION__+" suspending order");
       IsSuspended(true);
-   }   
    return IsClosed();
   }
 //+------------------------------------------------------------------+

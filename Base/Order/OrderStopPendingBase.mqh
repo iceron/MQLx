@@ -16,7 +16,6 @@ public:
                     ~COrderStopPendingBase(void);
    virtual void      Check(double &);
 protected:
-   virtual bool      ModifyStops(const double,const double);
    virtual bool      ModifyStopLoss(const double);
    virtual bool      ModifyTakeProfit(const double);
    virtual bool      Update(void);
@@ -97,13 +96,6 @@ COrderStopPendingBase::Check(double &volume)
       if(m_stop.Main())
          m_order.IsSuspended(true);
      }
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrderStopPendingBase::ModifyStops(const double stoploss,const double takeprofit)
-  {
-   return ModifyStopLoss(stoploss) && ModifyTakeProfit(takeprofit);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
