@@ -51,8 +51,8 @@ bool CStopsBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
-      if (stop!=NULL)
-         if (!stop.Init(symbolmanager,accountinfo))
+      if(stop!=NULL)
+         if(!stop.Init(symbolmanager,accountinfo))
             return false;
      }
    return true;
@@ -62,11 +62,23 @@ bool CStopsBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
 //+------------------------------------------------------------------+
 bool CStopsBase::Validate(void) const
   {
+   bool main= false;
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
-      if(!stop.Validate())
-         return false;
+      if(stop!=NULL)
+        {
+         if (stop.Main())
+         {
+            if (main)
+            {
+               PrintFormat(__FUNCTION__+": more than one main stop is not allowed");
+               return false;
+            }               
+         }
+         if(!stop.Validate())
+            return false;
+        }
      }
    return true;
   }
@@ -87,7 +99,7 @@ CStop *CStopsBase::Main()
 //+------------------------------------------------------------------+
 bool CStopsBase::CreateElement(const int index)
   {
-   CStop * stop = new CStop();
+   CStop*stop=new CStop();
    stop.SetContainer(GetPointer(this));
    return Insert(GetPointer(stop),index);
   }

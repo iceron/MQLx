@@ -188,9 +188,19 @@ bool CStopBase::Validate(void) const
   {
    if(m_name==NULL)
      {
-      PrintFormat(__FUNCTION__+": Empty name for stop.");
+      PrintFormat(__FUNCTION__+": empty name for stop");
       return false;
      }
+   if (Virtual() && Pending())
+   {
+      PrintFormat(__FUNCTION__+": stop cannot be both pending and virtual");
+      return false;
+   }
+   if (Virtual() && Broker())
+   {
+      PrintFormat(__FUNCTION__+": stop cannot be both broker-based and virtual");
+      return false;
+   }
    if(m_trails!=NULL)
      {
       for(int i=0;i<m_trails.Total();i++)
