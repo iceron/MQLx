@@ -266,6 +266,7 @@ bool COrderStopBase::Update(void)
             Sleep(m_stop.Delay());
             dragged=true;
            }
+         else dragged = true;
         }
      }
    if(CheckPointer(m_objsl)==POINTER_DYNAMIC)
@@ -278,6 +279,7 @@ bool COrderStopBase::Update(void)
             Sleep(m_stop.Delay());
             dragged=true;
            }
+         else dragged = true;
         }
      }
    if(dragged)
