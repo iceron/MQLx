@@ -94,9 +94,9 @@ void CCandleBase::Check(void)
 //+------------------------------------------------------------------+
 bool CCandleBase::Compare(MqlRates &rates) const
   {
-   return ((m_wait_for_new && m_last.time==0) ||
-            m_last.time!=rates.time ||
-           (m_last.open/m_symbol.TickSize())!=(rates.open/m_symbol.TickSize()));
+   return (m_last.time!=rates.time ||
+          (m_last.open/m_symbol.TickSize())!=(rates.open/m_symbol.TickSize()) ||
+          (m_wait_for_new && m_last.time==0));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
