@@ -95,7 +95,8 @@ bool CMoneyBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
 //+------------------------------------------------------------------+
 bool CMoneyBase::InitSymbol(CSymbolManager *symbolmanager)
   {
-   if(symbolmanager==NULL) return false;
+   if(!CheckPointer(symbolmanager)) 
+      return false;
    m_symbol_man=symbolmanager;
    return true;
   }
@@ -104,12 +105,7 @@ bool CMoneyBase::InitSymbol(CSymbolManager *symbolmanager)
 //+------------------------------------------------------------------+
 bool CMoneyBase::InitAccount(CAccountInfo *account)
   {
-   if(account==NULL)
-     {
-      if((m_account=new CAccountInfo)==NULL)
-         return false;
-     }
-   else m_account=account;
+   m_account=account;
    return CheckPointer(m_account);
   }
 //+------------------------------------------------------------------+

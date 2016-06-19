@@ -242,7 +242,7 @@ bool CExpertAdvisorBase::InitSignals(void)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::InitTimes(void)
   {
-   if(m_times==NULL)
+   if(!CheckPointer(m_times))
       return true;
    return m_times.Init(GetPointer(m_symbol_man));
   }
@@ -298,7 +298,7 @@ bool CExpertAdvisorBase::Add(CObject *object)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::AddSignal(CSignal *signal)
   {
-   if(m_signal!=NULL)
+   if (CheckPointer(m_signal))
      {
       delete m_signal;
      }
@@ -415,7 +415,7 @@ bool CExpertAdvisorBase::OnTick(void)
    checkopenshort=false,
    checkcloselong=false,
    checkcloseshort=false;
-   if(m_signal!=NULL)
+   if (CheckPointer(m_signal))
      {
       m_signal.Check();
       double   price=EMPTY_VALUE;
@@ -433,7 +433,7 @@ bool CExpertAdvisorBase::OnTick(void)
    for(int i=orders.Total()-1;i>=0;i--)
      {
       COrder *order=orders.At(i);
-      if(order==NULL)
+      if (!CheckPointer(order))
          continue;
       //ontick handler
       order.OnTick();
@@ -457,7 +457,7 @@ bool CExpertAdvisorBase::OnTick(void)
         }
      }
    m_order_man.OnTick();
-   if(m_signal!=NULL && (!CheckPointer(m_times) || m_times.Evaluate()))
+   if(CheckPointer(m_signal) && (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)
         {
@@ -514,7 +514,7 @@ void CExpertAdvisorBase::DeinitAccount(void)
 void CExpertAdvisorBase::DeinitComments(void)
   {
 //ADT::Delete(m_comments);
-   if(m_comments!=NULL)
+   if (CheckPointer(m_comments))
       delete m_comments;
   }
 //+------------------------------------------------------------------+
@@ -523,7 +523,7 @@ void CExpertAdvisorBase::DeinitComments(void)
 void CExpertAdvisorBase::DeinitTimes(void)
   {
 //ADT::Delete(m_times);
-   if(m_times!=NULL)
+   if (CheckPointer(m_times))
       delete m_times;
   }
 //+------------------------------------------------------------------+

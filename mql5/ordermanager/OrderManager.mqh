@@ -81,12 +81,12 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
   {
    bool closed=true;
    COrderInfo ord;
-   if(CheckPointer(order)==POINTER_DYNAMIC)
+   if(CheckPointer(order))
      {
       if(order.Volume()<=0) return true;
-      if(m_symbol==NULL || StringCompare(m_symbol.Name(),order.Symbol())!=0)
+      if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),order.Symbol())!=0)
          m_symbol = m_symbol_man.Get(order.Symbol());
-      if(m_symbol!=NULL)
+      if (CheckPointer(m_symbol))
          m_trade=m_trade_man.Get(order.Symbol());
       m_trade.SetExpertMagicNumber(m_magic_close);
       if(ord.Select(order.Ticket()))

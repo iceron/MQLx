@@ -67,7 +67,8 @@ bool CMoneysBase::Validate(void) const
    for(int i=0;i<Total();i++)
      {
       CMoney *money=At(i);
-      if(money==NULL) continue;
+      if (!CheckPointer(money)) 
+         continue;
       if(!money.Validate())
          return false;
      }
@@ -79,7 +80,7 @@ bool CMoneysBase::Validate(void) const
 double CMoneysBase::Volume(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
   {
    CMoney *money=At(m_selected);
-   if(money!=NULL)
+   if (CheckPointer(money))
       return money.Volume(symbol,price,type,sl);
    return 0;
   }
@@ -91,7 +92,8 @@ bool CMoneysBase::Selected(const string select)
    for(int i=0;i<Total();i++)
      {
       CMoney *money=At(i);
-      if(money==NULL) continue;
+      if (!CheckPointer(money)) 
+         continue;
       if(StringCompare(money.Name(),select))
         {
          Selected(i);

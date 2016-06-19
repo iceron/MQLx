@@ -44,7 +44,7 @@ bool CMoneyFixedRiskBase::Validate(void)
 CMoneyFixedRiskBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    m_symbol = m_symbol_man.Get(symbol);
-   if(m_account!=NULL && m_symbol!=NULL)
+   if (CheckPointer(m_symbol))
      {
       double balance=m_equity==false?m_account.Balance():m_account.Equity();
       double ticks = 0;

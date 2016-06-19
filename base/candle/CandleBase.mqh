@@ -66,7 +66,7 @@ bool CCandleBase::Init(CSymbolInfo *symbol,const int timeframe)
   {
    m_symbol = symbol;
    m_period = timeframe;
-   return true;
+   return CheckPointer(m_symbol);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -76,17 +76,14 @@ void CCandleBase::Check(void)
    if(!Active())
       return;
    m_new=false;
-   if(m_symbol!=NULL)
+   MqlRates rates[];
+   if(CopyRates(m_symbol.Name(),(ENUM_TIMEFRAMES)m_period,1,1,rates)==-1)
+      return;
+   if(Compare(rates[0]))
      {
-      MqlRates rates[];
-      if(CopyRates(m_symbol.Name(),(ENUM_TIMEFRAMES)m_period,1,1,rates)==-1)
-         return;
-      if(Compare(rates[0]))
-        {
-         m_new=true;
-         m_trade_processed=false;
-         m_last=rates[0];
-        }
+      m_new=true;
+      m_trade_processed=false;
+      m_last=rates[0];
      }
   }
 //+------------------------------------------------------------------+
@@ -95,8 +92,8 @@ void CCandleBase::Check(void)
 bool CCandleBase::Compare(MqlRates &rates) const
   {
    return (m_last.time!=rates.time ||
-          (m_last.open/m_symbol.TickSize())!=(rates.open/m_symbol.TickSize()) ||
-          (m_wait_for_new && m_last.time==0));
+           (m_last.open/m_symbol.TickSize())!=(rates.open/m_symbol.TickSize()) || 
+           (m_wait_for_new && m_last.time==0));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

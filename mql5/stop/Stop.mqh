@@ -157,7 +157,7 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
    ENUM_ORDER_TYPE type=order.OrderType();
    m_symbol= m_symbol_man.Get(order.Symbol());
    m_trade = m_trade_man.Get(m_symbol.Name());
-   if(m_trade!=NULL)
+   if (CheckPointer(m_trade))
      {
       if(m_stop_type==STOP_TYPE_VIRTUAL)
         {

@@ -67,6 +67,8 @@ CSymbolInfo *CSymbolManagerBase::Get(string symbol=NULL)
    for(int i=0;i<Total();i++)
      {
       CSymbolInfo *item=At(i);
+      if (!CheckPointer(item))
+         continue;
       if(StringCompare(item.Name(),symbol)==0)
          return item;
      }
@@ -80,6 +82,8 @@ bool CSymbolManagerBase::RefreshRates(void)
    for(int i=0;i<Total();i++)
      {
       CSymbolInfo *symbol=At(i);
+      if (!CheckPointer(symbol))
+         continue;
       if(!symbol.RefreshRates())
          return false;
      }
@@ -121,7 +125,7 @@ void CSymbolManagerBase::SetPrimary(const int idx)
 //+------------------------------------------------------------------+
 CSymbolInfo* CSymbolManagerBase::GetPrimary(void)
   {
-   if (Total()>=1 && m_symbol_primary==NULL)
+   if (Total()>=1 && !CheckPointer(m_symbol_primary))
    {      
       m_symbol_primary = At(0);
    }   
@@ -134,7 +138,7 @@ string CSymbolManagerBase::GetPrimaryName(void)
   {
    if (Total()==1 && m_symbol_primary==NULL)
       m_symbol_primary = At(0);
-   if(m_symbol_primary!=NULL)
+   if(CheckPointer(m_symbol_primary))
       return m_symbol_primary.Name();
    return NULL;
   }

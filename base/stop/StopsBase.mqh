@@ -51,7 +51,7 @@ bool CStopsBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
-      if(stop!=NULL)
+      if (CheckPointer(stop))
          if(!stop.Init(symbolmanager,accountinfo))
             return false;
      }
@@ -66,7 +66,7 @@ bool CStopsBase::Validate(void) const
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
-      if(stop!=NULL)
+      if (CheckPointer(stop))
         {
          if (stop.Main())
          {
@@ -90,7 +90,10 @@ CStop *CStopsBase::Main()
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
-      if(stop.Main()) return stop;
+      if (!CheckPointer(stop))
+         continue;
+      if(stop.Main()) 
+         return stop;
      }
    return NULL;
   }

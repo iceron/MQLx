@@ -48,17 +48,17 @@ CCandleManagerBase::~CCandleManagerBase()
 bool CCandleManagerBase::Init(CSymbolManager *symbol_man)
   {
    m_symbol_man=symbol_man;
-   return true;
+   return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CCandleManagerBase::Add(const string symbol,const int period)
   {
-   if(m_symbol_man!=NULL)
+   if (CheckPointer(m_symbol_man))
      {
       CSymbolInfo *instrument=m_symbol_man.Get(symbol);
-      if(instrument!=NULL)
+      if (CheckPointer(instrument))
         {
          instrument.Name(symbol);
          instrument.Refresh();
@@ -86,7 +86,7 @@ void CCandleManagerBase::Check(void) const
 bool CCandleManagerBase::IsNewCandle(const string symbol,const int timeframe) const
   {
    CCandle *candle=Get(symbol,timeframe);
-   if(candle!=NULL)
+   if (CheckPointer(candle))
       return candle.IsNewCandle();
    return false;
   }
@@ -96,7 +96,7 @@ bool CCandleManagerBase::IsNewCandle(const string symbol,const int timeframe) co
 bool CCandleManagerBase::TradeProcessed(const string symbol,const int timeframe) const
   {
    CCandle *candle=Get(symbol,timeframe);
-   if(candle!=NULL)
+   if (CheckPointer(candle))
       return candle.TradeProcessed();
    return false;
   }
@@ -106,7 +106,7 @@ bool CCandleManagerBase::TradeProcessed(const string symbol,const int timeframe)
 void CCandleManagerBase::TradeProcessed(const string symbol,const int timeframe,const bool processed) const
   {
    CCandle *candle=Get(symbol,timeframe);
-   if(candle!=NULL)
+   if (CheckPointer(candle))
       candle.TradeProcessed(processed);
   }
 //+------------------------------------------------------------------+
@@ -117,7 +117,7 @@ CCandle *CCandleManagerBase::Get(const string symbol,const int timeframe) const
    for(int i=0;i<Total();i++)
      {
       CCandle *candle=At(i);
-      if(candle!=NULL)
+      if (CheckPointer(candle))
          if(StringCompare(symbol,candle.SymbolName())==0 && timeframe==candle.Timeframe())
             return candle;
      }

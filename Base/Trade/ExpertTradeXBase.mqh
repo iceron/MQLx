@@ -33,7 +33,7 @@ CExpertTradeXBase::~CExpertTradeXBase(void)
 //+------------------------------------------------------------------+
 string CExpertTradeXBase::Name(void)
   {
-   if(m_symbol!=NULL)
+   if (CheckPointer(m_symbol))
       return m_symbol.Name();
    return NULL;
   }

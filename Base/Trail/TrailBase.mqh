@@ -84,13 +84,13 @@ bool CTrailBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool CTrailBase::Init(CSymbolManager *symbolmanager)
   {
-   if(symbolmanager==NULL) 
+   if (!CheckPointer(symbolmanager))
    {
       Print(__FUNCTION__+": symbol object is NULL");
       return false;
    }   
    m_symbol_man=symbolmanager;
-   return true;
+   return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -181,12 +181,11 @@ double CTrailBase::Price(const ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 bool CTrailBase::Refresh(const string symbol)
   {
-   if(m_symbol==NULL || StringCompare(m_symbol.Name(),symbol)!=0)
+   if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),symbol)!=0)
    {
-      if (m_symbol_man!=NULL)
-         m_symbol= m_symbol_man.Get(symbol);
+      m_symbol= m_symbol_man.Get(symbol);
    }   
-   return (m_symbol!=NULL);
+   return CheckPointer(m_symbol);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

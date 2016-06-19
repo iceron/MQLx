@@ -95,7 +95,7 @@ COrderBase::COrderBase(void) : m_closed(false),
 //+------------------------------------------------------------------+
 COrderBase::~COrderBase(void)
   {
-   if (m_order_stops!=NULL)
+   if (CheckPointer(m_order_stops))
       delete m_order_stops;
   }
 //+------------------------------------------------------------------+
@@ -140,7 +140,7 @@ void COrderBase::OnTick(void)
 //+------------------------------------------------------------------+
 void COrderBase::CheckStops(void)
   {
-   if(m_order_stops!=NULL)
+   if (CheckPointer(m_order_stops))
       m_order_stops.Check(m_volume);
   }
 //+------------------------------------------------------------------+
@@ -162,7 +162,7 @@ bool COrderBase::Close(void)
 //+------------------------------------------------------------------+
 bool COrderBase::CloseStops(void)
   {
-   if(m_order_stops!=NULL)
+   if (CheckPointer(m_order_stops))
       return m_order_stops.Close();
    return false;
   }

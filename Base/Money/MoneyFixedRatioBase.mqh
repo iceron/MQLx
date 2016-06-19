@@ -57,7 +57,7 @@ bool CMoneyFixedRatioBase::Validate(void)
 CMoneyFixedRatioBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
   {
    m_symbol=m_symbol_man.Get(symbol);
-   if(m_account!=NULL && m_symbol!=NULL)
+   if (CheckPointer(m_symbol))
      {
       double balance=m_equity==false?m_account.Balance():m_account.Equity();
       m_volume=m_volume_base+((int)(balance/m_balance_inc))*m_volume_inc;

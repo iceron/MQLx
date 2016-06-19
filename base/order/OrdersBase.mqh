@@ -63,7 +63,8 @@ bool COrdersBase::Init(CStops *stops=NULL)
 //+------------------------------------------------------------------+
 COrdersBase::SetStops(CStops *stops)
   {
-   if(stops!=NULL) m_stops=stops;
+   if(CheckPointer(stops))
+      m_stops=stops;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -201,12 +201,12 @@ bool CStopBase::Validate(void) const
       PrintFormat(__FUNCTION__+": stop cannot be both broker-based and virtual");
       return false;
    }
-   if(m_trails!=NULL)
+   if (CheckPointer(m_trails))
      {
       for(int i=0;i<m_trails.Total();i++)
         {
          CTrail *trail=m_trails.At(i);
-         if (trail!=NULL)
+         if (CheckPointer(trail))
             if(!trail.Validate())
                return false;
         }
@@ -218,12 +218,12 @@ bool CStopBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   if(symbolmanager==NULL || accountinfo==NULL) 
+   if (!CheckPointer(m_trails) || !CheckPointer(accountinfo))
       return false;
    InitSymbol(symbolmanager);
    InitAccount(accountinfo);
    InitTrade();
-   if(m_trails!=NULL)
+   if (CheckPointer(m_trails))
    {
       if (!m_trails.Init(symbolmanager,GetPointer(this)))
       {
@@ -246,9 +246,9 @@ bool CStopBase::InitSymbol(CSymbolManager *symbolmanager)
 //+------------------------------------------------------------------+
 bool CStopBase::InitAccount(CAccountInfo *accountinfo=NULL)
   {
-   if(accountinfo==NULL) return false;
-   m_account=accountinfo;
-   return true;
+   if (CheckPointer(accountinfo))
+      m_account=accountinfo;
+   return CheckPointer(m_account);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -259,7 +259,7 @@ bool CStopBase::InitTrade()
    {
       CSymbolInfo *symbol = m_symbol_man.At(i);
       CExpertTradeX *trade = new CExpertTradeX();
-      if (trade!=NULL)
+      if (CheckPointer(trade))
       {
          trade.SetSymbol(GetPointer(symbol));
          trade.SetExpertMagicNumber(m_magic);
@@ -370,12 +370,12 @@ bool CStopBase::CheckTakeProfit(COrder *order,COrderStop *orderstop)
 //+------------------------------------------------------------------+
 bool CStopBase::Refresh(const string symbol)
   {
-   if (m_symbol==NULL || StringCompare(m_symbol.Name(),symbol)!=0)
+   if (!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),symbol)!=0)
    {
       m_symbol = m_symbol_man.Get(symbol);
       m_trade = m_trade_man.Get(symbol);
    }   
-   if(CheckPointer(m_symbol)==POINTER_DYNAMIC)
+   if(CheckPointer(m_symbol))
       return m_symbol.RefreshRates();
    return false;
   }
@@ -405,7 +405,7 @@ void CStopBase::DeinitTrade(void)
 //+------------------------------------------------------------------+
 void CStopBase::DeinitTrails(void)
   {
-   if (m_trails!=NULL)
+   if (CheckPointer(m_trails))
       delete m_trails;
   }
 //+------------------------------------------------------------------+

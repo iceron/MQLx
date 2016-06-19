@@ -189,9 +189,9 @@ bool COrderManagerBase::Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAc
 bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,const double price,const double sl,const double tp)
   {
    bool ret=0;
-   if(CheckPointer(m_symbol)==POINTER_DYNAMIC)
+   if(CheckPointer(m_symbol))
       m_trade = m_trade_man.Get(m_symbol.Name());
-   if(m_trade!=NULL)
+   if (CheckPointer(m_trade))
      {
       if(COrder::IsOrderTypeLong(type))
          ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
@@ -205,10 +205,12 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitMoneys(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   if(m_moneys==NULL) 
-      return true;
-   m_moneys.SetContainer(GetPointer(this));
-   return m_moneys.Init(symbolmanager,accountinfo);
+   if(CheckPointer(m_moneys)) 
+   {
+      m_moneys.SetContainer(GetPointer(this));
+      return m_moneys.Init(symbolmanager,accountinfo);
+   }
+   return true;   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -219,7 +221,7 @@ bool COrderManagerBase::InitTrade()
      {
       CSymbolInfo *symbol=m_symbol_man.At(i);
       CExpertTradeX *trade=new CExpertTradeX();
-      if(trade!=NULL)
+      if (CheckPointer(trade))
         {
          trade.SetSymbol(GetPointer(symbol));
          trade.SetExpertMagicNumber(m_magic);
@@ -377,7 +379,7 @@ void COrderManagerBase::AddOtherMagicString(const string &magics[])
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitStops(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   if(m_stops!=NULL)
+   if (CheckPointer(m_stops))
    {
       m_stops.SetContainer(GetPointer(this));
       return m_stops.Init(symbolmanager,accountinfo);
@@ -410,7 +412,7 @@ void COrderManagerBase::Deinit(const int reason=0)
 //+------------------------------------------------------------------+
 void COrderManagerBase::DeinitStops()
   {
-   if (m_stops!=NULL)
+   if (CheckPointer(m_stops))
       delete m_stops;
   }
 //+------------------------------------------------------------------+
