@@ -13,11 +13,13 @@ class COrderStop : public COrderStopBase
 public:
                      COrderStop(void);
                     ~COrderStop(void);
-   virtual void      Check(double &);
+   //virtual void      Check(double &);
+/*
 protected:
    virtual bool      ModifyStops(const double,const double);
    virtual bool      ModifyStopLoss(const double);
    virtual bool      ModifyTakeProfit(const double);
+*/   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -31,6 +33,7 @@ COrderStop::COrderStop(void)
 COrderStop::~COrderStop(void)
   {
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -38,7 +41,6 @@ void COrderStop::Check(double &volume)
   {
    if(m_stop==NULL || !Active()) 
       return;
-   CheckInit();
    if(m_order.IsClosed() || m_order.IsSuspended())
      {
       bool delete_sl=false,delete_tp=false;
@@ -132,8 +134,8 @@ void COrderStop::Check(double &volume)
          //m_order.CloseStops();
       }   
      }
-   CheckDeinit();
   }
+*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -144,6 +146,7 @@ bool COrderStop::ModifyStops(const double stoploss,const double takeprofit)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+/*
 bool COrderStop::ModifyStopLoss(const double stoploss)
   {
    bool modify=false;
@@ -154,6 +157,8 @@ bool COrderStop::ModifyStopLoss(const double stoploss)
       MoveStopLoss(stoploss);
    return modify;
   }
+*/
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -167,4 +172,5 @@ bool COrderStop::ModifyTakeProfit(const double takeprofit)
       MoveTakeProfit(takeprofit);
    return modify;
   }
+  */
 //+------------------------------------------------------------------+

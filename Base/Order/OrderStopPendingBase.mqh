@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                          OrderStopBrokerBase.mqh |
+//|                                         OrderStopPendingBase.mqh |
 //|                                                   Enrico Lambino |
 //|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
@@ -9,32 +9,33 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class COrderStopBrokerBase : public COrderStop
+class COrderStopPendingBase : public COrderStop
   {
 public:
-                     COrderStopBrokerBase(void);
-                    ~COrderStopBrokerBase(void);
+                     COrderStopPendingBase(void);
+                    ~COrderStopPendingBase(void);
+protected:
    virtual bool      Update(void);
-   virtual bool      UpdateOrderStop(const double,const double);
+   virtual bool      UpdateOrderStop(const double,const double);   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderStopBrokerBase::COrderStopBrokerBase(void)
+COrderStopPendingBase::COrderStopPendingBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderStopBrokerBase::~COrderStopBrokerBase(void)
+COrderStopPendingBase::~COrderStopPendingBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderStopBrokerBase::Update(void)
+bool COrderStopPendingBase::Update(void)
   {
-   if (!CheckPointer(m_stop))
+   if(!CheckPointer(m_stop))
       return true;
    if(m_order.IsClosed() || m_order.IsSuspended())
       return true;
@@ -60,19 +61,19 @@ bool COrderStopBrokerBase::Update(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderStopBrokerBase::UpdateOrderStop(const double stoploss,const double takeprofit)
+bool COrderStopPendingBase::UpdateOrderStop(const double stoploss,const double takeprofit)
   {
    bool modify_sl=false,modify_tp=false;
    if(stoploss>0)
-      modify_sl=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
+      modify_sl=m_stop.OrderModify(m_stoploss_ticket,stoploss);
    if(takeprofit>0)
-      modify_tp=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
+      modify_tp=m_stop.OrderModify(m_takeprofit_ticket,takeprofit);
    return modify_tp||modify_sl;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\MQL5\Order\OrderStopBroker.mqh"
+#include "..\..\MQL5\Order\OrderStopPending.mqh"
 #else
-#include "..\..\MQL4\Order\OrderStopBroker.mqh"
+#include "..\..\MQL4\Order\OrderStopPending.mqh"
 #endif
 //+------------------------------------------------------------------+

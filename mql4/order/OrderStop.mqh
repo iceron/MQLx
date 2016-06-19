@@ -13,16 +13,17 @@ class COrderStop : public COrderStopBase
 public:
                      COrderStop(void);
                     ~COrderStop(void);
-   virtual void      Check(double &);
+   //virtual void      Check(double &);
    virtual bool      NewTicket(void);
    virtual void      NewTicket(const bool);
    virtual bool      Recreate(void);
    virtual void      UpdateTicket(const ulong);
+/*
 protected:
    virtual bool      ModifyStops(const double,const double);
    virtual bool      ModifyStopLoss(const double);
    virtual bool      ModifyTakeProfit(const double);
-   virtual bool      UpdateOrderStop(const double,const double);
+*/   
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -73,30 +74,7 @@ bool COrderStop::Recreate(void)
      }
    return true;
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrderStop::UpdateOrderStop(const double stoploss,const double takeprofit)
-  {
-   bool modify_sl=false,modify_tp=false;
-   if(stoploss>0)
-     {
-      if(m_stop.Pending())
-         modify_sl=m_stop.OrderModify(m_stoploss_ticket,stoploss);
-      else if(m_stop.Main() && !m_stop.Virtual())
-         modify_sl=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
-      else StopLoss(stoploss);
-     }
-   if(takeprofit>0)
-     {
-      if(m_stop.Pending())
-         modify_tp=m_stop.OrderModify(m_takeprofit_ticket,takeprofit);
-      else if(m_stop.Main() && !m_stop.Virtual())
-         modify_tp=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
-      else TakeProfit(takeprofit);
-     }
-   return modify_tp||modify_sl;
-  }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -104,7 +82,6 @@ void COrderStop::Check(double &volume)
   {
    if(m_stop==NULL || !Active()) 
       return;
-   CheckInit();
    if(m_order.IsClosed() || m_order.IsSuspended())
      {
       bool delete_sl=false,delete_tp=false;
@@ -182,13 +159,13 @@ void COrderStop::Check(double &volume)
       DeleteStopLines();
       if(m_stop.Main() && m_stop.Virtual() && (StopLoss()>0 || TakeProfit()>0))
         {
-         Print(__FUNCTION__+" suspending order");
          m_order.IsSuspended(true);
          //m_order.CloseStops();
         }
      }
-   CheckDeinit();
   }
+*/
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -204,6 +181,8 @@ bool COrderStop::ModifyStopLoss(const double stoploss)
       MoveStopLoss(stoploss);
    return modify;
   }
+*/
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -219,6 +198,8 @@ bool COrderStop::ModifyTakeProfit(const double takeprofit)
       MoveTakeProfit(takeprofit);
    return modify;
   }
+*/
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -237,4 +218,5 @@ bool COrderStop::ModifyStops(const double stoploss,const double takeprofit)
      }
    return modify;
   }
+*/
 //+------------------------------------------------------------------+

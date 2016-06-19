@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                          OrderStopBrokerBase.mqh |
+//|                                         OrderStopVirtualBase.mqh |
 //|                                                   Enrico Lambino |
 //|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
@@ -9,70 +9,68 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class COrderStopBrokerBase : public COrderStop
+class COrderStopVirtualBase : public COrderStop
   {
 public:
-                     COrderStopBrokerBase(void);
-                    ~COrderStopBrokerBase(void);
+                     COrderStopVirtualBase(void);
+                    ~COrderStopVirtualBase(void);
    virtual bool      Update(void);
    virtual bool      UpdateOrderStop(const double,const double);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderStopBrokerBase::COrderStopBrokerBase(void)
+COrderStopVirtualBase::COrderStopVirtualBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderStopBrokerBase::~COrderStopBrokerBase(void)
+COrderStopVirtualBase::~COrderStopVirtualBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderStopBrokerBase::Update(void)
+bool COrderStopVirtualBase::Update(void)
   {
    if (!CheckPointer(m_stop))
       return true;
    if(m_order.IsClosed() || m_order.IsSuspended())
-      return true;
+      return false;
+   double stoploss=0.0,takeprofit=0.0;
    bool result=false;
-   double sl_line = 0;
-   double tp_line = 0;
-   if(CheckPointer(m_objsl))
-      sl_line=m_objsl.GetPrice();
-   if(CheckPointer(m_objtp))
-      tp_line=m_objtp.GetPrice();
-   if((sl_line>0 && sl_line!=StopLoss()) || (tp_line>0 && tp_line!=TakeProfit()))
+   bool dragged=false;
+   if (CheckPointer(m_objsl))
      {
-      Sleep(m_stop.Delay());
-      double stoploss=0,takeprofit=0;
-      if(CheckPointer(m_objsl))
-         stoploss=m_objsl.GetPrice();
-      if(CheckPointer(m_objtp))
-         takeprofit=m_objtp.GetPrice();
-      result=UpdateOrderStop(stoploss,takeprofit);
+      double sl_line=m_objsl.GetPrice();
+      if(sl_line!=StopLoss())
+         dragged=true;
      }
+   if (CheckPointer(m_objtp))
+     {
+      double tp_line=m_objtp.GetPrice();
+      if(tp_line!=TakeProfit())
+         dragged=true;
+     }   
+   result=UpdateOrderStop(stoploss,takeprofit);
    return result;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderStopBrokerBase::UpdateOrderStop(const double stoploss,const double takeprofit)
+bool COrderStopVirtualBase::UpdateOrderStop(const double stoploss,const double takeprofit)
   {
-   bool modify_sl=false,modify_tp=false;
    if(stoploss>0)
-      modify_sl=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
+      StopLoss(stoploss);
    if(takeprofit>0)
-      modify_tp=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
-   return modify_tp||modify_sl;
+      TakeProfit(takeprofit);
+   return stoploss>0||takeprofit>0;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
-#include "..\..\MQL5\Order\OrderStopBroker.mqh"
+#include "..\..\MQL5\Order\OrderStopVirtual.mqh"
 #else
-#include "..\..\MQL4\Order\OrderStopBroker.mqh"
+#include "..\..\MQL4\Order\OrderStopVirtual.mqh"
 #endif
 //+------------------------------------------------------------------+

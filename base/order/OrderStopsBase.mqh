@@ -6,7 +6,9 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
-#include "OrderStopBase.mqh"
+#include "OrderStopBrokerBase.mqh"
+#include "OrderStopVirtualBase.mqh"
+#include "OrderStopPendingBase.mqh"
 class COrder;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -21,7 +23,7 @@ public:
                     ~COrderStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOPS;}
    bool              Active(){return m_active;}
-   void              Active(bool active){m_active = active;}
+   void              Active(bool active){m_active=active;}
    //--- initialization
    virtual void      SetContainer(COrder *order){m_order=order;}
    virtual bool      NewOrderStop(COrder*,CStop*,COrderStops*);
@@ -53,16 +55,29 @@ COrderStopsBase::~COrderStopsBase(void)
 //+------------------------------------------------------------------+
 bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop,COrderStops *order_stops)
   {
-   COrderStop *order_stop=new COrderStop();
-   order_stop.Init(order,stop,order_stops);
-   return Add(order_stop);
+   COrderStop *order_stop=NULL;
+   if(CheckPointer(stop))
+     {
+      switch(stop.StopType())
+        {
+         case STOP_TYPE_BROKER: order_stop=new COrderStopBroker();   break;
+         case STOP_TYPE_PENDING: order_stop = new COrderStopPending(); break;
+         case STOP_TYPE_VIRTUAL: order_stop = new COrderStopVirtual(); break;
+        }
+     }
+   if(CheckPointer(order_stop))
+     {
+      order_stop.Init(order,stop,order_stops);
+      return Add(order_stop);
+     }
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 COrderStopsBase::Check(double &volume)
   {
-   if (!Active()) 
+   if(!Active())
       return;
    int total=Total();
    if(total>0)
