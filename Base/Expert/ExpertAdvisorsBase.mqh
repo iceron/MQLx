@@ -65,8 +65,8 @@ bool CExpertAdvisorsBase::Validate(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *strat=At(i);
-      if(!strat.Validate())
+      CExpertAdvisor *e=At(i);
+      if(!e.Validate())
          return false;
      }
    return true;
@@ -85,10 +85,10 @@ bool CExpertAdvisorsBase::InitComponents(void) const
   {
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *strat=At(i);
+      CExpertAdvisor *e=At(i);
       if(CheckPointer(m_comments))
-         strat.ChartComment(GetPointer(m_comments));
-      strat.InitComponents();
+         e.ChartComment(GetPointer(m_comments));
+      e.InitComponents();
      }
    return true;
   }
@@ -100,8 +100,8 @@ int CExpertAdvisorsBase::OrdersTotal(void) const
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *strat=At(i);
-      total+=strat.OrdersTotal();
+      CExpertAdvisor *e=At(i);
+      total+=e.OrdersTotal();
      }
    return total;
   }
@@ -113,8 +113,8 @@ void CExpertAdvisorsBase::OnTick(void)
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *strat=At(i);
-      strat.OnTick();
+      CExpertAdvisor *e=At(i);
+      e.OnTick();
      }
    DisplayComment();
   }
@@ -142,8 +142,8 @@ void CExpertAdvisorsBase::OnChartEvent(const int id,const long &lparam,const dou
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *strat=At(i);
-      strat.OnChartEvent(id,lparam,dparam,sparam);
+      CExpertAdvisor *e=At(i);
+      e.OnChartEvent(id,lparam,dparam,sparam);
      }
   }
 //+------------------------------------------------------------------+
@@ -154,8 +154,8 @@ int CExpertAdvisorsBase::OrdersHistoryTotal(void) const
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *strat=At(i);
-      total+=strat.OrdersHistoryTotal();
+      CExpertAdvisor *e=At(i);
+      total+=e.OrdersHistoryTotal();
      }
    return total;
   }
@@ -167,8 +167,8 @@ int CExpertAdvisorsBase::TradesTotal(void) const
    int total=0;
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *strat=At(i);
-      total+=strat.TradesTotal();
+      CExpertAdvisor *e=At(i);
+      total+=e.TradesTotal();
      }
    return total;
   }
@@ -185,17 +185,15 @@ void CExpertAdvisorsBase::OnDeinit(const int reason=0)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::CreateElement(const int index)
   {
-   CExpertAdvisor*strat=new CExpertAdvisor();
-   strat.SetContainer(GetPointer(this));
-   return Insert(GetPointer(strat),index);
+   CExpertAdvisor*e=new CExpertAdvisor();
+   e.SetContainer(GetPointer(this));
+   return Insert(GetPointer(e),index);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::Save(const int handle)
   {
-   //CArrayObj::Save(handle);
-   //ADT::WriteInteger(handle,m_uninit_reason);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -203,8 +201,6 @@ bool CExpertAdvisorsBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::Load(const int handle)
   {
-   //CArrayObj::Load(handle);
-   //ADT::ReadInteger(handle,m_uninit_reason);
    return true;
   }
 //+------------------------------------------------------------------+

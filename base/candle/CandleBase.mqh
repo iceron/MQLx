@@ -100,8 +100,6 @@ bool CCandleBase::Compare(MqlRates &rates) const
 //+------------------------------------------------------------------+
 bool CCandleBase::Save(const int handle)
   {
-//ADT::WriteBool(handle,m_trade_processed);
-//ADT::WriteStruct(handle,m_last);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -109,8 +107,6 @@ bool CCandleBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool CCandleBase::Load(const int handle)
   {
-//ADT::ReadBool(handle,m_trade_processed);
-//ADT::ReadStruct(handle,m_last);
    return true;
   }
 //+------------------------------------------------------------------+

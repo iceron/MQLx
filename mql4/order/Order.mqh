@@ -96,9 +96,6 @@ bool COrder::IsSuspended(void)
 //+------------------------------------------------------------------+
 bool COrder::Save(const int handle)
   {
-//COrderBase::Save(handle);
-//ADT::WriteObject(handle,GetPointer(m_ticket_current));
-//ADT::WriteBool(handle,m_ticket_updated);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -106,9 +103,6 @@ bool COrder::Save(const int handle)
 //+------------------------------------------------------------------+
 bool COrder::Load(const int handle)
   {
-//COrderBase::Save(handle);
-//ADT::ReadObject(handle,GetPointer(m_ticket_current));
-//ADT::WriteBool(handle,m_ticket_updated);
    return true;
   }
 //+------------------------------------------------------------------+

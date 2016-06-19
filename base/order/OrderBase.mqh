@@ -210,15 +210,6 @@ bool COrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 bool COrderBase::Save(const int handle)
   {
-   //ADT::WriteBool(handle,m_closed);
-   //ADT::WriteBool(handle,m_clean);
-   //ADT::WriteInteger(handle,m_magic);
-   //ADT::WriteDouble(handle,m_price);
-   //ADT::WriteLong(handle,m_ticket);
-   //ADT::WriteDouble(handle,m_volume);
-   //ADT::WriteDouble(handle,m_volume_initial);
-   //if(CheckPointer(m_order_stops)==POINTER_DYNAMIC)
-      //ADT::WriteObject(handle,GetPointer(m_order_stops));
    return true;
   }
 //+------------------------------------------------------------------+
@@ -226,20 +217,6 @@ bool COrderBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool COrderBase::Load(const int handle)
   {
-   //ADT::ReadBool(handle,m_closed);
-   //ADT::ReadBool(handle,m_clean);
-   //ADT::ReadInteger(handle,m_magic);
-   //ADT::ReadDouble(handle,m_price);
-   //ADT::ReadLong(handle,m_ticket);
-   //ADT::ReadDouble(handle,m_volume);
-   //ADT::ReadDouble(handle,m_volume_initial);
-   /*
-   if(CheckPointer(m_order_stops)==POINTER_DYNAMIC)
-     {
-      ADT::ReadObject(handle,GetPointer(m_order_stops));
-      m_order_stops.SetContainer(GetPointer(this));
-     }
-   */  
    return true;
   }
 //+------------------------------------------------------------------+

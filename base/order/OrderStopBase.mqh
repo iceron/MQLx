@@ -225,7 +225,6 @@ bool COrderStopBase::Close(void)
       result=DeleteEntry() && DeleteStopLoss() && DeleteTakeProfit();
    if(result)
       m_closed=true;
-//CreateEvent(EVENT_CLASS_STANDARD,ACTION_ORDER_STOP_CLOSE,GetPointer(this));
    return result;
   }
 //+------------------------------------------------------------------+

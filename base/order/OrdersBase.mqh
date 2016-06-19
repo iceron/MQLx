@@ -118,8 +118,6 @@ bool COrdersBase::CreateElement(const int index)
 //+------------------------------------------------------------------+
 bool COrdersBase::Save(const int handle)
   {
-   CArrayObj::Save(handle);
-   //ADT::WriteBool(handle,m_clean);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -127,8 +125,6 @@ bool COrdersBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool COrdersBase::Load(const int handle)
   {
-   CArrayObj::Load(handle);
-   //ADT::ReadBool(handle,m_clean);
    return true;
   }
 //+------------------------------------------------------------------+

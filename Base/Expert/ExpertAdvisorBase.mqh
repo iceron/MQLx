@@ -509,7 +509,6 @@ void CExpertAdvisorBase::DeinitAccount(void)
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitComments(void)
   {
-//ADT::Delete(m_comments);
    if (CheckPointer(m_comments))
       delete m_comments;
   }
@@ -518,7 +517,6 @@ void CExpertAdvisorBase::DeinitComments(void)
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitTimes(void)
   {
-//ADT::Delete(m_times);
    if (CheckPointer(m_times))
       delete m_times;
   }
@@ -527,11 +525,6 @@ void CExpertAdvisorBase::DeinitTimes(void)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::Save(const int handle)
   {
-//ADT::WriteStruct(handle,m_last_trade_data);
-//ADT::WriteObject(handle,GetPointer(m_orders));
-//ADT::WriteObject(handle,GetPointer(m_orders_history));
-//ADT::WriteObject(handle,GetPointer(m_tick));
-//ADT::WriteObject(handle,GetPointer(m_candle));
    return true;
   }
 //+------------------------------------------------------------------+
@@ -539,11 +532,6 @@ bool CExpertAdvisorBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::Load(const int handle)
   {
-//ADT::ReadStruct(handle,m_last_trade_data);
-//ADT::ReadObject(handle,GetPointer(m_orders));
-//ADT::ReadObject(handle,GetPointer(m_orders_history));
-//ADT::ReadObject(handle,GetPointer(m_tick));
-//ADT::ReadObject(handle,GetPointer(m_candle));
    return true;
   }
 //+------------------------------------------------------------------+
