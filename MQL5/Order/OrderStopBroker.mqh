@@ -57,7 +57,7 @@ void COrderStopBroker::Check(double &volume)
          DeleteEntry();
       return;
      }
-   if(CheckPointer(m_objsl)==POINTER_DYNAMIC && !m_stoploss_closed)
+   if(CheckPointer(m_objsl) && !m_stoploss_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_stoploss_ticket))
          m_stoploss_closed=true;
@@ -107,16 +107,13 @@ bool COrderStop::ModifyStops(const double stoploss,const double takeprofit)
 //+------------------------------------------------------------------+
 bool COrderStop::ModifyStopLoss(const double stoploss)
   {
-
-   MoveStopLoss(stoploss);
-   return true;
+   return MoveStopLoss(stoploss);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderStop::ModifyTakeProfit(const double takeprofit)
   {
-   MoveTakeProfit(takeprofit);
-   return true;
+   return MoveTakeProfit(takeprofit);
   }
 //+------------------------------------------------------------------+

@@ -61,7 +61,7 @@ bool CTimeFilterBase::Validate(void)
       PrintFormat("Invalid setting for start and end times.");
       return false;
      }
-   if (m_symbol_man==NULL)
+   if (!CheckPointer(m_symbol_man))
    {
       PrintFormat("NULL pointer: symbol manager");
       return false;
@@ -91,7 +91,8 @@ bool CTimeFilterBase::Set(const int gmt,const int starthour,const int endhour,co
 //+------------------------------------------------------------------+
 bool CTimeFilterBase::Evaluate(void)
   {
-   if(!Active()) return true;
+   if(!Active()) 
+      return true;
    bool result=true;
    MqlDateTime time;
    CSymbolInfo *symbol = m_symbol_man.GetPrimary();   
@@ -111,7 +112,6 @@ bool CTimeFilterBase::Evaluate(void)
    datetime f_end=StructToTime(m_filter_end);
    if(!(current>=f_start && current<=f_end))
       result=false;
-
    result=Reverse()?result:!result;
    if(!result)
      {

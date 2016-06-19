@@ -58,7 +58,7 @@ bool CTimesBase::Init(CSymbolManager* symbol_man)
    for(int i=0;i<Total();i++)
      {
       CTime *time=At(i);
-      if (time==NULL)
+      if (!CheckPointer(time))
          continue;
       time.SetContainer(GetPointer(this));
       time.Init(symbol_man);      

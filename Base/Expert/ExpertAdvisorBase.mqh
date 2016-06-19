@@ -227,7 +227,6 @@ bool CExpertAdvisorBase::InitComponents(void)
       Print(__FUNCTION__+" error in candle manager initialization");
       return false;
      }
-   Print(__FUNCTION__+" components initialization complete");
    return true;
   }
 //+------------------------------------------------------------------+

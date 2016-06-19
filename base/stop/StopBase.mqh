@@ -218,7 +218,7 @@ bool CStopBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   if (!CheckPointer(m_trails) || !CheckPointer(accountinfo))
+   if (!CheckPointer(accountinfo))
       return false;
    InitSymbol(symbolmanager);
    InitAccount(accountinfo);
