@@ -17,8 +17,7 @@ class COrderManagerBase : public CObject
   {
 protected:
    double            m_lotsize;
-   COrders           m_orders;
-   COrders           m_orders_history;
+   int               m_price_points;
    string            m_comment;
    int               m_magic;
    int               m_expiration;
@@ -29,6 +28,8 @@ protected:
    bool              m_short_allowed;
    int               m_max_orders;
    int               m_max_trades;
+   COrders           m_orders;
+   COrders           m_orders_history;
    CArrayInt         m_other_magic;
    CSymbolInfo      *m_symbol;
    CSymbolManager   *m_symbol_man;
@@ -53,31 +54,32 @@ public:
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const;
    //--- setters and getters
-   bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
+   void              AsyncMode(const bool async) {m_trade.SetAsyncMode(async);}
+   string            Comment(void) const {return m_comment;}
+   void              Comment(const string comment){m_comment=comment;}
    bool              EnableTrade(void) const {return m_trade_allowed;}
    void              EnableTrade(bool allowed){m_trade_allowed=allowed;}
    bool              EnableLong(void) const {return m_long_allowed;}
    void              EnableLong(bool allowed){m_long_allowed=allowed;}
    bool              EnableShort(void) const {return m_short_allowed;}
    void              EnableShort(bool allowed){m_short_allowed=allowed;}
-   int               TradesTotal(void) const{return m_orders.Total()+m_orders_history.Total()+m_history_count;}
-   virtual uint      MaxTrades(void) const {return m_max_trades;}
-   virtual void      MaxTrades(const int max_trades){m_max_trades=max_trades;}
-   virtual int       MaxOrders(void) const {return m_max_orders;}
-   virtual void      MaxOrders(const int max_orders) {m_max_orders=max_orders;}
+   double            LotSize(void) const {return m_lotsize;}
+   void              LotSize(const double lotsize){m_lotsize=lotsize;}
    int               Magic(void) const {return m_magic;}
    void              Magic(const int magic) {m_magic=magic;}
    int               MagicClose(void) const {return m_magic;}
    void              MagicClose(const int magic) {}
-   double            LotSize(void) const {return m_lotsize;}
-   void              LotSize(const double lotsize){m_lotsize=lotsize;}
-   string            Comment(void) const {return m_comment;}
-   void              Comment(const string comment){m_comment=comment;}
+   virtual uint      MaxTrades(void) const {return m_max_trades;}
+   virtual void      MaxTrades(const int max_trades){m_max_trades=max_trades;}
+   virtual int       MaxOrders(void) const {return m_max_orders;}
+   virtual void      MaxOrders(const int max_orders) {m_max_orders=max_orders;}
    int               MaxOrdersHistory(void) const {return m_max_orders_history;}
    void              MaxOrdersHistory(const int max) {m_max_orders_history=max;}
-   void              AsyncMode(const bool async) {m_trade.SetAsyncMode(async);}
    int               OrdersTotal(void) const {return m_orders.Total();}
    int               OrdersHistoryTotal(void) const {return m_orders_history.Total();}
+   int               PricePoints(void) const {return m_price_points;}
+   void              PricePoints(const int points) {m_price_points=points;}
+   int               TradesTotal(void) const{return m_orders.Total()+m_orders_history.Total()+m_history_count;}
    //--- object pointers
    CStop            *MainStop(void) const {return m_main_stop;}
    CMoneys          *Moneys(void) const {return GetPointer(m_moneys);}
@@ -100,21 +102,20 @@ public:
    virtual bool      AddMoneys(CMoneys*);
    //--- stop levels  
    virtual bool      AddStops(CStops*);
-   //--- symbol manager
-   //virtual bool      SetSymbol(CSymbolInfo*);
    //--- trade manager
-   int               Expiration(void) const {return m_expiration;}
-   void              Expiration(const int expiration) {m_expiration=expiration;}
    virtual bool      AddOtherMagic(const int);
    virtual void      AddOtherMagicString(const string&[]);
+   int               Expiration(void) const {return m_expiration;}
+   void              Expiration(const int expiration) {m_expiration=expiration;}
+   bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE) {return true;}
    //--- events
    virtual void      OnTradeTransaction(COrder*){}
    virtual void      OnTick(void);
 protected:
    //--- trade manager
-   virtual double    PriceCalculate(ENUM_ORDER_TYPE);
-   virtual double    PriceCalculateCustom(const int) {return 0;}
+   virtual double    PriceCalculate(ENUM_ORDER_TYPE&);
+   virtual double    PriceCalculateCustom(ENUM_ORDER_TYPE&) {return 0;}
    virtual double    StopLossCalculate(const ENUM_ORDER_TYPE,const double);
    virtual double    TakeProfitCalculate(const ENUM_ORDER_TYPE,const double);
    bool              SendOrder(const ENUM_ORDER_TYPE,const double,const double,const double,const double);
@@ -127,6 +128,7 @@ protected:
 //|                                                                  |
 //+------------------------------------------------------------------+
 COrderManagerBase::COrderManagerBase() : m_lotsize(0.1),
+                                         m_price_points(0),
                                          m_comment(NULL),
                                          m_magic(0),
                                          m_expiration(0),
@@ -137,10 +139,10 @@ COrderManagerBase::COrderManagerBase() : m_lotsize(0.1),
                                          m_short_allowed(true),
                                          m_max_orders(1),
                                          m_max_trades(-1)
-                                         
+
   {
    if(!m_other_magic.IsSorted())
-      m_other_magic.Sort();    
+      m_other_magic.Sort();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -155,32 +157,32 @@ COrderManagerBase::~COrderManagerBase()
 bool COrderManagerBase::Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
    m_symbol_man=symbolmanager;
-   
-   if (!InitStops(s,symbolmanager,accountinfo))
-   {
+
+   if(!InitStops(s,symbolmanager,accountinfo))
+     {
       Print(__FUNCTION__+": error in stops manager initialization");
       return false;
-   }
-   if (!InitMoneys(s,symbolmanager,accountinfo))
-   {
+     }
+   if(!InitMoneys(s,symbolmanager,accountinfo))
+     {
       Print(__FUNCTION__+": error in money manager initialization");
       return false;
-   }
-   if (!InitTrade())
-   {
+     }
+   if(!InitTrade())
+     {
       Print(__FUNCTION__+": error in trade object initialization");
       return false;
-   }
-   if (!InitOrders())
-   {
+     }
+   if(!InitOrders())
+     {
       Print(__FUNCTION__+": error in orders initialization");
       return false;
-   }
-   if (!InitOrdersHistory())
-   {
+     }
+   if(!InitOrdersHistory())
+     {
       Print(__FUNCTION__+": error in orders history initialization");
       return false;
-   }
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -190,8 +192,8 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
   {
    bool ret=0;
    if(CheckPointer(m_symbol))
-      m_trade = m_trade_man.Get(m_symbol.Name());
-   if (CheckPointer(m_trade))
+      m_trade=m_trade_man.Get(m_symbol.Name());
+   if(CheckPointer(m_trade))
      {
       if(COrder::IsOrderTypeLong(type))
          ret=m_trade.Buy(lotsize,price,sl,tp,m_comment);
@@ -205,12 +207,12 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitMoneys(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   if(CheckPointer(m_moneys)) 
-   {
+   if(CheckPointer(m_moneys))
+     {
       m_moneys.SetContainer(GetPointer(this));
       return m_moneys.Init(symbolmanager,accountinfo);
-   }
-   return true;   
+     }
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -221,7 +223,7 @@ bool COrderManagerBase::InitTrade()
      {
       CSymbolInfo *symbol=m_symbol_man.At(i);
       CExpertTradeX *trade=new CExpertTradeX();
-      if (CheckPointer(trade))
+      if(CheckPointer(trade))
         {
          trade.SetSymbol(GetPointer(symbol));
          trade.SetExpertMagicNumber(m_magic);
@@ -324,14 +326,34 @@ bool COrderManagerBase::IsPositionAllowed(ENUM_ORDER_TYPE type) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE type)
+double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE &type)
   {
    double price=0;
+   double price_points=PricePoints();
+   double point = m_symbol.Point();
    switch(type)
      {
-      case ORDER_TYPE_BUY:    price=m_symbol.Ask();   break;
-      case ORDER_TYPE_SELL:   price=m_symbol.Bid();   break;
-      default:                price=PriceCalculateCustom(type);
+      case ORDER_TYPE_BUY:
+        {
+         double ask = m_symbol.Ask();
+         if(price_points>0)
+            type = ORDER_TYPE_BUY_STOP;
+         else if(price_points<0)
+            type = ORDER_TYPE_BUY_LIMIT;
+         price=ask+price_points*point;         
+         break;
+        }
+      case ORDER_TYPE_SELL:   
+      {
+         double bid = m_symbol.Bid();
+         if(price_points>0)
+            type = ORDER_TYPE_SELL_LIMIT;
+         else if(price_points<0)
+            type = ORDER_TYPE_SELL_STOP;
+         price=bid+price_points*point;   
+         break;
+      }   
+      default: price=PriceCalculateCustom(type);
      }
    return price;
   }
@@ -379,11 +401,11 @@ void COrderManagerBase::AddOtherMagicString(const string &magics[])
 //+------------------------------------------------------------------+
 bool COrderManagerBase::InitStops(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   if (CheckPointer(m_stops))
-   {
+   if(CheckPointer(m_stops))
+     {
       m_stops.SetContainer(GetPointer(this));
       return m_stops.Init(symbolmanager,accountinfo);
-   }   
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -412,7 +434,7 @@ void COrderManagerBase::Deinit(const int reason=0)
 //+------------------------------------------------------------------+
 void COrderManagerBase::DeinitStops()
   {
-   if (CheckPointer(m_stops))
+   if(CheckPointer(m_stops))
       delete m_stops;
   }
 //+------------------------------------------------------------------+

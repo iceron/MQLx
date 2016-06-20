@@ -373,43 +373,12 @@ bool CExpertAdvisorBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::OnTick(void)
   {
-   if(!Active()) return false;
-   if(!RefreshRates()) return false;
-
+   if(!Active()) 
+      return false;
+   if(!RefreshRates()) 
+      return false;
    bool ret=false;
-/*
-//bool newtick= m_tick.IsNewTick(m_symbol);
-   bool newtick=true;
    DetectNewBars();
-   bool newbar=IsNewBar(m_symbol_name,m_period);
-   m_order_man.OnTick();
-   ManageOrders();
-   int entry=0,exit=0;
-   CheckSignals(entry,exit);
-//AddComment("last tick: "+TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES|TIME_SECONDS));
-   AddComment("entry signal: "+EnumToString((ENUM_CMD)entry));
-   AddComment("exit signal: "+EnumToString((ENUM_CMD)exit));
-   if(newbar || (m_every_tick && newtick))
-     {
-      CloseOppositeOrders(m_symbol_name,entry,exit);
-      ManageOrders();
-      if(!m_candle_man.TradeProcessed(m_symbol_name,m_period))
-        {
-         if(!CheckPointer(m_times) || (m_times.Evaluate()))
-            ret=TradeOpen(m_symbol_name,entry);
-         if(ret)
-           {
-            //m_last_trade_data=m_tick.LastTick();
-            m_candle_man.TradeProcessed(m_symbol_name,m_period,true);
-           }
-        }
-     }
-   ManageOrdersHistory();
-   DisplayComment();
-   */
-   DetectNewBars();
-//m_orders.OnTick();
-//ManageOrders();
    bool checkopenlong=false,
    checkopenshort=false,
    checkcloselong=false,
@@ -425,26 +394,21 @@ bool CExpertAdvisorBase::OnTick(void)
       checkopenshort = m_signal.CheckOpenShort();
       checkcloselong = m_signal.CheckCloseLong();
       checkcloseshort= m_signal.CheckCloseShort();
+      //bool checkreverselong=m_signal.CheckReverseLong(price,sl,tp,expiration);
+      //bool checkreverseshort=m_signal.CheckReverseShort(price,sl,tp,expiration);
      }
-//bool checkreverselong=m_signal.CheckReverseLong(price,sl,tp,expiration);
-//bool checkreverseshort=m_signal.CheckReverseShort(price,sl,tp,expiration);
    COrders *orders=m_order_man.Orders();
    for(int i=orders.Total()-1;i>=0;i--)
      {
       COrder *order=orders.At(i);
       if (!CheckPointer(order))
          continue;
-      //ontick handler
-      order.OnTick();
-      //checking if the order was closed through external means (flag)
-      //this is the same as ordermanager manageorders()      
-
+      order.OnTick(); 
       if(order.IsSuspended())
         {
          if(m_order_man.CloseOrder(order,i))
             continue;
         }
-      //checking if the order should be closed
       if((checkcloselong && order.OrderType()==ORDER_TYPE_BUY) || 
          (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL))
         {
@@ -456,13 +420,9 @@ bool CExpertAdvisorBase::OnTick(void)
    if(CheckPointer(m_signal) && (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)
-        {
          ret=TradeOpen(m_symbol_name,ORDER_TYPE_BUY);
-        }
       if(checkopenshort)
-        {
          ret=TradeOpen(m_symbol_name,ORDER_TYPE_SELL);
-        }
      }
    return ret;
   }
