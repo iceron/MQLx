@@ -18,6 +18,7 @@ protected:
    virtual bool      ModifyStops(const double,const double);
    virtual bool      ModifyStopLoss(const double);
    virtual bool      ModifyTakeProfit(const double);
+   virtual bool      UpdateOrderStop(const double,const double)
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -73,5 +74,19 @@ bool COrderStopBroker::ModifyTakeProfit(const double takeprofit)
    if(m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit))
       return MoveTakeProfit(takeprofit);
    return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStopBroker::UpdateOrderStop(const double stoploss,const double takeprofit)
+  {
+   bool modify=true,modify_sl=true,modify_tp=true;
+   if (stoploss>0 && takeprofit>0)
+      modify = m_stop.Move(m_order.Ticket(),stoploss,takeprofit);
+   if(stoploss>0)
+      modify_sl = m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
+   if(takeprofit>0)
+      modify_tp = m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
+   return modify && modify_sl && modify_tp;
   }
 //+------------------------------------------------------------------+

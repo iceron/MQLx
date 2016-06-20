@@ -82,7 +82,7 @@ public:
    void              Magic(const int magic) {m_magic=magic;}
    int               Magic(void) const {return m_magic;}
    void              Main(const bool main) {m_main=main; m_oco=true;}
-   bool              Main(void) const {return m_main;}
+   bool              Main(void) const {return m_main;}   
    void              Name(const string name) {m_name=name;}
    string            Name(void) const{return m_name;}
    void              OCO(const bool oco) {if(!Main())m_oco=oco;}

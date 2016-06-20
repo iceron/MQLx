@@ -17,6 +17,9 @@ public:
                     ~CStop(void);
    virtual bool      CheckStopOrder(double &,const ulong) const;
    virtual bool      DeleteStopOrder(const ulong) const;
+   virtual bool      Move(const ulong,const double,const double);
+   virtual bool      MoveStopLoss(const ulong,const double);
+   virtual bool      MoveTakeProfit(const ulong,const double);
    virtual bool      OpenStop(COrder *,COrderStop *,double);
    virtual double    StopLossPrice(COrder *,COrderStop *);
    virtual double    TakeProfitPrice(COrder *,COrderStop *);
@@ -93,9 +96,10 @@ bool CStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
 //+------------------------------------------------------------------+
 bool CStop::DeleteStopOrder(const ulong ticket) const
   {
-   if(ticket<=0) return true;
-//if (OrderGetInteger(ORDER_TIME_DONE)>0) return true;
-   if(OrderGetInteger(ORDER_STATE)==ORDER_STATE_CANCELED) return true;
+   if(ticket<=0) 
+      return true;
+   if (!OrderSelect(ticket))
+      return true;
    if(m_trade.OrderDelete(ticket))
      {
       uint result=m_trade.ResultRetcode();
@@ -157,7 +161,7 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
    ENUM_ORDER_TYPE type=order.OrderType();
    m_symbol= m_symbol_man.Get(order.Symbol());
    m_trade = m_trade_man.Get(m_symbol.Name());
-   if (CheckPointer(m_trade))
+   if(CheckPointer(m_trade))
      {
       if(m_stop_type==STOP_TYPE_VIRTUAL)
         {
@@ -170,5 +174,42 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
         }
      }
    return res;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStop::Move(const ulong ticket,const double stoploss,const double takeprofit)
+  {
+   return MoveStopLoss(ticket,stoploss) && MoveTakeProfit(ticket,takeprofit);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStop::MoveStopLoss(const ulong ticket,const double stoploss)
+  {
+   COrderInfo order;
+   if(order.Select(ticket))
+     {
+      double price_open=order.PriceOpen();      
+      if(MathAbs(stoploss-price_open)<m_symbol.TickSize())
+         return false;
+      return m_trade.OrderModify(order.Ticket(),stoploss,order.StopLoss(),order.TakeProfit(),order.TypeTime(),order.TimeExpiration());
+     }
+   return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStop::MoveTakeProfit(const ulong ticket,const double takeprofit)
+  {
+   COrderInfo order;
+   if(order.Select(ticket))
+     {
+      double price_open=order.PriceOpen();      
+      if(MathAbs(takeprofit-price_open)<m_symbol.TickSize())
+         return false;
+      return m_trade.OrderModify(order.Ticket(),takeprofit,order.StopLoss(),order.TakeProfit(),order.TypeTime(),order.TimeExpiration());
+     }
+   return false;
   }
 //+------------------------------------------------------------------+

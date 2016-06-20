@@ -78,7 +78,7 @@ public:
    //--- hiding and showing of stop lines
    virtual void      Show(bool show=true);
    //--- checking   
-   virtual void      Check(double &volume) {}
+   virtual void      Check(double &volume)=0;
    virtual bool      Close(void);
    virtual bool      CheckTrailing(void);
    virtual bool      DeleteChartObject(const string);
@@ -87,7 +87,7 @@ public:
    virtual bool      DeleteStopLoss(void);
    virtual bool      DeleteTakeProfit(void);
    virtual bool      IsClosed(void);
-   virtual bool      Update(void) {return true;}
+   virtual bool      Update(void)=0;
    //--- deinitialization 
    virtual bool      Deinit(void);
    //--- recovery
@@ -100,7 +100,7 @@ protected:
    virtual bool      ModifyStops(const double,const double);
    virtual bool      ModifyStopLoss(const double)=0;
    virtual bool      ModifyTakeProfit(const double)=0;
-   virtual bool      UpdateOrderStop(const double,const double) {return true;}
+   virtual bool      UpdateOrderStop(const double,const double)=0;
    //--- objects
    virtual bool      MoveStopLoss(const double);
    virtual bool      MoveTakeProfit(const double);

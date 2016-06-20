@@ -15,7 +15,6 @@ public:
                      COrderStopBrokerBase(void);
                     ~COrderStopBrokerBase(void);
    virtual bool      Update(void);
-   virtual bool      UpdateOrderStop(const double,const double);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -56,18 +55,6 @@ bool COrderStopBrokerBase::Update(void)
       result=UpdateOrderStop(stoploss,takeprofit);
      }
    return result;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrderStopBrokerBase::UpdateOrderStop(const double stoploss,const double takeprofit)
-  {
-   bool modify_sl=false,modify_tp=false;
-   if(stoploss>0)
-      modify_sl=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
-   if(takeprofit>0)
-      modify_tp=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
-   return modify_tp||modify_sl;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

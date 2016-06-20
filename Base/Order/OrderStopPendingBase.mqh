@@ -148,12 +148,12 @@ bool COrderStopPendingBase::Update(void)
 //+------------------------------------------------------------------+
 bool COrderStopPendingBase::UpdateOrderStop(const double stoploss,const double takeprofit)
   {
-   bool modify_sl=false,modify_tp=false;
+   bool modify_sl=true,modify_tp=true;
    if(stoploss>0)
-      modify_sl=m_stop.OrderModify(m_stoploss_ticket,stoploss);
+      modify_sl = m_stop.MoveStopLoss(StopLossTicket(),stoploss);
    if(takeprofit>0)
-      modify_tp=m_stop.OrderModify(m_takeprofit_ticket,takeprofit);
-   return modify_tp||modify_sl;
+      modify_tp = m_stop.MoveTakeProfit(TakeProfitTicket(),takeprofit);
+   return modify_sl && modify_tp;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

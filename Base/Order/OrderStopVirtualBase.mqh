@@ -103,22 +103,21 @@ bool COrderStopVirtualBase::Update(void)
    if(m_order.IsClosed() || m_order.IsSuspended())
       return false;
    double stoploss=0.0,takeprofit=0.0;
-   bool result=false;
-   bool dragged=false;
    if (CheckPointer(m_objsl))
      {
       double sl_line=m_objsl.GetPrice();
       if(sl_line!=StopLoss())
-         dragged=true;
+         stoploss = sl_line;
      }
    if (CheckPointer(m_objtp))
      {
       double tp_line=m_objtp.GetPrice();
       if(tp_line!=TakeProfit())
-         dragged=true;
+         takeprofit = tp_line;         
      }   
-   result=UpdateOrderStop(stoploss,takeprofit);
-   return result;
+   if (stoploss>0 || takeprofit>0)
+      return UpdateOrderStop(stoploss,takeprofit);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
