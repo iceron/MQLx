@@ -40,7 +40,7 @@ COrderManager::~COrderManager(void)
 //+------------------------------------------------------------------+
 bool COrderManager::Validate(void) const
   {
-   if (m_magic==m_magic_close || m_other_magic.Search(m_magic_close)>=0)
+   if(m_magic==m_magic_close || m_other_magic.Search(m_magic_close)>=0)
       return false;
    return COrderManagerBase::Validate();
   }
@@ -49,10 +49,9 @@ bool COrderManager::Validate(void) const
 //+------------------------------------------------------------------+
 void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
-   if((request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0) && m_symbol_man.Search(request.symbol))
-     {
-      m_orders.NewOrder((int)result.order,request.symbol,(int)request.magic,request.type,result.volume,result.price);
-     }
+   if(request.action==TRADE_ACTION_DEAL && result.retcode==TRADE_RETCODE_DONE)
+      if((request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0) && m_symbol_man.Search(request.symbol))
+         m_orders.NewOrder((int)result.order,request.symbol,(int)request.magic,request.type,result.volume,result.price);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -85,8 +84,8 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
      {
       if(order.Volume()<=0) return true;
       if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),order.Symbol())!=0)
-         m_symbol = m_symbol_man.Get(order.Symbol());
-      if (CheckPointer(m_symbol))
+         m_symbol=m_symbol_man.Get(order.Symbol());
+      if(CheckPointer(m_symbol))
          m_trade=m_trade_man.Get(order.Symbol());
       m_trade.SetExpertMagicNumber(m_magic_close);
       if(ord.Select(order.Ticket()))
@@ -105,7 +104,6 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
            {
             order.Close();
             order.Volume(0);
-            //m_orders_history.Clean(false);
            }
         }
      }
