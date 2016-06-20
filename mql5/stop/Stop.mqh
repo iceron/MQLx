@@ -193,7 +193,7 @@ bool CStop::MoveStopLoss(const ulong ticket,const double stoploss)
       double price_open=order.PriceOpen();      
       if(MathAbs(stoploss-price_open)<m_symbol.TickSize())
          return false;
-      return m_trade.OrderModify(order.Ticket(),stoploss,order.StopLoss(),order.TakeProfit(),order.TypeTime(),order.TimeExpiration());
+      return OrderModify(order.Ticket(),stoploss);
      }
    return false;
   }
@@ -208,7 +208,7 @@ bool CStop::MoveTakeProfit(const ulong ticket,const double takeprofit)
       double price_open=order.PriceOpen();      
       if(MathAbs(takeprofit-price_open)<m_symbol.TickSize())
          return false;
-      return m_trade.OrderModify(order.Ticket(),takeprofit,order.StopLoss(),order.TakeProfit(),order.TypeTime(),order.TimeExpiration());
+      return OrderModify(order.Ticket(),takeprofit);
      }
    return false;
   }
