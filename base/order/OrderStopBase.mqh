@@ -133,8 +133,9 @@ void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
   {
    if(!CheckPointer(stop) || !CheckPointer(order) || !stop.Active())
       return;
-   SetContainer(m_order_stops);
+   SetContainer(m_order_stops);   
    m_stop_name=stop.Name();
+   //Print(__FUNCTION__+" "+m_stop_name);
    m_order=order;
    m_stop=stop;
    m_volume=m_stop.Volume();
@@ -235,7 +236,7 @@ bool COrderStopBase::IsClosed(void)
    if(m_closed)
       return true;
    if(CheckPointer(m_objentry) && !m_objentry.ChartObjectExists())
-      m_closed=true;
+      m_closed=true;   
    if(m_stoploss_closed && m_takeprofit_closed)
       m_closed=true;
    if(m_closed)

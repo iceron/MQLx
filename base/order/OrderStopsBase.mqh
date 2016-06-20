@@ -88,6 +88,8 @@ COrderStopsBase::Check(double &volume)
          COrderStop *order_stop=At(i);
          if(CheckPointer(order_stop))
            {
+            if (order_stop.IsClosed())
+               continue;
             order_stop.CheckTrailing();
             order_stop.Update();
             order_stop.Check(volume);
