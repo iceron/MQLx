@@ -135,7 +135,6 @@ void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
       return;
    SetContainer(m_order_stops);   
    m_stop_name=stop.Name();
-   //Print(__FUNCTION__+" "+m_stop_name);
    m_order=order;
    m_stop=stop;
    m_volume=m_stop.Volume();

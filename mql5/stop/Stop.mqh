@@ -125,9 +125,11 @@ double CStop::TakeProfitPrice(COrder *order,COrderStop *orderstop)
 double CStop::StopLossPrice(COrder *order,COrderStop *orderstop)
   {
    double val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.OrderType(),order.Price());
-   if((m_stop_type==STOP_TYPE_PENDING || m_main) && (val>0.0))
+   if((Pending() || Broker()) && (val>0.0))
+   {
       if(OpenStop(order,orderstop,val))
          orderstop.StopLossTicket(m_trade.ResultOrder());
+   }    
    return val==0?val:NormalizeDouble(val,m_symbol.Digits());
   }
 //+------------------------------------------------------------------+
@@ -139,7 +141,7 @@ bool CStop::OpenStop(COrder *order,COrderStop *orderstop,double val)
    bool res=false;
    double lotsize=LotSizeCalculate(order,orderstop);
    ENUM_ORDER_TYPE type=orderstop.MainTicketType();
-   if(m_stop_type==STOP_TYPE_PENDING || m_main)
+   if(Pending() || Broker())
      {
       if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
         {

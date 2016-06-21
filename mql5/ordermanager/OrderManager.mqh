@@ -48,10 +48,20 @@ bool COrderManager::Validate(void) const
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
-  {
-   if(request.action==TRADE_ACTION_DEAL && result.retcode==TRADE_RETCODE_DONE)
-      if((request.magic==m_magic || m_other_magic.Search((int)request.magic)>=0) && m_symbol_man.Search(request.symbol))
-         m_orders.NewOrder((int)result.order,request.symbol,(int)request.magic,request.type,result.volume,result.price);
+  {   
+   if(trans.type==TRADE_TRANSACTION_ORDER_DELETE && trans.order_state==ORDER_STATE_FILLED)
+     {
+      if(HistoryOrderSelect(trans.order))
+        {
+         ulong ticket=HistoryOrderGetInteger(trans.order,ORDER_TICKET);;
+         ulong magic=HistoryOrderGetInteger(trans.order,ORDER_MAGIC);
+         string symbol = HistoryOrderGetString(trans.order,ORDER_SYMBOL);
+         double volume = HistoryOrderGetDouble(trans.order,ORDER_VOLUME_INITIAL);
+         double price=HistoryOrderGetDouble(trans.order,ORDER_PRICE_OPEN);
+         if((magic==m_magic || m_other_magic.Search((int)magic)>=0) && m_symbol_man.Search(symbol))
+            m_orders.NewOrder((int)ticket,symbol,(int)magic,trans.order_type,volume,price);
+        }
+     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

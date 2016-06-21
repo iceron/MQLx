@@ -113,6 +113,8 @@ public:
    virtual void      MaxOrders(const int max_orders) {m_order_man.MaxOrders(max_orders);}
    int               OrdersTotal(void) const {return m_order_man.OrdersTotal();}
    int               OrdersHistoryTotal(void) const {return m_order_man.OrdersHistoryTotal();}
+   int               PricePoints(void) const {return m_order_man.PricePoints();}
+   void              PricePoints(const int points) {m_order_man.PricePoints(points);}
    int               TradesTotal(void) const{return m_order_man.TradesTotal();}
    //--- signal manager   
    virtual int       Period(void) const {return m_period;}
@@ -194,7 +196,6 @@ bool CExpertAdvisorBase::Init(string symbol,int period,int magic,bool every_tick
    candle.Init(instrument,m_period);
    m_candle_man.Add(candle);
    Magic(magic);
-
    return false;
   }
 //+------------------------------------------------------------------+
