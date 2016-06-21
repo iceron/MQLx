@@ -58,8 +58,13 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
          string symbol = HistoryOrderGetString(trans.order,ORDER_SYMBOL);
          double volume = HistoryOrderGetDouble(trans.order,ORDER_VOLUME_INITIAL);
          double price=HistoryOrderGetDouble(trans.order,ORDER_PRICE_OPEN);
+         ENUM_ORDER_TYPE order_type = trans.order_type;
+         if (order_type==ORDER_TYPE_BUY_STOP || order_type==ORDER_TYPE_BUY_LIMIT)
+            order_type = ORDER_TYPE_BUY;
+         else if (order_type==ORDER_TYPE_SELL_STOP || order_type==ORDER_TYPE_SELL_LIMIT)
+            order_type = ORDER_TYPE_SELL;
          if((magic==m_magic || m_other_magic.Search((int)magic)>=0) && m_symbol_man.Search(symbol))
-            m_orders.NewOrder((int)ticket,symbol,(int)magic,trans.order_type,volume,price);
+            m_orders.NewOrder((int)ticket,symbol,(int)magic,order_type,volume,price);
         }
      }
   }

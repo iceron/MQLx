@@ -34,7 +34,7 @@ CExpertAdvisor::~CExpertAdvisor(void)
 bool CExpertAdvisor::OnTick(void)
   {
    bool ret=CExpertAdvisorBase::OnTick();
-   if(ret) OnTradeTransaction();
+   OnTradeTransaction();
    return ret;
   }
 //+------------------------------------------------------------------+
