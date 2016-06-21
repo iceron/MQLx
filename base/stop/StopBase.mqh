@@ -234,7 +234,7 @@ bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
 bool CStopBase::InitSymbol(CSymbolManager *symbolmanager)
   {
    m_symbol_man=symbolmanager;
-   return true;
+   return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -311,7 +311,8 @@ double CStopBase::TakeProfitCalculate(const string symbol,const ENUM_ORDER_TYPE 
 //+------------------------------------------------------------------+
 bool CStopBase::GetClosePrice(const string symbol,const ENUM_ORDER_TYPE type,double &price)
   {
-   if(!Refresh(symbol)) return false;
+   if(!Refresh(symbol)) 
+      return false;
    if(type==ORDER_TYPE_BUY)
       price=m_symbol.Bid();
    else if(type==ORDER_TYPE_SELL)
@@ -323,12 +324,15 @@ bool CStopBase::GetClosePrice(const string symbol,const ENUM_ORDER_TYPE type,dou
 //+------------------------------------------------------------------+
 bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
   {
-   if(!Refresh(order.Symbol())) return false;
+   if(!Refresh(order.Symbol())) 
+      return false;
    double stoploss=orderstop.StopLoss();
-   if(stoploss<=0.0) return false;
+   if(stoploss<=0.0) 
+      return false;
    double price=0.0;
    ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
-   if(!GetClosePrice(order.Symbol(),type,price)) return false;
+   if(!GetClosePrice(order.Symbol(),type,price)) 
+      return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
       if(price<=stoploss)
@@ -345,12 +349,15 @@ bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
 //+------------------------------------------------------------------+
 bool CStopBase::CheckTakeProfit(COrder *order,COrderStop *orderstop)
   {
-   if(!Refresh(order.Symbol())) return false;
+   if(!Refresh(order.Symbol())) 
+      return false;
    double takeprofit=orderstop.TakeProfit();
-   if(takeprofit<=0.0) return false;
+   if(takeprofit<=0.0) 
+      return false;
    double price=0.0;
    ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
-   if(!GetClosePrice(order.Symbol(),type,price)) return false;
+   if(!GetClosePrice(order.Symbol(),type,price)) 
+      return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
       if(price>=takeprofit) close=true;
@@ -417,14 +424,15 @@ bool CStopBase::Add(CTrails *trails)
   {
    if(CheckPointer(trails)==POINTER_DYNAMIC)
       m_trails=trails;
-   return true;
+   return CheckPointer(m_trails);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 double CStopBase::CheckTrailing(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
-   if(!CheckPointer(m_trails)) return 0;
+   if(!CheckPointer(m_trails)) 
+      return 0;
    return m_trails.Check(symbol,type,entry_price,price,mode);
   }
 //+------------------------------------------------------------------+

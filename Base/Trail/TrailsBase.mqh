@@ -58,7 +58,8 @@ bool CTrailsBase::Init(CSymbolManager *symbolmanager,CStop *stop)
       if(CheckPointer(trail))
         {
          trail.SetContainer(GetPointer(this));
-         trail.Init(symbolmanager);
+         if (!trail.Init(symbolmanager))
+            return false;
         }
      }
    return true;
@@ -99,9 +100,11 @@ double CTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const d
          continue;
       val=trail.Check(symbol,type,entry_price,price,mode);
       if((type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_TAKEPROFIT))
-         if(val>ret || ret==0.0) ret=val;
+         if(val>ret || ret==0.0) 
+            ret=val;
       else if((type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_TAKEPROFIT))
-         if(val<ret || ret==0.0) ret=val;
+         if(val<ret || ret==0.0) 
+            ret=val;
      }
    return ret;
   }
@@ -110,9 +113,7 @@ double CTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const d
 //+------------------------------------------------------------------+
 bool CTrailsBase::CreateElement(const int index)
   {
-   CTrail*trail=new CTrail();
-   trail.SetContainer(GetPointer(this));
-   return Insert(GetPointer(trail),index);
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

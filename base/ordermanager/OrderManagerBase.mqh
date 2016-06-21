@@ -363,9 +363,7 @@ double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE &type)
 double COrderManagerBase::StopLossCalculate(const ENUM_ORDER_TYPE type,const double price)
   {
    if(CheckPointer(m_main_stop))
-     {
       return m_main_stop.StopLossTicks(type,price);
-     }
    return 0;
   }
 //+------------------------------------------------------------------+
@@ -374,9 +372,7 @@ double COrderManagerBase::StopLossCalculate(const ENUM_ORDER_TYPE type,const dou
 double COrderManagerBase::TakeProfitCalculate(const ENUM_ORDER_TYPE type,const double price)
   {
    if(CheckPointer(m_main_stop))
-     {
       return m_main_stop.TakeProfitTicks(type,price);
-     }
    return 0;
   }
 //+------------------------------------------------------------------+
@@ -450,11 +446,8 @@ void COrderManagerBase::DeinitTrade()
 bool COrderManagerBase::AddMoneys(CMoneys *moneys)
   {
    if(CheckPointer(moneys)==POINTER_DYNAMIC)
-     {
       m_moneys=moneys;
-      return true;
-     }
-   return false;
+   return CheckPointer(m_moneys);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

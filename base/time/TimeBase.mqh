@@ -35,7 +35,7 @@ public:
    datetime          TimeStart(void) const {return m_time_start;}
    void              TimeStart(const datetime st){m_time_start=st;}
    //--- checking
-   virtual bool      Evaluate(void) {return false;}
+   virtual bool      Evaluate(void)=0;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -57,7 +57,7 @@ CTimeBase::~CTimeBase(void)
 bool CTimeBase::Init(CSymbolManager* symbol_man)
   {
    m_symbol_man = symbol_man;
-   return true;
+   return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -55,7 +55,7 @@ bool CTimeRangeBase::Set(datetime begin,datetime end)
 //+------------------------------------------------------------------+
 bool CTimeRangeBase::Validate(void)
   {
-   if (m_end>m_begin)
+   if (m_end<m_begin)
    {
       PrintFormat("Invalid setting for start and end times.");
       return false;
@@ -67,7 +67,8 @@ bool CTimeRangeBase::Validate(void)
 //+------------------------------------------------------------------+
 bool CTimeRangeBase::Evaluate(void)
   {
-   if(!Active()) return true;
+   if(!Active()) 
+      return true;
    datetime current=TimeCurrent();
    bool result=current>=m_begin && current<m_end;
    return Reverse()?result:!result;

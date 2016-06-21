@@ -182,9 +182,7 @@ double CTrailBase::Price(const ENUM_ORDER_TYPE type)
 bool CTrailBase::Refresh(const string symbol)
   {
    if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),symbol)!=0)
-   {
       m_symbol= m_symbol_man.Get(symbol);
-   }   
    return CheckPointer(m_symbol);
   }
 //+------------------------------------------------------------------+

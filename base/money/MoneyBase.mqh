@@ -86,19 +86,15 @@ CMoneyBase::~CMoneyBase(void)
 //+------------------------------------------------------------------+
 bool CMoneyBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
   {
-   InitSymbol(symbolmanager);
-   InitAccount(accountinfo);
-   return true;
+   return InitSymbol(symbolmanager) && InitAccount(accountinfo);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CMoneyBase::InitSymbol(CSymbolManager *symbolmanager)
   {
-   if(!CheckPointer(symbolmanager)) 
-      return false;
    m_symbol_man=symbolmanager;
-   return true;
+   return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -113,7 +109,8 @@ bool CMoneyBase::InitAccount(CAccountInfo *account)
 //+------------------------------------------------------------------+
 double CMoneyBase::Volume(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
   {
-   if(!Active()) return 0;
+   if(!Active()) 
+      return 0;
    if(m_volume==0.0) UpdateLotSize(symbol,price,type,sl);
    else
      {
@@ -148,7 +145,7 @@ bool CMoneyBase::UpdateByPeriod(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CMoneyBase::OnLotSizeUpdated()
+void CMoneyBase::OnLotSizeUpdated(void)
   {
    double maxvol=m_symbol.LotsMax();
    double minvol=m_symbol.LotsMin();

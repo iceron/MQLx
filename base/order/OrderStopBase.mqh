@@ -89,7 +89,7 @@ public:
    virtual bool      IsClosed(void);
    virtual bool      Update(void)=0;
    //--- deinitialization 
-   virtual bool      Deinit(void);
+   virtual void      Deinit(void);
    //--- recovery
    virtual bool      Save(const int);
    virtual bool      Load(const int);
@@ -158,7 +158,7 @@ void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderStopBase::Deinit(void)
+void COrderStopBase::Deinit(void)
   {
    if(CheckPointer(m_objentry))
       delete m_objentry;
@@ -166,7 +166,6 @@ bool COrderStopBase::Deinit(void)
       delete m_objsl;
    if(CheckPointer(m_objtp))
       delete m_objtp;
-   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -174,7 +173,7 @@ bool COrderStopBase::Deinit(void)
 bool COrderStopBase::IsStopLossValid(const double stoploss) const
   {
    return (stoploss>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && stoploss>StopLoss()) ||
-           (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<StopLoss())));
+          (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<StopLoss())));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -182,7 +181,7 @@ bool COrderStopBase::IsStopLossValid(const double stoploss) const
 bool COrderStopBase::IsTakeProfitValid(const double takeprofit) const
   {
    return (takeprofit>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && takeprofit<TakeProfit()) ||
-           (m_order.OrderType()==ORDER_TYPE_SELL && takeprofit>TakeProfit())));
+          (m_order.OrderType()==ORDER_TYPE_SELL && takeprofit>TakeProfit())));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -335,13 +334,9 @@ bool COrderStopBase::Modify(const double stoploss,const double takeprofit)
         }
      }
    else if(stoploss>0 && takeprofit==0)
-     {
       stoploss_modified=ModifyStopLoss(stoploss);
-     }
    else if(takeprofit>0 && stoploss==0)
-     {
       takeprofit_modified=ModifyTakeProfit(takeprofit);
-     }
    return stoploss_modified || takeprofit_modified;
   }
 //+------------------------------------------------------------------+
@@ -350,9 +345,12 @@ bool COrderStopBase::Modify(const double stoploss,const double takeprofit)
 COrderStopBase::Show(bool show=true)
   {
    int setting=show?OBJ_ALL_PERIODS:OBJ_NO_PERIODS;
-   if(CheckPointer(m_objentry)) m_objentry.Timeframes(setting);
-   if(CheckPointer(m_objsl))     m_objsl.Timeframes(setting);
-   if(CheckPointer(m_objtp))     m_objtp.Timeframes(setting);
+   if(CheckPointer(m_objentry))  
+      m_objentry.Timeframes(setting);
+   if(CheckPointer(m_objsl))     
+      m_objsl.Timeframes(setting);
+   if(CheckPointer(m_objtp))     
+      m_objtp.Timeframes(setting);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

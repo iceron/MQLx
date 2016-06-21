@@ -76,7 +76,8 @@ bool CExpertAdvisorsBase::Validate(void) const
 //+------------------------------------------------------------------+
 void CExpertAdvisorsBase::ChartComment(const bool enable=true)
   {
-   if(enable) m_comments=new CComments();
+   if(enable) 
+      m_comments=new CComments();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -61,7 +61,7 @@ bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop,COrderStops *order_
      {
       switch(stop.StopType())
         {
-         case STOP_TYPE_BROKER: order_stop=new COrderStopBroker();   break;
+         case STOP_TYPE_BROKER:  order_stop = new COrderStopBroker();  break;
          case STOP_TYPE_PENDING: order_stop = new COrderStopPending(); break;
          case STOP_TYPE_VIRTUAL: order_stop = new COrderStopVirtual(); break;
         }
@@ -136,9 +136,6 @@ COrderStopsBase::Show(const bool show=true)
 //+------------------------------------------------------------------+
 bool COrderStopsBase::CreateElement(const int index)
   {
-   //COrderStop*orderstop=new COrderStop();
-   //orderstop.SetContainer(GetPointer(this));
-   //return Insert(GetPointer(orderstop),index);
    return true;
   }
 //+------------------------------------------------------------------+

@@ -137,20 +137,17 @@ double CStop::StopLossPrice(COrder *order,COrderStop *orderstop)
 //+------------------------------------------------------------------+
 bool CStop::OpenStop(COrder *order,COrderStop *orderstop,double val)
   {
-   if(val==0) return false;
+   if(val==0) 
+      return false;
    bool res=false;
    double lotsize=LotSizeCalculate(order,orderstop);
    ENUM_ORDER_TYPE type=orderstop.MainTicketType();
    if(Pending() || Broker())
      {
       if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
-        {
          res=m_trade.Sell(lotsize,val,0,0,m_comment);
-        }
       else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
-        {
          res=m_trade.Buy(lotsize,val,0,0,m_comment);
-        }
      }
    return res;
   }
@@ -172,7 +169,8 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
             res=m_trade.Sell(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
          else if(type==ORDER_TYPE_SELL)
             res=m_trade.Buy(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
-         if(res) order.Volume(order.Volume()-lotsize);
+         if(res) 
+            order.Volume(order.Volume()-lotsize);
         }
      }
    return res;

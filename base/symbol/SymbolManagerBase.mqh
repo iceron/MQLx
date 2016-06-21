@@ -126,9 +126,7 @@ void CSymbolManagerBase::SetPrimary(const int idx)
 CSymbolInfo* CSymbolManagerBase::GetPrimary(void)
   {
    if (Total()>=1 && !CheckPointer(m_symbol_primary))
-   {      
       m_symbol_primary = At(0);
-   }   
    return m_symbol_primary;
   }
 //+------------------------------------------------------------------+

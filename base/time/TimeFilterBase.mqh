@@ -45,7 +45,8 @@ bool CTimeFilterBase::Init(CTimes *times)
      {
       CTimeFilter *filter=m_time_filters.At(i);
       filter.Reverse(!Reverse());
-      filter.Init(times);
+      if (!filter.Init(times))
+         return false;
      }
    return true;
   }

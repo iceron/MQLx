@@ -143,7 +143,8 @@ void CTimeDaysBase::Saturday(const bool set)
 //+------------------------------------------------------------------+
 bool CTimeDaysBase::Evaluate(void)
   {
-   if(!Active()) return true;
+   if(!Active()) 
+      return true;
    bool result=false;
    MqlDateTime time;
    datetime current=TimeCurrent();
@@ -179,7 +180,6 @@ void CTimeDaysBase::Set(const bool sun=false,const bool mon=true,const bool tue=
       m_day_flags|=TIME_DAY_FLAG_FRI;
    if(sat)
       m_day_flags|=TIME_DAY_FLAG_SAT;
-
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

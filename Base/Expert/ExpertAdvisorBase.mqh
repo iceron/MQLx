@@ -285,7 +285,7 @@ bool CExpertAdvisorBase::Add(CObject *object)
    bool result=false;
    switch(object.Type())
      {
-      case CLASS_TYPE_SIGNAL:   result=AddSignal(object); break;
+      case CLASS_TYPE_SIGNAL:   result=AddSignal(object);   break;
       case CLASS_TYPE_MONEYS:    result=AddMoneys(object);  break;
       case CLASS_TYPE_STOPS:     result=AddStops(object);   break;
       case CLASS_TYPE_TIMES:     result=AddTimes(object);   break;
@@ -299,9 +299,7 @@ bool CExpertAdvisorBase::Add(CObject *object)
 bool CExpertAdvisorBase::AddSignal(CSignal *signal)
   {
    if (CheckPointer(m_signal))
-     {
       delete m_signal;
-     }
    m_signal=signal;
    return true;
   }

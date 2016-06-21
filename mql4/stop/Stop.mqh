@@ -68,7 +68,8 @@ bool CStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
 //+------------------------------------------------------------------+
 bool CStop::DeleteStopOrder(const ulong ticket) const
   {
-   if(ticket<=0) return true;
+   if(ticket<=0) 
+      return true;
    if(!OrderSelect((int)ticket,SELECT_BY_TICKET))
       return true;
    if(OrderType()>1 && OrderCloseTime()==0)

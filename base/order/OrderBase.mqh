@@ -182,12 +182,12 @@ string COrderBase::OrderTypeToString(void) const
   {
    switch(OrderType())
      {
-      case ORDER_TYPE_BUY: return "BUY";
-      case ORDER_TYPE_SELL: return "SELL";
-      case ORDER_TYPE_BUY_LIMIT: return "BUY LIMIT";
-      case ORDER_TYPE_BUY_STOP: return "BUY STOP";
-      case ORDER_TYPE_SELL_LIMIT: return "SELL LIMIT";
-      case ORDER_TYPE_SELL_STOP: return "SELL STOP";
+      case ORDER_TYPE_BUY:          return "BUY";
+      case ORDER_TYPE_SELL:         return "SELL";
+      case ORDER_TYPE_BUY_LIMIT:    return "BUY LIMIT";
+      case ORDER_TYPE_BUY_STOP:     return "BUY STOP";
+      case ORDER_TYPE_SELL_LIMIT:   return "SELL LIMIT";
+      case ORDER_TYPE_SELL_STOP:    return "SELL STOP";
      }
    return NULL;
   }

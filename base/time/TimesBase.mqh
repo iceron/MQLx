@@ -61,7 +61,8 @@ bool CTimesBase::Init(CSymbolManager* symbol_man)
       if (!CheckPointer(time))
          continue;
       time.SetContainer(GetPointer(this));
-      time.Init(symbol_man);      
+      if (!time.Init(symbol_man))
+         return false;      
      }
    return true;
   }
@@ -88,7 +89,8 @@ bool CTimesBase::Evaluate(void) const
      {
       CTime *time=At(i);
       if(CheckPointer(time))
-         if(!time.Evaluate()) return false;
+         if(!time.Evaluate()) 
+            return false;
      }
    return true;
   }
@@ -97,9 +99,7 @@ bool CTimesBase::Evaluate(void) const
 //+------------------------------------------------------------------+
 bool CTimesBase::CreateElement(const int index)
   {
-   CTime*time=new CTime();
-   time.SetContainer(GetPointer(this));
-   return Insert(GetPointer(time),index);
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

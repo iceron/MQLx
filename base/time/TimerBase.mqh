@@ -99,14 +99,19 @@ bool CTimerBase::Validate(void)
 //+------------------------------------------------------------------+
 void CTimerBase::RecalculateTotal(void)
   {
-   m_total=(int)((m_years*YEAR_SECONDS)+(m_months*MONTH_SECONDS)+(m_days*DAY_SECONDS)+(m_hours*HOUR_SECONDS)+(m_minutes*MINUTE_SECONDS));
+   m_total=(int)((m_years*YEAR_SECONDS)+
+                 (m_months*MONTH_SECONDS)+
+                 (m_days*DAY_SECONDS)+
+                 (m_hours*HOUR_SECONDS)+
+                 (m_minutes*MINUTE_SECONDS));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CTimerBase::Evaluate(void)
   {
-   if(!Active()) return true;
+   if(!Active()) 
+      return true;
    bool result=true;
    m_elapsed=(int)(TimeCurrent()-m_time_start);
    if(m_elapsed>=m_total) result=false;

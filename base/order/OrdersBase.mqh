@@ -110,7 +110,8 @@ bool COrdersBase::CloseStops(void)
 bool COrdersBase::CreateElement(const int index)
   {
    COrder*order=new COrder();
-   order.Init(0,GetPointer(this),m_stops,true);
+   if (order.Init(0,GetPointer(this),m_stops,true))
+      return false;
    return Insert(GetPointer(order),index);
   }
 //+------------------------------------------------------------------+
