@@ -6,6 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include "..\Symbol\SymbolManagerBase.mqh"
+#include "..\Event\EventAggregatorBase.mqh"
 #include "OrderStopsBase.mqh"
 class COrders;
 class CStops;

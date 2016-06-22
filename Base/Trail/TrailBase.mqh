@@ -8,6 +8,7 @@
 #include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
 #include "..\..\Common\Enum\ENUM_TRAIL_TARGET.mqh"
 #include "..\..\Base\Symbol\SymbolManagerBase.mqh"
+#include "..\Event\EventAggregatorBase.mqh"
 class CTrails;
 //+------------------------------------------------------------------+
 //|                                                                  |

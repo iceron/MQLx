@@ -10,6 +10,7 @@
 #include "..\Trade\ExpertTradeBase.mqh"
 #include "..\Stop\StopBase.mqh"
 #include "..\Stop\StopLineBase.mqh"
+#include "..\Event\EventAggregatorBase.mqh"
 class COrderStops;
 class COrder;
 class CStop;
