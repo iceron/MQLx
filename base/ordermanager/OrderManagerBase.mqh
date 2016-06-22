@@ -10,6 +10,7 @@
 #include "..\Money\MoneysBase.mqh"
 #include "..\Stop\StopsBase.mqh"
 #include "..\Order\OrdersBase.mqh"
+#include "..\Event\EventAggregatorBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -31,23 +32,23 @@ protected:
    COrders           m_orders;
    COrders           m_orders_history;
    CArrayInt         m_other_magic;
+   CAccountInfo     *m_account;
    CSymbolInfo      *m_symbol;
    CSymbolManager   *m_symbol_man;
    CTradeManager     m_trade_man;
    CExpertTradeX    *m_trade;
    CMoneys          *m_moneys;
-   //--- order objects
    CStops           *m_stops;
    CStop            *m_main_stop;
-   //--- container
+   CEventAggregator *m_event_man;
    CObject          *m_container;
 public:
                      COrderManagerBase(void);
                     ~COrderManagerBase(void);
    //--- initialization
-   virtual bool      Init(CExpertAdvisor *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
-   virtual bool      InitStops(CExpertAdvisor *s,CSymbolManager *symbolman,CAccountInfo *accountinfo);
-   bool              InitMoneys(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
+   virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
+   virtual bool      InitStops(void);
+   bool              InitMoneys(void);
    bool              InitTrade(void);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
@@ -154,16 +155,17 @@ COrderManagerBase::~COrderManagerBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::Init(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool COrderManagerBase::Init(CSymbolManager *symbol_man,CAccountInfo *account,CEventAggregator *event_man=NULL)
   {
-   m_symbol_man=symbolmanager;
-
-   if(!InitStops(s,symbolmanager,accountinfo))
+   m_symbol_man=symbol_man;
+   m_account = account;
+   m_event_man = event_man;
+   if(!InitStops())
      {
       Print(__FUNCTION__+": error in stops manager initialization");
       return false;
      }
-   if(!InitMoneys(s,symbolmanager,accountinfo))
+   if(!InitMoneys())
      {
       Print(__FUNCTION__+": error in money manager initialization");
       return false;
@@ -205,12 +207,12 @@ bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsiz
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitMoneys(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool COrderManagerBase::InitMoneys(void)
   {
    if(CheckPointer(m_moneys))
      {
       m_moneys.SetContainer(GetPointer(this));
-      return m_moneys.Init(symbolmanager,accountinfo);
+      return m_moneys.Init(m_symbol_man,m_account);
      }
    return true;
   }
@@ -395,12 +397,12 @@ void COrderManagerBase::AddOtherMagicString(const string &magics[])
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::InitStops(CExpertAdvisor *s,CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool COrderManagerBase::InitStops()
   {
    if(CheckPointer(m_stops))
      {
       m_stops.SetContainer(GetPointer(this));
-      return m_stops.Init(symbolmanager,accountinfo);
+      return m_stops.Init(m_symbol_man,m_account,m_event_man);
      }
    return true;
   }

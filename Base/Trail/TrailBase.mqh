@@ -23,13 +23,14 @@ protected:
    double            m_step;
    CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
+   CEventAggregator *m_event_man;
    CObject          *m_container;
 public:
                      CTrailBase(void);
                     ~CTrailBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TRAIL;}
    //--- initialization                    
-   virtual bool      Init(CSymbolManager *);
+   virtual bool      Init(CSymbolManager *,CEventAggregator*);
    virtual void      SetContainer(CObject *container){m_container=container;}
    virtual bool      Validate(void) const;
    //--- getters and setters    
@@ -82,7 +83,7 @@ bool CTrailBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTrailBase::Init(CSymbolManager *symbolmanager)
+bool CTrailBase::Init(CSymbolManager *symbolmanager,CEventAggregator *event_man=NULL)
   {
    if (!CheckPointer(symbolmanager))
    {
@@ -90,6 +91,7 @@ bool CTrailBase::Init(CSymbolManager *symbolmanager)
       return false;
    }   
    m_symbol_man=symbolmanager;
+   m_event_man = event_man;
    return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+

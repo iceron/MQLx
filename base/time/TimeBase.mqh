@@ -18,13 +18,14 @@ protected:
    bool              m_reverse;
    datetime          m_time_start;
    CSymbolManager   *m_symbol_man;
+   CEventAggregator *m_event_man;
    CObject          *m_container;   
 public:
                      CTimeBase(void);
                     ~CTimeBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIME;}   
    //--- initialization
-   virtual bool      Init(CSymbolManager*);
+   virtual bool      Init(CSymbolManager*,CEventAggregator*);
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) {return true;}
    //--- setters and getters
@@ -54,9 +55,10 @@ CTimeBase::~CTimeBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeBase::Init(CSymbolManager* symbol_man)
+bool CTimeBase::Init(CSymbolManager* symbol_man,CEventAggregator *event_man=NULL)
   {
    m_symbol_man = symbol_man;
+   m_event_man = event_man;
    return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+

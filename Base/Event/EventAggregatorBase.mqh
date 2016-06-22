@@ -17,7 +17,8 @@ protected:
 public:
                      CEventAggregatorBase(void);
                     ~CEventAggregatorBase(void);
-   virtual CObject  *GetContainer(void) const {return GetPointer(m_container);}                    
+   virtual bool      Init(void);
+   virtual CObject  *GetContainer(void) const {return GetPointer(m_container);}
    virtual void      SetContainer(CObject *container){m_container=container;}
    virtual void      Publish(string,CObject*);
   };
@@ -32,6 +33,20 @@ CEventAggregatorBase::CEventAggregatorBase(void)
 //+------------------------------------------------------------------+
 CEventAggregatorBase::~CEventAggregatorBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CEventAggregatorBase::Init(void)
+  {
+   for(int i=0;i<Total();i++)
+     {
+      CEventSubscriber *subscriber=At(i);
+      if(CheckPointer(subscriber))
+         if (!subscriber.Init())
+            return false;
+     }
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

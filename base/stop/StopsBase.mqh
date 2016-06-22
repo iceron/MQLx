@@ -15,13 +15,14 @@ class CStopsBase : public CArrayObj
   {
 protected:
    bool              m_active;
+   CEventAggregator *m_event_man;
    CObject          *m_container;
 public:
                      CStopsBase(void);
                     ~CStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPS;}
    //--- initialization
-   virtual bool      Init(CSymbolManager*,CAccountInfo*);
+   virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
    virtual void      SetContainer(CObject *container){m_container=container;}
    virtual bool      Validate(void) const;
    //--- setters and getters
@@ -46,13 +47,14 @@ CStopsBase::~CStopsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStopsBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool CStopsBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEventAggregator *event_man=NULL)
   {
+   m_event_man = event_man;
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
       if (CheckPointer(stop))
-         if(!stop.Init(symbolmanager,accountinfo))
+         if(!stop.Init(symbolmanager,accountinfo,event_man))
             return false;
      }
    return true;

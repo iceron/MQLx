@@ -7,6 +7,7 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
 #include "CandleBase.mqh"
+#include "..\Event\EventAggregatorBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -15,11 +16,12 @@ class CCandleManagerBase : public CArrayObj
 protected:
    bool              m_active;
    CSymbolManager   *m_symbol_man;
+   CEventAggregator *m_event_man;
    CObject          *m_container;
 public:
                      CCandleManagerBase(void);
                     ~CCandleManagerBase(void);
-   virtual bool      Init(CSymbolManager*);
+   virtual bool      Init(CSymbolManager*,CEventAggregator*);
    virtual bool      Add(const string,const int);
    virtual void      SetContainer(CObject *container) {m_container=container;}
    bool              Active(){return m_active;}
@@ -45,9 +47,16 @@ CCandleManagerBase::~CCandleManagerBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CCandleManagerBase::Init(CSymbolManager *symbol_man)
+bool CCandleManagerBase::Init(CSymbolManager *symbol_man,CEventAggregator *event_man=NULL)
   {
    m_symbol_man=symbol_man;
+   m_event_man=event_man;
+   for (int i=0;i<Total();i++)
+   {
+      CCandle *candle = At(i);
+      if (CheckPointer(candle))
+         candle.Init(m_event_man);
+   }
    return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+

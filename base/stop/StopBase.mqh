@@ -55,15 +55,17 @@ protected:
    CTradeManager     m_trade_man;
    CExpertTradeX    *m_trade;
    CTrails          *m_trails;
-   CStops           *m_stops;
+   CEventAggregator *m_event_man;
+   CStops           *m_stops;   
 public:
                      CStopBase(void);
                     ~CStopBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOP;}
    //--- initialization
-   virtual bool      Init(CSymbolManager *,CAccountInfo *);
-   virtual bool      InitAccount(CAccountInfo *);
-   virtual bool      InitSymbol(CSymbolManager *);
+   virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
+   virtual bool      InitAccount(CAccountInfo*);
+   virtual bool      InitEvent(CEventAggregator*);
+   virtual bool      InitSymbol(CSymbolManager*);
    virtual bool      InitTrade(void);
    virtual void      SetContainer(CStops *stops){m_stops=stops;}
    virtual bool      Validate(void) const;
@@ -82,7 +84,7 @@ public:
    void              Magic(const int magic) {m_magic=magic;}
    int               Magic(void) const {return m_magic;}
    void              Main(const bool main) {m_main=main; m_oco=true;}
-   bool              Main(void) const {return m_main;}   
+   bool              Main(void) const {return m_main;}
    void              Name(const string name) {m_name=name;}
    string            Name(void) const{return m_name;}
    void              OCO(const bool oco) {if(!Main())m_oco=oco;}
@@ -211,21 +213,31 @@ bool CStopBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEventAggregator *event_man=NULL)
   {
    if(!CheckPointer(accountinfo))
       return false;
    InitSymbol(symbolmanager);
    InitAccount(accountinfo);
-   InitTrade();
+   InitEvent(event_man);
+   InitTrade();   
    if(CheckPointer(m_trails))
      {
-      if(!m_trails.Init(symbolmanager,GetPointer(this)))
+      m_trails.SetContainer(GetPointer(this));
+      if(!m_trails.Init(symbolmanager,event_man))
         {
          Print(__FUNCTION__+": error in trailing manager initialization");
          return false;
         }
      }
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::InitEvent(CEventAggregator *event_man)
+  {
+   m_event_man=event_man;
    return true;
   }
 //+------------------------------------------------------------------+
@@ -311,7 +323,7 @@ double CStopBase::TakeProfitCalculate(const string symbol,const ENUM_ORDER_TYPE 
 //+------------------------------------------------------------------+
 bool CStopBase::GetClosePrice(const string symbol,const ENUM_ORDER_TYPE type,double &price)
   {
-   if(!Refresh(symbol)) 
+   if(!Refresh(symbol))
       return false;
    if(type==ORDER_TYPE_BUY)
       price=m_symbol.Bid();
@@ -324,14 +336,14 @@ bool CStopBase::GetClosePrice(const string symbol,const ENUM_ORDER_TYPE type,dou
 //+------------------------------------------------------------------+
 bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
   {
-   if(!Refresh(order.Symbol())) 
+   if(!Refresh(order.Symbol()))
       return false;
    double stoploss=orderstop.StopLoss();
-   if(stoploss<=0.0) 
+   if(stoploss<=0.0)
       return false;
    double price=0.0;
    ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
-   if(!GetClosePrice(order.Symbol(),type,price)) 
+   if(!GetClosePrice(order.Symbol(),type,price))
       return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
@@ -349,14 +361,14 @@ bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
 //+------------------------------------------------------------------+
 bool CStopBase::CheckTakeProfit(COrder *order,COrderStop *orderstop)
   {
-   if(!Refresh(order.Symbol())) 
+   if(!Refresh(order.Symbol()))
       return false;
    double takeprofit=orderstop.TakeProfit();
-   if(takeprofit<=0.0) 
+   if(takeprofit<=0.0)
       return false;
    double price=0.0;
    ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
-   if(!GetClosePrice(order.Symbol(),type,price)) 
+   if(!GetClosePrice(order.Symbol(),type,price))
       return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
@@ -431,7 +443,7 @@ bool CStopBase::Add(CTrails *trails)
 //+------------------------------------------------------------------+
 double CStopBase::CheckTrailing(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
-   if(!CheckPointer(m_trails)) 
+   if(!CheckPointer(m_trails))
       return 0;
    return m_trails.Check(symbol,type,entry_price,price,mode);
   }

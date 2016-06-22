@@ -17,13 +17,14 @@ class CMoneysBase : public CArrayObj
 protected:
    bool              m_active;
    int               m_selected;
+   CEventAggregator *m_event_man;
    CObject          *m_container;
 public:
                      CMoneysBase(void);
                     ~CMoneysBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}   
    //--- initialization
-   virtual bool      Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo);
+   virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const;
    //--- setters and getters
@@ -50,12 +51,13 @@ CMoneysBase::~CMoneysBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CMoneysBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool CMoneysBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEventAggregator *event_man=NULL)
   {
+   m_event_man = event_man;
    for(int i=0;i<Total();i++)
      {
       CMoney *money=At(i);
-      money.Init(GetPointer(symbolmanager),GetPointer(accountinfo));
+      money.Init(symbolmanager,accountinfo,event_man);
      }
    return true;
   }

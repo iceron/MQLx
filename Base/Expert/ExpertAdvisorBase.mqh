@@ -42,7 +42,7 @@ protected:
    //--- candle
    CCandleManager    m_candle_man;
    //--- events
-   CEventAggregator  *m_events;
+   CEventAggregator *m_event_man;
    //--- container
    CObject          *m_container;
 public:
@@ -50,7 +50,7 @@ public:
                     ~CExpertAdvisorBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STRATEGY;}
    //--- initialization
-   virtual bool      Add(CObject*);
+   virtual bool      AddEventAggregator(CEventAggregator*);
    virtual bool      AddMoneys(CMoneys*);
    virtual bool      AddSignal(CSignal*);
    virtual bool      AddStops(CStops*);
@@ -63,7 +63,7 @@ public:
    virtual bool      InitComponents(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
-   virtual bool      InitOrderManager(void) {return m_order_man.Init(GetPointer(this),GetPointer(m_symbol_man),GetPointer(m_account));}
+   virtual bool      InitOrderManager(void) {return m_order_man.Init(GetPointer(m_symbol_man),GetPointer(m_account));}
    virtual bool      Validate(void) const;
    //--- container
    virtual CObject  *GetContainer(void) const {return GetPointer(m_container);}
@@ -212,11 +212,6 @@ bool CExpertAdvisorBase::InitComponents(void)
       Print(__FUNCTION__+": error in signal initialization");
       return false;
      }
-   if(!InitAccount())
-     {
-      Print(__FUNCTION__+": error in account initialization");
-      return false;
-     }
    if(!InitTimes())
      {
       Print(__FUNCTION__+": error in time initialization");
@@ -244,7 +239,9 @@ bool CExpertAdvisorBase::InitComponents(void)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::InitSignals(void)
   {
-   return true;
+   if(!CheckPointer(m_signal))
+      return true;
+   return m_signal.Init(GetPointer(m_symbol_man),GetPointer(m_event_man));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -253,14 +250,7 @@ bool CExpertAdvisorBase::InitTimes(void)
   {
    if(!CheckPointer(m_times))
       return true;
-   return m_times.Init(GetPointer(m_symbol_man));
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CExpertAdvisorBase::InitAccount(void)
-  {
-   return true;
+   return m_times.Init(GetPointer(m_symbol_man),GetPointer(m_event_man));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -268,14 +258,15 @@ bool CExpertAdvisorBase::InitAccount(void)
 bool CExpertAdvisorBase::InitCandleManager(void)
   {
    m_candle_man.SetContainer(GetPointer(this));
-   return m_candle_man.Init(GetPointer(m_symbol_man));
+   return m_candle_man.Init(GetPointer(m_symbol_man),GetPointer(m_event_man));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::InitEventAggregator(void)
   {
-   m_events.SetContainer(GetPointer(this));
+   if (CheckPointer(m_event_man))
+      return m_event_man.Init();
    return true;
   }
 //+------------------------------------------------------------------+
@@ -297,35 +288,29 @@ void CExpertAdvisorBase::DisplayComment()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertAdvisorBase::Add(CObject *object)
+bool CExpertAdvisorBase::AddMoneys(CMoneys *moneys)
   {
-   bool result=false;
-   switch(object.Type())
-     {
-      case CLASS_TYPE_SIGNAL:   result=AddSignal(object);   break;
-      case CLASS_TYPE_MONEYS:    result=AddMoneys(object);  break;
-      case CLASS_TYPE_STOPS:     result=AddStops(object);   break;
-      case CLASS_TYPE_TIMES:     result=AddTimes(object);   break;
-      default: PrintFormat(__FUNCTION__+": unknown object: "+DoubleToString(object.Type(),0));
-     }
-   return result;
+   return m_order_man.AddMoneys(GetPointer(moneys));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::AddEventAggregator(CEventAggregator *aggregator)
+  {
+   if(CheckPointer(m_event_man))
+      delete m_event_man;
+   m_event_man=aggregator;
+   return CheckPointer(m_event_man);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::AddSignal(CSignal *signal)
   {
-   if (CheckPointer(m_signal))
+   if(CheckPointer(m_signal))
       delete m_signal;
    m_signal=signal;
    return true;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CExpertAdvisorBase::AddMoneys(CMoneys *moneys)
-  {
-   return m_order_man.AddMoneys(GetPointer(moneys));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -389,9 +374,9 @@ bool CExpertAdvisorBase::Validate(void) const
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::OnTick(void)
   {
-   if(!Active()) 
+   if(!Active())
       return false;
-   if(!RefreshRates()) 
+   if(!RefreshRates())
       return false;
    bool ret=false;
    DetectNewBars();
@@ -399,7 +384,7 @@ bool CExpertAdvisorBase::OnTick(void)
    checkopenshort=false,
    checkcloselong=false,
    checkcloseshort=false;
-   if (CheckPointer(m_signal))
+   if(CheckPointer(m_signal))
      {
       m_signal.Check();
       double   price=EMPTY_VALUE;
@@ -417,9 +402,9 @@ bool CExpertAdvisorBase::OnTick(void)
    for(int i=orders.Total()-1;i>=0;i--)
      {
       COrder *order=orders.At(i);
-      if (!CheckPointer(order))
+      if(!CheckPointer(order))
          continue;
-      order.OnTick(); 
+      order.OnTick();
       if(order.IsSuspended())
         {
          if(m_order_man.CloseOrder(order,i))
@@ -456,7 +441,6 @@ void CExpertAdvisorBase::Deinit(const int reason=0)
   {
    DeinitSymbol();
    DeinitSignals();
-   DeinitAccount();
    DeinitComments();
    DeinitTimes();
   }
@@ -477,15 +461,9 @@ void CExpertAdvisorBase::DeinitSymbol(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertAdvisorBase::DeinitAccount(void)
-  {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitComments(void)
   {
-   if (CheckPointer(m_comments))
+   if(CheckPointer(m_comments))
       delete m_comments;
   }
 //+------------------------------------------------------------------+
@@ -493,7 +471,7 @@ void CExpertAdvisorBase::DeinitComments(void)
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitTimes(void)
   {
-   if (CheckPointer(m_times))
+   if(CheckPointer(m_times))
       delete m_times;
   }
 //+------------------------------------------------------------------+

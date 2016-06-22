@@ -28,13 +28,14 @@ protected:
    CSymbolManager   *m_symbol_man;
    CSymbolInfo      *m_symbol;
    CAccountInfo     *m_account;
+   CEventAggregator *m_event_man;
    CObject          *m_container;
 public:
                      CMoneyBase(void);
                     ~CMoneyBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_MONEY;}
    //--- initialization
-   virtual bool      Init(CSymbolManager*,CAccountInfo*);
+   virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
    virtual bool      InitAccount(CAccountInfo*);
    virtual bool      InitSymbol(CSymbolManager*);
    virtual void      SetContainer(CObject *container) {m_container=container;}
@@ -84,8 +85,9 @@ CMoneyBase::~CMoneyBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CMoneyBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo)
+bool CMoneyBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEventAggregator *event_man=NULL)
   {
+   m_event_man = event_man;
    return InitSymbol(symbolmanager) && InitAccount(accountinfo);
   }
 //+------------------------------------------------------------------+

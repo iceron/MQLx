@@ -6,6 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include "..\Symbol\SymbolManagerBase.mqh"
+#include "..\Event\EventAggregatorBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -19,11 +20,13 @@ protected:
    bool              m_active;
    MqlRates          m_last;
    CSymbolInfo      *m_symbol;
+   CEventAggregator *m_event_man;
    CObject          *m_container;
 public:
                      CCandleBase(void);
                     ~CCandleBase(void);
    virtual bool      Init(CSymbolInfo*,const int);
+   virtual bool      Init(CEventAggregator *);
    virtual void      SetContainer(CObject *container) {m_container=container;}
    //--- setters and getters
    bool              Active(){return m_active;}
@@ -67,6 +70,14 @@ bool CCandleBase::Init(CSymbolInfo *symbol,const int timeframe)
    m_symbol = symbol;
    m_period = timeframe;
    return CheckPointer(m_symbol);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleBase::Init(CEventAggregator *event_man=NULL)
+  {
+   m_event_man = event_man;
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

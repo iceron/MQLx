@@ -15,14 +15,15 @@ class CTrailsBase : public CArrayObj
   {
 protected:
    bool              m_active;
+   CEventAggregator *m_event_man;
    CStop            *m_stop;
 public:
                      CTrailsBase(void);
                     ~CTrailsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TRAILS;}
    //--- initialization
-   virtual bool      Init(CSymbolManager *symbolmanager,CStop *stop);
-   virtual void      SetContainer(CStop *stop){m_stop=stop;}
+   virtual bool      Init(CSymbolManager*,CEventAggregator*);
+   virtual void      SetContainer(CStop*stop){m_stop=stop;}
    virtual bool      Validate(void) const;
    //--- getters and setters
    bool              Active(void) const {return m_active;}
@@ -49,16 +50,16 @@ CTrailsBase::~CTrailsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTrailsBase::Init(CSymbolManager *symbolmanager,CStop *stop)
+bool CTrailsBase::Init(CSymbolManager *symbolmanager,CEventAggregator *event_man=NULL)
   {
-   SetContainer(stop);
+   m_event_man = event_man;
    for(int i=0;i<Total();i++)
      {
       CTrail *trail=At(i);
       if(CheckPointer(trail))
         {
          trail.SetContainer(GetPointer(this));
-         if (!trail.Init(symbolmanager))
+         if (!trail.Init(symbolmanager,event_man))
             return false;
         }
      }

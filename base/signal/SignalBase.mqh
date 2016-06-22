@@ -18,15 +18,19 @@ class CSignalBase : public CObject
    int               m_weight;
    bool              m_invert;
    CArrayObj         m_filters;
+   CSymbolManager   *m_symbol_man;
+   CEventAggregator *m_event_man;
+   CObject          *m_container;
 public:
                      CSignalBase(void);
                     ~CSignalBase(void);
+   virtual bool      Init(CSymbolManager*,CEventAggregator*);
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void);
    virtual double    Check(void);
    virtual double    GetDirection(void) {return m_direction;}
    virtual int       LongCondition(void);
    virtual int       ShortCondition(void);
-
    bool              Active(void);
    void              Active(const bool);
    bool              Invert(void);
@@ -54,6 +58,15 @@ CSignalBase::CSignalBase(void) : m_active(true),
 //+------------------------------------------------------------------+
 CSignalBase::~CSignalBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CSignalBase::Init(CSymbolManager *symbol_man,CEventAggregator *event_man=NULL)
+  {
+   m_symbol_man= symbol_man;
+   m_event_man = event_man;
+   return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

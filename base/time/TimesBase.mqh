@@ -19,13 +19,14 @@ class CTimesBase : public CArrayObj
 protected:
    bool              m_active;
    int               m_selected;
+   CEventAggregator *m_event_man;
    CObject          *m_container;
 public:
                      CTimesBase(void);
                     ~CTimesBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIMES;}
    //-- initialization
-   virtual bool      Init(CSymbolManager*);
+   virtual bool      Init(CSymbolManager*,CEventAggregator *event_man);
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation
@@ -53,15 +54,16 @@ CTimesBase::~CTimesBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimesBase::Init(CSymbolManager* symbol_man)
+bool CTimesBase::Init(CSymbolManager* symbol_man,CEventAggregator* event_man=NULL)
   {
+   m_event_man = event_man;
    for(int i=0;i<Total();i++)
      {
       CTime *time=At(i);
       if (!CheckPointer(time))
          continue;
       time.SetContainer(GetPointer(this));
-      if (!time.Init(symbol_man))
+      if (!time.Init(symbol_man,event_man))
          return false;      
      }
    return true;
