@@ -6,6 +6,8 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Indicators\Indicators.mqh>
+#include "..\Symbol\SymbolManagerBase.mqh"
+#include "..\Event\EventAggregatorBase.mqh"
 class CSignal;
 //+------------------------------------------------------------------+
 //|                                                                  |
