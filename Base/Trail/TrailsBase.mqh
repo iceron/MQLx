@@ -23,6 +23,7 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_TRAILS;}
    //--- initialization
    virtual bool      Init(CSymbolManager*,CEventAggregator*);
+   virtual CStop    *GetContainer(void) {return m_stop;}
    virtual void      SetContainer(CStop*stop){m_stop=stop;}
    virtual bool      Validate(void) const;
    //--- getters and setters

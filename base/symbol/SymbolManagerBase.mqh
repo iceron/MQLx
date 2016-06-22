@@ -23,6 +23,7 @@ public:
    CSymbolInfo      *Get(string);
    virtual bool      RefreshRates(void);
    virtual bool      Search(string);
+   virtual CObject  *GetContainer(void) {return m_container;}
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual void      SetPrimary(string);
    virtual void      SetPrimary(const int);

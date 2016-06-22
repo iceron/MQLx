@@ -34,6 +34,7 @@ public:
                     ~COrderBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDER;}
    //--- initialization
+   virtual CObject*  GetContainer(void) {return m_orders;}
    virtual void      SetContainer(COrders *orders){m_orders=orders;}
    //--- getters and setters       
    void              CreateStops(CStops *stops);

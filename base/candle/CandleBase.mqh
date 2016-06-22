@@ -27,6 +27,7 @@ public:
                     ~CCandleBase(void);
    virtual bool      Init(CSymbolInfo*,const int);
    virtual bool      Init(CEventAggregator *);
+   virtual CObject*  GetContainer(void) {return m_container;}
    virtual void      SetContainer(CObject *container) {m_container=container;}
    //--- setters and getters
    bool              Active(){return m_active;}

@@ -52,6 +52,7 @@ public:
    bool              InitTrade(void);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
+   virtual CObject*  GetContainer(void) {return m_container;}
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const;
    //--- setters and getters

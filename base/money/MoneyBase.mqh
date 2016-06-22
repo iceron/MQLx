@@ -38,6 +38,7 @@ public:
    virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
    virtual bool      InitAccount(CAccountInfo*);
    virtual bool      InitSymbol(CSymbolManager*);
+   virtual CObject  *GetContainer(void) {return m_container;}
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const {return true;}
    //--- getters and setters
@@ -58,7 +59,7 @@ public:
    void              UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
    double            Volume(const string,const double,const ENUM_ORDER_TYPE,const double);
    double            Volume(void) {return m_volume;}
-   void              Volume(double volume) {m_volume = volume;}
+   void              Volume(double volume) {m_volume=volume;}
 protected:
    virtual void      OnLotSizeUpdated(void);
    virtual bool      UpdateByMargin(void);
@@ -87,7 +88,7 @@ CMoneyBase::~CMoneyBase(void)
 //+------------------------------------------------------------------+
 bool CMoneyBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEventAggregator *event_man=NULL)
   {
-   m_event_man = event_man;
+   m_event_man=event_man;
    return InitSymbol(symbolmanager) && InitAccount(accountinfo);
   }
 //+------------------------------------------------------------------+
@@ -111,7 +112,7 @@ bool CMoneyBase::InitAccount(CAccountInfo *account)
 //+------------------------------------------------------------------+
 double CMoneyBase::Volume(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
   {
-   if(!Active()) 
+   if(!Active())
       return 0;
    if(m_volume==0.0) UpdateLotSize(symbol,price,type,sl);
    else

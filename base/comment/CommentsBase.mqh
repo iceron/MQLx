@@ -18,9 +18,10 @@ protected:
 public:
                      CCommentsBase(void);
                     ~CCommentsBase(void);
-   virtual void      SetContainer(CObject *container) {m_container=container;}                    
+   virtual CObject  *GetContainer(void) {return m_container;}
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    bool              Active(){return m_activate;}
-   void              Active(bool active){m_activate = active;}
+   void              Active(bool active){m_activate=active;}
    virtual void      Display(void);
    virtual void      Concatenate(string &,string) const {}
   };

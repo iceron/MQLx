@@ -47,6 +47,7 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOP;}
    //--- initialization
    virtual void      Init(COrder *order,CStop *stop,COrderStops *order_stops);
+   virtual COrderStops *GetContainer(void) {return m_order_stops;}
    virtual void      SetContainer(COrderStops *orderstops){m_order_stops=orderstops;}
    //--- getters and setters  
    bool              Active(){return m_active;}
@@ -133,7 +134,7 @@ void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
   {
    if(!CheckPointer(stop) || !CheckPointer(order) || !stop.Active())
       return;
-   SetContainer(m_order_stops);   
+   SetContainer(m_order_stops);
    m_stop_name=stop.Name();
    m_order=order;
    m_stop=stop;
@@ -173,7 +174,7 @@ void COrderStopBase::Deinit(void)
 bool COrderStopBase::IsStopLossValid(const double stoploss) const
   {
    return (stoploss>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && stoploss>StopLoss()) ||
-          (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<StopLoss())));
+           (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<StopLoss())));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -181,7 +182,7 @@ bool COrderStopBase::IsStopLossValid(const double stoploss) const
 bool COrderStopBase::IsTakeProfitValid(const double takeprofit) const
   {
    return (takeprofit>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && takeprofit<TakeProfit()) ||
-          (m_order.OrderType()==ORDER_TYPE_SELL && takeprofit>TakeProfit())));
+           (m_order.OrderType()==ORDER_TYPE_SELL && takeprofit>TakeProfit())));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -234,7 +235,7 @@ bool COrderStopBase::IsClosed(void)
    if(m_closed)
       return true;
    if(CheckPointer(m_objentry) && !m_objentry.ChartObjectExists())
-      m_closed=true;   
+      m_closed=true;
    if(m_stoploss_closed && m_takeprofit_closed)
       m_closed=true;
    if(m_closed)
@@ -345,11 +346,11 @@ bool COrderStopBase::Modify(const double stoploss,const double takeprofit)
 COrderStopBase::Show(bool show=true)
   {
    int setting=show?OBJ_ALL_PERIODS:OBJ_NO_PERIODS;
-   if(CheckPointer(m_objentry))  
+   if(CheckPointer(m_objentry))
       m_objentry.Timeframes(setting);
-   if(CheckPointer(m_objsl))     
+   if(CheckPointer(m_objsl))
       m_objsl.Timeframes(setting);
-   if(CheckPointer(m_objtp))     
+   if(CheckPointer(m_objtp))
       m_objtp.Timeframes(setting);
   }
 //+------------------------------------------------------------------+

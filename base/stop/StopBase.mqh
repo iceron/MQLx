@@ -67,6 +67,7 @@ public:
    virtual bool      InitEvent(CEventAggregator*);
    virtual bool      InitSymbol(CSymbolManager*);
    virtual bool      InitTrade(void);
+   virtual CObject  *GetContainer(void) {return m_stops;}
    virtual void      SetContainer(CStops *stops){m_stops=stops;}
    virtual bool      Validate(void) const;
    //--- getters and setters

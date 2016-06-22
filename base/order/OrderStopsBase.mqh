@@ -25,6 +25,7 @@ public:
    bool              Active(){return m_active;}
    void              Active(bool active){m_active=active;}
    //--- initialization
+   virtual CObject*  GetContainer(void) {return m_order;}
    virtual void      SetContainer(COrder *order){m_order=order;}
    virtual bool      NewOrderStop(COrder*,CStop*,COrderStops*);
    //--- checking

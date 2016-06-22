@@ -27,6 +27,7 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_TIMES;}
    //-- initialization
    virtual bool      Init(CSymbolManager*,CEventAggregator *event_man);
+   virtual CObject  *GetContainer(void) {return m_container;}
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const;
    //--- activation and deactivation

@@ -18,7 +18,8 @@ protected:
 public:
                      CCommentBase(void);
                     ~CCommentBase(void);
-   virtual void      SetContainer(CObject *container) {m_container=container;}                    
+   virtual CObject  *GetContainer(void) {return m_container;}
+   virtual void      SetContainer(CObject *container) {m_container=container;}
    bool              Active(){return m_active;}
    void              Active(bool active){m_active=active;}
    virtual void      Init(const string comment) {m_comment=comment;}

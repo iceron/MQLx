@@ -23,6 +23,7 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_ORDERS;}
    //--- initialization
    virtual bool      Init(CStops *stops=NULL);
+   virtual CObject*  GetContainer(void) {return m_container;}
    virtual void      SetContainer(CObject *container) {m_container = container;}
    virtual void      SetStops(CStops *stops);
    //--- events                  

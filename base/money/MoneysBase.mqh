@@ -22,9 +22,10 @@ protected:
 public:
                      CMoneysBase(void);
                     ~CMoneysBase(void);
-   virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}   
+   virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}
    //--- initialization
    virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
+   virtual CObject  *GetContainer(void) {return m_container;}
    virtual void      SetContainer(CObject *container) {m_container=container;}
    virtual bool      Validate(void) const;
    //--- setters and getters
@@ -53,7 +54,7 @@ CMoneysBase::~CMoneysBase()
 //+------------------------------------------------------------------+
 bool CMoneysBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEventAggregator *event_man=NULL)
   {
-   m_event_man = event_man;
+   m_event_man=event_man;
    for(int i=0;i<Total();i++)
      {
       CMoney *money=At(i);
@@ -69,7 +70,7 @@ bool CMoneysBase::Validate(void) const
    for(int i=0;i<Total();i++)
      {
       CMoney *money=At(i);
-      if (!CheckPointer(money)) 
+      if(!CheckPointer(money))
          continue;
       if(!money.Validate())
          return false;
@@ -82,7 +83,7 @@ bool CMoneysBase::Validate(void) const
 double CMoneysBase::Volume(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
   {
    CMoney *money=At(m_selected);
-   if (CheckPointer(money))
+   if(CheckPointer(money))
       return money.Volume(symbol,price,type,sl);
    return 0;
   }
@@ -94,7 +95,7 @@ bool CMoneysBase::Selected(const string select)
    for(int i=0;i<Total();i++)
      {
       CMoney *money=At(i);
-      if (!CheckPointer(money)) 
+      if(!CheckPointer(money))
          continue;
       if(StringCompare(money.Name(),select))
         {

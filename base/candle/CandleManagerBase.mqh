@@ -23,6 +23,7 @@ public:
                     ~CCandleManagerBase(void);
    virtual bool      Init(CSymbolManager*,CEventAggregator*);
    virtual bool      Add(const string,const int);
+   virtual CObject*  GetContainer(void) {return m_container;}
    virtual void      SetContainer(CObject *container) {m_container=container;}
    bool              Active(){return m_active;}
    void              Active(bool active){m_active=active;}
