@@ -13,6 +13,7 @@
 #include "..\Time\TimesBase.mqh"
 #include "..\Comment\CommentsBase.mqh"
 #include "..\Ordermanager\OrderManagerBase.mqh"
+#include "..\Event\EventAggregatorBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -40,6 +41,8 @@ protected:
    CComments        *m_comments;
    //--- candle
    CCandleManager    m_candle_man;
+   //--- events
+   CEventAggregator  *m_events;
    //--- container
    CObject          *m_container;
 public:
@@ -56,6 +59,7 @@ public:
    virtual bool      Init(const string,const int,const int,const bool,const bool,const bool);
    virtual bool      InitAccount(void);
    virtual bool      InitCandleManager(void);
+   virtual bool      InitEventAggregator(void);
    virtual bool      InitComponents(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
@@ -205,27 +209,32 @@ bool CExpertAdvisorBase::InitComponents(void)
   {
    if(!InitSignals())
      {
-      Print("error in signal initialization");
+      Print(__FUNCTION__+": error in signal initialization");
       return false;
      }
    if(!InitAccount())
      {
-      Print(__FUNCTION__+" error in account initialization");
+      Print(__FUNCTION__+": error in account initialization");
       return false;
      }
    if(!InitTimes())
      {
-      Print(__FUNCTION__+" error in time initialization");
+      Print(__FUNCTION__+": error in time initialization");
       return false;
      }
    if(!InitOrderManager())
      {
-      Print(__FUNCTION__+" error in order manager initialization");
+      Print(__FUNCTION__+": error in order manager initialization");
       return false;
      }
    if(!InitCandleManager())
      {
-      Print(__FUNCTION__+" error in candle manager initialization");
+      Print(__FUNCTION__+": error in candle manager initialization");
+      return false;
+     }
+   if(!InitEventAggregator())
+     {
+      Print(__FUNCTION__+": error in event aggregator initialization");
       return false;
      }
    return true;
@@ -260,6 +269,14 @@ bool CExpertAdvisorBase::InitCandleManager(void)
   {
    m_candle_man.SetContainer(GetPointer(this));
    return m_candle_man.Init(GetPointer(m_symbol_man));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::InitEventAggregator(void)
+  {
+   m_events.SetContainer(GetPointer(this));
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
