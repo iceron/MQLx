@@ -92,34 +92,34 @@ public:
    void              AddComment(const string);
    void              DisplayComment(void);
    //--- order manager
-   bool      AddOtherMagic(const int magic) {return m_order_man.AddOtherMagic(magic);}
-   void      AddOtherMagicString(const string &magics[]){m_order_man.AddOtherMagicString(magics);}
-   void              AsyncMode(const bool async) {m_order_man.AsyncMode(async);}
-   string            Comment(void) const {return m_order_man.Comment();}
-   void              Comment(const string comment){m_order_man.Comment(comment);}
-   bool              EnableTrade(void) const {return m_order_man.EnableTrade();}
-   void              EnableTrade(bool allowed){m_order_man.EnableTrade(allowed);}
-   bool              EnableLong(void) const {return m_order_man.EnableLong();}
-   void              EnableLong(bool allowed){m_order_man.EnableLong(allowed);}
-   bool              EnableShort(void) const {return m_order_man.EnableShort();}
-   void              EnableShort(bool allowed){m_order_man.EnableShort(allowed);}
-   int               Expiration(void) const {return m_order_man.Expiration();}
-   void              Expiration(const int expiration) {m_order_man.Expiration(expiration);}
-   double            LotSize(void) const {return m_order_man.LotSize();}
-   void              LotSize(const double lotsize){m_order_man.LotSize(lotsize);}
-   int               MaxOrdersHistory(void) const {return m_order_man.MaxOrdersHistory();}
-   void              MaxOrdersHistory(const int max) {m_order_man.MaxOrdersHistory(max);}
-   int               Magic(void) const {return m_order_man.Magic();}
-   void              Magic(const int magic) {m_order_man.Magic(magic);}
-   uint              MaxTrades(void) const {return m_order_man.MaxTrades();}
-   void              MaxTrades(const int max_trades){m_order_man.MaxTrades(max_trades);}
-   int               MaxOrders(void) const {return m_order_man.MaxOrders();}
-   void              MaxOrders(const int max_orders) {m_order_man.MaxOrders(max_orders);}
-   int               OrdersTotal(void) const {return m_order_man.OrdersTotal();}
-   int               OrdersHistoryTotal(void) const {return m_order_man.OrdersHistoryTotal();}
-   int               PricePoints(void) const {return m_order_man.PricePoints();}
-   void              PricePoints(const int points) {m_order_man.PricePoints(points);}
-   int               TradesTotal(void) const{return m_order_man.TradesTotal();}
+   bool              AddOtherMagic(const int magic);
+   void              AddOtherMagicString(const string &magics[]);
+   void              AsyncMode(const bool async);
+   string            Comment(void) const;
+   void              Comment(const string comment);
+   bool              EnableTrade(void) const;
+   void              EnableTrade(bool allowed);
+   bool              EnableLong(void) const;
+   void              EnableLong(bool allowed);
+   bool              EnableShort(void) const;
+   void              EnableShort(bool allowed);
+   int               Expiration(void) const;
+   void              Expiration(const int expiration);
+   double            LotSize(void) const;
+   void              LotSize(const double lotsize);
+   int               MaxOrdersHistory(void) const;
+   void              MaxOrdersHistory(const int max);
+   int               Magic(void) const;
+   void              Magic(const int magic);
+   uint              MaxTrades(void) const;
+   void              MaxTrades(const int max_trades);
+   int               MaxOrders(void) const;
+   void              MaxOrders(const int max_orders);
+   int               OrdersTotal(void) const;
+   int               OrdersHistoryTotal(void) const;
+   int               PricePoints(void) const;
+   void              PricePoints(const int points);
+   int               TradesTotal(void) const;
    //--- signal manager   
    int               Period(void) const;
    void              Period(const int);
@@ -294,6 +294,202 @@ CSignal *CExpertAdvisorBase::Signal(void)
 CTimes *CExpertAdvisorBase::Times(void)
   {
    return GetPointer(m_times);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::AddOtherMagic(const int magic)
+  {
+   return m_order_man.AddOtherMagic(magic);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::AddOtherMagicString(const string &magics[])
+  {
+   m_order_man.AddOtherMagicString(magics);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::AsyncMode(const bool async)
+  {
+   m_order_man.AsyncMode(async);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CExpertAdvisorBase::Comment(void) const
+  {
+   return m_order_man.Comment();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::Comment(const string comment)
+  {
+   m_order_man.Comment(comment);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::EnableTrade(void) const
+  {
+   return m_order_man.EnableTrade();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::EnableTrade(bool allowed)
+  {
+   m_order_man.EnableTrade(allowed);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::EnableLong(void) const
+  {
+   return m_order_man.EnableLong();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::EnableLong(bool allowed)
+  {
+   m_order_man.EnableLong(allowed);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::EnableShort(void) const
+  {
+   return m_order_man.EnableShort();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::EnableShort(bool allowed)
+  {
+   m_order_man.EnableShort(allowed);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CExpertAdvisorBase::Expiration(void) const
+  {
+   return m_order_man.Expiration();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::Expiration(const int expiration)
+  {
+   m_order_man.Expiration(expiration);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CExpertAdvisorBase::LotSize(void) const
+  {
+   return m_order_man.LotSize();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::LotSize(const double lotsize)
+  {
+   m_order_man.LotSize(lotsize);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CExpertAdvisorBase::MaxOrdersHistory(void) const
+  {
+   return m_order_man.MaxOrdersHistory();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::MaxOrdersHistory(const int max)
+  {
+   m_order_man.MaxOrdersHistory(max);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CExpertAdvisorBase::Magic(void) const
+  {
+   return m_order_man.Magic();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::Magic(const int magic)
+  {
+   m_order_man.Magic(magic);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+uint CExpertAdvisorBase::MaxTrades(void) const
+  {
+   return m_order_man.MaxTrades();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::MaxTrades(const int max_trades)
+  {
+   m_order_man.MaxTrades(max_trades);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CExpertAdvisorBase::MaxOrders(void) const
+  {
+   return m_order_man.MaxOrders();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::MaxOrders(const int max_orders)
+  {
+   m_order_man.MaxOrders(max_orders);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CExpertAdvisorBase::OrdersTotal(void) const
+  {
+   return m_order_man.OrdersTotal();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CExpertAdvisorBase::OrdersHistoryTotal(void) const
+  {
+   return m_order_man.OrdersHistoryTotal();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CExpertAdvisorBase::PricePoints(void) const
+  {
+   return m_order_man.PricePoints();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::PricePoints(const int points)
+  {
+   m_order_man.PricePoints(points);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CExpertAdvisorBase::TradesTotal(void) const
+  {
+   return m_order_man.TradesTotal();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
