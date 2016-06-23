@@ -32,6 +32,6 @@ CComments::~CComments(void)
 //+------------------------------------------------------------------+
 CComments::Concatenate(string &str,string comment)
   {
-   StringConcatenate(str,comment,"\n");
+   StringConcatenate(str,str,comment,"\n");
   }
 //+------------------------------------------------------------------+

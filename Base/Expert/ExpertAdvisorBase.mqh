@@ -848,6 +848,7 @@ bool CExpertAdvisorBase::OnTick(void)
       if(checkopenshort)
          ret=TradeOpen(m_symbol_name,ORDER_TYPE_SELL);
      }
+   DisplayComment();
    return ret;
   }
 //+------------------------------------------------------------------+

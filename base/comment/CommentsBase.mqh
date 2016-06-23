@@ -70,6 +70,11 @@ bool CCommentsBase::Active(void) const
 //+------------------------------------------------------------------+
 CCommentsBase::Display(void)
   {
+   if(MQLInfoInteger(MQL_OPTIMIZATION) || (MQLInfoInteger(MQL_TESTER) && !MQLInfoInteger(MQL_VISUAL_MODE)))
+   {
+   }
+   else
+   {
    Comment("");
    string str="";
    CComment *comment=GetFirstNode();
@@ -80,6 +85,7 @@ CCommentsBase::Display(void)
      }
    Comment(str);
    Clear();
+   }
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -62,7 +62,7 @@ void COrderStopBroker::Check(double &volume)
       if(m_stop.CheckStopOrder(volume,m_stoploss_ticket))
          m_stoploss_closed=true;
      }
-   if(CheckPointer(m_objtp)==POINTER_DYNAMIC && !m_takeprofit_closed)
+   if(CheckPointer(m_objtp) && !m_takeprofit_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket))
          m_takeprofit_closed=true;
