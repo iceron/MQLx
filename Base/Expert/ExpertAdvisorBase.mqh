@@ -74,9 +74,9 @@ public:
    void              Active(const bool);
    //--- setters and getters       
    string            Name(void) const;
-   void              Name(const string name);
+   void              Name(const string);
    string            SymbolName(void) const;
-   void              SymbolName(const string name);
+   void              SymbolName(const string);
    //--- object pointers
    CAccountInfo     *AccountInfo(void);
    CComments        *Comments(void);
@@ -92,33 +92,33 @@ public:
    void              AddComment(const string);
    void              DisplayComment(void);
    //--- order manager
-   bool              AddOtherMagic(const int magic);
-   void              AddOtherMagicString(const string &magics[]);
-   void              AsyncMode(const bool async);
+   bool              AddOtherMagic(const int);
+   void              AddOtherMagicString(const string&[]);
+   void              AsyncMode(const bool);
    string            Comment(void) const;
-   void              Comment(const string comment);
+   void              Comment(const string);
    bool              EnableTrade(void) const;
-   void              EnableTrade(bool allowed);
+   void              EnableTrade(bool);
    bool              EnableLong(void) const;
-   void              EnableLong(bool allowed);
+   void              EnableLong(bool);
    bool              EnableShort(void) const;
-   void              EnableShort(bool allowed);
+   void              EnableShort(bool);
    int               Expiration(void) const;
-   void              Expiration(const int expiration);
+   void              Expiration(const int);
    double            LotSize(void) const;
-   void              LotSize(const double lotsize);
+   void              LotSize(const double);
    int               MaxOrdersHistory(void) const;
-   void              MaxOrdersHistory(const int max);
+   void              MaxOrdersHistory(const int);
    int               Magic(void) const;
-   void              Magic(const int magic);
+   void              Magic(const int);
    uint              MaxTrades(void) const;
-   void              MaxTrades(const int max_trades);
+   void              MaxTrades(const int);
    int               MaxOrders(void) const;
-   void              MaxOrders(const int max_orders);
+   void              MaxOrders(const int);
    int               OrdersTotal(void) const;
    int               OrdersHistoryTotal(void) const;
    int               PricePoints(void) const;
-   void              PricePoints(const int points);
+   void              PricePoints(const int);
    int               TradesTotal(void) const;
    //--- signal manager   
    int               Period(void) const;
