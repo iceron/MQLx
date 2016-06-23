@@ -21,10 +21,11 @@ public:
                      CStopLineBase(void);
                     ~CStopLineBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPLINE;}
-   virtual void      SetContainer(CStop *stop){m_stop=stop;}
-   bool              Active(void) {return m_active;}
-   void              Active(const bool activate) {m_active=activate;}
-   virtual bool      ChartObjectExists(void) {return ObjectFind(0,Name())>=0;}
+   virtual void      SetContainer(CStop*);
+   virtual CStop*    GetContainer(void);
+   bool              Active(void) const;
+   void              Active(const bool);
+   virtual bool      ChartObjectExists(void) const;
    virtual double    GetPrice(const int);
    virtual bool      Move(const double);
    virtual bool      SetStyle(const ENUM_LINE_STYLE);
@@ -41,6 +42,41 @@ CStopLineBase::CStopLineBase(void) : m_active(true)
 //+------------------------------------------------------------------+
 CStopLineBase::~CStopLineBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CStopLineBase::SetContainer(CStop *stop)
+  {
+   m_stop=stop;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStop *CStopLineBase::GetContainer(void)
+  {
+   return m_stop;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopLineBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CStopLineBase::Active(const bool active)
+  {
+   m_active=active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopLineBase::ChartObjectExists(void) const
+  {
+   return ObjectFind(0,Name())>=0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

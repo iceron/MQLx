@@ -13,8 +13,8 @@ class COrderStops : public COrderStopsBase
 public:
                      COrderStops(void);
                     ~COrderStops(void);
-   virtual bool      CheckNewTicket(COrderStop *);
-   virtual ulong     GetNewTicket(COrderStop *);
+   virtual bool      CheckNewTicket(COrderStop*);
+   virtual ulong     GetNewTicket(COrderStop*);
    virtual bool      UpdateStopsByTicket(const ulong);
   };
 //+------------------------------------------------------------------+

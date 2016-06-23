@@ -34,19 +34,19 @@ public:
    virtual bool      Evaluate(void);
    virtual void      Set(const bool,const bool,const bool,const bool,const bool,const bool,const bool);
    //--- setters and getters
-   bool              Sunday(void) const {return(m_day_flags&TIME_DAY_FLAG_SUN)!=0;}
+   bool              Sunday(void) const;
    void              Sunday(const bool);
-   bool              Monday(void) const {return(m_day_flags&TIME_DAY_FLAG_MON)!=0;}
+   bool              Monday(void) const;
    void              Monday(const bool);
-   bool              Tuesday(void) const {return(m_day_flags&TIME_DAY_FLAG_TUE)!=0;}
+   bool              Tuesday(void) const;
    void              Tuesday(const bool);
-   bool              Wednesday(void) const {return(m_day_flags&TIME_DAY_FLAG_WED)!=0;}
+   bool              Wednesday(void) const;
    void              Wednesday(const bool);
-   bool              Thursday(void) const {return(m_day_flags&TIME_DAY_FLAG_THU)!=0;}
+   bool              Thursday(void) const;
    void              Thursday(const bool);
-   bool              Friday(void) const {return(m_day_flags&TIME_DAY_FLAG_FRI)!=0;}
+   bool              Friday(void) const;
    void              Friday(const bool);
-   bool              Saturday(void) const {return(m_day_flags&TIME_DAY_FLAG_SAT)!=0;}
+   bool              Saturday(void) const;
    void              Saturday(const bool);
   };
 //+------------------------------------------------------------------+
@@ -67,6 +67,55 @@ CTimeDaysBase::~CTimeDaysBase(void)
 bool CTimeDaysBase::Validate(void)
   {
    return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeDaysBase::Sunday(void) const
+  {
+   return(m_day_flags&TIME_DAY_FLAG_SUN)!=0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeDaysBase::Monday(void) const
+  {
+   return(m_day_flags&TIME_DAY_FLAG_MON)!=0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeDaysBase::Tuesday(void) const
+  {
+   return(m_day_flags&TIME_DAY_FLAG_TUE)!=0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeDaysBase::Wednesday(void) const
+  {
+   return(m_day_flags&TIME_DAY_FLAG_WED)!=0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeDaysBase::Thursday(void) const
+  {
+   return(m_day_flags&TIME_DAY_FLAG_THU)!=0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeDaysBase::Friday(void) const
+  {
+   return(m_day_flags&TIME_DAY_FLAG_FRI)!=0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeDaysBase::Saturday(void) const
+  {
+   return(m_day_flags&TIME_DAY_FLAG_SAT)!=0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -143,7 +192,7 @@ void CTimeDaysBase::Saturday(const bool set)
 //+------------------------------------------------------------------+
 bool CTimeDaysBase::Evaluate(void)
   {
-   if(!Active()) 
+   if(!Active())
       return true;
    bool result=false;
    MqlDateTime time;

@@ -13,19 +13,23 @@
 class CEventAggregatorBase : public CArrayObj
   {
 protected:
+   bool              m_active;
    CObject          *m_container;
 public:
                      CEventAggregatorBase(void);
                     ~CEventAggregatorBase(void);
    virtual bool      Init(void);
-   virtual CObject  *GetContainer(void) const {return GetPointer(m_container);}
-   virtual void      SetContainer(CObject *container){m_container=container;}
+   virtual bool      Validate(void) const;
+   void              Active(bool);
+   bool              Active(void) const;
+   virtual CObject *GetContainer(void);
+   virtual void      SetContainer(CObject *container);
    virtual void      Publish(string,CObject*);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CEventAggregatorBase::CEventAggregatorBase(void)
+CEventAggregatorBase::CEventAggregatorBase(void) : m_active(true)
   {
   }
 //+------------------------------------------------------------------+
@@ -37,13 +41,48 @@ CEventAggregatorBase::~CEventAggregatorBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+CEventAggregatorBase::Active(bool value)
+  {
+   m_active=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CEventAggregatorBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CEventAggregatorBase::Validate(void) const
+  {
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CEventAggregatorBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CObject *CEventAggregatorBase::GetContainer(void)
+  {
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CEventAggregatorBase::Init(void)
   {
    for(int i=0;i<Total();i++)
      {
       CEventSubscriber *subscriber=At(i);
       if(CheckPointer(subscriber))
-         if (!subscriber.Init())
+         if(!subscriber.Init())
             return false;
      }
    return true;
@@ -53,11 +92,14 @@ bool CEventAggregatorBase::Init(void)
 //+------------------------------------------------------------------+
 CEventAggregatorBase::Publish(string name,CObject *subject=NULL)
   {
-   for(int i=0;i<Total();i++)
+   if(Active())
      {
-      CEventSubscriber *subscriber=At(i);
-      if(CheckPointer(subscriber))
-         subscriber.Notify(name,subject);
+      for(int i=0;i<Total();i++)
+        {
+         CEventSubscriber *subscriber=At(i);
+         if(CheckPointer(subscriber))
+            subscriber.Notify(name,subject);
+        }
      }
   }
 //+------------------------------------------------------------------+

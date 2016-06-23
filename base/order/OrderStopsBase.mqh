@@ -22,15 +22,15 @@ public:
                      COrderStopsBase(void);
                     ~COrderStopsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOPS;}
-   bool              Active(){return m_active;}
-   void              Active(bool active){m_active=active;}
+   void              Active(bool);
+   bool              Active(void) const;
    //--- initialization
-   virtual CObject*  GetContainer(void) {return m_order;}
-   virtual void      SetContainer(COrder *order){m_order=order;}
+   virtual CObject *GetContainer(void);
+   virtual void      SetContainer(COrder*);
    virtual bool      NewOrderStop(COrder*,CStop*,COrderStops*);
    //--- checking
    virtual void      Check(double &volume);
-   virtual bool      CheckNewTicket(COrderStop *) {return true;}
+   virtual bool      CheckNewTicket(COrderStop*);
    virtual bool      Close(void);
    //--- hiding and showing of stop lines
    virtual void      Show(const bool);
@@ -51,6 +51,27 @@ COrderStopsBase::COrderStopsBase(void) : m_active(true)
 COrderStopsBase::~COrderStopsBase(void)
   {
    Shutdown();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderStopsBase::Active(bool value)
+  {
+   m_active=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStopsBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStopsBase::CheckNewTicket(COrderStop *order_stop)
+  {
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -89,7 +110,7 @@ COrderStopsBase::Check(double &volume)
          COrderStop *order_stop=At(i);
          if(CheckPointer(order_stop))
            {
-            if (order_stop.IsClosed())
+            if(order_stop.IsClosed())
                continue;
             order_stop.CheckTrailing();
             order_stop.Update();

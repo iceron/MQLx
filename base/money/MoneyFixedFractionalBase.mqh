@@ -18,8 +18,8 @@ public:
                     ~CMoneyFixedFractionalBase(void);
    virtual bool      Validate(void);
    virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
-   void              RiskPercent(const double percent) {m_risk_percent=percent;}
-   double            RiskPercent(void) const {return m_risk_percent;}
+   void              RiskPercent(const double);
+   double            RiskPercent(void) const;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -48,22 +48,36 @@ bool CMoneyFixedFractionalBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+CMoneyFixedFractionalBase::RiskPercent(const double value)
+  {
+   m_risk_percent=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CMoneyFixedFractionalBase::RiskPercent(void) const
+  {
+   return m_risk_percent;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 void CMoneyFixedFractionalBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
-   m_symbol = m_symbol_man.Get(symbol);
-   if (CheckPointer(m_symbol))
+   m_symbol=m_symbol_man.Get(symbol);
+   if(CheckPointer(m_symbol))
      {
       double balance=m_equity==false?m_account.Balance():m_account.Equity();
-      double ticks = 0;
+      double ticks=0;
       if(price==0.0)
         {
          if(type==ORDER_TYPE_BUY)
-            ticks = MathAbs(m_symbol.Bid()-sl)/m_symbol.TickSize();
+            ticks=MathAbs(m_symbol.Bid()-sl)/m_symbol.TickSize();
          else if(type==ORDER_TYPE_SELL)
-            ticks = MathAbs(m_symbol.Ask()-sl)/m_symbol.TickSize();
+            ticks=MathAbs(m_symbol.Ask()-sl)/m_symbol.TickSize();
         }
-      else ticks = MathAbs(price-sl)/m_symbol.TickSize();
-      m_volume = ((balance*(m_risk_percent/100))/ticks)/m_symbol.TickValue();
+      else ticks=MathAbs(price-sl)/m_symbol.TickSize();
+      m_volume=((balance*(m_risk_percent/100))/ticks)/m_symbol.TickValue();
       OnLotSizeUpdated();
      }
   }

@@ -21,7 +21,8 @@ public:
                      CExpertAdvisorsBase(void);
                     ~CExpertAdvisorsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_EXPERT;}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
+   void              SetContainer(CObject *container);
+   CObject          *GetContainer(void);
    //--- getters and setters
    bool              Active(void) const {return m_active;}
    void              Active(const bool activate) {m_active=activate;}
@@ -49,7 +50,7 @@ public:
 //|                                                                  |
 //+------------------------------------------------------------------+
 CExpertAdvisorsBase::CExpertAdvisorsBase(void) : m_active(true),
-                                   m_uninit_reason(0)
+                                                 m_uninit_reason(0)
   {
   }
 //+------------------------------------------------------------------+
@@ -57,6 +58,20 @@ CExpertAdvisorsBase::CExpertAdvisorsBase(void) : m_active(true),
 //+------------------------------------------------------------------+
 CExpertAdvisorsBase::~CExpertAdvisorsBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorsBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CObject *CExpertAdvisorsBase::GetContainer(void)
+  {
+   return m_container;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -76,7 +91,7 @@ bool CExpertAdvisorsBase::Validate(void) const
 //+------------------------------------------------------------------+
 void CExpertAdvisorsBase::ChartComment(const bool enable=true)
   {
-   if(enable) 
+   if(enable)
       m_comments=new CComments();
   }
 //+------------------------------------------------------------------+
@@ -88,7 +103,7 @@ bool CExpertAdvisorsBase::InitComponents(void) const
      {
       CExpertAdvisor *e=At(i);
       if(CheckPointer(m_comments))
-         e.ChartComment(GetPointer(m_comments));
+         e.AddChartComment(GetPointer(m_comments));
       e.InitComponents();
      }
    return true;

@@ -23,10 +23,10 @@ public:
                     ~CCandleManagerBase(void);
    virtual bool      Init(CSymbolManager*,CEventAggregator*);
    virtual bool      Add(const string,const int);
-   virtual CObject*  GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
-   bool              Active(){return m_active;}
-   void              Active(bool active){m_active=active;}
+   CObject          *GetContainer(void);
+   void              SetContainer(CObject *container);
+   bool              Active(void) const;
+   void              Active(bool active);
    virtual void      Check(void) const;
    virtual bool      IsNewCandle(const string,const int) const;
    virtual CCandle *Get(const string,const int) const;
@@ -48,16 +48,44 @@ CCandleManagerBase::~CCandleManagerBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+CCandleManagerBase::Active(bool value)
+  {
+   m_active=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleManagerBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CCandleManagerBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CObject*CCandleManagerBase::GetContainer(void)
+  {
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CCandleManagerBase::Init(CSymbolManager *symbol_man,CEventAggregator *event_man=NULL)
   {
    m_symbol_man=symbol_man;
    m_event_man=event_man;
-   for (int i=0;i<Total();i++)
-   {
-      CCandle *candle = At(i);
-      if (CheckPointer(candle))
+   for(int i=0;i<Total();i++)
+     {
+      CCandle *candle=At(i);
+      if(CheckPointer(candle))
          candle.Init(m_event_man);
-   }
+     }
    return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+
@@ -65,10 +93,10 @@ bool CCandleManagerBase::Init(CSymbolManager *symbol_man,CEventAggregator *event
 //+------------------------------------------------------------------+
 bool CCandleManagerBase::Add(const string symbol,const int period)
   {
-   if (CheckPointer(m_symbol_man))
+   if(CheckPointer(m_symbol_man))
      {
       CSymbolInfo *instrument=m_symbol_man.Get(symbol);
-      if (CheckPointer(instrument))
+      if(CheckPointer(instrument))
         {
          instrument.Name(symbol);
          instrument.Refresh();
@@ -82,7 +110,7 @@ bool CCandleManagerBase::Add(const string symbol,const int period)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CCandleManagerBase::Check(void) const
+CCandleManagerBase::Check(void) const
   {
    for(int i=0;i<Total();i++)
      {
@@ -96,7 +124,7 @@ void CCandleManagerBase::Check(void) const
 bool CCandleManagerBase::IsNewCandle(const string symbol,const int timeframe) const
   {
    CCandle *candle=Get(symbol,timeframe);
-   if (CheckPointer(candle))
+   if(CheckPointer(candle))
       return candle.IsNewCandle();
    return false;
   }
@@ -106,17 +134,17 @@ bool CCandleManagerBase::IsNewCandle(const string symbol,const int timeframe) co
 bool CCandleManagerBase::TradeProcessed(const string symbol,const int timeframe) const
   {
    CCandle *candle=Get(symbol,timeframe);
-   if (CheckPointer(candle))
+   if(CheckPointer(candle))
       return candle.TradeProcessed();
    return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CCandleManagerBase::TradeProcessed(const string symbol,const int timeframe,const bool processed) const
+CCandleManagerBase::TradeProcessed(const string symbol,const int timeframe,const bool processed) const
   {
    CCandle *candle=Get(symbol,timeframe);
-   if (CheckPointer(candle))
+   if(CheckPointer(candle))
       candle.TradeProcessed(processed);
   }
 //+------------------------------------------------------------------+
@@ -127,7 +155,7 @@ CCandle *CCandleManagerBase::Get(const string symbol,const int timeframe) const
    for(int i=0;i<Total();i++)
      {
       CCandle *candle=At(i);
-      if (CheckPointer(candle))
+      if(CheckPointer(candle))
          if(StringCompare(symbol,candle.SymbolName())==0 && timeframe==candle.Timeframe())
             return candle;
      }

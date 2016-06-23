@@ -37,30 +37,31 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_MONEY;}
    //--- initialization
    virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
-   virtual bool      InitAccount(CAccountInfo*);
-   virtual bool      InitSymbol(CSymbolManager*);
-   virtual CObject  *GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
-   virtual bool      Validate(void) const {return true;}
+   bool              InitAccount(CAccountInfo*);
+   bool              InitSymbol(CSymbolManager*);
+   CObject          *GetContainer(void);
+   void              SetContainer(CObject*);
+   virtual bool      Validate(void);
    //--- getters and setters
-   bool              Active(void) const {return m_active;}
-   void              Active(const bool activate) {m_active=activate;}
-   void              Balance(const double balance) {m_balance=balance;}
-   double            Balance(void) const {return m_balance;}
-   void              BalanceIncrement(const double balance) {m_balance_inc=balance;}
-   double            BalanceIncrement(void) const {return m_balance_inc;}
-   void              Equity(const bool equity) {m_equity=equity;}
-   bool              Equity(void) const {return m_equity;}
-   void              LastUpdate(const datetime update) {m_last_update=update;}
-   datetime          LastUpdate(void) const {return m_last_update;}
-   void              Name(const string name) {m_name=name;}
-   string            Name(void) const {return m_name;}
-   void              Period(const int period) {m_period=period;}
-   int               Period(void) const {return m_period;}
-   void              UpdateType(const ENUM_MONEY_UPDATE_TYPE type) {m_update=type;}
+   bool              Active(void) const;
+   void              Active(const bool);
+   void              Balance(const double);
+   double            Balance(void) const;
+   void              BalanceIncrement(const double);
+   double            BalanceIncrement(void) const;
+   void              Equity(const bool);
+   bool              Equity(void) const;
+   void              LastUpdate(const datetime);
+   datetime          LastUpdate(void) const;
+   void              Name(const string);
+   string            Name(void) const;
+   void              Period(const int);
+   int               Period(void) const;
+   void              UpdateType(const ENUM_MONEY_UPDATE_TYPE);
+   ENUM_MONEY_UPDATE_TYPE UpdateType(void) const;
    double            Volume(const string,const double,const ENUM_ORDER_TYPE,const double);
-   double            Volume(void) {return m_volume;}
-   void              Volume(double volume) {m_volume=volume;}
+   void              Volume(const double);
+   double            Volume(void) const;
 protected:
    virtual void      OnLotSizeUpdated(void);
    virtual bool      UpdateByMargin(void);
@@ -83,6 +84,153 @@ CMoneyBase::CMoneyBase(void) : m_active(true),
 //+------------------------------------------------------------------+
 CMoneyBase::~CMoneyBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CMoneyBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CObject *CMoneyBase::GetContainer(void)
+  {
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CMoneyBase::Validate(void)
+  {
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CMoneyBase::Active(const bool value)
+  {
+   m_active=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CMoneyBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CMoneyBase::Balance(const double value)
+  {
+   m_balance=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CMoneyBase::Balance(void) const
+  {
+   return m_balance;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CMoneyBase::BalanceIncrement(const double value)
+  {
+   m_balance_inc=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CMoneyBase::BalanceIncrement(void) const
+  {
+   return m_balance_inc;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CMoneyBase::Equity(const bool value)
+  {
+   m_equity=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CMoneyBase::Equity(void) const
+  {
+   return m_equity;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CMoneyBase::LastUpdate(const datetime value)
+  {
+   m_last_update=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+datetime CMoneyBase::LastUpdate(void) const
+  {
+   return m_last_update;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CMoneyBase::Name(const string value)
+  {
+   m_name=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CMoneyBase::Name(void) const
+  {
+   return m_name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CMoneyBase::Period(const int value)
+  {
+   m_period=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CMoneyBase::Period(void) const
+  {
+   return m_period;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CMoneyBase::UpdateType(const ENUM_MONEY_UPDATE_TYPE value)
+  {
+   m_update=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+ENUM_MONEY_UPDATE_TYPE CMoneyBase::UpdateType(void) const
+  {
+   return m_update;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CMoneyBase::Volume(const double value)
+  {
+   m_volume=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CMoneyBase::Volume(void) const
+  {
+   return m_volume;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

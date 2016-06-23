@@ -26,15 +26,15 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_MONEYS;}
    //--- initialization
    virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
-   virtual CObject  *GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
+   CObject          *GetContainer(void);
+   void              SetContainer(CObject*);
    virtual bool      Validate(void) const;
    //--- setters and getters
-   virtual bool      Active(void) const {return m_active;}
-   virtual void      Active(const bool activate) {m_active=activate;}
-   virtual int       Selected(void) const {return m_selected;}
-   virtual void      Selected(const bool select) {m_selected=select;}
-   virtual bool      Selected(const string select);
+   virtual bool      Active(void) const;
+   virtual void      Active(const bool);
+   virtual int       Selected(void) const;
+   virtual void      Selected(const int);
+   virtual bool      Selected(const string);
    //--- volume calculation
    virtual double    Volume(const string,const double,const ENUM_ORDER_TYPE,const double);
   };
@@ -49,6 +49,48 @@ CMoneysBase::CMoneysBase() : m_active(true)
 //+------------------------------------------------------------------+
 CMoneysBase::~CMoneysBase()
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CMoneysBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CObject *CMoneysBase::GetContainer(void)
+  {
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CMoneysBase::Active(const bool value)
+  {
+   m_active=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CMoneysBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CMoneysBase::Selected(const int value)
+  {
+   m_selected=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CMoneysBase::Selected(void) const
+  {
+   return m_selected;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -26,14 +26,14 @@ public:
                     ~CTimesBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_TIMES;}
    //-- initialization
-   virtual bool      Init(CSymbolManager*,CEventAggregator *event_man);
-   virtual CObject  *GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
+   virtual bool      Init(CSymbolManager*,CEventAggregator*);
+   virtual CObject  *GetContainer(void);
+   virtual void      SetContainer(CObject*);
    virtual bool      Validate(void) const;
    //--- activation and deactivation
-   bool              Active(void) const {return m_active;}
-   void              Active(const bool activate) {m_active=activate;}
-   int               Selected(void) {return m_selected;}
+   bool              Active(void) const;
+   void              Active(const bool);
+   int               Selected(void);
    //--- checking
    virtual bool      Evaluate(void) const;
    //--- recovery
@@ -55,17 +55,52 @@ CTimesBase::~CTimesBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimesBase::Init(CSymbolManager* symbol_man,CEventAggregator* event_man=NULL)
+CObject  *CTimesBase::GetContainer(void)
   {
-   m_event_man = event_man;
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CTimesBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimesBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CTimesBase::Active(const bool activate)
+  {
+   m_active=activate;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CTimesBase::Selected(void)
+  {
+   return m_selected;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimesBase::Init(CSymbolManager *symbol_man,CEventAggregator *event_man=NULL)
+  {
+   m_event_man=event_man;
    for(int i=0;i<Total();i++)
      {
       CTime *time=At(i);
-      if (!CheckPointer(time))
+      if(!CheckPointer(time))
          continue;
       time.SetContainer(GetPointer(this));
-      if (!time.Init(symbol_man,event_man))
-         return false;      
+      if(!time.Init(symbol_man,event_man))
+         return false;
      }
    return true;
   }
@@ -92,7 +127,7 @@ bool CTimesBase::Evaluate(void) const
      {
       CTime *time=At(i);
       if(CheckPointer(time))
-         if(!time.Evaluate()) 
+         if(!time.Evaluate())
             return false;
      }
    return true;

@@ -15,16 +15,16 @@ public:
                      CStop(void);
                      CStop(const string);
                     ~CStop(void);
-   virtual bool      CheckStopOrder(double &,const ulong) const;
+   virtual bool      CheckStopOrder(double&,const ulong) const;
    virtual bool      DeleteStopOrder(const ulong) const;
    virtual bool      Move(const ulong,const double,const double);
    virtual bool      MoveStopLoss(const ulong,const double);
-   virtual bool      MoveTakeProfit(const ulong,const double);
-   virtual bool      OpenStop(COrder *,COrderStop *,double);
-   virtual double    StopLossPrice(COrder *,COrderStop *);
-   virtual double    TakeProfitPrice(COrder *,COrderStop *);
+   virtual bool      MoveTakeProfit(const ulong,const double);   
+   virtual double    StopLossPrice(COrder*,COrderStop*);
+   virtual double    TakeProfitPrice(COrder*,COrderStop*);
 protected:
-   virtual bool      CloseStop(COrder *,COrderStop *,const double);
+   virtual bool      OpenStop(COrder*,COrderStop*,double);
+   virtual bool      CloseStop(COrder*,COrderStop*,const double);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

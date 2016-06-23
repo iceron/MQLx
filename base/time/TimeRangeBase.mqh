@@ -21,10 +21,10 @@ public:
    virtual bool      Set(datetime,datetime);
    virtual bool      Validate(void);
    //--- setters and getters
-   datetime          Begin(void) const  {return m_begin;}
-   void              Begin(const datetime begin) {m_begin=begin;}
-   datetime          End(void) const  {return m_end;}
-   void              End(const datetime end) {m_end=end;}
+   datetime          Begin(void) const;
+   void              Begin(const datetime);
+   datetime          End(void) const;
+   void              End(const datetime);
    //--- processing
    virtual bool      Evaluate(void);
   };
@@ -44,6 +44,34 @@ CTimeRangeBase::~CTimeRangeBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+datetime CTimeRangeBase::Begin(void) const
+  {
+   return m_begin;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CTimeRangeBase::Begin(const datetime begin)
+  {
+   m_begin=begin;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+datetime CTimeRangeBase::End(void) const
+  {
+   return m_end;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CTimeRangeBase::End(const datetime end)
+  {
+   m_end=end;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CTimeRangeBase::Set(datetime begin,datetime end)
   {
    m_begin=begin;
@@ -55,11 +83,11 @@ bool CTimeRangeBase::Set(datetime begin,datetime end)
 //+------------------------------------------------------------------+
 bool CTimeRangeBase::Validate(void)
   {
-   if (m_end<m_begin)
-   {
+   if(m_end<m_begin)
+     {
       PrintFormat("Invalid setting for start and end times.");
       return false;
-   }
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -67,7 +95,7 @@ bool CTimeRangeBase::Validate(void)
 //+------------------------------------------------------------------+
 bool CTimeRangeBase::Evaluate(void)
   {
-   if(!Active()) 
+   if(!Active())
       return true;
    datetime current=TimeCurrent();
    bool result=current>=m_begin && current<m_end;

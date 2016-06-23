@@ -56,7 +56,7 @@ protected:
    CExpertTradeX    *m_trade;
    CTrails          *m_trails;
    CEventAggregator *m_event_man;
-   CStops           *m_stops;   
+   CStops           *m_stops;
 public:
                      CStopBase(void);
                     ~CStopBase(void);
@@ -67,55 +67,55 @@ public:
    virtual bool      InitEvent(CEventAggregator*);
    virtual bool      InitSymbol(CSymbolManager*);
    virtual bool      InitTrade(void);
-   virtual CStops   *GetContainer(void) {return m_stops;}
-   virtual void      SetContainer(CStops *stops){m_stops=stops;}
+   virtual CStops   *GetContainer(void);
+   virtual void      SetContainer(CStops*);
    virtual bool      Validate(void) const;
    //--- getters and setters
-   bool              Active(void) {return m_active;}
-   void              Active(const bool activate) {m_active=activate;}
-   bool              Broker(void) const {return m_stop_type==STOP_TYPE_BROKER;}
-   void              Comment(string comment) {m_comment=comment;}
-   string            Comment(void) const {return m_comment;}
-   void              Delay(int delay) {m_delay=delay;}
-   int               Delay(void) const {return m_delay;}
-   void              SetDeviation(int deviation) {m_deviation=deviation;}
-   int               SetDeviation(void) const {return m_deviation;}
-   void              EntryColor(const color clr) {m_entry_color=clr;}
-   void              EntryStyle(const ENUM_LINE_STYLE style) {m_entry_style=style;}
-   void              Magic(const int magic) {m_magic=magic;}
-   int               Magic(void) const {return m_magic;}
-   void              Main(const bool main) {m_main=main; m_oco=true;}
-   bool              Main(void) const {return m_main;}
-   void              Name(const string name) {m_name=name;}
-   string            Name(void) const{return m_name;}
-   void              OCO(const bool oco) {if(!Main())m_oco=oco;}
-   bool              OCO(void) const{return m_oco;}
-   bool              Pending(void) const {return m_stop_type==STOP_TYPE_PENDING;}
-   void              StopLoss(const double sl) {m_stoploss=sl;}
-   double            StopLoss(void) const {return m_stoploss;}
-   void              StopLossColor(const color clr) {m_stoploss_color=clr;}
-   bool              StopLossCustom(void) {return m_stoploss==0;}
-   void              StopLossName(const string name) {m_stoploss_name=name;}
-   string            StopLossName(void) const{return m_stoploss_name;}
-   void              StopLossStyle(const ENUM_LINE_STYLE style) {m_stoploss_style=style;}
-   void              StopType(const ENUM_STOP_TYPE stop_type);
-   ENUM_STOP_TYPE    StopType(void) const {return m_stop_type;}
-   string            SymbolName(void) {return m_symbol.Name();}
-   void              TakeProfit(const double tp) {m_takeprofit=tp;}
-   double            TakeProfit(void) const {return m_takeprofit;}
-   void              TakeProfitColor(const color clr) {m_takeprofit_color=clr;}
-   bool              TakeProfitCustom(void) {return m_takeprofit==0;}
-   void              TakeProfitName(const string name) {m_takeprofit_name=name;}
-   string            TakeProfitName(void) const {return m_takeprofit_name;}
-   void              TakeProfitStyle(const ENUM_LINE_STYLE style) {m_takeprofit_style=style;}
-   bool              Virtual(void) const {return m_stop_type==STOP_TYPE_VIRTUAL;}
-   void              Volume(double volume) {m_volume=volume;}
-   double            Volume(void) const {return m_volume;}
-   void              VolumeType(const ENUM_VOLUME_TYPE type){m_volume_type=type;}
+   bool              Active(void);
+   void              Active(const bool);
+   bool              Broker(void) const;
+   void              Comment(const string);
+   string            Comment(void) const;
+   void              Delay(int delay);
+   int               Delay(void) const;
+   void              SetDeviation(const int);
+   int               SetDeviation(void) const;
+   void              EntryColor(const color clr);
+   void              EntryStyle(const ENUM_LINE_STYLE);
+   void              Magic(const int);
+   int               Magic(void) const;
+   void              Main(const bool);
+   bool              Main(void) const;
+   void              Name(const string);
+   string            Name(void) const;
+   void              OCO(const bool oco);
+   bool              OCO(void) const;
+   bool              Pending(void) const;
+   void              StopLoss(const double);
+   double            StopLoss(void) const;
+   void              StopLossColor(const color);
+   bool              StopLossCustom(void);
+   void              StopLossName(const string);
+   string            StopLossName(void) const;
+   void              StopLossStyle(const ENUM_LINE_STYLE);
+   void              StopType(const ENUM_STOP_TYPE);
+   ENUM_STOP_TYPE    StopType(void) const;
+   string            SymbolName(void);
+   void              TakeProfit(const double);
+   double            TakeProfit(void) const;
+   void              TakeProfitColor(const color);
+   bool              TakeProfitCustom(void);
+   void              TakeProfitName(const string);
+   string            TakeProfitName(void) const;
+   void              TakeProfitStyle(const ENUM_LINE_STYLE);
+   bool              Virtual(void) const;
+   void              Volume(double);
+   double            Volume(void) const;
+   void              VolumeType(const ENUM_VOLUME_TYPE);
    //--- stop order checking
-   virtual bool      CheckStopLoss(COrder *,COrderStop *);
-   virtual bool      CheckTakeProfit(COrder *,COrderStop *);
-   virtual bool      CheckStopOrder(double &,const ulong) const {return false;}
+   virtual bool      CheckStopLoss(COrder*,COrderStop*);
+   virtual bool      CheckTakeProfit(COrder*,COrderStop*);
+   virtual bool      CheckStopOrder(double&,const ulong);
    virtual bool      OrderModify(const ulong,const double);
    //--- stop order object creation
    virtual CStopLine *CreateEntryObject(const long,const string,const int,const double);
@@ -124,25 +124,25 @@ public:
    //--- stop order price calculation   
    virtual bool      Refresh(const string);
    virtual double    StopLossCalculate(const string,const ENUM_ORDER_TYPE,const double);
-   virtual double    StopLossCustom(const string,const ENUM_ORDER_TYPE,const double) {return 0;}
-   virtual double    StopLossPrice(COrder *,COrderStop *){return 0;}
-   virtual double    StopLossTicks(const ENUM_ORDER_TYPE,const double) {return m_stoploss;}
+   virtual double    StopLossCustom(const string,const ENUM_ORDER_TYPE,const double);
+   virtual double    StopLossPrice(COrder*,COrderStop*);
+   virtual double    StopLossTicks(const ENUM_ORDER_TYPE,const double);
    virtual double    TakeProfitCalculate(const string,const ENUM_ORDER_TYPE,const double price);
-   virtual double    TakeProfitCustom(const string,const ENUM_ORDER_TYPE,const double) {return 0;}
-   virtual double    TakeProfitPrice(COrder *,COrderStop *) {return 0;}
-   virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE,const double) {return m_takeprofit;}
+   virtual double    TakeProfitCustom(const string,const ENUM_ORDER_TYPE,const double);
+   virtual double    TakeProfitPrice(COrder*,COrderStop*);
+   virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE,const double);
    //--- trailing   
-   virtual bool      Add(CTrails *);
+   virtual bool      Add(CTrails*);
    virtual double    CheckTrailing(const string,const ENUM_ORDER_TYPE,const double,const double,const ENUM_TRAIL_TARGET);
 protected:
    //--- object creation
    virtual CStopLine *CreateObject(const long,const string,const int,const double);
    //--- stop order price calculation
-   virtual double    LotSizeCalculate(COrder *,COrderStop *);
+   virtual double    LotSizeCalculate(COrder*,COrderStop*);
    //--- stop order entry   
-   virtual bool      GetClosePrice(const string,const ENUM_ORDER_TYPE,double &);
+   virtual bool      GetClosePrice(const string,const ENUM_ORDER_TYPE,double&);
    //--- stop order exit
-   virtual bool      CloseStop(COrder *,COrderStop *,const double) {return true;}
+   virtual bool      CloseStop(COrder*,COrderStop*,const double);
    //--- deinitialization
    virtual void      Deinit(void);
    virtual void      DeinitSymbol(void);
@@ -214,6 +214,358 @@ bool CStopBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+CStops *CStopBase::GetContainer(void)
+  {
+   return m_stops;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::SetContainer(CStops *stops)
+  {
+   m_stops=stops;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::Active(void)
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::Active(const bool activate)
+  {
+   m_active=activate;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::Broker(void) const
+  {
+   return m_stop_type==STOP_TYPE_BROKER;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::Comment(string comment)
+  {
+   m_comment=comment;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CStopBase::Comment(void) const
+  {
+   return m_comment;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::Delay(int delay)
+  {
+   m_delay=delay;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CStopBase::Delay(void) const
+  {
+   return m_delay;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::SetDeviation(int deviation)
+  {
+   m_deviation=deviation;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CStopBase::SetDeviation(void) const
+  {
+   return m_deviation;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::EntryColor(const color clr)
+  {
+   m_entry_color=clr;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::EntryStyle(const ENUM_LINE_STYLE style)
+  {
+   m_entry_style=style;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::Magic(const int magic)
+  {
+   m_magic=magic;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CStopBase::Magic(void) const
+  {
+   return m_magic;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::Main(const bool main)
+  {
+   m_main=main; m_oco=true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::Main(void) const
+  {
+   return m_main;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::Name(const string name)
+  {
+   m_name=name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CStopBase::Name(void) const
+  {
+   return m_name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::OCO(const bool oco)
+  {
+   if(!Main())
+      m_oco=oco;
+   else m_oco=true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::OCO(void) const
+  {
+   return m_oco;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::Pending(void) const
+  {
+   return m_stop_type==STOP_TYPE_PENDING;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::StopLoss(const double sl)
+  {
+   m_stoploss=sl;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CStopBase::StopLoss(void) const
+  {
+   return m_stoploss;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::StopLossColor(const color clr)
+  {
+   m_stoploss_color=clr;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::StopLossCustom(void)
+  {
+   return m_stoploss==0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::StopLossName(const string name)
+  {
+   m_stoploss_name=name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CStopBase::StopLossName(void) const
+  {
+   return m_stoploss_name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::StopLossStyle(const ENUM_LINE_STYLE style)
+  {
+   m_stoploss_style=style;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CStopBase::StopType(const ENUM_STOP_TYPE type)
+  {
+   m_stop_type=type;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+ENUM_STOP_TYPE CStopBase::StopType(void) const
+  {
+   return m_stop_type;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CStopBase::SymbolName(void)
+  {
+   return m_symbol.Name();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::TakeProfit(const double tp)
+  {
+   m_takeprofit=tp;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CStopBase::TakeProfit(void) const
+  {
+   return m_takeprofit;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::TakeProfitColor(const color clr)
+  {
+   m_takeprofit_color=clr;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::TakeProfitCustom(void)
+  {
+   return m_takeprofit==0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::TakeProfitName(const string name)
+  {
+   m_takeprofit_name=name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CStopBase::TakeProfitName(void) const
+  {
+   return m_takeprofit_name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::TakeProfitStyle(const ENUM_LINE_STYLE style)
+  {
+   m_takeprofit_style=style;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::Virtual(void) const
+  {
+   return m_stop_type==STOP_TYPE_VIRTUAL;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::Volume(double volume)
+  {
+   m_volume=volume;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CStopBase::Volume(void) const
+  {
+   return m_volume;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStopBase::VolumeType(const ENUM_VOLUME_TYPE type)
+  {
+   m_volume_type=type;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopBase::CheckStopOrder(double &,const ulong)
+  {
+   return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CStopBase::StopLossCustom(const string,const ENUM_ORDER_TYPE,const double)
+  {
+   return 0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CStopBase::StopLossPrice(COrder *,COrderStop *)
+  {
+   return 0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CStopBase::StopLossTicks(const ENUM_ORDER_TYPE,const double)
+  {
+   return m_stoploss;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CStopBase::TakeProfitCustom(const string,const ENUM_ORDER_TYPE,const double)
+  {
+   return 0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CStopBase::TakeProfitPrice(COrder *,COrderStop *)
+  {
+   return 0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CStopBase::TakeProfitTicks(const ENUM_ORDER_TYPE,const double)
+  {
+   return m_takeprofit;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEventAggregator *event_man=NULL)
   {
    if(!CheckPointer(accountinfo))
@@ -221,7 +573,7 @@ bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEv
    InitSymbol(symbolmanager);
    InitAccount(accountinfo);
    InitEvent(event_man);
-   InitTrade();   
+   InitTrade();
    if(CheckPointer(m_trails))
      {
       m_trails.SetContainer(GetPointer(this));
@@ -397,6 +749,13 @@ bool CStopBase::Refresh(const string symbol)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool CStopBase::CloseStop(COrder*,COrderStop*,const double)
+  {
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 void CStopBase::Deinit(void)
   {
    DeinitTrade();
@@ -422,13 +781,6 @@ void CStopBase::DeinitTrails(void)
   {
    if(CheckPointer(m_trails)==POINTER_DYNAMIC)
       delete m_trails;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void CStopBase::StopType(const ENUM_STOP_TYPE type)
-  {
-   m_stop_type=type;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

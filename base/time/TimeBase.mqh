@@ -20,23 +20,23 @@ protected:
    datetime          m_time_start;
    CSymbolManager   *m_symbol_man;
    CEventAggregator *m_event_man;
-   CObject          *m_container;   
+   CObject          *m_container;
 public:
                      CTimeBase(void);
                     ~CTimeBase(void);
-   virtual int       Type(void) const {return CLASS_TYPE_TIME;}   
+   virtual int       Type(void) const {return CLASS_TYPE_TIME;}
    //--- initialization
    virtual bool      Init(CSymbolManager*,CEventAggregator*);
-   virtual CObject  *GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
-   virtual bool      Validate(void) {return true;}
+   virtual CObject *GetContainer(void);
+   virtual void      SetContainer(CObject*);
+   virtual bool      Validate(void);
    //--- setters and getters
-   bool              Active(void) const {return m_active;}
-   void              Active(const bool activate) {m_active=activate;}
-   bool              Reverse(void) {return m_reverse;}
-   void              Reverse(bool reverse) {m_reverse = reverse;}
-   datetime          TimeStart(void) const {return m_time_start;}
-   void              TimeStart(const datetime st){m_time_start=st;}
+   bool              Active(void) const;
+   void              Active(const bool);
+   bool              Reverse(void);
+   void              Reverse(const bool);
+   datetime          TimeStart(void) const;
+   void              TimeStart(const datetime);
    //--- checking
    virtual bool      Evaluate(void)=0;
   };
@@ -57,9 +57,72 @@ CTimeBase::~CTimeBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeBase::Init(CSymbolManager* symbol_man,CEventAggregator *event_man=NULL)
+CObject *CTimeBase::GetContainer(void)
   {
-   m_symbol_man = symbol_man;
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CTimeBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeBase::Validate(void)
+  {
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CTimeBase::Active(const bool activate)
+  {
+   m_active=activate;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeBase::Reverse(void)
+  {
+   return m_reverse;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CTimeBase::Reverse(const bool reverse)
+  {
+   m_reverse=reverse;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+datetime CTimeBase::TimeStart(void) const
+  {
+   return m_time_start;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CTimeBase::TimeStart(const datetime st)
+  {
+   m_time_start=st;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeBase::Init(CSymbolManager *symbol_man,CEventAggregator *event_man=NULL)
+  {
+   m_symbol_man= symbol_man;
    m_event_man = event_man;
    return CheckPointer(m_symbol_man);
   }

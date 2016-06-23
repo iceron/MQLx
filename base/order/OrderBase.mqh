@@ -35,34 +35,35 @@ public:
                     ~COrderBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDER;}
    //--- initialization
-   virtual COrders*  GetContainer(void) {return m_orders;}
-   virtual void      SetContainer(COrders *orders){m_orders=orders;}
-   //--- getters and setters       
-   void              CreateStops(CStops *stops);
+   virtual COrders  *GetContainer(void);
+   virtual void      SetContainer(COrders*);
+   void              CreateStops(CStops*);
+   bool              Init(const int,COrders*,CStops*,bool);
+   void              MainStop(COrderStop*);
+   COrderStop       *MainStop(void);
+   //--- getters and setters     
+   void              IsClosed(const bool);
+   bool              IsClosed(void) const;
+   void              IsSuspended(const bool);
+   bool              IsSuspended(void) const;
+   void              Magic(const int);
+   int               Magic(void) const;
+   void              Price(const double);
+   double            Price(void) const;
+   void              OrderType(const ENUM_ORDER_TYPE);
+   ENUM_ORDER_TYPE   OrderType(void) const;
+   void              Symbol(const string);
+   string            Symbol(void) const;
+   void              Ticket(const ulong);
+   ulong             Ticket(void) const;
+   void              Volume(const double);
+   double            Volume(void) const;
+   void              VolumeInitial(const double);
+   double            VolumeInitial(void) const;
+   //--- checking
    void              CheckStops(void);
-   bool              Init(int magic,COrders *orders,CStops *m_stops,bool recreate=false);
-   void              IsClosed(const bool closed) {m_closed=closed;}
-   bool              IsClosed(void) const {return m_closed;}
-   void              IsSuspended(const bool suspend) {m_suspend=suspend;}
-   bool              IsSuspended(void) const {return false;}
-   void              Magic(const int magic){m_magic=magic;}
-   int               Magic(void) const {return m_magic;}
-   void              MainStop(COrderStop *order_stop){m_main_stop=order_stop;}
-   COrderStop       *MainStop(void) const {return m_main_stop;}
-   void              Price(const double price){m_price=price;}
-   double            Price(void) const {return m_price;}
-   void              OrderType(const ENUM_ORDER_TYPE type){m_type=type;}
-   ENUM_ORDER_TYPE   OrderType(void) const {return m_type;}
-   void              Symbol(const string symbol) {m_symbol=symbol;}
-   string            Symbol(void) const {return m_symbol;}
-   void              Ticket(const ulong ticket) {m_ticket=ticket;}
-   ulong             Ticket(void) const {return m_ticket;}
-   void              Volume(const double volume){m_volume=volume;}
-   double            Volume(void) const {return m_volume;}
-   void              VolumeInitial(const double volume){m_volume_initial=volume;}
-   double            VolumeInitial(void) const {return m_volume_initial;}
    //--- hiding and showing of stop lines
-   virtual void      ShowStops(bool show=true) {m_order_stops.Show(show);}
+   virtual void      ShowStops(const bool);
    //--- events
    virtual void      OnTick(void);
    //--- archiving
@@ -111,6 +112,167 @@ bool COrderBase::Init(int magic,COrders *orders,CStops *stops,bool recreate=fals
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+COrderBase::IsClosed(const bool value)
+  {
+   m_closed=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderBase::IsClosed(void) const
+  {
+   return m_closed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::IsSuspended(const bool value)
+  {
+   m_suspend=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderBase::IsSuspended(void) const
+  {
+   return m_suspend;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::Magic(const int value)
+  {
+   m_magic=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderBase::Magic(void) const
+  {
+   return m_magic;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::Price(const double value)
+  {
+   m_price=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderBase::Price(void) const
+  {
+   return m_price;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::OrderType(const ENUM_ORDER_TYPE value)
+  {
+   m_type=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+ENUM_ORDER_TYPE COrderBase::OrderType(void) const
+  {
+   return m_type;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::Symbol(const string value)
+  {
+   m_symbol=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string COrderBase::Symbol(void) const
+  {
+   return m_symbol;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::Ticket(const ulong value)
+  {
+   m_ticket=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+ulong COrderBase::Ticket(void) const
+  {
+   return m_ticket;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::Volume(const double value)
+  {
+   m_volume=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderBase::Volume(void) const
+  {
+   return m_volume;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::VolumeInitial(const double value)
+  {
+   m_volume_initial=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderBase::VolumeInitial(void) const
+  {
+   return m_volume_initial;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::MainStop(COrderStop *order_stop)
+  {
+   m_main_stop=order_stop;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderStop *COrderBase::MainStop(void)
+  {
+   return m_main_stop;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::ShowStops(const bool show=true)
+  {
+   m_order_stops.Show(show);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderBase::SetContainer(COrders *orders)
+  {
+   m_orders=orders;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrders *COrderBase::GetContainer(void)
+  {
+   return m_orders;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 void COrderBase::CreateStops(CStops *stops)
   {
    if(!CheckPointer(stops))
@@ -147,7 +309,7 @@ bool COrderBase::Close(void)
   {
    if(CloseStops())
       IsClosed(true);
-   else 
+   else
       IsSuspended(true);
    return IsClosed();
   }

@@ -22,10 +22,10 @@ public:
                     ~COrdersBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERS;}
    //--- initialization
-   virtual bool      Init(CStops *stops=NULL);
-   virtual CObject*  GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container) {m_container = container;}
-   virtual void      SetStops(CStops *stops);
+   virtual bool      Init(CStops*);
+   virtual CObject  *GetContainer(void);
+   virtual void      SetContainer(CObject*);
+   virtual void      SetStops(CStops*);
    //--- events                  
    virtual void      OnTick(void);
    //--- order creation
@@ -50,6 +50,20 @@ COrdersBase::COrdersBase(void)
 //+------------------------------------------------------------------+
 COrdersBase::~COrdersBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrdersBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CObject *COrdersBase::GetContainer(void)
+  {
+   return m_container;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -111,7 +125,7 @@ bool COrdersBase::CloseStops(void)
 bool COrdersBase::CreateElement(const int index)
   {
    COrder*order=new COrder();
-   if (order.Init(0,GetPointer(this),m_stops,true))
+   if(order.Init(0,GetPointer(this),m_stops,true))
       return false;
    return Insert(GetPointer(order),index);
   }

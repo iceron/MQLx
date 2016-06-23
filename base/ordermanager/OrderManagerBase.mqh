@@ -52,51 +52,52 @@ public:
    bool              InitTrade(void);
    bool              InitOrders(void);
    bool              InitOrdersHistory(void);
-   virtual CObject*  GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
+   virtual CObject *GetContainer(void);
+   virtual void      SetContainer(CObject*);
    virtual bool      Validate(void) const;
    //--- setters and getters
-   void              AsyncMode(const bool async) {m_trade.SetAsyncMode(async);}
-   string            Comment(void) const {return m_comment;}
-   void              Comment(const string comment){m_comment=comment;}
-   bool              EnableTrade(void) const {return m_trade_allowed;}
-   void              EnableTrade(bool allowed){m_trade_allowed=allowed;}
-   bool              EnableLong(void) const {return m_long_allowed;}
-   void              EnableLong(bool allowed){m_long_allowed=allowed;}
-   bool              EnableShort(void) const {return m_short_allowed;}
-   void              EnableShort(bool allowed){m_short_allowed=allowed;}
-   double            LotSize(void) const {return m_lotsize;}
-   void              LotSize(const double lotsize){m_lotsize=lotsize;}
-   int               Magic(void) const {return m_magic;}
-   void              Magic(const int magic) {m_magic=magic;}
-   int               MagicClose(void) const {return m_magic;}
-   void              MagicClose(const int magic) {}
-   virtual uint      MaxTrades(void) const {return m_max_trades;}
-   virtual void      MaxTrades(const int max_trades){m_max_trades=max_trades;}
-   virtual int       MaxOrders(void) const {return m_max_orders;}
-   virtual void      MaxOrders(const int max_orders) {m_max_orders=max_orders;}
-   int               MaxOrdersHistory(void) const {return m_max_orders_history;}
-   void              MaxOrdersHistory(const int max) {m_max_orders_history=max;}
-   int               OrdersTotal(void) const {return m_orders.Total();}
-   int               OrdersHistoryTotal(void) const {return m_orders_history.Total();}
-   int               PricePoints(void) const {return m_price_points;}
-   void              PricePoints(const int points) {m_price_points=points;}
-   int               TradesTotal(void) const{return m_orders.Total()+m_orders_history.Total()+m_history_count;}
+   void              AsyncMode(const bool);
+   string            Comment(void) const;
+   void              Comment(const string);
+   bool              EnableTrade(void) const;
+   void              EnableTrade(bool);
+   bool              EnableLong(void) const;
+   void              EnableLong(bool);
+   bool              EnableShort(void) const;
+   void              EnableShort(bool);
+   int               Expiration(void) const;
+   void              Expiration(const int expiration);
+   double            LotSize(void) const;
+   void              LotSize(const double);
+   int               Magic(void) const;
+   void              Magic(const int);
+   int               MagicClose(void) const;
+   void              MagicClose(const int);
+   virtual uint      MaxTrades(void) const;
+   virtual void      MaxTrades(const int);
+   virtual int       MaxOrders(void) const;
+   virtual void      MaxOrders(const int);
+   int               MaxOrdersHistory(void) const;
+   void              MaxOrdersHistory(const int);
+   int               OrdersTotal(void) const;
+   int               OrdersHistoryTotal(void) const;
+   int               PricePoints(void) const;
+   void              PricePoints(const int);
+   int               TradesTotal(void) const;
    //--- object pointers
-   CStop            *MainStop(void) const {return m_main_stop;}
-   CMoneys          *Moneys(void) const {return GetPointer(m_moneys);}
-   COrders          *Orders(void) {return GetPointer(m_orders);}
-   COrders          *OrdersHistory() {return GetPointer(m_orders_history);}
-   CStops           *Stops(void) const {return GetPointer(m_stops);}
-   CArrayInt        *OtherMagic(void) {return GetPointer(m_other_magic);}
+   CStop            *MainStop(void) const;
+   CMoneys          *Moneys(void) const;
+   COrders          *Orders(void);
+   COrders          *OrdersHistory(void);
+   CStops           *Stops(void) const;
+   CArrayInt        *OtherMagic(void);
    //--- current orders
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(COrder*);
    virtual void      CheckClosedOrders(void);
-   //virtual void      CheckOldStops(void);
    virtual bool      CloseStops(void);
    virtual void      ManageOrders(void);
-   virtual bool      CloseOrder(COrder*,const int) {return true;}
+   virtual bool      CloseOrder(COrder*,const int);
    //--- orders history
    virtual void      ManageOrdersHistory(void);
    //--- money manager
@@ -106,18 +107,16 @@ public:
    virtual bool      AddStops(CStops*);
    //--- trade manager
    virtual bool      AddOtherMagic(const int);
-   virtual void      AddOtherMagicString(const string&[]);
-   int               Expiration(void) const {return m_expiration;}
-   void              Expiration(const int expiration) {m_expiration=expiration;}
+   virtual void      AddOtherMagicString(const string&[]);   
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
-   virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE) {return true;}
+   virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    //--- events
-   virtual void      OnTradeTransaction(COrder*){}
+   virtual void      OnTradeTransaction(COrder*);
    virtual void      OnTick(void);
 protected:
    //--- trade manager
    virtual double    PriceCalculate(ENUM_ORDER_TYPE&);
-   virtual double    PriceCalculateCustom(ENUM_ORDER_TYPE&) {return 0;}
+   virtual double    PriceCalculateCustom(ENUM_ORDER_TYPE&);
    virtual double    StopLossCalculate(const ENUM_ORDER_TYPE,const double);
    virtual double    TakeProfitCalculate(const ENUM_ORDER_TYPE,const double);
    bool              SendOrder(const ENUM_ORDER_TYPE,const double,const double,const double,const double);
@@ -156,11 +155,289 @@ COrderManagerBase::~COrderManagerBase()
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+CObject *COrderManagerBase::GetContainer(void)
+  {
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::AsyncMode(const bool async)
+  {
+   m_trade.SetAsyncMode(async);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string COrderManagerBase::Comment(void) const
+  {
+   return m_comment;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::Comment(const string comment)
+  {
+   m_comment=comment;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManagerBase::EnableTrade(void) const
+  {
+   return m_trade_allowed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::EnableTrade(bool allowed)
+  {
+   m_trade_allowed=allowed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManagerBase::EnableLong(void) const
+  {
+   return m_long_allowed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::EnableLong(bool allowed)
+  {
+   m_long_allowed=allowed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManagerBase::EnableShort(void) const
+  {
+   return m_short_allowed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::EnableShort(bool allowed)
+  {
+   m_short_allowed=allowed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderManagerBase::LotSize(void) const
+  {
+   return m_lotsize;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::LotSize(const double lotsize)
+  {
+   m_lotsize=lotsize;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderManagerBase::Magic(void) const
+  {
+   return m_magic;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::Magic(const int magic)
+  {
+   m_magic=magic;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderManagerBase::MagicClose(void) const
+  {
+   return m_magic;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::MagicClose(const int magic)
+  {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+uint COrderManagerBase::MaxTrades(void) const
+  {
+   return m_max_trades;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::MaxTrades(const int max_trades)
+  {
+   m_max_trades=max_trades;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderManagerBase::MaxOrders(void) const
+  {
+   return m_max_orders;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::MaxOrders(const int max_orders)
+  {
+   m_max_orders=max_orders;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderManagerBase::MaxOrdersHistory(void) const
+  {
+   return m_max_orders_history;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::MaxOrdersHistory(const int max)
+  {
+   m_max_orders_history=max;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderManagerBase::OrdersTotal(void) const
+  {
+   return m_orders.Total();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderManagerBase::OrdersHistoryTotal(void) const
+  {
+   return m_orders_history.Total();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderManagerBase::PricePoints(void) const
+  {
+   return m_price_points;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::PricePoints(const int points)
+  {
+   m_price_points=points;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderManagerBase::TradesTotal(void) const
+  {
+   return m_orders.Total()+m_orders_history.Total()+m_history_count;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStop *COrderManagerBase::MainStop(void) const
+  {
+   return m_main_stop;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CMoneys *COrderManagerBase::Moneys(void) const
+  {
+   return GetPointer(m_moneys);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrders *COrderManagerBase::Orders(void)
+  {
+   return GetPointer(m_orders);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrders *COrderManagerBase::OrdersHistory()
+  {
+   return GetPointer(m_orders_history);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStops *COrderManagerBase::Stops(void) const
+  {
+   return GetPointer(m_stops);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CArrayInt *COrderManagerBase::OtherMagic(void)
+  {
+   return GetPointer(m_other_magic);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManagerBase::CloseOrder(COrder*,const int)
+  {
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderManagerBase::Expiration(void) const
+  {
+   return m_expiration;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::Expiration(const int expiration)
+  {
+   m_expiration=expiration;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManagerBase::TradeOpen(const string,const ENUM_ORDER_TYPE)
+  {
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::OnTradeTransaction(COrder*)
+  {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderManagerBase::PriceCalculateCustom(ENUM_ORDER_TYPE&)
+  {
+   return 0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool COrderManagerBase::Init(CSymbolManager *symbol_man,CAccountInfo *account,CEventAggregator *event_man=NULL)
   {
    m_symbol_man=symbol_man;
-   m_account = account;
-   m_event_man = event_man;
+   m_account=account;
+   m_event_man=event_man;
    if(!InitStops())
      {
       Print(__FUNCTION__+": error in stops manager initialization");
@@ -333,29 +610,29 @@ double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE &type)
   {
    double price=0;
    double price_points=PricePoints();
-   double point = m_symbol.Point();
+   double point=m_symbol.Point();
    switch(type)
      {
       case ORDER_TYPE_BUY:
         {
-         double ask = m_symbol.Ask();
+         double ask=m_symbol.Ask();
          if(price_points>0)
-            type = ORDER_TYPE_BUY_STOP;
+            type=ORDER_TYPE_BUY_STOP;
          else if(price_points<0)
-            type = ORDER_TYPE_BUY_LIMIT;
-         price=ask+price_points*point;         
+            type=ORDER_TYPE_BUY_LIMIT;
+         price=ask+price_points*point;
          break;
         }
-      case ORDER_TYPE_SELL:   
-      {
-         double bid = m_symbol.Bid();
+      case ORDER_TYPE_SELL:
+        {
+         double bid=m_symbol.Bid();
          if(price_points>0)
-            type = ORDER_TYPE_SELL_LIMIT;
+            type=ORDER_TYPE_SELL_LIMIT;
          else if(price_points<0)
-            type = ORDER_TYPE_SELL_STOP;
-         price=bid+price_points*point;   
+            type=ORDER_TYPE_SELL_STOP;
+         price=bid+price_points*point;
          break;
-      }   
+        }
       default: price=PriceCalculateCustom(type);
      }
    return price;

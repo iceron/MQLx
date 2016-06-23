@@ -23,12 +23,12 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_TRAILS;}
    //--- initialization
    virtual bool      Init(CSymbolManager*,CEventAggregator*);
-   virtual CStop    *GetContainer(void) {return m_stop;}
-   virtual void      SetContainer(CStop*stop){m_stop=stop;}
+   virtual CStop    *GetContainer(void);
+   virtual void      SetContainer(CStop*stop);
    virtual bool      Validate(void) const;
    //--- getters and setters
-   bool              Active(void) const {return m_active;}
-   void              Active(const bool activate) {m_active=activate;}
+   bool              Active(void) const;
+   void              Active(const bool activate);
    //--- checking
    virtual double    Check(const string,const ENUM_ORDER_TYPE,const double,const double,const ENUM_TRAIL_TARGET);
    //--- recovery
@@ -51,16 +51,44 @@ CTrailsBase::~CTrailsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+CStop *CTrailsBase::GetContainer(void)
+  {
+   return m_stop;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CTrailsBase::SetContainer(CStop*stop)
+  {
+   m_stop=stop;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTrailsBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CTrailsBase::Active(const bool activate)
+  {
+   m_active=activate;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CTrailsBase::Init(CSymbolManager *symbolmanager,CEventAggregator *event_man=NULL)
   {
-   m_event_man = event_man;
+   m_event_man=event_man;
    for(int i=0;i<Total();i++)
      {
       CTrail *trail=At(i);
       if(CheckPointer(trail))
         {
          trail.SetContainer(GetPointer(this));
-         if (!trail.Init(symbolmanager,event_man))
+         if(!trail.Init(symbolmanager,event_man))
             return false;
         }
      }
@@ -102,11 +130,11 @@ double CTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const d
          continue;
       val=trail.Check(symbol,type,entry_price,price,mode);
       if((type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_TAKEPROFIT))
-         if(val>ret || ret==0.0) 
+         if(val>ret || ret==0.0)
             ret=val;
       else if((type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_TAKEPROFIT))
-         if(val<ret || ret==0.0) 
-            ret=val;
+      if(val<ret || ret==0.0)
+         ret=val;
      }
    return ret;
   }

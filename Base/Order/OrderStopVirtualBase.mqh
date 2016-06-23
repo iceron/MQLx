@@ -14,7 +14,7 @@ class COrderStopVirtualBase : public COrderStop
 public:
                      COrderStopVirtualBase(void);
                     ~COrderStopVirtualBase(void);
-   virtual void      Check(double &);                    
+   virtual void      Check(double&);                    
    virtual bool      Update(void);
    virtual bool      UpdateOrderStop(const double,const double);
 protected:

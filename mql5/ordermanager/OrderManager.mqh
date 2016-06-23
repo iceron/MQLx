@@ -18,10 +18,10 @@ public:
                     ~COrderManager(void);
    virtual bool      Validate(void) const;
    virtual bool      CloseOrder(COrder*,const int);
-   virtual void      OnTradeTransaction(const MqlTradeTransaction &,const MqlTradeRequest &,const MqlTradeResult &);
+   virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
-   int               MagicClose(void) const {return m_magic;}
-   void              MagicClose(const int magic) {m_magic_close=magic;}
+   int               MagicClose(void) const;
+   void              MagicClose(const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -38,6 +38,20 @@ COrderManager::~COrderManager(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+int COrderManager::MagicClose(void) const
+  {
+   return m_magic;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderManager::MagicClose(const int magic)
+  {
+   m_magic_close=magic;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool COrderManager::Validate(void) const
   {
    if(m_magic==m_magic_close || m_other_magic.Search(m_magic_close)>=0)
@@ -48,7 +62,7 @@ bool COrderManager::Validate(void) const
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
-  {   
+  {
    if(trans.type==TRADE_TRANSACTION_ORDER_DELETE && trans.order_state==ORDER_STATE_FILLED)
      {
       if(HistoryOrderSelect(trans.order))
@@ -58,11 +72,11 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
          string symbol = HistoryOrderGetString(trans.order,ORDER_SYMBOL);
          double volume = HistoryOrderGetDouble(trans.order,ORDER_VOLUME_INITIAL);
          double price=HistoryOrderGetDouble(trans.order,ORDER_PRICE_OPEN);
-         ENUM_ORDER_TYPE order_type = trans.order_type;
-         if (order_type==ORDER_TYPE_BUY_STOP || order_type==ORDER_TYPE_BUY_LIMIT)
-            order_type = ORDER_TYPE_BUY;
-         else if (order_type==ORDER_TYPE_SELL_STOP || order_type==ORDER_TYPE_SELL_LIMIT)
-            order_type = ORDER_TYPE_SELL;
+         ENUM_ORDER_TYPE order_type=trans.order_type;
+         if(order_type==ORDER_TYPE_BUY_STOP|| order_type==ORDER_TYPE_BUY_LIMIT)
+            order_type= ORDER_TYPE_BUY;
+         else if(order_type==ORDER_TYPE_SELL_STOP || order_type==ORDER_TYPE_SELL_LIMIT)
+            order_type=ORDER_TYPE_SELL;
          if((magic==m_magic || m_other_magic.Search((int)magic)>=0) && m_symbol_man.Search(symbol))
             m_orders.NewOrder((int)ticket,symbol,(int)magic,order_type,volume,price);
         }

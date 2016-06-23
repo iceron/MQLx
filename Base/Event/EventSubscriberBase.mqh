@@ -19,9 +19,10 @@ protected:
 public:
                      CEventSubscriberBase(void);
                     ~CEventSubscriberBase(void);
-   virtual bool      Init(void);                    
-   virtual CEventAggregator *GetContainer(void) const {return m_container;}
-   virtual void      SetContainer(CEventAggregator *aggregator) {m_container=aggregator;}
+   virtual bool      Init(void);
+   virtual bool      Validate(void) const;
+   virtual CEventAggregator *GetContainer(void);
+   virtual void      SetContainer(CEventAggregator *aggregator);
    virtual void      Notify(string,CObject*);
    virtual bool      CheckName(string);
    virtual bool      CheckSubject(CObject*);
@@ -45,6 +46,27 @@ CEventSubscriberBase::~CEventSubscriberBase(void)
 bool CEventSubscriberBase::Init(void)
   {
    return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CEventSubscriberBase::Validate(void) const
+  {
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CEventSubscriberBase::SetContainer(CEventAggregator *aggregator)
+  {
+   m_container=aggregator;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CEventAggregator *CEventSubscriberBase::GetContainer(void)
+  {
+   return m_container;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

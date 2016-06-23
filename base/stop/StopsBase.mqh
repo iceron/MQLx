@@ -23,12 +23,12 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_STOPS;}
    //--- initialization
    virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
-   virtual CObject  *GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container){m_container=container;}
+   virtual CObject  *GetContainer(void);
+   virtual void      SetContainer(CObject*);
    virtual bool      Validate(void) const;
    //--- setters and getters
-   virtual bool      Active(void) const {return m_active;}
-   virtual void      Active(const bool activate) {m_active=activate;}
+   virtual bool      Active(void) const;
+   virtual void      Active(const bool);
    virtual CStop    *Main(void);
    //--- recovery
    virtual bool      CreateElement(const int);
@@ -48,13 +48,41 @@ CStopsBase::~CStopsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+CObject  *CStopsBase::GetContainer(void)
+  {
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CStopsBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStopsBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CStopsBase::Active(const bool activate)
+  {
+   m_active=activate;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CStopsBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEventAggregator *event_man=NULL)
   {
-   m_event_man = event_man;
+   m_event_man=event_man;
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
-      if (CheckPointer(stop))
+      if(CheckPointer(stop))
          if(!stop.Init(symbolmanager,accountinfo,event_man))
             return false;
      }
@@ -69,16 +97,16 @@ bool CStopsBase::Validate(void) const
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
-      if (CheckPointer(stop))
+      if(CheckPointer(stop))
         {
-         if (stop.Main())
-         {
-            if (main)
-            {
+         if(stop.Main())
+           {
+            if(main)
+              {
                PrintFormat(__FUNCTION__+": more than one main stop is not allowed");
                return false;
-            }               
-         }
+              }
+           }
          if(!stop.Validate())
             return false;
         }
@@ -93,9 +121,9 @@ CStop *CStopsBase::Main()
    for(int i=0;i<Total();i++)
      {
       CStop *stop=At(i);
-      if (!CheckPointer(stop))
+      if(!CheckPointer(stop))
          continue;
-      if(stop.Main()) 
+      if(stop.Main())
          return stop;
      }
    return NULL;

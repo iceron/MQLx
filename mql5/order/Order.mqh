@@ -12,7 +12,7 @@ class COrder : public COrderBase
   {
 public:
                      COrder(void);
-                     COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);
+                     COrder(const ulong,const string,const ENUM_ORDER_TYPE,const double,const double);
                     ~COrder(void);
    virtual bool      IsSuspended(void);
   };

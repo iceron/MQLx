@@ -16,8 +16,8 @@ public:
                     ~CMoneyFixedRiskPerPointBase(void);
    virtual bool      Validate(void);
    virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
-   void              Risk(const double risk) {m_risk=risk;}
-   double            Risk(void) const {return m_risk;}
+   void              Risk(const double);
+   double            Risk(void) const;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -30,6 +30,20 @@ CMoneyFixedRiskPerPointBase::CMoneyFixedRiskPerPointBase(void)
 //+------------------------------------------------------------------+
 CMoneyFixedRiskPerPointBase::~CMoneyFixedRiskPerPointBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CMoneyFixedRiskPerPointBase::Risk(const double value)
+  {
+   m_risk=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CMoneyFixedRiskPerPointBase::Risk(void) const
+  {
+   return m_risk;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

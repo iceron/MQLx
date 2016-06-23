@@ -18,7 +18,7 @@ protected:
 public:
                      CTimeFilterBase(void);
                     ~CTimeFilterBase(void);
-   virtual bool      Init(CTimes *);
+   virtual bool      Init(CTimes*);
    virtual bool      Validate(void);
    virtual bool      Evaluate(void);
    virtual bool      Set(const int,const int,const int,const int,const int,const int,const int);

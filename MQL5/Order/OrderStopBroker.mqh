@@ -13,7 +13,7 @@ class COrderStopBroker : public COrderStopBrokerBase
 public:
                      COrderStopBroker(void);
                     ~COrderStopBroker(void);
-   virtual void      Check(double &);
+   virtual void      Check(double&);
 protected:
    virtual bool      ModifyStopLoss(const double);
    virtual bool      ModifyTakeProfit(const double);

@@ -26,24 +26,27 @@ public:
                      CCandleBase(void);
                     ~CCandleBase(void);
    virtual bool      Init(CSymbolInfo*,const int);
-   virtual bool      Init(CEventAggregator *);
-   virtual CObject*  GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
+   virtual bool      Init(CEventAggregator*);
+   CObject          *GetContainer(void);
+   void              SetContainer(CObject*);
    //--- setters and getters
-   bool              Active(){return m_active;}
-   void              Active(bool active){m_active=active;}
-   datetime          LastTime(void) const {return m_last.time;}
-   double            LastOpen(void) const {return m_last.open;}
-   double            LastHigh(void) const {return m_last.high;}
-   double            LastLow(void) const {return m_last.low;}
-   double            LastClose(void) const {return m_last.close;}
-   string            SymbolName(void) const {return m_symbol.Name();}
-   int               Timeframe(void) const {return m_period;}
+   void              Active(bool);
+   bool              Active(void) const;
+   datetime          LastTime(void) const;
+   double            LastOpen(void) const;
+   double            LastHigh(void) const;
+   double            LastLow(void) const;
+   double            LastClose(void) const;
+   string            SymbolName(void) const;
+   int               Timeframe(void) const;
+   void              WaitForNew(bool);
+   bool              WaitForNew(void) const;
    //--- processing
-   virtual bool      TradeProcessed(void) const {return m_trade_processed;}
-   virtual void      TradeProcessed(bool processed) {m_trade_processed=processed;}
+   virtual bool      TradeProcessed(void) const;
+   virtual void      TradeProcessed(bool);
    virtual void      Check(void);
-   virtual bool      IsNewCandle(void) {return m_new;}
+   virtual void      IsNewCandle(bool);
+   virtual bool      IsNewCandle(void) const;
    virtual bool      Compare(MqlRates &) const;
    //--- recovery
    virtual bool      Save(const int);
@@ -77,24 +80,145 @@ bool CCandleBase::Init(CSymbolInfo *symbol,const int timeframe)
 //+------------------------------------------------------------------+
 bool CCandleBase::Init(CEventAggregator *event_man=NULL)
   {
-   m_event_man = event_man;
+   m_event_man=event_man;
    return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CCandleBase::Check(void)
+CCandleBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CObject *CCandleBase::GetContainer(void)
+  {
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CCandleBase::Active(bool active)
+  {
+   m_active=active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+datetime CCandleBase::LastTime(void) const
+  {
+   return m_last.time;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CCandleBase::LastOpen(void) const
+  {
+   return m_last.open;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CCandleBase::LastHigh(void) const
+  {
+   return m_last.high;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CCandleBase::LastLow(void) const
+  {
+   return m_last.low;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CCandleBase::LastClose(void) const
+  {
+   return m_last.close;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleBase::TradeProcessed(void) const
+  {
+   return m_trade_processed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CCandleBase::TradeProcessed(bool value)
+  {
+   m_trade_processed=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CCandleBase::IsNewCandle(bool value)
+  {
+   m_new=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleBase::IsNewCandle(void) const
+  {
+   return m_new;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CCandleBase::WaitForNew(bool value)
+  {
+   m_wait_for_new=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleBase::WaitForNew(void) const
+  {
+   return m_wait_for_new;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CCandleBase::SymbolName(void) const
+  {
+   if(CheckPointer(m_symbol))
+      return m_symbol.Name();
+   return NULL;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CCandleBase::Timeframe(void) const
+  {
+   return m_period;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CCandleBase::Check(void)
   {
    if(!Active())
       return;
-   m_new=false;
+   IsNewCandle(false);
    MqlRates rates[];
    if(CopyRates(m_symbol.Name(),(ENUM_TIMEFRAMES)m_period,1,1,rates)==-1)
       return;
    if(Compare(rates[0]))
      {
-      m_new=true;
-      m_trade_processed=false;
+      IsNewCandle(true);
+      TradeProcessed(false);
       m_last=rates[0];
      }
   }

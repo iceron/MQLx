@@ -28,20 +28,20 @@ public:
                      CSignalBase(void);
                     ~CSignalBase(void);
    virtual bool      Init(CSymbolManager*,CEventAggregator*);
-   virtual CObject  *GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
+   virtual CObject  *GetContainer(void);
+   virtual void      SetContainer(CObject*);
    virtual bool      Validate(void);
    virtual bool      AddFilter(CSignal*);
 
    virtual double    Check(void);
-   virtual double    GetDirection(void) {return m_direction;}
+   virtual double    GetDirection(void);
    virtual int       LongCondition(void);
    virtual int       ShortCondition(void);
    bool              Active(void);
    void              Active(const bool);
    bool              Invert(void);
-   int               ThresholdOpen(void) {return m_threshold_open;}
-   int               ThresholdClose(void){return m_threshold_close;}
+   int               ThresholdOpen(void) const;
+   int               ThresholdClose(void)const;
    virtual bool      CheckOpenLong(void);
    virtual bool      CheckOpenShort(void);
    virtual bool      CheckCloseLong(void);
@@ -71,17 +71,31 @@ bool CSignalBase::Init(CSymbolManager *symbol_man,CEventAggregator *event_man=NU
   {
    m_symbol_man= symbol_man;
    m_event_man = event_man;
-   if (!CheckPointer(m_symbol_man))
+   if(!CheckPointer(m_symbol_man))
       return false;
-   for (int i=0;i<m_filters.Total();i++)
-   {
-      CSignal *filter = m_filters.At(i);
-      if (!CheckPointer(filter))
+   for(int i=0;i<m_filters.Total();i++)
+     {
+      CSignal *filter=m_filters.At(i);
+      if(!CheckPointer(filter))
          continue;
-      if (!filter.Init(m_symbol_man,m_event_man))
+      if(!filter.Init(m_symbol_man,m_event_man))
          return false;
-   }
+     }
    return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CSignalBase::SetContainer(CObject *container)
+  {
+   m_container = container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CObject *CSignalBase::GetContainer(void)
+  {
+   return m_container;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -89,6 +103,27 @@ bool CSignalBase::Init(CSymbolManager *symbol_man,CEventAggregator *event_man=NU
 bool CSignalBase::Validate(void)
   {
    return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CSignalBase::GetDirection(void)
+  {
+   return m_direction;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CSignalBase::ThresholdOpen(void) const
+  {
+   return m_threshold_open;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CSignalBase::ThresholdClose(void)const
+  {
+   return m_threshold_close;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

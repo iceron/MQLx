@@ -47,40 +47,40 @@ public:
                     ~COrderStopBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOP;}
    //--- initialization
-   virtual void      Init(COrder *order,CStop *stop,COrderStops *order_stops);
-   virtual COrderStops *GetContainer(void) {return m_order_stops;}
-   virtual void      SetContainer(COrderStops *orderstops){m_order_stops=orderstops;}
+   virtual void      Init(COrder*,CStop*,COrderStops*);
+   virtual COrderStops *GetContainer(void);
+   virtual void      SetContainer(COrderStops*);
    //--- getters and setters  
-   bool              Active(){return m_active;}
-   void              Active(bool active){m_active=active;}
-   string            EntryName(void) const {return m_stop.Name()+"."+(string)m_order.Ticket();}
-   ulong             MainMagic(void) const {return m_order.Magic();}
-   ulong             MainTicket(void) const {return m_order.Ticket();}
-   double            MainTicketPrice(void) const {return m_order.Price();}
-   ENUM_ORDER_TYPE   MainTicketType(void) const {return(ENUM_ORDER_TYPE)m_order.OrderType();}
-   COrder           *Order(void) {return GetPointer(m_order);}
-   bool              StopLoss(const double stoploss) {return m_stoploss.Add(stoploss);}
-   double            StopLoss(void) const {return m_stoploss.Total()>0?m_stoploss.At(m_stoploss.Total()-1):0;}
-   double            StopLoss(const int index) const {return m_stoploss.Total()>index?m_stoploss.At(index):0;}
-   double            StopLossLast(void) const {return m_stoploss.Total()>2?m_stoploss.At(m_stoploss.Total()-2):0;}
-   string            StopLossName(void) const {return m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket();}
-   void              StopLossTicket(const ulong ticket) {m_stoploss_ticket=ticket;}
-   ulong             StopLossTicket(void) const {return m_stoploss_ticket;}
-   void              StopName(const string stop_name) {m_stop_name=stop_name;}
-   string            StopName(void) const {return m_stop_name;}
-   bool              TakeProfit(const double takeprofit) {return m_takeprofit.Add(takeprofit);}
-   double            TakeProfit(void) const {return m_takeprofit.Total()>0?m_takeprofit.At(m_takeprofit.Total()-1):0;}
-   double            TakeProfit(const int index) const {return m_takeprofit.Total()>index?m_takeprofit.At(index):0;}
-   double            TakeProfitLast(void) const {return m_takeprofit.Total()>2?m_takeprofit.At(m_takeprofit.Total()-2):0;}
-   string            TakeProfitName(void) const {return m_stop.Name()+m_stop.TakeProfitName()+(string)m_order.Ticket();}
-   void              TakeProfitTicket(const ulong ticket) {m_takeprofit_ticket=ticket;}
-   ulong             TakeProfitTicket(void) const {return m_takeprofit_ticket;}
-   void              Volume(const double volume) {m_volume=volume;}
-   double            Volume(void) const {return m_volume;}
+   bool              Active(void) const;
+   void              Active(bool active);
+   string            EntryName(void) const;
+   ulong             MainMagic(void) const;
+   ulong             MainTicket(void) const;
+   double            MainTicketPrice(void) const;
+   ENUM_ORDER_TYPE   MainTicketType(void) const;
+   COrder           *Order(void);
+   bool              StopLoss(const double);
+   double            StopLoss(void) const;
+   double            StopLoss(const int);
+   double            StopLossLast(void) const;
+   string            StopLossName(void) const;
+   void              StopLossTicket(const ulong);
+   ulong             StopLossTicket(void) const;
+   void              StopName(const string);
+   string            StopName(void) const;
+   bool              TakeProfit(const double);
+   double            TakeProfit(void) const;
+   double            TakeProfit(const int);
+   double            TakeProfitLast(void) const;
+   string            TakeProfitName(void) const;
+   void              TakeProfitTicket(const ulong);
+   ulong             TakeProfitTicket(void) const;
+   void              Volume(const double);
+   double            Volume(void) const;
    //--- hiding and showing of stop lines
-   virtual void      Show(bool show=true);
+   virtual void      Show(bool);
    //--- checking   
-   virtual void      Check(double &volume)=0;
+   virtual void      Check(double&)=0;
    virtual bool      Close(void);
    virtual bool      CheckTrailing(void);
    virtual bool      DeleteChartObject(const string);
@@ -127,6 +127,202 @@ COrderStopBase::COrderStopBase(void) : m_active(true),
 COrderStopBase::~COrderStopBase(void)
   {
    Deinit();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderStopBase::SetContainer(COrderStops *orderstops)
+  {
+   m_order_stops=orderstops;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderStops *COrderStopBase::GetContainer(void)
+  {
+   return m_order_stops;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStopBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderStopBase::Active(bool active)
+  {
+   m_active=active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string COrderStopBase::EntryName(void) const
+  {
+   return m_stop.Name()+"."+(string)m_order.Ticket();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+ulong COrderStopBase::MainMagic(void) const
+  {
+   return m_order.Magic();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+ulong COrderStopBase::MainTicket(void) const
+  {
+   return m_order.Ticket();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderStopBase::MainTicketPrice(void) const
+  {
+   return m_order.Price();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+ENUM_ORDER_TYPE COrderStopBase::MainTicketType(void) const
+  {
+   return(ENUM_ORDER_TYPE)m_order.OrderType();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrder *COrderStopBase::Order(void)
+  {
+   return GetPointer(m_order);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStopBase::StopLoss(const double stoploss)
+  {
+   return m_stoploss.Add(stoploss);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderStopBase::StopLoss(void) const
+  {
+   return m_stoploss.Total()>0?m_stoploss.At(m_stoploss.Total()-1):0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderStopBase::StopLoss(const int index)
+  {
+   return m_stoploss.Total()>index?m_stoploss.At(index):0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderStopBase::StopLossLast(void) const
+  {
+   return m_stoploss.Total()>2?m_stoploss.At(m_stoploss.Total()-2):0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string COrderStopBase::StopLossName(void) const
+  {
+   return m_stop.Name()+m_stop.StopLossName()+(string)m_order.Ticket();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderStopBase::StopLossTicket(const ulong ticket)
+  {
+   m_stoploss_ticket=ticket;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+ulong COrderStopBase::StopLossTicket(void) const
+  {
+   return m_stoploss_ticket;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderStopBase::StopName(const string stop_name)
+  {
+   m_stop_name=stop_name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string COrderStopBase::StopName(void) const
+  {
+   return m_stop_name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStopBase::TakeProfit(const double takeprofit)
+  {
+   return m_takeprofit.Add(takeprofit);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderStopBase::TakeProfit(void) const
+  {
+   return m_takeprofit.Total()>0?m_takeprofit.At(m_takeprofit.Total()-1):0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderStopBase::TakeProfit(const int index)
+  {
+   return m_takeprofit.Total()>index?m_takeprofit.At(index):0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderStopBase::TakeProfitLast(void) const
+  {
+   return m_takeprofit.Total()>2?m_takeprofit.At(m_takeprofit.Total()-2):0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string COrderStopBase::TakeProfitName(void) const
+  {
+   return m_stop.Name()+m_stop.TakeProfitName()+(string)m_order.Ticket();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderStopBase::TakeProfitTicket(const ulong ticket)
+  {
+   m_takeprofit_ticket=ticket;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+ulong COrderStopBase::TakeProfitTicket(void) const
+  {
+   return m_takeprofit_ticket;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderStopBase::Volume(const double volume)
+  {
+   m_volume=volume;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double COrderStopBase::Volume(void) const
+  {
+   return m_volume;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

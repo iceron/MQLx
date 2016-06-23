@@ -50,12 +50,13 @@ public:
                     ~CExpertAdvisorBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STRATEGY;}
    //--- initialization
-   virtual bool      AddEventAggregator(CEventAggregator*);
-   virtual bool      AddMoneys(CMoneys*);
-   virtual bool      AddSignal(CSignal*);
-   virtual bool      AddStops(CStops*);
-   virtual bool      AddSymbol(const string);
-   virtual bool      AddTimes(CTimes*);
+   bool              AddChartComment(CComments*);
+   bool              AddEventAggregator(CEventAggregator*);
+   bool              AddMoneys(CMoneys*);
+   bool              AddSignal(CSignal*);
+   bool              AddStops(CStops*);
+   bool              AddSymbol(const string);
+   bool              AddTimes(CTimes*);
    virtual bool      Init(const string,const int,const int,const bool,const bool,const bool);
    virtual bool      InitAccount(void);
    virtual bool      InitCandleManager(void);
@@ -63,37 +64,36 @@ public:
    virtual bool      InitComponents(void);
    virtual bool      InitSignals(void);
    virtual bool      InitTimes(void);
-   virtual bool      InitOrderManager(void) {return m_order_man.Init(GetPointer(m_symbol_man),GetPointer(m_account));}
+   virtual bool      InitOrderManager(void);
    virtual bool      Validate(void) const;
    //--- container
-   virtual CObject  *GetContainer(void) const {return GetPointer(m_container);}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
+   void              SetContainer(CObject*);
+   CObject          *GetContainer(void);
    //--- activation and deactivation
-   virtual bool      Active(void) const {return m_active;}
-   virtual void      Active(const bool toggle) {m_active=toggle;}
+   bool              Active(void) const;
+   void              Active(const bool);
    //--- setters and getters       
-   string            Name() const {return m_name;}
-   void              Name(const string name) {m_name=name;}
-   string            SymbolName() const {return m_symbol_name;}
-   void              SymbolName(const string name) {m_symbol_name=name;}
+   string            Name(void) const;
+   void              Name(const string name);
+   string            SymbolName(void) const;
+   void              SymbolName(const string name);
    //--- object pointers
-   CAccountInfo      *AccountInfo(void) {return GetPointer(m_account);}
-   CComments         *Comments(void) {return GetPointer(m_comments);}
-   CStop             *MainStop(void) {return m_order_man.MainStop();}
-   CMoneys           *Moneys(void) {return m_order_man.Moneys();}
-   COrders           *Orders(void) {return m_order_man.Orders();}
-   COrders           *OrdersHistory(void) {return m_order_man.OrdersHistory();}
-   CArrayInt         *OtherMagic(void) {return m_order_man.OtherMagic();}
-   CStops            *Stops(void) {return m_order_man.Stops();}
-   CSignal           *Signal(void) const {return GetPointer(m_signal);}
-   CTimes            *Times(void) const {return GetPointer(m_times);}
+   CAccountInfo     *AccountInfo(void);
+   CComments        *Comments(void);
+   CStop            *MainStop(void);
+   CMoneys          *Moneys(void);
+   COrders          *Orders(void);
+   COrders          *OrdersHistory(void);
+   CArrayInt        *OtherMagic(void);
+   CStops           *Stops(void);
+   CSignal          *Signal(void);
+   CTimes           *Times(void);
    //--- chart comment manager
    void              AddComment(const string);
-   void              ChartComment(CComments *comments) {m_comments=comments;}
    void              DisplayComment(void);
    //--- order manager
-   virtual bool      AddOtherMagic(const int magic) {return m_order_man.AddOtherMagic(magic);}
-   virtual void      AddOtherMagicString(const string &magics[]){m_order_man.AddOtherMagicString(magics);}
+   bool      AddOtherMagic(const int magic) {return m_order_man.AddOtherMagic(magic);}
+   void      AddOtherMagicString(const string &magics[]){m_order_man.AddOtherMagicString(magics);}
    void              AsyncMode(const bool async) {m_order_man.AsyncMode(async);}
    string            Comment(void) const {return m_order_man.Comment();}
    void              Comment(const string comment){m_order_man.Comment(comment);}
@@ -111,28 +111,28 @@ public:
    void              MaxOrdersHistory(const int max) {m_order_man.MaxOrdersHistory(max);}
    int               Magic(void) const {return m_order_man.Magic();}
    void              Magic(const int magic) {m_order_man.Magic(magic);}
-   virtual uint      MaxTrades(void) const {return m_order_man.MaxTrades();}
-   virtual void      MaxTrades(const int max_trades){m_order_man.MaxTrades(max_trades);}
-   virtual int       MaxOrders(void) const {return m_order_man.MaxOrders();}
-   virtual void      MaxOrders(const int max_orders) {m_order_man.MaxOrders(max_orders);}
+   uint              MaxTrades(void) const {return m_order_man.MaxTrades();}
+   void              MaxTrades(const int max_trades){m_order_man.MaxTrades(max_trades);}
+   int               MaxOrders(void) const {return m_order_man.MaxOrders();}
+   void              MaxOrders(const int max_orders) {m_order_man.MaxOrders(max_orders);}
    int               OrdersTotal(void) const {return m_order_man.OrdersTotal();}
    int               OrdersHistoryTotal(void) const {return m_order_man.OrdersHistoryTotal();}
    int               PricePoints(void) const {return m_order_man.PricePoints();}
    void              PricePoints(const int points) {m_order_man.PricePoints(points);}
    int               TradesTotal(void) const{return m_order_man.TradesTotal();}
    //--- signal manager   
-   virtual int       Period(void) const {return m_period;}
-   virtual void      Period(const int period) {m_period=(ENUM_TIMEFRAMES)period;}
-   virtual bool      EveryTick(void) const {return m_every_tick;}
-   virtual void      EveryTick(const bool every_tick) {m_every_tick=every_tick;}
-   virtual bool      OneTradePerCandle(void) const {return m_one_trade_per_candle;}
-   virtual void      OneTradePerCandle(const bool one_trade_per_candle){m_one_trade_per_candle=one_trade_per_candle;}
-   virtual bool      PositionReverse(void) const {return m_position_reverse;}
-   virtual void      PositionReverse(const bool position_reverse){m_position_reverse=position_reverse;}
+   int               Period(void) const;
+   void              Period(const int);
+   bool              EveryTick(void) const;
+   void              EveryTick(const bool);
+   bool              OneTradePerCandle(void) const;
+   void              OneTradePerCandle(const bool);
+   bool              PositionReverse(void) const;
+   void              PositionReverse(const bool);
    //--- additional candles
-   virtual void      AddCandle(const string,const int);
+   void              AddCandle(const string,const int);
    //--- new bar detection
-   virtual void      DetectNewBars(void) const {m_candle_man.Check();}
+   void              DetectNewBars(void);
    //-- generic events
    virtual bool      OnTick(void);
    virtual void      OnChartEvent(const int,const long&,const double&,const string&) {}
@@ -142,12 +142,12 @@ public:
 
 protected:
    //--- candle manager   
-   virtual bool      IsNewBar(const string symbol,const int period) const {return m_candle_man.IsNewCandle(symbol,period);}
+   virtual bool      IsNewBar(const string,const int);
    //--- order manager
-   virtual void      ManageOrders(void) {m_order_man.ManageOrders();}
-   virtual void      ManageOrdersHistory(void){m_order_man.ManageOrdersHistory();}
+   virtual void      ManageOrders(void);
+   virtual void      ManageOrdersHistory(void);
    virtual void      OnTradeTransaction(COrder*) {}
-   virtual bool      TradeOpen(const string symbol,const ENUM_ORDER_TYPE type) {return m_order_man.TradeOpen(symbol,type);}
+   virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    //--- symbol manager
    virtual bool      RefreshRates(void);
    //--- deinitialization
@@ -175,6 +175,125 @@ CExpertAdvisorBase::CExpertAdvisorBase(void) : m_active(true),
 CExpertAdvisorBase::~CExpertAdvisorBase(void)
   {
    Deinit();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CObject *CExpertAdvisorBase::GetContainer(void)
+  {
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::Active(const bool value)
+  {
+   m_active=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::Name(const string name)
+  {
+   m_name=name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CExpertAdvisorBase::Name(void) const
+  {
+   return m_name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::SymbolName(const string name)
+  {
+   m_symbol_name=name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+string CExpertAdvisorBase::SymbolName(void) const
+  {
+   return m_symbol_name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CAccountInfo *CExpertAdvisorBase::AccountInfo(void)
+  {
+   return GetPointer(m_account);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CComments *CExpertAdvisorBase::Comments(void)
+  {
+   return GetPointer(m_comments);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CMoneys *CExpertAdvisorBase::Moneys(void)
+  {
+   return m_order_man.Moneys();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrders *CExpertAdvisorBase::Orders(void)
+  {
+   return m_order_man.Orders();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrders *CExpertAdvisorBase::OrdersHistory(void)
+  {
+   return m_order_man.OrdersHistory();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CArrayInt *CExpertAdvisorBase::OtherMagic(void)
+  {
+   return m_order_man.OtherMagic();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CStops *CExpertAdvisorBase::Stops(void)
+  {
+   return m_order_man.Stops();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CSignal *CExpertAdvisorBase::Signal(void)
+  {
+   return GetPointer(m_signal);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CTimes *CExpertAdvisorBase::Times(void)
+  {
+   return GetPointer(m_times);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -255,6 +374,13 @@ bool CExpertAdvisorBase::InitTimes(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool CExpertAdvisorBase::InitOrderManager(void)
+  {
+   return m_order_man.Init(GetPointer(m_symbol_man),GetPointer(m_account));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CExpertAdvisorBase::InitCandleManager(void)
   {
    m_candle_man.SetContainer(GetPointer(this));
@@ -265,7 +391,7 @@ bool CExpertAdvisorBase::InitCandleManager(void)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::InitEventAggregator(void)
   {
-   if (CheckPointer(m_event_man))
+   if(CheckPointer(m_event_man))
       return m_event_man.Init();
    return true;
   }
@@ -291,6 +417,16 @@ void CExpertAdvisorBase::DisplayComment()
 bool CExpertAdvisorBase::AddMoneys(CMoneys *moneys)
   {
    return m_order_man.AddMoneys(GetPointer(moneys));
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::AddChartComment(CComments *comments)
+  {
+   if(CheckPointer(m_comments))
+      delete m_comments;
+   m_comments=comments;
+   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -368,6 +504,97 @@ bool CExpertAdvisorBase::Validate(void) const
          return false;
      }
    return m_order_man.Validate();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::Period(const int value)
+  {
+   m_period=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CExpertAdvisorBase::Period(void) const
+  {
+   return m_period;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::EveryTick(const bool value)
+  {
+   m_every_tick=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::EveryTick(void) const
+  {
+   return m_every_tick;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::OneTradePerCandle(const bool value)
+  {
+   m_one_trade_per_candle=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::OneTradePerCandle(void) const
+  {
+   return m_one_trade_per_candle;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::PositionReverse(const bool value)
+  {
+   m_position_reverse=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::PositionReverse(void) const
+  {
+   return m_position_reverse;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CExpertAdvisorBase::DetectNewBars(void)
+  {
+   m_candle_man.Check();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::IsNewBar(const string symbol,const int period)
+  {
+   return m_candle_man.IsNewCandle(symbol,period);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertAdvisorBase::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
+  {
+   return m_order_man.TradeOpen(symbol,type);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CExpertAdvisorBase::ManageOrders(void)
+  {
+   m_order_man.ManageOrders();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CExpertAdvisorBase::ManageOrdersHistory(void)
+  {
+   m_order_man.ManageOrdersHistory();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

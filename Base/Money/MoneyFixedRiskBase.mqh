@@ -16,8 +16,8 @@ public:
                     ~CMoneyFixedRiskBase(void);
    virtual bool      Validate(void);
    virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
-   void              Risk(const double risk) {m_risk=risk;}
-   double            Risk(void) const {return m_risk;}
+   void              Risk(const double);
+   double            Risk(void) const;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -43,20 +43,20 @@ bool CMoneyFixedRiskBase::Validate(void)
 //+------------------------------------------------------------------+
 CMoneyFixedRiskBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
-   m_symbol = m_symbol_man.Get(symbol);
-   if (CheckPointer(m_symbol))
+   m_symbol=m_symbol_man.Get(symbol);
+   if(CheckPointer(m_symbol))
      {
       double balance=m_equity==false?m_account.Balance():m_account.Equity();
-      double ticks = 0;
+      double ticks=0;
       if(price==0.0)
         {
          if(type==ORDER_TYPE_BUY)
-            ticks = MathAbs(m_symbol.Bid()-sl)/m_symbol.TickSize();
+            ticks=MathAbs(m_symbol.Bid()-sl)/m_symbol.TickSize();
          else if(type==ORDER_TYPE_SELL)
-            ticks = MathAbs(m_symbol.Ask()-sl)/m_symbol.TickSize();
+            ticks=MathAbs(m_symbol.Ask()-sl)/m_symbol.TickSize();
         }
-      else ticks = MathAbs(price-sl)/m_symbol.TickSize();
-      m_volume = (m_risk/m_symbol.TickValue())/ticks;
+      else ticks=MathAbs(price-sl)/m_symbol.TickSize();
+      m_volume=(m_risk/m_symbol.TickValue())/ticks;
       OnLotSizeUpdated();
      }
   }

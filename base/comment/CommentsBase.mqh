@@ -13,22 +13,22 @@
 class CCommentsBase : public CList
   {
 protected:
-   bool              m_activate;
+   bool              m_active;
    CObject          *m_container;
 public:
                      CCommentsBase(void);
                     ~CCommentsBase(void);
-   virtual CObject  *GetContainer(void) {return m_container;}
-   virtual void      SetContainer(CObject *container) {m_container=container;}
-   bool              Active(){return m_activate;}
-   void              Active(bool active){m_activate=active;}
+   CObject          *GetContainer(void);
+   void              SetContainer(CObject*);
+   bool              Active(void) const;
+   void              Active(bool);
    virtual void      Display(void);
-   virtual void      Concatenate(string &,string) const {}
+   virtual void      Concatenate(string&,string)=0;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CCommentsBase::CCommentsBase(void) : m_activate(true)
+CCommentsBase::CCommentsBase(void) : m_active(true)
   {
   }
 //+------------------------------------------------------------------+
@@ -36,6 +36,34 @@ CCommentsBase::CCommentsBase(void) : m_activate(true)
 //+------------------------------------------------------------------+
 CCommentsBase::~CCommentsBase(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CCommentsBase::SetContainer(CObject *container)
+  {
+   m_container=container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CObject *CCommentsBase::GetContainer(void)
+  {
+   return m_container;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CCommentsBase::Active(bool value)
+  {
+   m_active=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCommentsBase::Active(void) const
+  {
+   return m_active;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
