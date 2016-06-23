@@ -9,6 +9,7 @@
 #include "MoneyFixedFractionalBase.mqh"
 #include "MoneyFixedRatioBase.mqh"
 #include "MoneyFixedRiskPerPointBase.mqh"
+#include "..\Event\EventAggregatorBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

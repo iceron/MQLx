@@ -27,7 +27,7 @@ protected:
    double            m_volume;
    double            m_volume_initial;
    string            m_symbol;
-   COrderStops      *m_order_stops;
+   COrderStops       m_order_stops;
    COrderStop       *m_main_stop;
    COrders          *m_orders;
 public:
@@ -35,7 +35,7 @@ public:
                     ~COrderBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDER;}
    //--- initialization
-   virtual CObject*  GetContainer(void) {return m_orders;}
+   virtual COrders*  GetContainer(void) {return m_orders;}
    virtual void      SetContainer(COrders *orders){m_orders=orders;}
    //--- getters and setters       
    void              CreateStops(CStops *stops);
@@ -97,8 +97,6 @@ COrderBase::COrderBase(void) : m_closed(false),
 //+------------------------------------------------------------------+
 COrderBase::~COrderBase(void)
   {
-   if (CheckPointer(m_order_stops))
-      delete m_order_stops;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -115,18 +113,16 @@ bool COrderBase::Init(int magic,COrders *orders,CStops *stops,bool recreate=fals
 //+------------------------------------------------------------------+
 void COrderBase::CreateStops(CStops *stops)
   {
-   if(CheckPointer(stops)==POINTER_INVALID)
+   if(!CheckPointer(stops))
       return;
    if(stops.Total()>0)
      {
-      if(CheckPointer(m_order_stops)==POINTER_INVALID)
-         m_order_stops=new COrderStops();
       for(int i=0;i<stops.Total();i++)
         {
          CStop *stop=stops.At(i);
          if(CheckPointer(stop)==POINTER_INVALID)
             continue;
-         m_order_stops.NewOrderStop(GetPointer(this),stop,m_order_stops);
+         m_order_stops.NewOrderStop(GetPointer(this),stop,GetPointer(m_order_stops));
         }
      }
   }
@@ -142,8 +138,7 @@ void COrderBase::OnTick(void)
 //+------------------------------------------------------------------+
 void COrderBase::CheckStops(void)
   {
-   if (CheckPointer(m_order_stops))
-      m_order_stops.Check(m_volume);
+   m_order_stops.Check(m_volume);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -161,9 +156,7 @@ bool COrderBase::Close(void)
 //+------------------------------------------------------------------+
 bool COrderBase::CloseStops(void)
   {
-   if (CheckPointer(m_order_stops))
-      return m_order_stops.Close();
-   return false;
+   return m_order_stops.Close();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

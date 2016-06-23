@@ -113,7 +113,7 @@ bool CStop::DeleteStopOrder(const ulong ticket) const
 //+------------------------------------------------------------------+
 double CStop::TakeProfitPrice(COrder *order,COrderStop *orderstop)
   {
-   double val=m_takeprofit>0?TakeProfitCalculate(order.Symbol(),order.OrderType(),order.Price()):TakeProfitCustom(order.OrderType(),order.Price());
+   double val=m_takeprofit>0?TakeProfitCalculate(order.Symbol(),order.OrderType(),order.Price()):TakeProfitCustom(order.Symbol(),order.OrderType(),order.Price());
    if((m_stop_type==STOP_TYPE_PENDING || m_main) && (val>0.0))
       if(OpenStop(order,orderstop,val))
          orderstop.TakeProfitTicket(m_trade.ResultOrder());
@@ -124,7 +124,7 @@ double CStop::TakeProfitPrice(COrder *order,COrderStop *orderstop)
 //+------------------------------------------------------------------+
 double CStop::StopLossPrice(COrder *order,COrderStop *orderstop)
   {
-   double val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.OrderType(),order.Price());
+   double val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.Symbol(),order.OrderType(),order.Price());
    if((Pending() || Broker()) && (val>0.0))
    {
       if(OpenStop(order,orderstop,val))

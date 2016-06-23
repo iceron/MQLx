@@ -124,11 +124,11 @@ public:
    //--- stop order price calculation   
    virtual bool      Refresh(const string);
    virtual double    StopLossCalculate(const string,const ENUM_ORDER_TYPE,const double);
-   virtual double    StopLossCustom(const ENUM_ORDER_TYPE,const double) {return 0;}
+   virtual double    StopLossCustom(const string,const ENUM_ORDER_TYPE,const double) {return 0;}
    virtual double    StopLossPrice(COrder *,COrderStop *){return 0;}
    virtual double    StopLossTicks(const ENUM_ORDER_TYPE,const double) {return m_stoploss;}
    virtual double    TakeProfitCalculate(const string,const ENUM_ORDER_TYPE,const double price);
-   virtual double    TakeProfitCustom(const ENUM_ORDER_TYPE,const double) {return 0;}
+   virtual double    TakeProfitCustom(const string,const ENUM_ORDER_TYPE,const double) {return 0;}
    virtual double    TakeProfitPrice(COrder *,COrderStop *) {return 0;}
    virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE,const double) {return m_takeprofit;}
    //--- trailing   

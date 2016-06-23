@@ -20,7 +20,7 @@ public:
                      CEventSubscriberBase(void);
                     ~CEventSubscriberBase(void);
    virtual bool      Init(void);                    
-   virtual CObject  *GetContainer(void) const {return GetPointer(m_container);}
+   virtual CEventAggregator *GetContainer(void) const {return m_container;}
    virtual void      SetContainer(CEventAggregator *aggregator) {m_container=aggregator;}
    virtual void      Notify(string,CObject*);
    virtual bool      CheckName(string);

@@ -9,6 +9,7 @@
 #include "..\..\Common\Enum\ENUM_MONEY_UPDATE_TYPE.mqh"
 #include "..\Symbol\SymbolManagerBase.mqh"
 #include "..\Lib\AccountInfo.mqh"
+#include "..\Event\EventAggregatorBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
