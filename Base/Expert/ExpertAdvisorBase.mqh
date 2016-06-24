@@ -11,7 +11,6 @@
 #include "..\Stop\StopsBase.mqh"
 #include "..\Money\MoneysBase.mqh"
 #include "..\Time\TimesBase.mqh"
-#include "..\Comment\CommentsBase.mqh"
 #include "..\Ordermanager\OrderManagerBase.mqh"
 #include "..\Event\EventAggregatorBase.mqh"
 //+------------------------------------------------------------------+
@@ -37,8 +36,6 @@ protected:
    COrderManager     m_order_man;
    //--- trading time objects
    CTimes           *m_times;
-   //--- comments
-   CComments        *m_comments;
    //--- candle
    CCandleManager    m_candle_man;
    //--- events
@@ -50,7 +47,6 @@ public:
                     ~CExpertAdvisorBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STRATEGY;}
    //--- initialization
-   bool              AddChartComment(CComments*);
    bool              AddEventAggregator(CEventAggregator*);
    bool              AddMoneys(CMoneys*);
    bool              AddSignal(CSignal*);
@@ -79,7 +75,6 @@ public:
    void              SymbolName(const string);
    //--- object pointers
    CAccountInfo     *AccountInfo(void);
-   CComments        *Comments(void);
    CStop            *MainStop(void);
    CMoneys          *Moneys(void);
    COrders          *Orders(void);
@@ -88,9 +83,6 @@ public:
    CStops           *Stops(void);
    CSignal          *Signal(void);
    CTimes           *Times(void);
-   //--- chart comment manager
-   void              AddComment(const string);
-   void              DisplayComment(void);
    //--- order manager
    bool              AddOtherMagic(const int);
    void              AddOtherMagicString(const string&[]);
@@ -153,7 +145,6 @@ protected:
    //--- deinitialization
    void              Deinit(const int);
    void              DeinitAccount(void);
-   void              DeinitComments(void);
    void              DeinitSignals(void);
    void              DeinitSymbol(void);
    void              DeinitTimes(void);
@@ -238,13 +229,6 @@ string CExpertAdvisorBase::SymbolName(void) const
 CAccountInfo *CExpertAdvisorBase::AccountInfo(void)
   {
    return GetPointer(m_account);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-CComments *CExpertAdvisorBase::Comments(void)
-  {
-   return GetPointer(m_comments);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -594,35 +578,9 @@ bool CExpertAdvisorBase::InitEventAggregator(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertAdvisorBase::AddComment(const string comment)
-  {
-   if(CheckPointer(m_comments)==POINTER_DYNAMIC)
-      m_comments.Add(new CComment(comment));
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void CExpertAdvisorBase::DisplayComment()
-  {
-   if(CheckPointer(m_comments)==POINTER_DYNAMIC)
-      m_comments.Display();
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool CExpertAdvisorBase::AddMoneys(CMoneys *moneys)
   {
    return m_order_man.AddMoneys(GetPointer(moneys));
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CExpertAdvisorBase::AddChartComment(CComments *comments)
-  {
-   if(CheckPointer(m_comments))
-      delete m_comments;
-   m_comments=comments;
-   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -848,7 +806,6 @@ bool CExpertAdvisorBase::OnTick(void)
       if(checkopenshort)
          ret=TradeOpen(m_symbol_name,ORDER_TYPE_SELL);
      }
-   DisplayComment();
    return ret;
   }
 //+------------------------------------------------------------------+
@@ -865,7 +822,6 @@ void CExpertAdvisorBase::Deinit(const int reason=0)
   {
    DeinitSymbol();
    DeinitSignals();
-   DeinitComments();
    DeinitTimes();
   }
 //+------------------------------------------------------------------+
@@ -881,14 +837,6 @@ void CExpertAdvisorBase::DeinitSignals(void)
 void CExpertAdvisorBase::DeinitSymbol(void)
   {
    m_symbol_man.Deinit();
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void CExpertAdvisorBase::DeinitComments(void)
-  {
-   if(CheckPointer(m_comments))
-      delete m_comments;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
