@@ -21,6 +21,7 @@ protected:
 public:
                      CCandleManagerBase(void);
                     ~CCandleManagerBase(void);
+   virtual int       Type(void) const {return(CLASS_TYPE_CANDLE_MANAGER);}
    virtual bool      Init(CSymbolManager*,CEventAggregator*);
    virtual bool      Add(const string,const int);
    CObject          *GetContainer(void);

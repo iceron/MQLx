@@ -19,7 +19,7 @@ protected:
 public:
                      CExpertAdvisorsBase(void);
                     ~CExpertAdvisorsBase(void);
-   virtual int       Type(void) const {return CLASS_TYPE_EXPERT;}
+   virtual int       Type(void) const {return CLASS_TYPE_EXPERTS;}
    void              SetContainer(CObject *container);
    CObject          *GetContainer(void);
    //--- getters and setters

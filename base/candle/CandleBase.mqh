@@ -25,6 +25,7 @@ protected:
 public:
                      CCandleBase(void);
                     ~CCandleBase(void);
+   virtual int       Type(void) const {return(CLASS_TYPE_CANDLE);}
    virtual bool      Init(CSymbolInfo*,const int);
    virtual bool      Init(CEventAggregator*);
    CObject          *GetContainer(void);

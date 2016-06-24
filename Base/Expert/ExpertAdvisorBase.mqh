@@ -45,7 +45,7 @@ protected:
 public:
                      CExpertAdvisorBase(void);
                     ~CExpertAdvisorBase(void);
-   virtual int       Type(void) const {return CLASS_TYPE_STRATEGY;}
+   virtual int       Type(void) const {return CLASS_TYPE_EXPERT;}
    //--- initialization
    bool              AddEventAggregator(CEventAggregator*);
    bool              AddMoneys(CMoneys*);

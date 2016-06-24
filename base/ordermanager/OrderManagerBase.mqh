@@ -45,6 +45,7 @@ protected:
 public:
                      COrderManagerBase(void);
                     ~COrderManagerBase(void);
+   virtual int       Type(void) const {return(CLASS_TYPE_ORDER_MANAGER);}
    //--- initialization
    virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
    virtual bool      InitStops(void);
@@ -107,7 +108,7 @@ public:
    virtual bool      AddStops(CStops*);
    //--- trade manager
    virtual bool      AddOtherMagic(const int);
-   virtual void      AddOtherMagicString(const string&[]);   
+   virtual void      AddOtherMagicString(const string&[]);
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    //--- events

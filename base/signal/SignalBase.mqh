@@ -27,8 +27,9 @@ class CSignalBase : public CObject
 public:
                      CSignalBase(void);
                     ~CSignalBase(void);
+   virtual int       Type(void) const {return(CLASS_TYPE_SIGNAL);}
    virtual bool      Init(CSymbolManager*,CEventAggregator*);
-   virtual CObject  *GetContainer(void);
+   virtual CObject *GetContainer(void);
    virtual void      SetContainer(CObject*);
    virtual bool      Validate(void);
    virtual bool      AddFilter(CSignal*);
@@ -88,7 +89,7 @@ bool CSignalBase::Init(CSymbolManager *symbol_man,CEventAggregator *event_man=NU
 //+------------------------------------------------------------------+
 CSignalBase::SetContainer(CObject *container)
   {
-   m_container = container;
+   m_container=container;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

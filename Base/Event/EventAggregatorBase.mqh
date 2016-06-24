@@ -18,6 +18,7 @@ protected:
 public:
                      CEventAggregatorBase(void);
                     ~CEventAggregatorBase(void);
+   virtual int       Type(void) const {return(CLASS_TYPE_EVENT_AGGREGATOR);}
    virtual bool      Init(void);
    virtual bool      Validate(void) const;
    void              Active(bool);

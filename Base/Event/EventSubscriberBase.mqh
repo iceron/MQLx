@@ -6,6 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Object.mqh>
+#include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
 class CEventAggregator;
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -19,6 +20,7 @@ protected:
 public:
                      CEventSubscriberBase(void);
                     ~CEventSubscriberBase(void);
+   virtual int       Type(void) const {return(CLASS_TYPE_EVENT_SUBSCRIBER);}
    virtual bool      Init(void);
    virtual bool      Validate(void) const;
    virtual CEventAggregator *GetContainer(void);
