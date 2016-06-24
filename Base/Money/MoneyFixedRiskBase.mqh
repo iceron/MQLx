@@ -16,8 +16,6 @@ public:
                     ~CMoneyFixedRiskBase(void);
    virtual bool      Validate(void);
    virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
-   void              Risk(const double);
-   double            Risk(void) const;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -41,9 +39,10 @@ bool CMoneyFixedRiskBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
+bool CMoneyFixedRiskBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    m_symbol=m_symbol_man.Get(symbol);
+   double last_volume=m_volume;
    if(CheckPointer(m_symbol))
      {
       double balance=m_equity==false?m_account.Balance():m_account.Equity();
@@ -57,8 +56,8 @@ CMoneyFixedRiskBase::UpdateLotSize(const string symbol,const double price,const 
         }
       else ticks=MathAbs(price-sl)/m_symbol.TickSize();
       m_volume=(m_risk/m_symbol.TickValue())/ticks;
-      OnLotSizeUpdated();
      }
+    return NormalizeDouble(last_volume-m_volume,2)==0;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

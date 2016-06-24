@@ -11,18 +11,20 @@
 //+------------------------------------------------------------------+
 class CMoneyFixedRiskPerPointBase : public CMoney
   {
+protected:
+   double            m_risk;
 public:
                      CMoneyFixedRiskPerPointBase(void);
                     ~CMoneyFixedRiskPerPointBase(void);
    virtual bool      Validate(void);
-   virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
+   virtual bool      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
    void              Risk(const double);
    double            Risk(void) const;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPointBase::CMoneyFixedRiskPerPointBase(void)
+CMoneyFixedRiskPerPointBase::CMoneyFixedRiskPerPointBase(void) : m_risk(0)
   {
   }
 //+------------------------------------------------------------------+
@@ -60,15 +62,16 @@ bool CMoneyFixedRiskPerPointBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPointBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
+bool CMoneyFixedRiskPerPointBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
   {
-   m_symbol = m_symbol_man.Get(symbol);
-   if (CheckPointer(m_symbol))
+   m_symbol=m_symbol_man.Get(symbol);
+   double last_volume=m_volume;
+   if(CheckPointer(m_symbol))
      {
       double balance=m_equity==false?m_account.Balance():m_account.Equity();
-      m_volume = (m_risk/m_symbol.TickValue());
-      OnLotSizeUpdated();
+      m_volume=(m_risk/m_symbol.TickValue());
      }
+   return NormalizeDouble(last_volume-m_volume,2)==0;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

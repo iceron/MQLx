@@ -18,7 +18,7 @@ public:
                      CMoneyFixedRatioBase(void);
                     ~CMoneyFixedRatioBase(void);
    virtual bool      Validate(void);
-   virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
+   virtual bool      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
    void              VolumeBase(const double);
    double            VolumeBase(void) const;
    void              VolumeIncrement(const double);
@@ -31,7 +31,7 @@ CMoneyFixedRatioBase::CMoneyFixedRatioBase(void) : m_volume_base(0),
                                                    m_volume_inc(0)
 
   {
-   m_update=MONEY_UPDATE_BALANCE;
+   //m_update=MONEY_UPDATE_BALANCE;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -82,16 +82,17 @@ double CMoneyFixedRatioBase::VolumeIncrement(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRatioBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
+bool CMoneyFixedRatioBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl=0)
   {
    m_symbol=m_symbol_man.Get(symbol);
+   double last_volume=m_volume;
    if(CheckPointer(m_symbol))
      {
       double balance=m_equity==false?m_account.Balance():m_account.Equity();
       m_volume=m_volume_base+((int)(balance/m_balance_inc))*m_volume_inc;
       m_balance=balance;
-      OnLotSizeUpdated();
      }
+   return NormalizeDouble(last_volume-m_volume,2)==0;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

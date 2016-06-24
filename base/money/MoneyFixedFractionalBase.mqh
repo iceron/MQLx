@@ -12,12 +12,12 @@
 class CMoneyFixedFractionalBase : public CMoney
   {
 protected:
-   double            m_risk_percent;
+   double            m_risk;
 public:
                      CMoneyFixedFractionalBase(void);
                     ~CMoneyFixedFractionalBase(void);
    virtual bool      Validate(void);
-   virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
+   virtual bool      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
    void              RiskPercent(const double);
    double            RiskPercent(void) const;
   };
@@ -38,9 +38,9 @@ CMoneyFixedFractionalBase::~CMoneyFixedFractionalBase(void)
 //+------------------------------------------------------------------+
 bool CMoneyFixedFractionalBase::Validate(void)
   {
-   if(m_risk_percent<=0)
+   if(m_risk<=0)
      {
-      PrintFormat(__FUNCTION__+": invalid percentage: "+(string)m_risk_percent);
+      PrintFormat(__FUNCTION__+": invalid percentage: "+(string)m_risk);
       return false;
      }
    return true;
@@ -50,21 +50,22 @@ bool CMoneyFixedFractionalBase::Validate(void)
 //+------------------------------------------------------------------+
 CMoneyFixedFractionalBase::RiskPercent(const double value)
   {
-   m_risk_percent=value;
+   m_risk=value;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 double CMoneyFixedFractionalBase::RiskPercent(void) const
   {
-   return m_risk_percent;
+   return m_risk;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CMoneyFixedFractionalBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
+bool CMoneyFixedFractionalBase::UpdateLotSize(const string symbol,const double price,const ENUM_ORDER_TYPE type,const double sl)
   {
    m_symbol=m_symbol_man.Get(symbol);
+   double last_volume=m_volume;
    if(CheckPointer(m_symbol))
      {
       double balance=m_equity==false?m_account.Balance():m_account.Equity();
@@ -77,9 +78,9 @@ void CMoneyFixedFractionalBase::UpdateLotSize(const string symbol,const double p
             ticks=MathAbs(m_symbol.Ask()-sl)/m_symbol.TickSize();
         }
       else ticks=MathAbs(price-sl)/m_symbol.TickSize();
-      m_volume=((balance*(m_risk_percent/100))/ticks)/m_symbol.TickValue();
-      OnLotSizeUpdated();
+      m_volume=((balance*(m_risk/100))/ticks)/m_symbol.TickValue();
      }
+   return NormalizeDouble(last_volume-m_volume,2)==0;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
