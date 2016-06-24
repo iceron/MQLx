@@ -125,9 +125,11 @@ public:
    void              AddCandle(const string,const int);
    //--- new bar detection
    void              DetectNewBars(void);
-   //-- generic events
+   //-- events
    virtual bool      OnTick(void);
-   virtual void      OnChartEvent(const int,const long&,const double&,const string&) {}
+   virtual void      OnChartEvent(const int,const long&,const double&,const string&);
+   virtual void      OnTimer(void);
+   virtual void      OnTrade(void);
    //--- recovery
    virtual bool      Save(const int);
    virtual bool      Load(const int);
@@ -807,6 +809,24 @@ bool CExpertAdvisorBase::OnTick(void)
          ret=TradeOpen(m_symbol_name,ORDER_TYPE_SELL);
      }
    return ret;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CExpertAdvisorBase::OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam)
+  {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CExpertAdvisorBase::OnTimer(void)
+  {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CExpertAdvisorBase::OnTrade(void)
+  {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

@@ -23,8 +23,8 @@ public:
    void              SetContainer(CObject *container);
    CObject          *GetContainer(void);
    //--- getters and setters
-   bool              Active(void) const {return m_active;}
-   void              Active(const bool activate) {m_active=activate;}
+   bool              Active(void) const;
+   void              Active(const bool);
    int               OrdersTotal(void) const;
    int               OrdersHistoryTotal(void) const;
    int               TradesTotal(void) const;
@@ -33,7 +33,9 @@ public:
    virtual bool      InitComponents(void) const;
    //--- events
    virtual void      OnTick(void);
-   virtual void      OnChartEvent(const int id,const long &lparam,const double &dparam,const string &sparam);
+   virtual void      OnChartEvent(const int,const long&,const double&,const string&);
+   virtual void      OnTimer(void);
+   virtual void      OnTrade(void);
    //--- deinitialization
    virtual void      OnDeinit(const int reason=0);
    //--- recovery
@@ -96,6 +98,20 @@ bool CExpertAdvisorsBase::InitComponents(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool CExpertAdvisorsBase::Active(void) const
+  {
+   return m_active;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CExpertAdvisorsBase::Active(const bool value)
+  {
+   m_active=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 int CExpertAdvisorsBase::OrdersTotal(void) const
   {
    int total=0;
@@ -116,6 +132,30 @@ void CExpertAdvisorsBase::OnTick(void)
      {
       CExpertAdvisor *e=At(i);
       e.OnTick();
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CExpertAdvisorsBase::OnTrade(void)
+  {
+   if(!Active()) return;
+   for(int i=0;i<Total();i++)
+     {
+      CExpertAdvisor *e=At(i);
+      e.OnTrade();
+     }
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CExpertAdvisorsBase::OnTimer(void)
+  {
+   if(!Active()) return;
+   for(int i=0;i<Total();i++)
+     {
+      CExpertAdvisor *e=At(i);
+      e.OnTimer();
      }
   }
 //+------------------------------------------------------------------+

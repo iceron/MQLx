@@ -599,7 +599,6 @@ void COrderManagerBase::OnTick(void)
 //+------------------------------------------------------------------+
 bool COrderManagerBase::IsPositionAllowed(ENUM_ORDER_TYPE type) const
   {
-
    return EnableTrade() && ((COrder::IsOrderTypeLong(type) && EnableLong())
                       || (COrder::IsOrderTypeShort(type) && EnableShort()));
    return true;
