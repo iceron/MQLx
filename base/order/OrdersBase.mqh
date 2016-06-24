@@ -29,7 +29,7 @@ public:
    //--- events                  
    virtual void      OnTick(void);
    //--- order creation
-   virtual bool      NewOrder(const int,const string,const int,const ENUM_ORDER_TYPE,const double,const double);
+   virtual bool      NewOrder(const ulong,const string,const int,const ENUM_ORDER_TYPE,const double,const double);
    //--- archiving
    virtual bool      CloseStops(void);
    //--- recovery
@@ -84,7 +84,7 @@ COrdersBase::SetStops(CStops *stops)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrdersBase::NewOrder(const int ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
+bool COrdersBase::NewOrder(const ulong ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
    COrder *order=new COrder(ticket,symbol,type,volume,price);
    if(CheckPointer(order)==POINTER_DYNAMIC)
