@@ -142,7 +142,7 @@ protected:
    //--- stop order entry   
    virtual bool      GetClosePrice(const string,const ENUM_ORDER_TYPE,double&);
    //--- stop order exit
-   virtual bool      CloseStop(COrder*,COrderStop*,const double);
+   virtual bool      CloseStop(COrder*,COrderStop*,const double)=0;
    //--- deinitialization
    virtual void      Deinit(void);
    virtual void      DeinitSymbol(void);
@@ -321,7 +321,8 @@ int CStopBase::Magic(void) const
 //+------------------------------------------------------------------+
 CStopBase::Main(const bool main)
   {
-   m_main=main; m_oco=true;
+   m_main=main; 
+   m_oco=m_main;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -422,6 +423,8 @@ CStopBase::StopLossStyle(const ENUM_LINE_STYLE style)
 void CStopBase::StopType(const ENUM_STOP_TYPE type)
   {
    m_stop_type=type;
+   if (m_stop_type==STOP_TYPE_BROKER)
+      m_main = true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -698,7 +701,7 @@ bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
    ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
    if(!GetClosePrice(order.Symbol(),type,price))
       return false;
-   bool close=false;
+   bool close=false;   
    if(type==ORDER_TYPE_BUY)
       if(price<=stoploss)
          close=true;
@@ -745,13 +748,6 @@ bool CStopBase::Refresh(const string symbol)
    if(CheckPointer(m_symbol))
       return m_symbol.RefreshRates();
    return false;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CStopBase::CloseStop(COrder*,COrderStop*,const double)
-  {
-   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

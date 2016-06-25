@@ -339,17 +339,18 @@ void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
    m_stop.Refresh(order.Symbol());
    double stoploss=m_stop.StopLossPrice(order,GetPointer(this));
    double takeprofit=m_stop.TakeProfitPrice(order,GetPointer(this));
+   m_stoploss.Add(stoploss);
+   m_takeprofit.Add(takeprofit);
    if(MQLInfoInteger(MQL_OPTIMIZATION) || (MQLInfoInteger(MQL_TESTER) && !MQLInfoInteger(MQL_VISUAL_MODE)))
      {
      }
    else
      {
-      m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,stoploss);
-      m_stoploss.Add(stoploss);
-      m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,takeprofit);
-      m_takeprofit.Add(takeprofit);
+      m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,stoploss);      
+      m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,takeprofit);      
       m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
      }
+   
    if(stop.Main())
       order.MainStop(GetPointer(this));
   }
