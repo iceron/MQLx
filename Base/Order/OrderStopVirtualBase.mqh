@@ -100,6 +100,8 @@ bool COrderStopVirtualBase::Update(void)
       return true;
    if(m_order.IsClosed() || m_order.IsSuspended())
       return false;
+   if(!CheckPointer(m_objsl) && !CheckPointer(m_objtp))
+      return true;
    double stoploss=0.0,takeprofit=0.0;
    if (CheckPointer(m_objsl))
      {

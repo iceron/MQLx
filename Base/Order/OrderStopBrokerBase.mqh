@@ -14,7 +14,7 @@ class COrderStopBrokerBase : public COrderStop
 public:
                      COrderStopBrokerBase(void);
                     ~COrderStopBrokerBase(void);
-   virtual bool      Update(void);
+   //virtual bool      Update(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -28,6 +28,7 @@ COrderStopBrokerBase::COrderStopBrokerBase(void)
 COrderStopBrokerBase::~COrderStopBrokerBase(void)
   {
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -56,6 +57,7 @@ bool COrderStopBrokerBase::Update(void)
      }
    return result;
   }
+*/
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
 #include "..\..\MQL5\Order\OrderStopBroker.mqh"
