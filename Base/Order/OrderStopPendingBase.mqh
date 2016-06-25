@@ -138,8 +138,8 @@ bool COrderStopPendingBase::Update(void)
       if (OrderSelect(m_takeprofit_ticket))
       {
          order_takeprofit = OrderGetDouble(ORDER_PRICE_OPEN);
-         if (MathAbs(order_takeprofit-StopLoss())>=ticksize)
-         StopLoss(order_takeprofit);
+         if (MathAbs(order_takeprofit-TakeProfit())>=ticksize)
+         TakeProfit(order_takeprofit);
       }     
       return true;
      }
