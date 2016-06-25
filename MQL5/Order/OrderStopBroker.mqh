@@ -100,14 +100,24 @@ void COrderStopBroker::Check(double &volume)
 //+------------------------------------------------------------------+
 bool COrderStopBroker::ModifyStopLoss(const double stoploss)
   {
+   /*
    return MoveStopLoss(stoploss);
+   */
+   if(m_stop.OrderModify(m_stoploss_ticket,stoploss))
+      return MoveStopLoss(stoploss);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderStopBroker::ModifyTakeProfit(const double takeprofit)
   {
+   /*
    return MoveTakeProfit(takeprofit);
+   */
+   if(m_stop.OrderModify(m_takeprofit_ticket,takeprofit))
+      return MoveTakeProfit(takeprofit);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

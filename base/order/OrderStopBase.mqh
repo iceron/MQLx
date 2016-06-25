@@ -391,8 +391,15 @@ bool COrderStopBase::CheckTrailing(void)
       (m_stoploss_closed && m_takeprofit_closed))
       return false;
    double stoploss=0,takeprofit=0;
-   if(!m_stoploss_closed) stoploss=m_stop.CheckTrailing(m_order.Symbol(),m_order.OrderType(),m_order.Price(),StopLoss(),TRAIL_TARGET_STOPLOSS);
-   if(!m_takeprofit_closed)takeprofit=m_stop.CheckTrailing(m_order.Symbol(),m_order.OrderType(),m_order.Price(),TakeProfit(),TRAIL_TARGET_TAKEPROFIT);
+   string symbol = m_order.Symbol();
+   ENUM_ORDER_TYPE type = m_order.OrderType();
+   double price = m_order.Price();
+   double sl = StopLoss();
+   double tp = TakeProfit();
+   if(!m_stoploss_closed) 
+      stoploss=m_stop.CheckTrailing(symbol,type,price,sl,TRAIL_TARGET_STOPLOSS);
+   if(!m_takeprofit_closed)
+      takeprofit=m_stop.CheckTrailing(symbol,type,price,tp,TRAIL_TARGET_TAKEPROFIT);
    if(!IsStopLossValid(stoploss))
       stoploss=0;
    if(!IsTakeProfitValid(takeprofit))
@@ -499,11 +506,10 @@ bool COrderStopBase::MoveStopLoss(const double stoploss)
   {
    if(CheckPointer(m_objsl))
      {
-      if(m_objsl.Move(stoploss))
-         StopLoss(stoploss);
-      else return false;
+      if(!m_objsl.Move(stoploss))
+         return false;
      }
-   return true;
+   return StopLoss(stoploss);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -512,11 +518,10 @@ bool COrderStopBase::MoveTakeProfit(const double takeprofit)
   {
    if(CheckPointer(m_objtp))
      {
-      if(m_objtp.Move(takeprofit))
-         TakeProfit(takeprofit);
-      else return false;
+      if(!m_objtp.Move(takeprofit))
+         return false;
      }
-   return true;
+   return TakeProfit(takeprofit);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
