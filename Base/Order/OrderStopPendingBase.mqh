@@ -59,12 +59,12 @@ COrderStopPendingBase::Check(double &volume)
          DeleteEntry();
       return;
      }
-   if(/*CheckPointer(m_objsl) && */!m_stoploss_closed)
+   if(!m_stoploss_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_stoploss_ticket))
          m_stoploss_closed=true;
      }
-   if(/*CheckPointer(m_objtp)==POINTER_DYNAMIC && */!m_takeprofit_closed)
+   if(!m_takeprofit_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket))
          m_takeprofit_closed=true;
@@ -90,7 +90,7 @@ COrderStopPendingBase::Check(double &volume)
       if(m_takeprofit_closed)
          DeleteTakeProfit();
      }
-   if(((m_stoploss_closed || !CheckPointer(m_objsl)) && (m_takeprofit_closed || !CheckPointer(m_objtp))) || volume<=0)
+   if((m_stoploss_closed && m_takeprofit_closed) || volume<=0)
      {
       DeleteStopLines();
       if(m_stop.Main())

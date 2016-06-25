@@ -49,10 +49,10 @@ void COrderStopVirtualBase::Check(double &volume)
          DeleteEntry();
       return;
      }   
-   if(/*CheckPointer(m_objsl) && */!m_stoploss_closed)
+   if(!m_stoploss_closed)
       if(m_stop.CheckStopLoss(m_order,GetPointer(this)))
          m_stoploss_closed=true;   
-   if(/*CheckPointer(m_objtp) && */!m_takeprofit_closed)
+   if(!m_takeprofit_closed)
       if(m_stop.CheckTakeProfit(m_order,GetPointer(this)))
          m_takeprofit_closed=true;
    if(m_stoploss_closed || m_takeprofit_closed)
@@ -69,7 +69,7 @@ void COrderStopVirtualBase::Check(double &volume)
       if(m_takeprofit_closed)
          DeleteTakeProfit();
      }
-   if(((m_stoploss_closed/* || !CheckPointer(m_objsl)*/) && (m_takeprofit_closed/* || !CheckPointer(m_objtp)*/)) || volume<=0)
+   if((m_stoploss_closed && m_takeprofit_closed) || volume<=0)
      {
       m_closed = true;
       DeleteStopLines();

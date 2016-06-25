@@ -505,10 +505,8 @@ bool COrderStopBase::DeleteStopLines(void)
 bool COrderStopBase::MoveStopLoss(const double stoploss)
   {
    if(CheckPointer(m_objsl))
-     {
       if(!m_objsl.Move(stoploss))
          return false;
-     }
    return StopLoss(stoploss);
   }
 //+------------------------------------------------------------------+
@@ -517,10 +515,8 @@ bool COrderStopBase::MoveStopLoss(const double stoploss)
 bool COrderStopBase::MoveTakeProfit(const double takeprofit)
   {
    if(CheckPointer(m_objtp))
-     {
       if(!m_objtp.Move(takeprofit))
          return false;
-     }
    return TakeProfit(takeprofit);
   }
 //+------------------------------------------------------------------+
