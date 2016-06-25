@@ -50,6 +50,7 @@ public:
    virtual void      Init(COrder*,CStop*,COrderStops*);
    virtual COrderStops *GetContainer(void);
    virtual void      SetContainer(COrderStops*);
+   virtual void      Show(bool);
    //--- getters and setters  
    bool              Active(void) const;
    void              Active(bool active);
@@ -77,8 +78,6 @@ public:
    ulong             TakeProfitTicket(void) const;
    void              Volume(const double);
    double            Volume(void) const;
-   //--- hiding and showing of stop lines
-   virtual void      Show(bool);
    //--- checking   
    virtual void      Check(double&)=0;
    virtual bool      Close(void);
@@ -103,7 +102,6 @@ protected:
    virtual bool      ModifyStopLoss(const double)=0;
    virtual bool      ModifyTakeProfit(const double)=0;
    virtual bool      UpdateOrderStop(const double,const double)=0;
-   //--- objects
    virtual bool      MoveStopLoss(const double);
    virtual bool      MoveTakeProfit(const double);
   };
