@@ -116,6 +116,7 @@ public:
    virtual bool      CheckStopLoss(COrder*,COrderStop*);
    virtual bool      CheckTakeProfit(COrder*,COrderStop*);
    virtual bool      CheckStopOrder(double&,const ulong);
+   virtual bool      DeleteStopOrder(const ulong)=0;
    virtual bool      OrderModify(const ulong,const double);
    //--- stop order object creation
    virtual CStopLine *CreateEntryObject(const long,const string,const int,const double);

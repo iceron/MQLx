@@ -111,7 +111,8 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
    COrderInfo ord;
    if(CheckPointer(order))
      {
-      if(order.Volume()<=0) return true;
+      if(order.Volume()<=0) 
+         return true;
       if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),order.Symbol())!=0)
          m_symbol=m_symbol_man.Get(order.Symbol());
       if(CheckPointer(m_symbol))

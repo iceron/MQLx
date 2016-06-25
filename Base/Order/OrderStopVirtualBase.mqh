@@ -40,8 +40,9 @@ void COrderStopVirtualBase::Check(double &volume)
   {
    if(!CheckPointer(m_stop) || !Active())
       return;
-   if(m_order.IsClosed() || m_order.IsSuspended())
+   if(m_closed || m_order.IsClosed() || m_order.IsSuspended())
      {
+      m_closed = true;
       bool delete_sl=DeleteStopLoss();
       bool delete_tp=DeleteTakeProfit();
       if(delete_sl && delete_tp)
@@ -70,6 +71,7 @@ void COrderStopVirtualBase::Check(double &volume)
      }
    if(((m_stoploss_closed/* || !CheckPointer(m_objsl)*/) && (m_takeprofit_closed/* || !CheckPointer(m_objtp)*/)) || volume<=0)
      {
+      m_closed = true;
       DeleteStopLines();
       if(m_stop.Main())
          m_order.IsSuspended(true);
