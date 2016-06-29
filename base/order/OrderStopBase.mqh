@@ -27,8 +27,6 @@ protected:
    double            m_volume;
    CArrayDouble      m_stoploss;
    CArrayDouble      m_takeprofit;
-   double            m_stoploss_initial;
-   double            m_takeprofit_initial;
    ulong             m_stoploss_ticket;
    ulong             m_takeprofit_ticket;
    bool              m_stoploss_closed;
@@ -610,8 +608,6 @@ bool COrderStopBase::Save(const int handle)
    file.WriteDouble(m_volume);
    file.WriteObject(GetPointer(m_stoploss));
    file.WriteObject(GetPointer(m_takeprofit));
-   file.WriteDouble(m_stoploss_initial);
-   file.WriteDouble(m_takeprofit_initial);
    file.WriteLong(m_stoploss_ticket);
    file.WriteLong(m_takeprofit_ticket);
    file.WriteBool(m_stoploss_closed);
@@ -635,10 +631,6 @@ bool COrderStopBase::Load(const int handle)
    if(!file.ReadObject(GetPointer(m_stoploss)))
       return false;
    if(!file.ReadObject(GetPointer(m_takeprofit)))
-      return false;
-   if(!file.ReadDouble(m_stoploss_initial))
-      return false;
-   if(!file.ReadDouble(m_takeprofit_initial))
       return false;
    if(!file.ReadLong(m_stoploss_ticket))
       return false;
