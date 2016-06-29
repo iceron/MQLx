@@ -19,10 +19,10 @@ protected:
 public:
                      CExpertAdvisorsBase(void);
                     ~CExpertAdvisorsBase(void);
-   virtual int       Type(void) const {return CLASS_TYPE_EXPERTS;}
+   virtual int       Type(void) const {return CLASS_TYPE_EXPERTS;}   
+   //--- getters and setters
    void              SetContainer(CObject *container);
    CObject          *GetContainer(void);
-   //--- getters and setters
    bool              Active(void) const;
    void              Active(const bool);
    int               OrdersTotal(void) const;
@@ -209,9 +209,15 @@ void CExpertAdvisorsBase::OnDeinit(const int reason=0)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::CreateElement(const int index)
   {
-   CExpertAdvisor*e=new CExpertAdvisor();
-   e.SetContainer(GetPointer(this));
-   return Insert(GetPointer(e),index);
+   CExpertAdvisor*expert_advisor=new CExpertAdvisor();   
+   if(!CheckPointer(expert_advisor))
+      return(false);
+   expert_advisor.SetContainer(GetPointer(this));
+   if(!Reserve(1))
+      return(false);
+   m_data[index]=expert_advisor;
+   m_sort_mode=-1;
+   return CheckPointer(m_data[index]);;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
