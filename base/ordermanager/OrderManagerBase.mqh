@@ -58,7 +58,7 @@ public:
    virtual void      SetContainer(CObject*);
    virtual bool      Validate(void) const;
    //--- setters and getters
-   void              AsyncMode(const bool);
+   void              AsyncMode(const string,const bool);
    string            Comment(void) const;
    void              Comment(const string);
    bool              EnableTrade(void) const;
@@ -175,9 +175,12 @@ void COrderManagerBase::SetContainer(CObject *container)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void COrderManagerBase::AsyncMode(const bool async)
+void COrderManagerBase::AsyncMode(const string symbol,const bool async)
   {
-   m_trade.SetAsyncMode(async);
+   if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),symbol)!=0)
+      m_symbol=m_symbol_man.Get(symbol);
+   if (CheckPointer(m_symbol))
+      m_trade.SetAsyncMode(async);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -476,7 +479,7 @@ bool COrderManagerBase::Init(CSymbolManager *symbol_man,CAccountInfo *account,CE
 //+------------------------------------------------------------------+
 bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,const double price,const double sl,const double tp)
   {
-   bool ret=0;
+   bool ret=false;
    if(CheckPointer(m_symbol))
       m_trade=m_trade_man.Get(m_symbol.Name());
    if(CheckPointer(m_trade))

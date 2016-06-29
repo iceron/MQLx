@@ -57,6 +57,8 @@ bool COrderManager::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
    int trades_total = TradesTotal();
    int orders_total = OrdersTotal();
    m_symbol = m_symbol_man.Get(symbol);
+   if (!CheckPointer(m_symbol))
+      return false;
    if(!IsPositionAllowed(type))
       return true;
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
