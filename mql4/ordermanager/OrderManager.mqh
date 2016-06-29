@@ -39,11 +39,15 @@ void COrderManager::OnTradeTransaction(void)
    int total= ::OrdersTotal();
    for(int i=0;i<total;i++)
      {
-      if(!OrderSelect(i,SELECT_BY_POS)) continue;
-      if(OrderMagicNumber()!=m_magic && m_other_magic.Search(OrderMagicNumber())<0) continue;
-      if (!m_symbol_man.Search(OrderSymbol())) continue;
+      if(!OrderSelect(i,SELECT_BY_POS)) 
+         continue;
+      if(OrderMagicNumber()!=m_magic && m_other_magic.Search(OrderMagicNumber())<0) 
+         continue;
+      if (!m_symbol_man.Search(OrderSymbol())) 
+         continue;
       temp.Ticket(OrderTicket());
-      if(m_orders.Search(temp)>=0) continue;
+      if(m_orders.Search(temp)>=0) 
+         continue;
       m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
      }
    delete temp;

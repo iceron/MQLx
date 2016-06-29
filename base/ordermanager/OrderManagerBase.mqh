@@ -29,7 +29,7 @@ protected:
    bool              m_long_allowed;
    bool              m_short_allowed;
    int               m_max_orders;
-   int               m_max_trades;   
+   int               m_max_trades;
    COrders           m_orders;
    COrders           m_orders_history;
    CArrayInt         m_other_magic;
@@ -110,7 +110,7 @@ public:
    //--- trade manager
    virtual bool      AddOtherMagic(const int);
    virtual void      AddOtherMagicString(const string&[]);
-   virtual bool      IsHedging(void) const {return true;}
+   virtual bool      IsHedging(void) const;
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    //--- events
@@ -145,7 +145,7 @@ COrderManagerBase::COrderManagerBase() : m_lotsize(0.1),
                                          m_long_allowed(true),
                                          m_short_allowed(true),
                                          m_max_orders(1),
-                                         m_max_trades(-1)                                         
+                                         m_max_trades(-1)
 
   {
    if(!m_other_magic.IsSorted())
@@ -179,7 +179,7 @@ void COrderManagerBase::AsyncMode(const string symbol,const bool async)
   {
    if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),symbol)!=0)
       m_symbol=m_symbol_man.Get(symbol);
-   if (CheckPointer(m_symbol))
+   if(CheckPointer(m_symbol))
       m_trade.SetAsyncMode(async);
   }
 //+------------------------------------------------------------------+
@@ -614,6 +614,13 @@ bool COrderManagerBase::IsPositionAllowed(ENUM_ORDER_TYPE type) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool COrderManagerBase::IsHedging(void) const
+  {
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE &type)
   {
    double price=0;
@@ -776,7 +783,7 @@ bool COrderManagerBase::Load(const int handle)
    if(handle==INVALID_HANDLE)
       return false;
    if(!file.ReadDouble(m_lotsize))
-      return false; 
+      return false;
    if(!file.ReadInteger(m_price_points))
       return false;
    if(!file.ReadString(m_comment))

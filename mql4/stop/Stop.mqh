@@ -39,7 +39,6 @@ CStop::CStop(void)
 CStop::CStop(const string name)
   {
    m_name=name;
-   m_entry_visible=false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

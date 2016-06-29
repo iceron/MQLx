@@ -82,7 +82,7 @@ public:
    void              Volume(const double);
    double            Volume(void) const;
    //--- checking   
-   virtual void      Check(double&) {}
+   virtual void      Check(double&)=0;
    virtual bool      Close(void);
    virtual bool      CheckTrailing(void);
    virtual bool      DeleteChartObject(const string);
@@ -373,7 +373,7 @@ void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
          m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,stoploss);
       if(m_stop.TakeProfitVisible())
          m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,takeprofit);
-      if(CheckPointer(m_objsl) || CheckPointer(m_objtp))
+      if((CheckPointer(m_objsl) || CheckPointer(m_objtp)) && m_stop.EntryVisible())
          m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,order.Price());
      }
    if(stop.Main())

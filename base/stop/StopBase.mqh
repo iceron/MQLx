@@ -83,7 +83,7 @@ public:
    void              EntryColor(const color clr);
    void              EntryStyle(const ENUM_LINE_STYLE);
    void              EntryVisible(const bool);
-   bool              EntryVisible(void) const;   
+   bool              EntryVisible(void) const;
    void              Magic(const int);
    int               Magic(void) const;
    void              Main(const bool);
@@ -309,14 +309,20 @@ CStopBase::EntryStyle(const ENUM_LINE_STYLE style)
   {
    m_entry_style=style;
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 CStopBase::EntryVisible(const bool value)
-{
-   m_entry_visible = value;
-}
+  {
+   m_entry_visible=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CStopBase::EntryVisible(void) const
-{
+  {
    return m_entry_visible;
-}
+  }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -336,7 +342,7 @@ int CStopBase::Magic(void) const
 //+------------------------------------------------------------------+
 CStopBase::Main(const bool main)
   {
-   m_main=main; 
+   m_main=main;
    m_oco=m_main;
   }
 //+------------------------------------------------------------------+
@@ -432,22 +438,28 @@ CStopBase::StopLossStyle(const ENUM_LINE_STYLE style)
   {
    m_stoploss_style=style;
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 CStopBase::StopLossVisible(const bool value)
-{
-   m_entry_visible = value;
-}
+  {
+   m_stoploss_visible=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CStopBase::StopLossVisible(void) const
-{
-   return m_entry_visible;
-}
+  {
+   return m_stoploss_visible;
+  }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void CStopBase::StopType(const ENUM_STOP_TYPE type)
   {
    m_stop_type=type;
-   if (m_stop_type==STOP_TYPE_BROKER)
-      m_main = true;
+   if(m_stop_type==STOP_TYPE_BROKER)
+      m_main=true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -512,14 +524,20 @@ CStopBase::TakeProfitStyle(const ENUM_LINE_STYLE style)
   {
    m_takeprofit_style=style;
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 CStopBase::TakeProfitVisible(const bool value)
-{
-   m_entry_visible = value;
-}
+  {
+   m_takeprofit_visible=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CStopBase::TakeProfitVisible(void) const
-{
-   return m_entry_visible;
-}
+  {
+   return m_takeprofit_visible;
+  }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -732,7 +750,7 @@ bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
    ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
    if(!GetClosePrice(order.Symbol(),type,price))
       return false;
-   bool close=false;   
+   bool close=false;
    if(type==ORDER_TYPE_BUY)
       if(price<=stoploss)
          close=true;

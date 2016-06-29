@@ -140,6 +140,10 @@ bool COrderStopBroker::Update(void)
          stoploss=m_objsl.GetPrice();
       if(CheckPointer(m_objtp))
          takeprofit=m_objtp.GetPrice();
+      if (stoploss==StopLoss())
+         stoploss = 0;
+      if (takeprofit==TakeProfit())
+         takeprofit = 0;
       result=UpdateOrderStop(stoploss,takeprofit);
      }
    return result;
