@@ -787,9 +787,11 @@ bool CExpertAdvisorBase::OnTick(void)
          if(m_order_man.CloseOrder(order,i))
             continue;
         }
-      if(m_position_reverse && 
-         ((checkcloselong && order.OrderType()==ORDER_TYPE_BUY) ||
-         (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL)))
+      if((m_position_reverse && 
+         ((checkopenlong && order.OrderType()==ORDER_TYPE_SELL) ||
+         (checkopenshort && order.OrderType()==ORDER_TYPE_BUY))) ||
+         (checkcloselong && order.OrderType()==ORDER_TYPE_BUY) ||
+         (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL))
         {
          if(m_order_man.CloseOrder(order,i))
             continue;
