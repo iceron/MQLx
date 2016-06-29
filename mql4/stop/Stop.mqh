@@ -93,7 +93,7 @@ double CStop::TakeProfitPrice(COrder *order,COrderStop *orderstop)
    if(orderstop.TakeProfit()>0)
       val=orderstop.TakeProfit();
    else
-      val=m_takeprofit>0?TakeProfitCalculate(order.Symbol(),order.OrderType(),order.Price()):TakeProfitCustom(order.OrderType(),order.Price());
+      val=m_takeprofit>0?TakeProfitCalculate(order.Symbol(),order.OrderType(),order.Price()):TakeProfitCustom(order.Symbol(),order.OrderType(),order.Price());
    if(Pending() && val>0.0)
       orderstop.TakeProfitTicket(OpenStop(order,orderstop,val));
    return NormalizeDouble(val,m_symbol.Digits());
@@ -107,7 +107,7 @@ double CStop::StopLossPrice(COrder *order,COrderStop *orderstop)
    if(orderstop.StopLoss()>0)
       val=orderstop.StopLoss();
    else
-      val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.OrderType(),order.Price());
+      val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.Symbol(),order.OrderType(),order.Price());
    if(Pending() && val>0.0)
       orderstop.StopLossTicket(OpenStop(order,orderstop,val));
    return NormalizeDouble(val,m_symbol.Digits());
@@ -226,7 +226,7 @@ bool CStop::MoveTakeProfit(const ulong ticket,const double takeprofit)
   {
    if(OrderSelect((int)ticket,SELECT_BY_TICKET))
      {
-      m_symbol=m_symbol_man.Get(order.Symbol());
+      m_symbol=m_symbol_man.Get(OrderSymbol());
       if(!CheckPointer(m_symbol))
          return false;
       m_trade=m_trade_man.Get(m_symbol.Name());

@@ -15,7 +15,7 @@ public:
                     ~COrderStop(void);
    virtual bool      NewTicket(void);
    virtual void      NewTicket(const bool);
-   virtual bool      Recreate(void);
+   virtual bool      RecreateStops(void);
    virtual void      UpdateTicket(const ulong); 
   };
 //+------------------------------------------------------------------+
@@ -54,7 +54,7 @@ void COrderStop::UpdateTicket(const ulong ticket)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderStop::Recreate(void)
+bool COrderStop::RecreateStops(void)
   {
    if(!m_order.IsClosed() && !m_order.IsSuspended())
      {

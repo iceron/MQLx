@@ -99,3 +99,4 @@ bool CExpertFileBase::ReadObject(T *object)
 #include "..\..\MQL4\File\ExpertFile.mqh"
 #endif
 //+------------------------------------------------------------------+
+CExpertFile *file;

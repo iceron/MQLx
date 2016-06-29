@@ -63,12 +63,13 @@ bool COrderManager::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
       return true;
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
-      double price=PriceCalculate(type);
+      ENUM_ORDER_TYPE ordertype = type;
+      double price=PriceCalculate(ordertype);
       double sl=0,tp=0;
       if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
         {
-         sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(type,price):m_main_stop.StopLossCalculate(symbol,type,price);
-         tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(type,price):m_main_stop.TakeProfitCalculate(symbol,type,price);
+         sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(symbol,type,price):m_main_stop.StopLossCalculate(symbol,type,price);
+         tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(symbol,type,price):m_main_stop.TakeProfitCalculate(symbol,type,price);
         }
       double lotsize=LotSizeCalculate(price,type,sl);
       ret=SendOrder(type,lotsize,price,sl,tp);

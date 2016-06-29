@@ -19,7 +19,7 @@ protected:
    virtual bool      ModifyStops(const double,const double);
    virtual bool      ModifyStopLoss(const double);
    virtual bool      ModifyTakeProfit(const double);
-   virtual bool      UpdateOrderStop(const double,const double)
+   virtual bool      UpdateOrderStop(const double,const double);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -108,7 +108,7 @@ bool COrderStopBroker::UpdateOrderStop(const double stoploss,const double takepr
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderStopBrokerBase::Update(void)
+bool COrderStopBroker::Update(void)
   {
    if(!CheckPointer(m_stop))
       return true;
@@ -117,7 +117,7 @@ bool COrderStopBrokerBase::Update(void)
    bool result=false;   
    if(!CheckPointer(m_objsl) && !CheckPointer(m_objtp))
      {
-      if(!OrderSelect(m_order.Ticket())
+      if(!OrderSelect((int)m_order.Ticket(),SELECT_BY_TICKET))
          return false;
       double ticksize = SymbolInfoDouble(OrderSymbol(),SYMBOL_TRADE_TICK_SIZE);      
       if (MathAbs(OrderStopLoss()-StopLoss())>=ticksize)

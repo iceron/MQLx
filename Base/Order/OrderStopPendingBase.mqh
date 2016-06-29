@@ -130,13 +130,13 @@ bool COrderStopPendingBase::Update(void)
      {
       double order_stoploss=0,order_takeprofit=0;
       double ticksize=SymbolInfoDouble(m_order.Symbol(),SYMBOL_TRADE_TICK_SIZE);
-      if(OrderSelect(m_stoploss_ticket))
+      if(OrderSelect((int)m_stoploss_ticket,SELECT_BY_TICKET))
         {
          order_stoploss=OrderGetDouble(ORDER_PRICE_OPEN);
          if(MathAbs(order_stoploss-StopLoss())>=ticksize)
             StopLoss(order_stoploss);
         }
-      if(OrderSelect(m_takeprofit_ticket))
+      if(OrderSelect((int)m_takeprofit_ticket,SELECT_BY_TICKET))
         {
          order_takeprofit=OrderGetDouble(ORDER_PRICE_OPEN);
          if(MathAbs(order_takeprofit-TakeProfit())>=ticksize)

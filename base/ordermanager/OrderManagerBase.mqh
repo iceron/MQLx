@@ -110,7 +110,7 @@ public:
    //--- trade manager
    virtual bool      AddOtherMagic(const int);
    virtual void      AddOtherMagicString(const string&[]);
-   virtual bool      IsHedging(void) const=0;
+   virtual bool      IsHedging(void) const {return true;}
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    //--- events
