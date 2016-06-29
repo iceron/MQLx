@@ -81,13 +81,28 @@ bool COrderStopBroker::ModifyTakeProfit(const double takeprofit)
 //+------------------------------------------------------------------+
 bool COrderStopBroker::UpdateOrderStop(const double stoploss,const double takeprofit)
   {
-   bool modify=true,modify_sl=true,modify_tp=true;
+   bool modify=true,modify_sl=true,modify_tp=true;   
    if(stoploss>0 && takeprofit>0)
+   {
       modify=m_stop.Move(m_order.Ticket(),stoploss,takeprofit);
-   if(stoploss>0)
+      if (modify)
+      {  
+         StopLoss(stoploss);
+         TakeProfit(takeprofit);   
+      }         
+   }   
+   else if(stoploss>0)
+   {
       modify_sl=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
-   if(takeprofit>0)
+      if (modify_sl)
+         StopLoss(stoploss);
+   }   
+   else if(takeprofit>0)
+   {
       modify_tp=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
+      if (modify_tp)
+         TakeProfit(takeprofit);   
+   }      
    return modify && modify_sl && modify_tp;
   }
 //+------------------------------------------------------------------+

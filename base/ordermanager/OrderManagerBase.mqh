@@ -11,6 +11,7 @@
 #include "..\Stop\StopsBase.mqh"
 #include "..\Order\OrdersBase.mqh"
 #include "..\Event\EventAggregatorBase.mqh"
+#include "..\File\ExpertFileBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -114,6 +115,9 @@ public:
    //--- events
    virtual void      OnTradeTransaction(COrder*);
    virtual void      OnTick(void);
+   //--- recovery
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);
 protected:
    //--- trade manager
    virtual double    PriceCalculate(ENUM_ORDER_TYPE&);
@@ -737,6 +741,90 @@ double COrderManagerBase::LotSizeCalculate(const double price,const ENUM_ORDER_T
    if(CheckPointer(m_moneys))
       return m_moneys.Volume(m_symbol.Name(),0,type,stoploss);
    return m_lotsize;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManagerBase::Save(const int handle)
+  {
+   if(handle==INVALID_HANDLE)
+      return false;
+   file.WriteDouble(m_lotsize);
+   file.WriteInteger(m_price_points);
+   file.WriteString(m_comment);
+   file.WriteInteger(m_expiration);
+   file.WriteInteger(m_history_count);
+   file.WriteInteger(m_max_orders_history);
+   file.WriteBool(m_trade_allowed);
+   file.WriteBool(m_long_allowed);
+   file.WriteBool(m_short_allowed);
+   file.WriteInteger(m_max_orders);
+   file.WriteInteger(m_max_trades);
+   file.WriteObject(GetPointer(m_orders));
+   file.WriteObject(GetPointer(m_orders_history));
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManagerBase::Load(const int handle)
+  {
+   if(handle==INVALID_HANDLE)
+      return false;
+   if(!file.ReadDouble(m_lotsize))
+      return false; 
+   if(!file.ReadInteger(m_price_points))
+      return false;
+   if(!file.ReadString(m_comment))
+      return false;
+   if(!file.ReadInteger(m_expiration))
+      return false;
+   if(!file.ReadInteger(m_history_count))
+      return false;
+   if(!file.ReadInteger(m_max_orders_history))
+      return false;
+   if(!file.ReadBool(m_trade_allowed))
+      return false;
+   if(!file.ReadBool(m_long_allowed))
+      return false;
+   if(!file.ReadBool(m_short_allowed))
+      return false;
+   if(!file.ReadInteger(m_max_orders))
+      return false;
+   if(!file.ReadInteger(m_max_trades))
+      return false;
+   if(!file.ReadObject(GetPointer(m_orders)))
+      return false;
+   if(!file.ReadObject(GetPointer(m_orders_history)))
+      return false;
+   for(int i=0;i<m_orders.Total();i++)
+     {
+      COrder *order=m_orders.At(i);
+      if(!CheckPointer(order))
+         continue;
+      COrderStops *orderstops=order.OrderStops();
+      if(!CheckPointer(orderstops))
+         continue;
+      for(int j=0;j<orderstops.Total();j++)
+        {
+         COrderStop *orderstop=orderstops.At(j);
+         if(!CheckPointer(orderstop))
+            continue;
+         for(int k=0;k<m_stops.Total();k++)
+           {
+            CStop *stop=m_stops.At(k);
+            if(!CheckPointer(stop))
+               continue;
+            orderstop.Order(order);
+            if(StringCompare(orderstop.StopName(),stop.Name())==0)
+              {
+               orderstop.Stop(stop);
+               orderstop.Recreate();
+              }
+           }
+        }
+     }
+   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

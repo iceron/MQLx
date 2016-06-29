@@ -22,6 +22,8 @@ public:
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    int               MagicClose(void) const;
    void              MagicClose(const int);
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -111,7 +113,7 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
    COrderInfo ord;
    if(CheckPointer(order))
      {
-      if(order.Volume()<=0) 
+      if(order.Volume()<=0)
          return true;
       if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),order.Symbol())!=0)
          m_symbol=m_symbol_man.Get(order.Symbol());
@@ -138,5 +140,25 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
         }
      }
    return closed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManager::Save(const int handle)
+  {
+   file.Handle(handle);
+   if (!file.WriteInteger(m_magic_close))
+      return false;
+   return COrderManagerBase::Save(handle);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManager::Load(const int handle)
+  {
+   file.Handle(handle);
+   if (!file.ReadInteger(m_magic_close))
+      return false;
+   return COrderManagerBase::Load(handle);
   }
 //+------------------------------------------------------------------+

@@ -190,6 +190,10 @@ bool CStop::MoveStopLoss(const ulong ticket,const double stoploss)
    COrderInfo order;
    if(order.Select(ticket))
      {
+      m_symbol= m_symbol_man.Get(order.Symbol());
+      m_trade = m_trade_man.Get(m_symbol.Name());
+      if (!CheckPointer(m_symbol))
+         return false;
       double price_open=order.PriceOpen();      
       if(MathAbs(stoploss-price_open)<m_symbol.TickSize())
          return false;
@@ -205,6 +209,10 @@ bool CStop::MoveTakeProfit(const ulong ticket,const double takeprofit)
    COrderInfo order;
    if(order.Select(ticket))
      {
+      m_symbol= m_symbol_man.Get(order.Symbol());
+      m_trade = m_trade_man.Get(m_symbol.Name());
+      if (!CheckPointer(m_symbol))
+         return false;
       double price_open=order.PriceOpen();      
       if(MathAbs(takeprofit-price_open)<m_symbol.TickSize())
          return false;

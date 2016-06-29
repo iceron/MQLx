@@ -89,7 +89,10 @@ bool COrdersBase::NewOrder(const ulong ticket,const string symbol,const int magi
    COrder *order=new COrder(ticket,symbol,type,volume,price);
    if(CheckPointer(order)==POINTER_DYNAMIC)
       if(InsertSort(GetPointer(order)))
-         return order.Init(magic,GetPointer(this),m_stops);
+      {  
+         order.Magic(magic);
+         return order.Init(GetPointer(this),m_stops);
+      }   
    return false;
   }
 //+------------------------------------------------------------------+
@@ -125,23 +128,32 @@ bool COrdersBase::CloseStops(void)
 bool COrdersBase::CreateElement(const int index)
   {
    COrder*order=new COrder();
-   if(order.Init(0,GetPointer(this),m_stops,true))
-      return false;
-   return Insert(GetPointer(order),index);
+   if(!CheckPointer(order))
+      return(false);
+   order.SetContainer(GetPointer(this));
+   if(!Reserve(1))
+      return(false);
+   m_data[index]=order;
+   m_sort_mode=-1;
+   return CheckPointer(m_data[index]);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrdersBase::Save(const int handle)
-  {
-   return true;
+  {   
+   if (handle==INVALID_HANDLE)
+      return false;
+   return CArrayObj::Save(handle);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrdersBase::Load(const int handle)
   {
-   return true;
+   if (handle==INVALID_HANDLE)
+      return false;   
+   return CArrayObj::Load(handle);   
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

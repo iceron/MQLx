@@ -7,6 +7,7 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 #include "..\Symbol\SymbolManagerBase.mqh"
 #include "..\Event\EventAggregatorBase.mqh"
+#include "..\File\ExpertFileBase.mqh"
 #include "OrderStopsBase.mqh"
 class COrders;
 class CStops;
@@ -35,10 +36,10 @@ public:
                     ~COrderBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDER;}
    //--- initialization
-   virtual COrders  *GetContainer(void);
+   virtual COrders *GetContainer(void);
    virtual void      SetContainer(COrders*);
    void              CreateStops(CStops*);
-   bool              Init(const int,COrders*,CStops*,bool);
+   bool              Init(COrders*,CStops*);
    void              MainStop(COrderStop*);
    COrderStop       *MainStop(void);
    //--- getters and setters     
@@ -60,6 +61,8 @@ public:
    double            Volume(void) const;
    void              VolumeInitial(const double);
    double            VolumeInitial(void) const;
+   //--- objects
+   COrderStops      *OrderStops(void);
    //--- checking
    void              CheckStops(void);
    //--- hiding and showing of stop lines
@@ -102,9 +105,8 @@ COrderBase::~COrderBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderBase::Init(int magic,COrders *orders,CStops *stops,bool recreate=false)
+bool COrderBase::Init(COrders *orders,CStops *stops)
   {
-   m_magic=magic;
    SetContainer(GetPointer(orders));
    CreateStops(GetPointer(stops));
    return true;
@@ -273,6 +275,13 @@ COrders *COrderBase::GetContainer(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+COrderStops *COrderBase::OrderStops(void)
+  {
+   return GetPointer(m_order_stops);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 void COrderBase::CreateStops(CStops *stops)
   {
    if(!CheckPointer(stops))
@@ -284,7 +293,7 @@ void COrderBase::CreateStops(CStops *stops)
          CStop *stop=stops.At(i);
          if(CheckPointer(stop)==POINTER_INVALID)
             continue;
-         m_order_stops.NewOrderStop(GetPointer(this),stop,GetPointer(m_order_stops));
+         m_order_stops.NewOrderStop(GetPointer(this),stop);
         }
      }
   }
@@ -367,6 +376,18 @@ bool COrderBase::IsOrderTypeShort(const ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 bool COrderBase::Save(const int handle)
   {
+   if(handle==INVALID_HANDLE)
+      return false;
+   file.WriteBool(m_closed);
+   file.WriteBool(m_suspend);
+   file.WriteInteger(m_magic);
+   file.WriteDouble(m_price);
+   file.WriteLong(m_ticket);
+   file.WriteEnum(m_type);
+   file.WriteDouble(m_volume);
+   file.WriteDouble(m_volume_initial);
+   file.WriteString(m_symbol);
+   file.WriteObject(GetPointer(m_order_stops));
    return true;
   }
 //+------------------------------------------------------------------+
@@ -374,6 +395,29 @@ bool COrderBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool COrderBase::Load(const int handle)
   {
+   if(handle==INVALID_HANDLE)
+      return false;
+   if(!file.ReadBool(m_closed))
+      return false;
+   if(!file.ReadBool(m_suspend))
+      return false;
+   if(!file.ReadInteger(m_magic))
+      return false;
+   if(!file.ReadDouble(m_price))
+      return false;
+   if(!file.ReadLong(m_ticket))
+      return false;
+   if(!file.ReadEnum(m_type))
+      return false;
+   if(!file.ReadDouble(m_volume))
+      return false;
+   if(!file.ReadDouble(m_volume_initial))
+      return false;
+   if(!file.ReadString(m_symbol))
+      return false;
+   if(!file.ReadObject(GetPointer(m_order_stops)))
+      return false;
+   m_order_stops.SetContainer(GetPointer(this));
    return true;
   }
 //+------------------------------------------------------------------+

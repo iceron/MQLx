@@ -14,6 +14,7 @@ class COrderStopPendingBase : public COrderStop
 public:
                      COrderStopPendingBase(void);
                     ~COrderStopPendingBase(void);
+   virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOP_PENDING;}
    virtual void      Check(double&);
 protected:
    virtual bool      ModifyStopLoss(const double);
@@ -128,23 +129,23 @@ bool COrderStopPendingBase::Update(void)
    if(!CheckPointer(m_objsl) && !CheckPointer(m_objtp))
      {
       double order_stoploss=0,order_takeprofit=0;
-      double ticksize = SymbolInfoDouble(m_order.Symbol(),SYMBOL_TRADE_TICK_SIZE);    
-      if (OrderSelect(m_stoploss_ticket))
-      {
-         order_stoploss = OrderGetDouble(ORDER_PRICE_OPEN);
-         if (MathAbs(order_stoploss-StopLoss())>=ticksize)
-         StopLoss(order_stoploss);
-      }
-      if (OrderSelect(m_takeprofit_ticket))
-      {
-         order_takeprofit = OrderGetDouble(ORDER_PRICE_OPEN);
-         if (MathAbs(order_takeprofit-TakeProfit())>=ticksize)
-         TakeProfit(order_takeprofit);
-      }     
+      double ticksize=SymbolInfoDouble(m_order.Symbol(),SYMBOL_TRADE_TICK_SIZE);
+      if(OrderSelect(m_stoploss_ticket))
+        {
+         order_stoploss=OrderGetDouble(ORDER_PRICE_OPEN);
+         if(MathAbs(order_stoploss-StopLoss())>=ticksize)
+            StopLoss(order_stoploss);
+        }
+      if(OrderSelect(m_takeprofit_ticket))
+        {
+         order_takeprofit=OrderGetDouble(ORDER_PRICE_OPEN);
+         if(MathAbs(order_takeprofit-TakeProfit())>=ticksize)
+            TakeProfit(order_takeprofit);
+        }
       return true;
      }
    double sl_line = 0;
-   double tp_line = 0;   
+   double tp_line = 0;
    if(CheckPointer(m_objsl))
       sl_line=m_objsl.GetPrice();
    if(CheckPointer(m_objtp))
@@ -166,11 +167,19 @@ bool COrderStopPendingBase::Update(void)
 //+------------------------------------------------------------------+
 bool COrderStopPendingBase::UpdateOrderStop(const double stoploss,const double takeprofit)
   {
-   bool modify_sl=true,modify_tp=true;
+   bool modify_sl=true,modify_tp=true;   
    if(stoploss>0)
-      modify_sl = m_stop.MoveStopLoss(StopLossTicket(),stoploss);
+   {
+      modify_sl=m_stop.MoveStopLoss(StopLossTicket(),stoploss);
+      if (modify_sl)
+         StopLoss(stoploss);
+   }   
    if(takeprofit>0)
-      modify_tp = m_stop.MoveTakeProfit(TakeProfitTicket(),takeprofit);
+   {
+      modify_tp=m_stop.MoveTakeProfit(TakeProfitTicket(),takeprofit);
+      if (modify_tp)
+         TakeProfit(takeprofit);
+   }   
    return modify_sl && modify_tp;
   }
 //+------------------------------------------------------------------+

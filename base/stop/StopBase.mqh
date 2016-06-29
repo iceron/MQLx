@@ -82,6 +82,8 @@ public:
    int               SetDeviation(void) const;
    void              EntryColor(const color clr);
    void              EntryStyle(const ENUM_LINE_STYLE);
+   void              EntryVisible(const bool);
+   bool              EntryVisible(void) const;
    void              Magic(const int);
    int               Magic(void) const;
    void              Main(const bool);
@@ -97,6 +99,8 @@ public:
    bool              StopLossCustom(void);
    void              StopLossName(const string);
    string            StopLossName(void) const;
+   void              StopLossVisible(const bool);
+   bool              StopLossVisible(void) const;
    void              StopLossStyle(const ENUM_LINE_STYLE);
    void              StopType(const ENUM_STOP_TYPE);
    ENUM_STOP_TYPE    StopType(void) const;
@@ -108,6 +112,8 @@ public:
    void              TakeProfitName(const string);
    string            TakeProfitName(void) const;
    void              TakeProfitStyle(const ENUM_LINE_STYLE);
+   void              TakeProfitVisible(const bool);
+   bool              TakeProfitVisible(void) const;
    bool              Virtual(void) const;
    void              Volume(double);
    double            Volume(void) const;
@@ -303,6 +309,14 @@ CStopBase::EntryStyle(const ENUM_LINE_STYLE style)
   {
    m_entry_style=style;
   }
+CStopBase::EntryVisible(const bool value)
+{
+   m_entry_visible = value;
+}
+bool CStopBase::EntryVisible(void) const
+{
+   return m_entry_visible;
+}
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -418,6 +432,14 @@ CStopBase::StopLossStyle(const ENUM_LINE_STYLE style)
   {
    m_stoploss_style=style;
   }
+CStopBase::StopLossVisible(const bool value)
+{
+   m_entry_visible = value;
+}
+bool CStopBase::StopLossVisible(void) const
+{
+   return m_entry_visible;
+}
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -490,6 +512,14 @@ CStopBase::TakeProfitStyle(const ENUM_LINE_STYLE style)
   {
    m_takeprofit_style=style;
   }
+CStopBase::TakeProfitVisible(const bool value)
+{
+   m_entry_visible = value;
+}
+bool CStopBase::TakeProfitVisible(void) const
+{
+   return m_entry_visible;
+}
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

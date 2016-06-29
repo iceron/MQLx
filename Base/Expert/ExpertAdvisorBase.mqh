@@ -871,14 +871,14 @@ void CExpertAdvisorBase::DeinitTimes(void)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::Save(const int handle)
   {
-   return true;
+   return m_order_man.Save(handle);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::Load(const int handle)
   {
-   return true;
+   return m_order_man.Load(handle);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

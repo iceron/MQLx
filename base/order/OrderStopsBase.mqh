@@ -5,6 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
+#include <Arrays\ArrayInt.mqh>
 #include <Arrays\ArrayObj.mqh>
 #include "OrderStopBrokerBase.mqh"
 #include "OrderStopVirtualBase.mqh"
@@ -17,6 +18,7 @@ class COrderStopsBase : public CArrayObj
   {
 protected:
    bool              m_active;
+   CArrayInt         m_types;
    COrder           *m_order;
 public:
                      COrderStopsBase(void);
@@ -27,7 +29,7 @@ public:
    //--- initialization
    virtual CObject *GetContainer(void);
    virtual void      SetContainer(COrder*);
-   virtual bool      NewOrderStop(COrder*,CStop*,COrderStops*);
+   virtual bool      NewOrderStop(COrder*,CStop*);
    //--- checking
    virtual void      Check(double &volume);
    virtual bool      CheckNewTicket(COrderStop*);
@@ -55,6 +57,20 @@ COrderStopsBase::~COrderStopsBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+CObject *COrderStopsBase::GetContainer(void)
+  {
+   return m_order;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrderStopsBase::SetContainer(COrder *order)
+  {
+   m_order=order;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 COrderStopsBase::Active(bool value)
   {
    m_active=value;
@@ -76,7 +92,7 @@ bool COrderStopsBase::CheckNewTicket(COrderStop *order_stop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop,COrderStops *order_stops)
+bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop)
   {
    COrderStop *order_stop=NULL;
    if(CheckPointer(stop))
@@ -90,7 +106,7 @@ bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop,COrderStops *order_
      }
    if(CheckPointer(order_stop))
      {
-      order_stop.Init(order,stop,order_stops);
+      order_stop.Init(order,stop,GetPointer(this));
       return Add(order_stop);
      }
    return false;
@@ -158,23 +174,52 @@ COrderStopsBase::Show(const bool show=true)
 //+------------------------------------------------------------------+
 bool COrderStopsBase::CreateElement(const int index)
   {
-   return true;
+   COrderStop *order_stop=NULL;
+   ENUM_CLASS_TYPE type=(ENUM_CLASS_TYPE) m_types.At(index);
+   switch(type)
+     {
+      case CLASS_TYPE_ORDERSTOP_BROKER:  order_stop = new COrderStopBroker();  break;
+      case CLASS_TYPE_ORDERSTOP_PENDING: order_stop = new COrderStopPending(); break;
+      case CLASS_TYPE_ORDERSTOP_VIRTUAL: order_stop = new COrderStopVirtual(); break;
+     }
+   if(!CheckPointer(order_stop))
+      return(false);
+   order_stop.SetContainer(GetPointer(this));
+   if(!Reserve(1))
+      return(false);
+   m_data[index]=order_stop;
+   m_sort_mode=-1;
+   return CheckPointer(m_data[index]);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderStopsBase::Save(const int handle)
   {
-   CArrayObj::Save(handle);
-   return true;
+   if(handle==INVALID_HANDLE)
+      return false;
+   file.WriteBool(m_active);
+   for(int i=0;i<Total();i++)
+     {
+      COrderStop *orderstop=At(i);
+      if(CheckPointer(orderstop))
+         m_types.Add(orderstop.Type());
+     }
+   file.WriteObject(GetPointer(m_types));
+   return CArrayObj::Save(file.Handle());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderStopsBase::Load(const int handle)
   {
-   CArrayObj::Load(handle);
-   return true;
+   if(handle==INVALID_HANDLE)
+      return false;
+   if(!file.ReadBool(m_active))
+      return false;
+   if(!file.ReadObject(GetPointer(m_types)))
+      return false;   
+   return CArrayObj::Load(handle);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

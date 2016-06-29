@@ -218,6 +218,12 @@ bool CExpertAdvisorsBase::CreateElement(const int index)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::Save(const int handle)
   {
+   for(int i=0;i<Total();i++)
+     {
+      CExpertAdvisor *e=At(i);
+      if (!e.Save(handle))
+         return false;
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -225,6 +231,12 @@ bool CExpertAdvisorsBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::Load(const int handle)
   {
+   for(int i=0;i<Total();i++)
+     {
+      CExpertAdvisor *e=At(i);
+      if (!e.Load(handle))
+         return false;
+     }
    return true;
   }
 //+------------------------------------------------------------------+

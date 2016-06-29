@@ -11,7 +11,6 @@
 //+------------------------------------------------------------------+
 class COrderManager : public COrderManagerBase
   {
-protected:
 public:
                      COrderManager(void);
                     ~COrderManager(void);
