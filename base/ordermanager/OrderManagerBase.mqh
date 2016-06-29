@@ -29,7 +29,7 @@ protected:
    bool              m_long_allowed;
    bool              m_short_allowed;
    int               m_max_orders;
-   int               m_max_trades;
+   int               m_max_trades;   
    COrders           m_orders;
    COrders           m_orders_history;
    CArrayInt         m_other_magic;
@@ -110,6 +110,7 @@ public:
    //--- trade manager
    virtual bool      AddOtherMagic(const int);
    virtual void      AddOtherMagicString(const string&[]);
+   virtual bool      IsHedging(void) const=0;
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    //--- events
@@ -144,7 +145,7 @@ COrderManagerBase::COrderManagerBase() : m_lotsize(0.1),
                                          m_long_allowed(true),
                                          m_short_allowed(true),
                                          m_max_orders(1),
-                                         m_max_trades(-1)
+                                         m_max_trades(-1)                                         
 
   {
    if(!m_other_magic.IsSorted())

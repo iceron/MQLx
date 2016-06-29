@@ -83,7 +83,7 @@ public:
    void              EntryColor(const color clr);
    void              EntryStyle(const ENUM_LINE_STYLE);
    void              EntryVisible(const bool);
-   bool              EntryVisible(void) const;
+   bool              EntryVisible(void) const;   
    void              Magic(const int);
    int               Magic(void) const;
    void              Main(const bool);

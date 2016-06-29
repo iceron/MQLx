@@ -13,11 +13,14 @@ class COrderManager : public COrderManagerBase
   {
 protected:
    int               m_magic_close;
+   ENUM_ACCOUNT_MARGIN_MODE m_margin_mode;
 public:
                      COrderManager(void);
                     ~COrderManager(void);
+   virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
    virtual bool      Validate(void) const;
    virtual bool      CloseOrder(COrder*,const int);
+   virtual bool      IsHedging(void) const;
    virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    int               MagicClose(void) const;
@@ -28,7 +31,8 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderManager::COrderManager(void) : m_magic_close(0)
+COrderManager::COrderManager(void) : m_magic_close(0),
+                                     m_margin_mode(0)
   {
   }
 //+------------------------------------------------------------------+
@@ -36,6 +40,14 @@ COrderManager::COrderManager(void) : m_magic_close(0)
 //+------------------------------------------------------------------+
 COrderManager::~COrderManager(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManager::Init(CSymbolManager *symbol_man,CAccountInfo *account,CEventAggregator *event_man=NULL)
+  {
+   m_margin_mode=(ENUM_ACCOUNT_MARGIN_MODE)AccountInfoInteger(ACCOUNT_MARGIN_MODE);
+   return COrderManagerBase::Init(symbol_man,account,event_man);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -59,6 +71,13 @@ bool COrderManager::Validate(void) const
    if(m_magic==m_magic_close || m_other_magic.Search(m_magic_close)>=0)
       return false;
    return COrderManagerBase::Validate();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderManager::IsHedging(void) const
+  {
+   return m_margin_mode==ACCOUNT_MARGIN_MODE_RETAIL_HEDGING;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -111,17 +130,23 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
   {
    bool closed=true;
    COrderInfo ord;
-   if(CheckPointer(order))
+   if(!CheckPointer(order))
+      return closed;
+   if(order.Volume()<=0)
+      return true;
+   if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),order.Symbol())!=0)
+      m_symbol=m_symbol_man.Get(order.Symbol());
+   if(CheckPointer(m_symbol))
+      m_trade=m_trade_man.Get(order.Symbol());
+   m_trade.SetExpertMagicNumber(m_magic_close);
+   if(ord.Select(order.Ticket()))
+      closed=m_trade.OrderDelete(order.Ticket());
+   else
      {
-      if(order.Volume()<=0)
-         return true;
-      if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),order.Symbol())!=0)
-         m_symbol=m_symbol_man.Get(order.Symbol());
-      if(CheckPointer(m_symbol))
-         m_trade=m_trade_man.Get(order.Symbol());
-      m_trade.SetExpertMagicNumber(m_magic_close);
-      if(ord.Select(order.Ticket()))
-         closed=m_trade.OrderDelete(order.Ticket());
+      CHistoryOrderInfo h_ord;
+      h_ord.Ticket(order.Ticket());
+      if(IsHedging())
+         closed=m_trade.PositionClose(h_ord.PositionId());
       else
         {
          if(COrder::IsOrderTypeLong(order.OrderType()))
@@ -129,14 +154,14 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
          else if(COrder::IsOrderTypeShort(order.OrderType()))
             closed=m_trade.Buy(order.Volume(),0,0,0);
         }
-      m_trade.SetExpertMagicNumber(m_magic);
-      if(closed)
+     }
+   m_trade.SetExpertMagicNumber(m_magic);
+   if(closed)
+     {
+      if(ArchiveOrder(m_orders.Detach(index)))
         {
-         if(ArchiveOrder(m_orders.Detach(index)))
-           {
-            order.Close();
-            order.Volume(0);
-           }
+         order.Close();
+         order.Volume(0);
         }
      }
    return closed;
@@ -147,7 +172,7 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
 bool COrderManager::Save(const int handle)
   {
    file.Handle(handle);
-   if (!file.WriteInteger(m_magic_close))
+   if(!file.WriteInteger(m_magic_close))
       return false;
    return COrderManagerBase::Save(handle);
   }
@@ -157,7 +182,7 @@ bool COrderManager::Save(const int handle)
 bool COrderManager::Load(const int handle)
   {
    file.Handle(handle);
-   if (!file.ReadInteger(m_magic_close))
+   if(!file.ReadInteger(m_magic_close))
       return false;
    return COrderManagerBase::Load(handle);
   }

@@ -770,16 +770,10 @@ bool CExpertAdvisorBase::OnTick(void)
    if(CheckPointer(m_signal))
      {
       m_signal.Check();
-      double   price=EMPTY_VALUE;
-      double   sl=0.0;
-      double   tp=0.0;
-      datetime expiration=TimeCurrent();
       checkopenlong=m_signal.CheckOpenLong();
       checkopenshort = m_signal.CheckOpenShort();
       checkcloselong = m_signal.CheckCloseLong();
       checkcloseshort= m_signal.CheckCloseShort();
-      //bool checkreverselong=m_signal.CheckReverseLong(price,sl,tp,expiration);
-      //bool checkreverseshort=m_signal.CheckReverseShort(price,sl,tp,expiration);
      }
    COrders *orders=m_order_man.Orders();
    for(int i=orders.Total()-1;i>=0;i--)
@@ -793,15 +787,18 @@ bool CExpertAdvisorBase::OnTick(void)
          if(m_order_man.CloseOrder(order,i))
             continue;
         }
-      if((checkcloselong && order.OrderType()==ORDER_TYPE_BUY) || 
-         (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL))
+      if(m_position_reverse && 
+         ((checkcloselong && order.OrderType()==ORDER_TYPE_BUY) ||
+         (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL)))
         {
          if(m_order_man.CloseOrder(order,i))
             continue;
         }
      }
    m_order_man.OnTick();
-   if(CheckPointer(m_signal) && (!CheckPointer(m_times) || m_times.Evaluate()))
+   if(CheckPointer(m_signal) && 
+      (m_every_tick || IsNewBar(m_symbol_name,m_period)) && 
+      (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)
          ret=TradeOpen(m_symbol_name,ORDER_TYPE_BUY);
