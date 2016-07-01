@@ -1,6 +1,6 @@
 //+------------------------------------------------------------------+
 //|                                                  AccountInfo.mqh |
-//|                   Copyright 2009-2013, MetaQuotes Software Corp. |
+//|                   Copyright 2009-2016, MetaQuotes Software Corp. |
 //|                                              http://www.mql5.com |
 //+------------------------------------------------------------------+
 #include <Object.mqh>
@@ -19,8 +19,10 @@ public:
    ENUM_ACCOUNT_TRADE_MODE TradeMode(void) const;
    string            TradeModeDescription(void) const;
    long              Leverage(void) const;
-   ENUM_ACCOUNT_STOPOUT_MODE MarginMode(void) const;
-   string            MarginModeDescription(void) const;
+   ENUM_ACCOUNT_STOPOUT_MODE StopoutMode(void) const;
+   string            StopoutModeDescription(void) const;
+   //ENUM_ACCOUNT_MARGIN_MODE MarginMode(void) const;
+   //string            MarginModeDescription(void) const;
    bool              TradeAllowed(void) const;
    bool              TradeExpert(void) const;
    int               LimitOrders(void) const;
@@ -44,18 +46,14 @@ public:
    double            InfoDouble(const ENUM_ACCOUNT_INFO_DOUBLE prop_id) const;
    string            InfoString(const ENUM_ACCOUNT_INFO_STRING prop_id) const;
    //--- checks
-   double            OrderProfitCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
-                                      const double volume,const double price_open,const double price_close) const;
-   double            MarginCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
-                                 const double volume,const double price) const;
-   double            FreeMarginCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
-                                     const double volume,const double price) const;
-   double            MaxLotCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
-                                 const double price,const double percent=100) const;
-   bool              OrderCalcMargin(const ENUM_ORDER_TYPE action,const string symbol,const double volume,
-                                     const double price,double &margin) const;
-   bool              OrderCalcProfit(const ENUM_ORDER_TYPE action,const string symbol,const double volume,
-                                     const double price_open,const double price_close,double &profit) const;
+   //double            OrderProfitCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
+                                      //const double volume,const double price_open,const double price_close) const;
+   //double            MarginCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
+                                 //const double volume,const double price) const;
+   //double            FreeMarginCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
+                                     //const double volume,const double price) const;
+   //double            MaxLotCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
+                                 //const double price,const double percent=100) const;
   };
 //+------------------------------------------------------------------+
 //| Constructor                                                      |
@@ -110,12 +108,38 @@ long CAccountInfo::Leverage(void) const
 //+------------------------------------------------------------------+
 //| Get the property value "ACCOUNT_MARGIN_SO_MODE"                  |
 //+------------------------------------------------------------------+
-ENUM_ACCOUNT_STOPOUT_MODE CAccountInfo::MarginMode(void) const
+ENUM_ACCOUNT_STOPOUT_MODE CAccountInfo::StopoutMode(void) const
   {
    return((ENUM_ACCOUNT_STOPOUT_MODE)AccountInfoInteger(ACCOUNT_MARGIN_SO_MODE));
   }
 //+------------------------------------------------------------------+
 //| Get the property value "ACCOUNT_MARGIN_SO_MODE" as string        |
+//+------------------------------------------------------------------+
+string CAccountInfo::StopoutModeDescription(void) const
+  {
+   string str;
+//---
+   switch(StopoutMode())
+     {
+      case ACCOUNT_STOPOUT_MODE_PERCENT: str="Level is specified in percentage"; break;
+      case ACCOUNT_STOPOUT_MODE_MONEY  : str="Level is specified in money";      break;
+      default                          : str="Unknown stopout mode";
+     }
+//---
+   return(str);
+  }
+/*
+//+------------------------------------------------------------------+
+//| Get the property value "ACCOUNT_MARGIN_MODE"                     |
+//+------------------------------------------------------------------+
+ENUM_ACCOUNT_MARGIN_MODE CAccountInfo::MarginMode(void) const
+  {
+   return((ENUM_ACCOUNT_MARGIN_MODE)AccountInfoInteger(ACCOUNT_MARGIN_MODE));
+  }
+*/
+/*
+//+------------------------------------------------------------------+
+//| Get the property value "ACCOUNT_MARGIN_MODE" as string           |
 //+------------------------------------------------------------------+
 string CAccountInfo::MarginModeDescription(void) const
   {
@@ -123,13 +147,15 @@ string CAccountInfo::MarginModeDescription(void) const
 //---
    switch(MarginMode())
      {
-      case ACCOUNT_STOPOUT_MODE_PERCENT: str="Level is specified in percentage"; break;
-      case ACCOUNT_STOPOUT_MODE_MONEY  : str="Level is specified in money";      break;
-      default                          : str="Unknown margin mode";
+      case ACCOUNT_MARGIN_MODE_RETAIL_NETTING: str="Netting";  break;
+      case ACCOUNT_MARGIN_MODE_EXCHANGE      : str="Exchange"; break;
+      case ACCOUNT_MARGIN_MODE_RETAIL_HEDGING: str="Hedging";  break;
+      default                                : str="Unknown margin mode";
      }
 //---
    return(str);
   }
+*/
 //+------------------------------------------------------------------+
 //| Get the property value "ACCOUNT_TRADE_ALLOWED"                   |
 //+------------------------------------------------------------------+
@@ -263,29 +289,7 @@ string CAccountInfo::InfoString(const ENUM_ACCOUNT_INFO_STRING prop_id) const
   {
    return(AccountInfoString(prop_id));
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CAccountInfo::OrderCalcMargin(const ENUM_ORDER_TYPE action,const string symbol,const double volume,
-                                   const double price,double &margin) const
-  {
-   margin=MarketInfo(symbol,MODE_MARGINREQUIRED)*volume;
-   return(margin<EMPTY_VALUE);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CAccountInfo::OrderCalcProfit(const ENUM_ORDER_TYPE action,const string symbol,const double volume,
-                                   const double price_open,const double price_close,double &profit) const
-  {
-   double difference=0;
-   if(action==OP_BUY || action==OP_BUYLIMIT || action==OP_BUYSTOP)
-      difference = (price_close-price_open)/MarketInfo(symbol,MODE_TICKSIZE);
-   else if(action==OP_SELL || action==OP_SELLLIMIT || action==OP_SELLSTOP)
-      difference = (price_open-price_close)/MarketInfo(symbol,MODE_TICKSIZE);
-   profit=(volume/(difference))/MarketInfo(symbol,MODE_TICKVALUE);
-   return(profit<EMPTY_VALUE);
-  }
+/*
 //+------------------------------------------------------------------+
 //| Access functions OrderCalcProfit(...).                            |
 //| INPUT:  name            - symbol name,                           |
@@ -304,6 +308,8 @@ double CAccountInfo::OrderProfitCheck(const string symbol,const ENUM_ORDER_TYPE 
 //---
    return(profit);
   }
+*/
+/*
 //+------------------------------------------------------------------+
 //| Access functions OrderCalcMargin(...).                           |
 //| INPUT:  name            - symbol name,                           |
@@ -321,6 +327,8 @@ double CAccountInfo::MarginCheck(const string symbol,const ENUM_ORDER_TYPE trade
 //---
    return(margin);
   }
+*/
+/*
 //+------------------------------------------------------------------+
 //| Access functions OrderCalcMargin(...).                           |
 //| INPUT:  name            - symbol name,                           |
@@ -333,12 +341,14 @@ double CAccountInfo::FreeMarginCheck(const string symbol,const ENUM_ORDER_TYPE t
   {
    return(FreeMargin()-MarginCheck(symbol,trade_operation,volume,price));
   }
+*/
+/*
 //+------------------------------------------------------------------+
 //| Access functions OrderCalcMargin(...).                           |
 //| INPUT:  name            - symbol name,                           |
 //|         trade_operation - trade operation,                       |
 //|         price           - price of the opening position,         |
-//|         percent         - percent of available margin [1-100%].   |
+//|         percent         - percent of available margin [1-100%].  |
 //+------------------------------------------------------------------+
 double CAccountInfo::MaxLotCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
                                  const double price,const double percent) const
@@ -356,7 +366,6 @@ double CAccountInfo::MaxLotCheck(const string symbol,const ENUM_ORDER_TYPE trade
       Print("CAccountInfo::MaxLotCheck margin calculation failed");
       return(0.0);
      }
-
 //---
    if(margin==0.0) // for pending orders
       return(SymbolInfoDouble(symbol,SYMBOL_VOLUME_MAX));
@@ -377,4 +386,5 @@ double CAccountInfo::MaxLotCheck(const string symbol,const ENUM_ORDER_TYPE trade
 //--- return volume
    return(volume);
   }
+*/
 //+------------------------------------------------------------------+
