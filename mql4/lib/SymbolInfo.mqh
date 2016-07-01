@@ -4,8 +4,11 @@
 //|                                              http://www.mql5.com |
 //+------------------------------------------------------------------+
 #include <Object.mqh>
-
-enum ENUM_SYMBOL_CALC_MODE {
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+enum ENUM_SYMBOL_CALC_MODE
+  {
    SYMBOL_CALC_MODE_FOREX,
    SYMBOL_CALC_MODE_FUTURES,
    SYMBOL_CALC_MODE_CFD,
@@ -14,8 +17,12 @@ enum ENUM_SYMBOL_CALC_MODE {
    SYMBOL_CALC_MODE_EXCH_STOCKS,
    SYMBOL_CALC_MODE_EXCH_FUTURES,
    SYMBOL_CALC_MODE_EXCH_FUTURES_FORTS
-};
-enum ENUM_SYMBOL_SWAP_MODE {
+  };
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+enum ENUM_SYMBOL_SWAP_MODE
+  {
    SYMBOL_SWAP_MODE_DISABLED,
    SYMBOL_SWAP_MODE_POINTS,
    SYMBOL_SWAP_MODE_CURRENCY_SYMBOL,
@@ -25,7 +32,7 @@ enum ENUM_SYMBOL_SWAP_MODE {
    SYMBOL_SWAP_MODE_INTEREST_OPEN,
    SYMBOL_SWAP_MODE_REOPEN_CURRENT,
    SYMBOL_SWAP_MODE_REOPEN_BID
-};
+  };
 //+------------------------------------------------------------------+
 //| Class CSymbolInfo.                                               |
 //| Appointment: Class for access to symbol info.                    |
@@ -226,7 +233,6 @@ bool CSymbolInfo::Name(const string name)
       return(false);
 //---
    if(!Refresh())
-   //Refresh();
      {
       m_name="";
       Print(__FUNCTION__+": invalid data of symbol '"+name+"'");
@@ -242,44 +248,71 @@ bool CSymbolInfo::Refresh(void)
   {
    long tmp=0;
 //---
-   SymbolInfoDouble(m_name,SYMBOL_POINT,m_point);
-   SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_VALUE,m_tick_value);
-   SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_VALUE_PROFIT,m_tick_value_profit);
-   SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_VALUE_LOSS,m_tick_value_loss);
-   SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_SIZE,m_tick_size);
-   SymbolInfoDouble(m_name,SYMBOL_TRADE_CONTRACT_SIZE,m_contract_size);
-   SymbolInfoDouble(m_name,SYMBOL_VOLUME_MIN,m_lots_min);
-   SymbolInfoDouble(m_name,SYMBOL_VOLUME_MAX,m_lots_max);
-   SymbolInfoDouble(m_name,SYMBOL_VOLUME_STEP,m_lots_step);
-   SymbolInfoDouble(m_name,SYMBOL_VOLUME_LIMIT,m_lots_limit);
-   SymbolInfoDouble(m_name,SYMBOL_SWAP_LONG,m_swap_long);
-   SymbolInfoDouble(m_name,SYMBOL_SWAP_SHORT,m_swap_short);
-   
-   SymbolInfoInteger(m_name,SYMBOL_DIGITS,tmp);
+   if(!SymbolInfoDouble(m_name,SYMBOL_POINT,m_point))
+      return(false);
+   if(!SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_VALUE,m_tick_value))
+      return(false);
+//if(!SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_VALUE_PROFIT,m_tick_value_profit))
+//return(false);
+//if(!SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_VALUE_LOSS,m_tick_value_loss))
+//return(false);
+   if(!SymbolInfoDouble(m_name,SYMBOL_TRADE_TICK_SIZE,m_tick_size))
+      return(false);
+   if(!SymbolInfoDouble(m_name,SYMBOL_TRADE_CONTRACT_SIZE,m_contract_size))
+      return(false);
+   if(!SymbolInfoDouble(m_name,SYMBOL_VOLUME_MIN,m_lots_min))
+      return(false);
+   if(!SymbolInfoDouble(m_name,SYMBOL_VOLUME_MAX,m_lots_max))
+      return(false);
+   if(!SymbolInfoDouble(m_name,SYMBOL_VOLUME_STEP,m_lots_step))
+      return(false);
+//if(!SymbolInfoDouble(m_name,SYMBOL_VOLUME_LIMIT,m_lots_limit))
+//return(false);
+   if(!SymbolInfoDouble(m_name,SYMBOL_SWAP_LONG,m_swap_long))
+      return(false);
+   if(!SymbolInfoDouble(m_name,SYMBOL_SWAP_SHORT,m_swap_short))
+      return(false);
+   if(!SymbolInfoInteger(m_name,SYMBOL_DIGITS,tmp))
+      return(false);
    m_digits=(int)tmp;
-
-   SymbolInfoInteger(m_name,SYMBOL_ORDER_MODE,tmp);
-   m_order_mode=(int)tmp;
-   SymbolInfoInteger(m_name,SYMBOL_TRADE_EXEMODE,tmp);
+//if(!SymbolInfoInteger(m_name,SYMBOL_ORDER_MODE,tmp))
+//return(false);
+//m_order_mode=(int)tmp;
+   if(!SymbolInfoInteger(m_name,SYMBOL_TRADE_EXEMODE,tmp))
+      return(false);
    m_trade_execution=(ENUM_SYMBOL_TRADE_EXECUTION)tmp;
-   SymbolInfoInteger(m_name,SYMBOL_TRADE_CALC_MODE,tmp);
+   if(!SymbolInfoInteger(m_name,SYMBOL_TRADE_CALC_MODE,tmp))
+      return(false);
    m_trade_calcmode=(ENUM_SYMBOL_CALC_MODE)tmp;
-   SymbolInfoInteger(m_name,SYMBOL_TRADE_MODE,tmp);
+   if(!SymbolInfoInteger(m_name,SYMBOL_TRADE_MODE,tmp))
+      return(false);
    m_trade_mode=(ENUM_SYMBOL_TRADE_MODE)tmp;
-   SymbolInfoInteger(m_name,SYMBOL_SWAP_MODE,tmp);
+   if(!SymbolInfoInteger(m_name,SYMBOL_SWAP_MODE,tmp))
+      return(false);
    m_swap_mode=(ENUM_SYMBOL_SWAP_MODE)tmp;
-   SymbolInfoInteger(m_name,SYMBOL_SWAP_ROLLOVER3DAYS,tmp);
+   if(!SymbolInfoInteger(m_name,SYMBOL_SWAP_ROLLOVER3DAYS,tmp))
+      return(false);
    m_swap3=(ENUM_DAY_OF_WEEK)tmp;
-   SymbolInfoDouble(m_name,SYMBOL_MARGIN_INITIAL,m_margin_initial);
-   SymbolInfoDouble(m_name,SYMBOL_MARGIN_MAINTENANCE,m_margin_maintenance);
-   SymbolInfoDouble(m_name,SYMBOL_MARGIN_LONG,m_margin_long);
-   SymbolInfoDouble(m_name,SYMBOL_MARGIN_SHORT,m_margin_short);
-   SymbolInfoDouble(m_name,SYMBOL_MARGIN_LIMIT,m_margin_limit);
-   SymbolInfoDouble(m_name,SYMBOL_MARGIN_STOP,m_margin_stop);
-   SymbolInfoDouble(m_name,SYMBOL_MARGIN_STOPLIMIT,m_margin_stoplimit);
-   SymbolInfoInteger(m_name,SYMBOL_EXPIRATION_MODE,tmp);
-   m_trade_time_flags=(int)tmp;
-   SymbolInfoInteger(m_name,SYMBOL_FILLING_MODE,tmp);
+   if(!SymbolInfoDouble(m_name,SYMBOL_MARGIN_INITIAL,m_margin_initial))
+      return(false);
+   if(!SymbolInfoDouble(m_name,SYMBOL_MARGIN_MAINTENANCE,m_margin_maintenance))
+      return(false);
+//if(!SymbolInfoDouble(m_name,SYMBOL_MARGIN_LONG,m_margin_long))
+//return(false);
+//if(!SymbolInfoDouble(m_name,SYMBOL_MARGIN_SHORT,m_margin_short))
+//return(false);
+//if(!SymbolInfoDouble(m_name,SYMBOL_MARGIN_LIMIT,m_margin_limit))
+//return(false);
+//if(!SymbolInfoDouble(m_name,SYMBOL_MARGIN_STOP,m_margin_stop))
+//return(false);
+//if(!SymbolInfoDouble(m_name,SYMBOL_MARGIN_STOPLIMIT,m_margin_stoplimit))
+//return(false);
+//if(!SymbolInfoInteger(m_name,SYMBOL_EXPIRATION_MODE,tmp))
+//return(false);
+//m_trade_time_flags=(int)tmp;
+//if(!SymbolInfoInteger(m_name,SYMBOL_FILLING_MODE,tmp))
+//return(false);
+//m_trade_fill_flags=(int)tmp;
 //--- succeed
    return(true);
   }
