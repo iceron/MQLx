@@ -18,6 +18,7 @@ public:
    virtual bool      Add(CExpertTrade*);
    virtual void      Deinit(void);
    CExpertTrade     *Get(const string);
+   virtual bool      Search(string);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -45,6 +46,21 @@ bool CTradeManagerBase::Add(CExpertTrade *node)
   {
    if(Search(node)==-1)
       return CArrayObj::Add(node);
+   return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTradeManagerBase::Search(string symbol=NULL)
+  {
+   if(symbol==NULL)
+      symbol= Symbol();
+   for(int i=0;i<Total();i++)
+     {
+      CSymbolInfo *item=At(i);
+      if(StringCompare(item.Name(),symbol)==0)
+         return true;
+     }
    return false;
   }
 //+------------------------------------------------------------------+

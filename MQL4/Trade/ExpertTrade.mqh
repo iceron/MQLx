@@ -262,18 +262,12 @@ color CExpertTrade::ArrowColor(const ENUM_ORDER_TYPE type)
   {
    switch(type)
      {
-      case ORDER_TYPE_BUY:
-         return m_color_long;
-      case ORDER_TYPE_SELL:
-         return m_color_short;
-      case ORDER_TYPE_BUY_STOP:
-         return m_color_buystop;
-      case ORDER_TYPE_BUY_LIMIT:
-         return m_color_buylimit;
-      case ORDER_TYPE_SELL_STOP:
-         return m_color_sellstop;
-      case ORDER_TYPE_SELL_LIMIT:
-         return m_color_selllimit;
+      case ORDER_TYPE_BUY:        return m_color_long;
+      case ORDER_TYPE_SELL:       return m_color_short;
+      case ORDER_TYPE_BUY_STOP:   return m_color_buystop;
+      case ORDER_TYPE_BUY_LIMIT:  return m_color_buylimit;
+      case ORDER_TYPE_SELL_STOP:  return m_color_sellstop;
+      case ORDER_TYPE_SELL_LIMIT: return m_color_selllimit;
      }
    return clrNONE;
   }
