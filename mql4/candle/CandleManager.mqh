@@ -10,7 +10,6 @@
 //+------------------------------------------------------------------+
 class CCandleManager : public CCandleManagerBase
   {
-protected:
 public:
                      CCandleManager(void);
                     ~CCandleManager(void);
