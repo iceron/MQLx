@@ -22,7 +22,7 @@ public:
    virtual void      Deinit(void);
    CSymbolInfo      *Get(string);
    virtual bool      RefreshRates(void);
-   virtual bool      Search(string);
+   virtual int       Search(string);
    virtual CObject *GetContainer(void);
    virtual void      SetContainer(CObject*);
    virtual void      SetPrimary(string);
@@ -73,9 +73,9 @@ bool CSymbolManagerBase::Add(CSymbolInfo *node)
      {
       result=CArrayObj::Add(node);
       if(Total()==1 && result)
-         m_symbol_primary=At(0);
+         m_symbol_primary=At(0);         
      }
-   return false;
+   return result;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -112,7 +112,7 @@ bool CSymbolManagerBase::RefreshRates(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CSymbolManagerBase::Search(string symbol=NULL)
+int CSymbolManagerBase::Search(string symbol=NULL)
   {
    if(symbol==NULL)
       symbol= Symbol();

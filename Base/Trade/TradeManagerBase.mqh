@@ -15,10 +15,10 @@ class CTradeManagerBase : public CArrayObj
 public:
                      CTradeManagerBase(void);
                     ~CTradeManagerBase(void);
-   virtual bool      Add(CExpertTrade*);
+   virtual int       Search(string);
+   virtual bool      Add(CExpertTradeX*);
    virtual void      Deinit(void);
    CExpertTrade     *Get(const string);
-   virtual bool      Search(string);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -42,26 +42,26 @@ CTradeManagerBase::Deinit(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTradeManagerBase::Add(CExpertTrade *node)
+bool CTradeManagerBase::Add(CExpertTradeX *node)
   {
-   if(Search(node)==-1)
+   if(Search(node.Name())==-1)
       return CArrayObj::Add(node);
    return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTradeManagerBase::Search(string symbol=NULL)
+int CTradeManagerBase::Search(string symbol=NULL)
   {
    if(symbol==NULL)
       symbol= Symbol();
    for(int i=0;i<Total();i++)
      {
-      CSymbolInfo *item=At(i);
+      CExpertTradeX *item=At(i);
       if(StringCompare(item.Name(),symbol)==0)
-         return true;
+         return i;
      }
-   return false;
+   return -1;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

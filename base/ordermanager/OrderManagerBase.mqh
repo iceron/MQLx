@@ -136,7 +136,7 @@ protected:
 //+------------------------------------------------------------------+
 COrderManagerBase::COrderManagerBase() : m_lotsize(0.1),
                                          m_price_points(0),
-                                         m_comment(NULL),
+                                         m_comment(""),
                                          m_magic(0),
                                          m_expiration(0),
                                          m_history_count(0),
@@ -757,22 +757,22 @@ double COrderManagerBase::LotSizeCalculate(const double price,const ENUM_ORDER_T
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderManagerBase::Save(const int handle)
-  {
+  {      
    if(handle==INVALID_HANDLE)
       return false;
-   file.WriteDouble(m_lotsize);
+   file.WriteDouble(m_lotsize);   
    file.WriteInteger(m_price_points);
-   file.WriteString(m_comment);
-   file.WriteInteger(m_expiration);
-   file.WriteInteger(m_history_count);
+   file.WriteString(m_comment);   
+   file.WriteInteger(m_expiration);   
+   file.WriteInteger(m_history_count);   
    file.WriteInteger(m_max_orders_history);
    file.WriteBool(m_trade_allowed);
    file.WriteBool(m_long_allowed);
    file.WriteBool(m_short_allowed);
    file.WriteInteger(m_max_orders);
-   file.WriteInteger(m_max_trades);
+   file.WriteInteger(m_max_trades);   
    file.WriteObject(GetPointer(m_orders));
-   file.WriteObject(GetPointer(m_orders_history));
+   file.WriteObject(GetPointer(m_orders_history));   
    return true;
   }
 //+------------------------------------------------------------------+

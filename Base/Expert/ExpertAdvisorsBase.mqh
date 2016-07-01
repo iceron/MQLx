@@ -229,7 +229,7 @@ bool CExpertAdvisorsBase::Save(const int handle)
       CExpertAdvisor *e=At(i);
       if (!e.Save(handle))
          return false;
-     }
+     }   
    return true;
   }
 //+------------------------------------------------------------------+
