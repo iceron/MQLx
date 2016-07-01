@@ -31,7 +31,6 @@ CMoneyFixedRatioBase::CMoneyFixedRatioBase(void) : m_volume_base(0),
                                                    m_volume_inc(0)
 
   {
-   //m_update=MONEY_UPDATE_BALANCE;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
