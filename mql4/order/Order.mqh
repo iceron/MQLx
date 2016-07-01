@@ -18,11 +18,12 @@ public:
                      COrder(void);
                      COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);
                     ~COrder(void);
+   virtual int       Compare(const CObject*,const int) const;                    
    virtual bool      IsSuspended(void);
-   virtual void      Ticket(const ulong ticket) ;
-   virtual ulong     Ticket(void) const ;
-   virtual void      NewTicket(const bool updated) ;
-   virtual bool      NewTicket(void) const ;
+   virtual void      Ticket(const ulong ticket);
+   virtual ulong     Ticket(void) const;
+   virtual void      NewTicket(const bool updated);
+   virtual bool      NewTicket(void) const;
    //--- recovery
    virtual bool      Save(const int handle);
    virtual bool      Load(const int handle);
@@ -61,7 +62,7 @@ COrder::~COrder(void)
 //+------------------------------------------------------------------+
 COrder::Ticket(const ulong ticket)
   {
-   m_ticket_current.InsertSort((int)ticket);
+   m_ticket_current.InsertSort((int)ticket);   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -118,6 +119,20 @@ bool COrder::IsSuspended(void)
         }
      }
    return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrder::Compare(const CObject *node,const int mode=0) const
+  {
+   const COrder *order=node;
+   for (int i=0;i<m_ticket_current.Total();i++)
+   {
+      int ticket = m_ticket_current.At(i);
+      if (ticket==order.Ticket())
+         return 0;
+   }
+   return COrderBase::Compare(node,mode);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

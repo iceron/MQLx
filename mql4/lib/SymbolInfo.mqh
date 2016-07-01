@@ -225,12 +225,12 @@ bool CSymbolInfo::Name(const string name)
    if(!CheckMarketWatch())
       return(false);
 //---
-   //if(!Refresh())
-   Refresh();
+   if(!Refresh())
+   //Refresh();
      {
-      //m_name="";
-      //Print(__FUNCTION__+": invalid data of symbol '"+name+"'");
-      //return(false);
+      m_name="";
+      Print(__FUNCTION__+": invalid data of symbol '"+name+"'");
+      return(false);
      }
 //--- succeed
    return(true);
@@ -254,8 +254,10 @@ bool CSymbolInfo::Refresh(void)
    SymbolInfoDouble(m_name,SYMBOL_VOLUME_LIMIT,m_lots_limit);
    SymbolInfoDouble(m_name,SYMBOL_SWAP_LONG,m_swap_long);
    SymbolInfoDouble(m_name,SYMBOL_SWAP_SHORT,m_swap_short);
+   
    SymbolInfoInteger(m_name,SYMBOL_DIGITS,tmp);
    m_digits=(int)tmp;
+
    SymbolInfoInteger(m_name,SYMBOL_ORDER_MODE,tmp);
    m_order_mode=(int)tmp;
    SymbolInfoInteger(m_name,SYMBOL_TRADE_EXEMODE,tmp);
@@ -272,7 +274,6 @@ bool CSymbolInfo::Refresh(void)
    SymbolInfoDouble(m_name,SYMBOL_MARGIN_MAINTENANCE,m_margin_maintenance);
    SymbolInfoDouble(m_name,SYMBOL_MARGIN_LONG,m_margin_long);
    SymbolInfoDouble(m_name,SYMBOL_MARGIN_SHORT,m_margin_short);
-      return(false);
    SymbolInfoDouble(m_name,SYMBOL_MARGIN_LIMIT,m_margin_limit);
    SymbolInfoDouble(m_name,SYMBOL_MARGIN_STOP,m_margin_stop);
    SymbolInfoDouble(m_name,SYMBOL_MARGIN_STOPLIMIT,m_margin_stoplimit);

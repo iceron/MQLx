@@ -686,6 +686,9 @@ bool CStopBase::InitTrade()
 //+------------------------------------------------------------------+
 double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
   {
+   m_symbol = m_symbol_man.Get(order.Symbol());
+   if (!CheckPointer(m_symbol))
+      return 0;
    double lotsize=0.0;
    if(m_volume_type==VOLUME_TYPE_FIXED)
       lotsize=orderstop.Volume();
@@ -695,6 +698,12 @@ double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
       lotsize=orderstop.Volume()*order.VolumeInitial();
    else if(m_volume_type==VOLUME_TYPE_REMAINING)
       lotsize=order.Volume();
+   double maxvol=m_symbol.LotsMax();
+   double minvol=m_symbol.LotsMin();
+   if(lotsize<minvol)
+      lotsize=minvol;
+   if(lotsize>maxvol)
+      lotsize=maxvol;
    return lotsize;
   }
 //+------------------------------------------------------------------+

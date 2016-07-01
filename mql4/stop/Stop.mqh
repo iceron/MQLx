@@ -152,7 +152,9 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
       m_trade = m_trade_man.Get(m_symbol.Name());
       if (!CheckPointer(m_trade))
          return false;
-      double lotsize=MathMin(order.Volume(),LotSizeCalculate(order,orderstop));
+      double lotsize_calc = LotSizeCalculate(order,orderstop);
+      double lotsize=MathMin(order.Volume(),lotsize_calc);
+      Print("closing order: "+orderstop.EntryName()+" "+order.Volume()+" "+lotsize+" "+lotsize_calc);
       res=m_trade.OrderClose(ticket,lotsize,price);
       if(res)
         {

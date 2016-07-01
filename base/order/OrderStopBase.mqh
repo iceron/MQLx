@@ -66,6 +66,8 @@ public:
    bool              StopLoss(const double);
    double            StopLoss(void) const;
    double            StopLoss(const int);
+   void              StopLossClosed(const bool);
+   bool              StopLossClosed(void);
    double            StopLossLast(void) const;
    string            StopLossName(void) const;
    void              StopLossTicket(const ulong);
@@ -75,6 +77,8 @@ public:
    bool              TakeProfit(const double);
    double            TakeProfit(void) const;
    double            TakeProfit(const int);
+   void              TakeProfitClosed(const bool);
+   bool              TakeProfitClosed(void);
    double            TakeProfitLast(void) const;
    string            TakeProfitName(void) const;
    void              TakeProfitTicket(const ulong);
@@ -245,6 +249,20 @@ double COrderStopBase::StopLoss(const int index)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+void COrderStopBase::StopLossClosed(const bool value)
+  {
+   m_stoploss_closed=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStopBase::StopLossClosed(void)
+  {
+   return m_stoploss_closed;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 double COrderStopBase::StopLossLast(void) const
   {
    return m_stoploss.Total()>2?m_stoploss.At(m_stoploss.Total()-2):0;
@@ -304,6 +322,20 @@ double COrderStopBase::TakeProfit(void) const
 double COrderStopBase::TakeProfit(const int index)
   {
    return m_takeprofit.Total()>index?m_takeprofit.At(index):0;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderStopBase::TakeProfitClosed(const bool value)
+  {
+   m_takeprofit_closed=value;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStopBase::TakeProfitClosed(void)
+  {
+   return m_takeprofit_closed;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -397,9 +429,11 @@ void COrderStopBase::Deinit(void)
 //+------------------------------------------------------------------+
 void COrderStopBase::Recreate(void)
   {
-   if(m_stop.StopLossVisible())
+   if (m_closed)
+      return;
+   if(m_stop.StopLossVisible() && !m_stoploss_closed)
       m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,m_stoploss.At(m_stoploss.Total()-1));
-   if(m_stop.TakeProfitVisible())
+   if(m_stop.TakeProfitVisible() && !m_takeprofit_closed)
       m_objtp=m_stop.CreateTakeProfitObject(0,TakeProfitName(),0,m_takeprofit.At(m_takeprofit.Total()-1));
    if(CheckPointer(m_objsl) || CheckPointer(m_objtp))
       m_objentry=m_stop.CreateEntryObject(0,EntryName(),0,m_order.Price());
@@ -449,6 +483,8 @@ bool COrderStopBase::CheckTrailing(void)
 //+------------------------------------------------------------------+
 bool COrderStopBase::Close(void)
   {
+   if (m_closed)
+      return true;
    bool res1=false,res2=false,result=false;
    if(m_stoploss_closed || StopLoss()==0 || m_stoploss_ticket==0)
       res1=true;

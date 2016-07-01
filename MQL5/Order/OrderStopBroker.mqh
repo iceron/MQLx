@@ -45,13 +45,13 @@ void COrderStopBroker::Check(double &volume)
       if(m_stoploss_ticket>0 && !m_stoploss_closed)
          if(m_stop.DeleteStopOrder(m_stoploss_ticket))
            {
-            m_stoploss_closed=true;
+            StopLossClosed(true);
             delete_sl=DeleteStopLoss();
            }
       if(m_takeprofit_ticket>0 && !m_takeprofit_closed)
          if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
            {
-            m_takeprofit_closed=true;
+            TakeProfitClosed(true);
             delete_tp=DeleteTakeProfit();
            }
       if(delete_sl && delete_tp)
@@ -61,12 +61,12 @@ void COrderStopBroker::Check(double &volume)
    if(!m_stoploss_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_stoploss_ticket))
-         m_stoploss_closed=true;
+         StopLossClosed(true);
      }
    if(!m_takeprofit_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket))
-         m_takeprofit_closed=true;
+         TakeProfitClosed(true);
      }
    if(m_stoploss_closed || m_takeprofit_closed)
      {
@@ -75,13 +75,13 @@ void COrderStopBroker::Check(double &volume)
          if(m_stoploss_closed && !m_takeprofit_closed)
            {
             if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
-               m_takeprofit_closed=true;
+               TakeProfitClosed(true);
            }
 
          if(m_takeprofit_closed && !m_stoploss_closed)
            {
             if(m_stop.DeleteStopOrder(m_stoploss_ticket))
-               m_stoploss_closed=true;
+               StopLossClosed(true);
            }
         }
       if(m_stoploss_closed)

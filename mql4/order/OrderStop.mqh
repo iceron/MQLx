@@ -16,7 +16,7 @@ public:
    virtual bool      NewTicket(void);
    virtual void      NewTicket(const bool);
    virtual bool      RecreateStops(void);
-   virtual void      UpdateTicket(const ulong); 
+   virtual void      UpdateTicket(const ulong);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -56,15 +56,14 @@ void COrderStop::UpdateTicket(const ulong ticket)
 //+------------------------------------------------------------------+
 bool COrderStop::RecreateStops(void)
   {
-   if(!m_order.IsClosed() && !m_order.IsSuspended())
-     {
-      if(!m_takeprofit_closed)
-         m_objtp.Name(TakeProfitName());
-      if(!m_stoploss_closed)
-         m_objsl.Name(StopLossName());
-      if(!m_stoploss_closed || !m_takeprofit_closed)
-         m_objentry.Name(EntryName());
-     }
+   if(m_order.IsClosed() || m_order.IsSuspended() || m_closed)
+      return true;
+   if(!m_takeprofit_closed && CheckPointer(m_objtp))
+      m_objtp.Name(TakeProfitName());
+   if(!m_stoploss_closed && CheckPointer(m_objsl))
+      m_objsl.Name(StopLossName());
+   if((!m_stoploss_closed || !m_takeprofit_closed) && CheckPointer(m_objentry))
+      m_objentry.Name(EntryName());
    return true;
   }
 //+------------------------------------------------------------------+

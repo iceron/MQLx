@@ -117,23 +117,18 @@ bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop)
 COrderStopsBase::Check(double &volume)
   {
    if(!Active())
-      return;
-   int total=Total();
-   if(total>0)
+      return;   
+   for(int i=0;i<Total();i++)
      {
-      for(int i=0;i<Total();i++)
+      COrderStop *order_stop=(COrderStop *)At(i);      
         {
-         COrderStop *order_stop=At(i);
-         if(CheckPointer(order_stop))
-           {
-            if(order_stop.IsClosed())
-               continue;
-            order_stop.CheckTrailing();
-            order_stop.Update();
-            order_stop.Check(volume);
-            if(!CheckNewTicket(order_stop))
-               return;
-           }
+         if(order_stop.IsClosed())
+            continue;         
+         order_stop.CheckTrailing();
+         order_stop.Update();
+         order_stop.Check(volume);
+         if(!CheckNewTicket(order_stop))
+            return;
         }
      }
   }
@@ -218,7 +213,7 @@ bool COrderStopsBase::Load(const int handle)
    if(!file.ReadBool(m_active))
       return false;
    if(!file.ReadObject(GetPointer(m_types)))
-      return false;   
+      return false;
    return CArrayObj::Load(handle);
   }
 //+------------------------------------------------------------------+

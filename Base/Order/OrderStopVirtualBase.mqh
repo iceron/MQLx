@@ -43,37 +43,33 @@ void COrderStopVirtualBase::Check(double &volume)
       return;
    if(m_closed || m_order.IsClosed() || m_order.IsSuspended())
      {
-      m_closed=true;
-      bool delete_sl=DeleteStopLoss();
-      bool delete_tp=DeleteTakeProfit();
-      if(delete_sl && delete_tp)
-         DeleteEntry();
+      Close();
       return;
      }
    if(!m_stoploss_closed)
       if(m_stop.CheckStopLoss(m_order,GetPointer(this)))
-         m_stoploss_closed=true;
+         StopLossClosed(true);
    if(!m_takeprofit_closed)
       if(m_stop.CheckTakeProfit(m_order,GetPointer(this)))
-         m_takeprofit_closed=true;
+         TakeProfitClosed(true);
    if(m_stoploss_closed || m_takeprofit_closed)
      {
       if(m_stop.OCO())
         {
          if(m_stoploss_closed && !m_takeprofit_closed)
-            m_takeprofit_closed=true;
+            TakeProfitClosed(true);
          if(m_takeprofit_closed && !m_stoploss_closed)
-            m_stoploss_closed=true;
+            StopLossClosed(true);
         }
       if(m_stoploss_closed)
          DeleteStopLoss();
       if(m_takeprofit_closed)
          DeleteTakeProfit();
      }
-   if((m_stoploss_closed && m_takeprofit_closed) || volume<=0)
+   if(m_closed || (m_stoploss_closed && m_takeprofit_closed) || volume<=0)
      {
-      m_closed=true;
-      DeleteStopLines();
+      Close();
+      //DeleteStopLines();
       if(m_stop.Main())
          m_order.IsSuspended(true);
      }
