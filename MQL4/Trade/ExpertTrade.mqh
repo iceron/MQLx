@@ -224,7 +224,7 @@ bool CExpertTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const 
       close_price=NormalizeDouble(OrderClosePrice(),(int)MarketInfo(OrderSymbol(),MODE_DIGITS));
       deviation=(int)(m_deviation*MarketInfo(OrderSymbol(),MODE_POINT));
      }
-   double lots=(lotsize>0.0)?lotsize:OrderLots();
+   double lots=(lotsize>0.0 || lotsize>OrderLots())?lotsize:OrderLots();
    return ::OrderClose((int)ticket,lots,close_price,deviation,m_color_exit);
   }
 //+------------------------------------------------------------------+
