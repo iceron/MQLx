@@ -68,14 +68,9 @@ CSymbolManagerBase::Deinit(void)
 //+------------------------------------------------------------------+
 bool CSymbolManagerBase::Add(CSymbolInfo *node)
   {
-   bool result=false;
-   if(Search(node)==-1)
-     {
-      result=CArrayObj::Add(node);
-      if(Total()==1 && result)
-         m_symbol_primary=At(0);         
-     }
-   return result;
+   if(Search(node.Name())==-1)
+      return CArrayObj::Add(node);       
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -120,9 +115,9 @@ int CSymbolManagerBase::Search(string symbol=NULL)
      {
       CSymbolInfo *item=At(i);
       if(StringCompare(item.Name(),symbol)==0)
-         return true;
+         return i;
      }
-   return false;
+   return -1;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -145,6 +140,8 @@ void CSymbolManagerBase::SetPrimary(const int idx)
 //+------------------------------------------------------------------+
 CSymbolInfo *CSymbolManagerBase::GetPrimary(void)
   {
+   if (!CheckPointer(m_symbol_primary) && Total()>0)
+      SetPrimary(0);
    return m_symbol_primary;
   }
 //+------------------------------------------------------------------+

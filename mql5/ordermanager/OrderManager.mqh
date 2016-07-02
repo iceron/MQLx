@@ -98,7 +98,7 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
             order_type= ORDER_TYPE_BUY;
          else if(order_type==ORDER_TYPE_SELL_STOP || order_type==ORDER_TYPE_SELL_LIMIT)
             order_type=ORDER_TYPE_SELL;
-         if((magic==m_magic || m_other_magic.Search((int)magic)>=0) && m_symbol_man.Search(symbol))
+         if((magic==m_magic || m_other_magic.Search((int)magic)>=0) && m_symbol_man.Search(symbol)>=0)
             m_orders.NewOrder((int)ticket,symbol,(int)magic,order_type,volume,price);
         }
      }

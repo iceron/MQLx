@@ -43,7 +43,7 @@ void COrderManager::OnTradeTransaction(void)
          continue;
       if(OrderMagicNumber()!=m_magic && m_other_magic.Search(OrderMagicNumber())<0) 
          continue;
-      if (!m_symbol_man.Search(OrderSymbol())) 
+      if (m_symbol_man.Search(OrderSymbol())==-1) 
          continue;
       temp.Ticket(OrderTicket());
       if(m_orders.Search(temp)>=0) 
