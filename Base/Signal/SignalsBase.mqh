@@ -167,9 +167,6 @@ CSignalsBase::Check(void)
       if(m_signal_close==m_signal_close_last)
          m_signal_close= CMD_NEUTRAL;
      }
-
-   if(m_signal_open>0)
-      Print(m_signal_open+" "+m_signal_open_last+" "+m_new_signal);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
