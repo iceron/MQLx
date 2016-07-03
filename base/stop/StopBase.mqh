@@ -686,8 +686,8 @@ bool CStopBase::InitTrade()
 //+------------------------------------------------------------------+
 double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
   {
-   m_symbol = m_symbol_man.Get(order.Symbol());
-   if (!CheckPointer(m_symbol))
+   m_symbol=m_symbol_man.Get(order.Symbol());
+   if(!CheckPointer(m_symbol))
       return 0;
    double lotsize=0.0;
    if(m_volume_type==VOLUME_TYPE_FIXED)
@@ -761,11 +761,15 @@ bool CStopBase::CheckStopLoss(COrder *order,COrderStop *orderstop)
       return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
+     {
       if(price<=stoploss)
          close=true;
+     }
    else if(type==ORDER_TYPE_SELL)
-   if(price>=stoploss)
-             close=true;
+     {
+      if(price>=stoploss)
+         close=true;
+     }
    if(close)
       return CloseStop(order,orderstop,price);
    return close;
