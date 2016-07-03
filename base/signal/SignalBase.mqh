@@ -87,6 +87,7 @@ CSignalBase::CSignalBase(void) : m_active(true),
 //+------------------------------------------------------------------+
 CSignalBase::~CSignalBase(void)
   {
+   m_indicators.Shutdown();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
