@@ -7,7 +7,7 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 #include "..\Symbol\SymbolManagerBase.mqh"
 #include "..\Candle\CandleManagerBase.mqh"
-#include "..\Signal\SignalBase.mqh"
+#include "..\Signal\SignalsBase.mqh"
 #include "..\Stop\StopsBase.mqh"
 #include "..\Money\MoneysBase.mqh"
 #include "..\Time\TimesBase.mqh"
@@ -29,7 +29,7 @@ protected:
    int               m_period;
    bool              m_position_reverse;
    //--- signal objects
-   CSignal          *m_signal;
+   CSignals         *m_signals;
    //--- trade objects   
    CAccountInfo      m_account;
    CSymbolManager    m_symbol_man;
@@ -49,7 +49,7 @@ public:
    //--- initialization
    bool              AddEventAggregator(CEventAggregator*);
    bool              AddMoneys(CMoneys*);
-   bool              AddSignal(CSignal*);
+   bool              AddSignal(CSignals*);
    bool              AddStops(CStops*);
    bool              AddSymbol(const string);
    bool              AddTimes(CTimes*);
@@ -81,7 +81,7 @@ public:
    COrders          *OrdersHistory(void);
    CArrayInt        *OtherMagic(void);
    CStops           *Stops(void);
-   CSignal          *Signal(void);
+   CSignals         *Signals(void);
    CTimes           *Times(void);
    //--- order manager
    bool              AddOtherMagic(const int);
@@ -270,9 +270,9 @@ CStops *CExpertAdvisorBase::Stops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CSignal *CExpertAdvisorBase::Signal(void)
+CSignals *CExpertAdvisorBase::Signals(void)
   {
-   return GetPointer(m_signal);
+   return GetPointer(m_signals);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -540,9 +540,9 @@ bool CExpertAdvisorBase::InitComponents(void)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::InitSignals(void)
   {
-   if(!CheckPointer(m_signal))
+   if(!CheckPointer(m_signals))
       return true;
-   return m_signal.Init(GetPointer(m_symbol_man),GetPointer(m_event_man));
+   return m_signals.Init(GetPointer(m_symbol_man),GetPointer(m_event_man));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -597,11 +597,11 @@ bool CExpertAdvisorBase::AddEventAggregator(CEventAggregator *aggregator)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertAdvisorBase::AddSignal(CSignal *signal)
+bool CExpertAdvisorBase::AddSignal(CSignals *signals)
   {
-   if(CheckPointer(m_signal))
-      delete m_signal;
-   m_signal=signal;
+   if(CheckPointer(m_signals))
+      delete m_signals;
+   m_signals=signals;
    return true;
   }
 //+------------------------------------------------------------------+
@@ -649,9 +649,9 @@ CExpertAdvisorBase::AddCandle(const string symbol,const int timeframe)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::Validate(void) const
   {
-   if(CheckPointer(m_signal)==POINTER_DYNAMIC)
+   if(CheckPointer(m_signals)==POINTER_DYNAMIC)
      {
-      if(!m_signal.Validate())
+      if(!m_signals.Validate())
          return false;
      }
    if(CheckPointer(m_times)==POINTER_DYNAMIC)
@@ -767,13 +767,13 @@ bool CExpertAdvisorBase::OnTick(void)
    checkopenshort=false,
    checkcloselong=false,
    checkcloseshort=false;
-   if(CheckPointer(m_signal))
+   if(CheckPointer(m_signals))
      {
-      m_signal.Check();
-      checkopenlong=m_signal.CheckOpenLong();
-      checkopenshort = m_signal.CheckOpenShort();
-      checkcloselong = m_signal.CheckCloseLong();
-      checkcloseshort= m_signal.CheckCloseShort();
+      m_signals.Check();
+      checkopenlong=m_signals.CheckOpenLong();
+      checkopenshort = m_signals.CheckOpenShort();
+      checkcloselong = m_signals.CheckCloseLong();
+      checkcloseshort= m_signals.CheckCloseShort();
      }
    COrders *orders=m_order_man.Orders();
    for(int i=orders.Total()-1;i>=0;i--)
@@ -798,7 +798,7 @@ bool CExpertAdvisorBase::OnTick(void)
         }
      }
    m_order_man.OnTick();
-   if(CheckPointer(m_signal) && 
+   if(CheckPointer(m_signals) && 
       (m_every_tick || IsNewBar(m_symbol_name,m_period)) && 
       (!CheckPointer(m_times) || m_times.Evaluate()))
      {
@@ -848,7 +848,7 @@ void CExpertAdvisorBase::Deinit(const int reason=0)
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::DeinitSignals(void)
   {
-   delete m_signal;
+   delete m_signals;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

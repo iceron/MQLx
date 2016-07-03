@@ -11,13 +11,13 @@
 //+------------------------------------------------------------------+
 enum ENUM_TIME_DAY_FLAGS
   {
-   TIME_DAY_FLAG_SUN,
-   TIME_DAY_FLAG_MON,
-   TIME_DAY_FLAG_TUE,
-   TIME_DAY_FLAG_WED,
-   TIME_DAY_FLAG_THU,
-   TIME_DAY_FLAG_FRI,
-   TIME_DAY_FLAG_SAT
+   TIME_DAY_FLAG_SUN=1<<0,
+   TIME_DAY_FLAG_MON=1<<1,
+   TIME_DAY_FLAG_TUE=1<<2,
+   TIME_DAY_FLAG_WED=1<<3,
+   TIME_DAY_FLAG_THU=1<<4,
+   TIME_DAY_FLAG_FRI=1<<5,
+   TIME_DAY_FLAG_SAT=1<<6
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
