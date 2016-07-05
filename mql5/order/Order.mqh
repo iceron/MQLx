@@ -45,6 +45,8 @@ COrder::~COrder(void)
 //+------------------------------------------------------------------+
 bool COrder::IsSuspended(void)
   {
+   if(m_suspend==true)
+      return true;
    if(Volume()<=0.0)
      {
       IsSuspended(true);
