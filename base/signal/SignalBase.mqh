@@ -130,7 +130,7 @@ bool CSignalBase::Refresh(void)
      {
       CSeries *indicator=m_indicators.At(i);
       if(indicator!=NULL)
-         indicator.Refresh();
+         indicator.Refresh(OBJ_ALL_PERIODS);
      }
    return true;
   }

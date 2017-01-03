@@ -113,7 +113,7 @@ public:
    virtual bool      IsHedging(void) const;
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
    //virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
-   virtual COrder   *TradeOpen(const string,const ENUM_ORDER_TYPE);
+   virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
    //--- events
    virtual void      OnTradeTransaction(COrder*);
    virtual void      OnTick(void);
@@ -432,7 +432,7 @@ bool COrderManagerBase::TradeOpen(const string,const ENUM_ORDER_TYPE)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrder* COrderManagerBase::TradeOpen(const string,const ENUM_ORDER_TYPE)
+COrder* COrderManagerBase::TradeOpen(const string,ENUM_ORDER_TYPE)
   {
    return NULL;
   }

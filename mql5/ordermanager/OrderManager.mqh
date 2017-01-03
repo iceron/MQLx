@@ -22,7 +22,8 @@ public:
    virtual bool      CloseOrder(COrder*,const int);
    virtual bool      IsHedging(void) const;
    virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
-   virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
+   //virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
+   virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
    int               MagicClose(void) const;
    void              MagicClose(const int);
    virtual bool      Save(const int);
@@ -103,6 +104,7 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
         }
      }
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -122,6 +124,28 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
       ret=SendOrder(type,lotsize,price,0,0);
      }
    return ret;
+  }
+*/
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrder* COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
+  {
+   double lotsize=0.0,price=0.0;
+   int trades_total =TradesTotal();
+   int orders_total = OrdersTotal();
+   m_symbol=m_symbol_man.Get(symbol);
+   if(!IsPositionAllowed(type))
+      return NULL;
+   if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
+     {
+      price=PriceCalculate(type);
+      lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
+      bool ret=SendOrder(type,lotsize,price,0,0);
+      
+     }      
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

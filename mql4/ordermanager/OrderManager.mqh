@@ -17,7 +17,7 @@ public:
    virtual bool      CloseOrder(COrder*,const int);
    virtual void      OnTradeTransaction(void);
    //virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
-   virtual COrder   *TradeOpen(const string,const ENUM_ORDER_TYPE);
+   virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -88,7 +88,7 @@ bool COrderManager::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrder* COrderManager::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
+COrder* COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
   {
    int trades_total = TradesTotal();
    int orders_total = OrdersTotal();
