@@ -41,6 +41,6 @@ bool CExpertAdvisor::OnTick(void)
 //+------------------------------------------------------------------+
 void CExpertAdvisor::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
-   m_order_man.OnTradeTransaction(trans,request,result);
+   //m_order_man.OnTradeTransaction(trans,request,result);
   }  
 //+------------------------------------------------------------------+

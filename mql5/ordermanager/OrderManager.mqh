@@ -21,7 +21,7 @@ public:
    virtual bool      Validate(void) const;
    virtual bool      CloseOrder(COrder*,const int);
    virtual bool      IsHedging(void) const;
-   virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
+   //virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
    //virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
    int               MagicClose(void) const;
@@ -80,6 +80,7 @@ bool COrderManager::IsHedging(void) const
   {
    return m_margin_mode==ACCOUNT_MARGIN_MODE_RETAIL_HEDGING;
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -104,6 +105,7 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
         }
      }
   }
+*/
 /*
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -142,8 +144,8 @@ COrder* COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
      {
       price=PriceCalculate(type);
       lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
-      bool ret=SendOrder(type,lotsize,price,0,0);
-      
+      if (SendOrder(type,lotsize,price,0,0))
+         return m_orders.NewOrder((int)m_trade.ResultOrder(),m_trade.RequestSymbol(),(int)m_trade.RequestMagic(),m_trade.RequestType(),m_trade.ResultVolume(),m_trade.ResultPrice());
      }      
    return NULL;
   }
