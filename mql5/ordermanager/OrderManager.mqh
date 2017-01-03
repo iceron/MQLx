@@ -157,7 +157,7 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
    bool closed=true;
    COrderInfo ord;
    if(!CheckPointer(order))
-      return closed;
+      return true;
    if(order.Volume()<=0)
       return true;
    if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),order.Symbol())!=0)
@@ -166,13 +166,17 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
       m_trade=m_trade_man.Get(order.Symbol());
    m_trade.SetExpertMagicNumber(m_magic_close);
    if(ord.Select(order.Ticket()))
+   {
       closed=m_trade.OrderDelete(order.Ticket());
+   }   
    else
      {
       CHistoryOrderInfo h_ord;
       h_ord.Ticket(order.Ticket());
       if(IsHedging())
-         closed=m_trade.PositionClose(h_ord.PositionId());
+      {
+         closed=m_trade.PositionClose(h_ord.Ticket());
+      }   
       else
         {
          if(COrder::IsOrderTypeLong(order.OrderType()))

@@ -43,6 +43,7 @@ public:
    virtual CObject  *GetContainer(void);
    virtual void      SetContainer(CObject*);
    virtual bool      Validate(void);
+   virtual bool      Calculate(void);
    virtual void      Check(void);
    virtual bool      CheckFilters(void);
    virtual double    GetDirection(void);
@@ -124,6 +125,13 @@ bool CSignalBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+bool CSignalBase::Calculate(void)
+  {
+   return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CSignalBase::Refresh(void)
   {
    for(int i=0;i<m_indicators.Total();i++)
@@ -142,6 +150,8 @@ void CSignalBase::Check(void)
    if(!Active())
       return;
    if(!Refresh())
+      return;
+   if(!Calculate())
       return;
    int res=CMD_NEUTRAL;
    if(LongCondition())
