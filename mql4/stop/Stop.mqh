@@ -109,6 +109,13 @@ double CStop::StopLossPrice(COrder *order,COrderStop *orderstop)
       val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.Symbol(),order.OrderType(),order.Price());
    if(Pending() && val>0.0)
       orderstop.StopLossTicket(OpenStop(order,orderstop,val));
+   /*
+   Refresh(order.Symbol());
+   if (!CheckPointer(m_symbol))
+   {
+      Print("pointer does not exist");
+   }
+   */
    return NormalizeDouble(val,m_symbol.Digits());
   }
 //+------------------------------------------------------------------+

@@ -50,6 +50,7 @@ COrder::COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type
    m_volume_initial=volume;
    m_volume= m_volume_initial;
    m_price = price;
+   Print(__FUNCTION__+" "+m_symbol+" "+symbol);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

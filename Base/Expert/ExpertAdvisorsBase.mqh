@@ -130,7 +130,7 @@ void CExpertAdvisorsBase::OnTick(void)
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *e=At(i);
+      CExpertAdvisor *e= At(i);
       e.OnTick();
      }
   }
@@ -226,7 +226,7 @@ bool CExpertAdvisorsBase::Save(const int handle)
   {
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *e=At(i);
+      CExpertAdvisor *e= At(i);
       if (!e.Save(handle))
          return false;
      }   

@@ -112,7 +112,8 @@ public:
    virtual void      AddOtherMagicString(const string&[]);
    virtual bool      IsHedging(void) const;
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
-   virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
+   //virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
+   virtual COrder   *TradeOpen(const string,const ENUM_ORDER_TYPE);
    //--- events
    virtual void      OnTradeTransaction(COrder*);
    virtual void      OnTick(void);
@@ -125,7 +126,7 @@ protected:
    virtual double    PriceCalculateCustom(ENUM_ORDER_TYPE&);
    virtual double    StopLossCalculate(const ENUM_ORDER_TYPE,const double);
    virtual double    TakeProfitCalculate(const ENUM_ORDER_TYPE,const double);
-   bool              SendOrder(const ENUM_ORDER_TYPE,const double,const double,const double,const double);
+   ulong             SendOrder(const ENUM_ORDER_TYPE,const double,const double,const double,const double);
    //--- deinitialization  
    virtual void      Deinit(const int);
    virtual void      DeinitStops(void);
@@ -419,12 +420,21 @@ void COrderManagerBase::Expiration(const int expiration)
   {
    m_expiration=expiration;
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderManagerBase::TradeOpen(const string,const ENUM_ORDER_TYPE)
   {
    return true;
+  }
+*/
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+COrder* COrderManagerBase::TradeOpen(const string,const ENUM_ORDER_TYPE)
+  {
+   return NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -477,7 +487,7 @@ bool COrderManagerBase::Init(CSymbolManager *symbol_man,CAccountInfo *account,CE
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,const double price,const double sl,const double tp)
+ulong COrderManagerBase::SendOrder(const ENUM_ORDER_TYPE type,const double lotsize,const double price,const double sl,const double tp)
   {
    bool ret=false;
    if(CheckPointer(m_symbol))
