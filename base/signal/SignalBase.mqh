@@ -49,6 +49,7 @@ public:
    virtual double    GetDirection(void);
    virtual bool      LongCondition(void);
    virtual bool      ShortCondition(void);
+   virtual void      Update(void);
    bool              Active(void);
    void              Active(const bool);
    bool              Entry(void);
@@ -132,6 +133,12 @@ bool CSignalBase::Calculate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+void CSignalBase::Update(void)
+  {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CSignalBase::Refresh(void)
   {
    for(int i=0;i<m_indicators.Total();i++)
@@ -167,6 +174,7 @@ void CSignalBase::Check(void)
       SignalInvert(m_signal_open);
       SignalInvert(m_signal_close);
    }   
+   Update();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
