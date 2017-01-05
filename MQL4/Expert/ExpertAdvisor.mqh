@@ -14,7 +14,7 @@ public:
                      CExpertAdvisor(void);
                     ~CExpertAdvisor(void);              
    virtual bool      OnTick(void);
-   virtual void      OnTradeTransaction(void) {m_order_man.OnTradeTransaction();}
+   //virtual void      OnTradeTransaction(void) {m_order_man.OnTradeTransaction();}
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -34,7 +34,7 @@ CExpertAdvisor::~CExpertAdvisor(void)
 bool CExpertAdvisor::OnTick(void)
   {
    bool ret=CExpertAdvisorBase::OnTick();
-   OnTradeTransaction();
+   //OnTradeTransaction();
    return ret;
   }
 //+------------------------------------------------------------------+

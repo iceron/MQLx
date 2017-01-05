@@ -15,7 +15,7 @@ public:
                      COrderManager(void);
                     ~COrderManager(void);
    virtual bool      CloseOrder(COrder*,const int);
-   virtual void      OnTradeTransaction(void);
+   //virtual void      OnTradeTransaction(void);
    //virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
   };
@@ -31,6 +31,7 @@ COrderManager::COrderManager(void)
 COrderManager::~COrderManager(void)
   {
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -53,6 +54,7 @@ void COrderManager::OnTradeTransaction(void)
      }
    delete temp;
   }
+*/
 /*
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -110,8 +112,10 @@ COrder* COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
       double lotsize=LotSizeCalculate(price,type,sl);
       ulong ticket = SendOrder(type,lotsize,price,sl,tp);
       if (ticket>0)
+      {
          if (OrderSelect((int)ticket,SELECT_BY_TICKET))
             return m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
+      }            
      }
    return NULL;
   }
