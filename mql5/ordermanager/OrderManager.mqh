@@ -18,7 +18,6 @@ public:
                      COrderManager(void);
                     ~COrderManager(void);
    virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
-   virtual bool      Validate(void) const;
    virtual bool      CloseOrder(COrder*,const int);
    virtual bool      IsHedging(void) const;
    //virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
@@ -63,15 +62,6 @@ int COrderManager::MagicClose(void) const
 COrderManager::MagicClose(const int magic)
   {
    m_magic_close=magic;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrderManager::Validate(void) const
-  {
-   if(m_magic==m_magic_close || m_other_magic.Search(m_magic_close)>=0)
-      return false;
-   return COrderManagerBase::Validate();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
