@@ -12,7 +12,7 @@
 class COrderManager : public COrderManagerBase
   {
 protected:
-   int               m_magic_close;
+   //int               m_magic_close;
    ENUM_ACCOUNT_MARGIN_MODE m_margin_mode;
 public:
                      COrderManager(void);
@@ -31,7 +31,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderManager::COrderManager(void) : m_magic_close(0),
+COrderManager::COrderManager(void) : //m_magic_close(0),
                                      m_margin_mode(0)
   {
   }
@@ -56,6 +56,7 @@ int COrderManager::MagicClose(void) const
   {
    return m_magic;
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -63,6 +64,7 @@ COrderManager::MagicClose(const int magic)
   {
    m_magic_close=magic;
   }
+*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -154,7 +156,7 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
       m_symbol=m_symbol_man.Get(order.Symbol());
    if(CheckPointer(m_symbol))
       m_trade=m_trade_man.Get(order.Symbol());
-   m_trade.SetExpertMagicNumber(m_magic_close);
+   //m_trade.SetExpertMagicNumber(m_magic_close);
    if(ord.Select(order.Ticket()))
    {
       closed=m_trade.OrderDelete(order.Ticket());
@@ -175,7 +177,7 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
             closed=m_trade.Buy(order.Volume(),0,0,0);
         }
      }
-   m_trade.SetExpertMagicNumber(m_magic);
+   //m_trade.SetExpertMagicNumber(m_magic);
    if(closed)
      {
       if(ArchiveOrder(m_orders.Detach(index)))
@@ -192,8 +194,8 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
 bool COrderManager::Save(const int handle)
   {
    file.Handle(handle);
-   if(!file.WriteInteger(m_magic_close))
-      return false;
+   //if(!file.WriteInteger(m_magic_close))
+      //return false;
    return COrderManagerBase::Save(handle);
   }
 //+------------------------------------------------------------------+
@@ -202,8 +204,8 @@ bool COrderManager::Save(const int handle)
 bool COrderManager::Load(const int handle)
   {
    file.Handle(handle);
-   if(!file.ReadInteger(m_magic_close))
-      return false;
+   //if(!file.ReadInteger(m_magic_close))
+      //return false;
    return COrderManagerBase::Load(handle);
   }
 //+------------------------------------------------------------------+
