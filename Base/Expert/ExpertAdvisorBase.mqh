@@ -774,7 +774,6 @@ bool CExpertAdvisorBase::OnTick(void)
       return false;
    if(!RefreshRates())
       return false;
-   bool ret=false;
    DetectNewBars();
    bool checkopenlong=false,
    checkopenshort=false,
@@ -817,19 +816,12 @@ bool CExpertAdvisorBase::OnTick(void)
       (m_every_tick || IsNewBar(m_symbol_name,m_period)) && 
       (!CheckPointer(m_times) || m_times.Evaluate()))
      {
-      /*
-      if(checkopenlong)
-         ret=TradeOpen(m_symbol_name,ORDER_TYPE_BUY);
-      if(checkopenshort)
-         ret=TradeOpen(m_symbol_name,ORDER_TYPE_SELL);
-      */  
       if(checkopenlong)
          order=TradeOpen(m_symbol_name,ORDER_TYPE_BUY);
       if(checkopenshort)
          order=TradeOpen(m_symbol_name,ORDER_TYPE_SELL); 
-      ret = order!=NULL;
      }
-   return ret;
+   return order!=NULL;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

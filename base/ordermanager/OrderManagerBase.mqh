@@ -5,7 +5,6 @@
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
-//#include <Arrays\ArrayInt.mqh>
 #include "..\Lib\AccountInfo.mqh"
 #include "..\Money\MoneysBase.mqh"
 #include "..\Stop\StopsBase.mqh"
@@ -32,7 +31,6 @@ protected:
    int               m_max_trades;
    COrders           m_orders;
    COrders           m_orders_history;
-   //CArrayInt         m_other_magic;
    CAccountInfo     *m_account;
    CSymbolInfo      *m_symbol;
    CSymbolManager   *m_symbol_man;
@@ -112,7 +110,6 @@ public:
    virtual void      AddOtherMagicString(const string&[]);
    virtual bool      IsHedging(void) const;
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
-   //virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
    virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
    //--- events
    virtual void      OnTradeTransaction(COrder*);
@@ -149,8 +146,6 @@ COrderManagerBase::COrderManagerBase() : m_lotsize(0.1),
                                          m_max_trades(-1)
 
   {
-   //if(!m_other_magic.IsSorted())
-      //m_other_magic.Sort();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -392,15 +387,6 @@ CStops *COrderManagerBase::Stops(void) const
   {
    return GetPointer(m_stops);
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-CArrayInt *COrderManagerBase::OtherMagic(void)
-  {
-   return GetPointer(m_other_magic);
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -422,15 +408,6 @@ void COrderManagerBase::Expiration(const int expiration)
   {
    m_expiration=expiration;
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrderManagerBase::TradeOpen(const string,const ENUM_ORDER_TYPE)
-  {
-   return true;
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -682,27 +659,6 @@ double COrderManagerBase::TakeProfitCalculate(const ENUM_ORDER_TYPE type,const d
       return m_main_stop.TakeProfitTicks(type,price);
    return 0;
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrderManagerBase::AddOtherMagic(const int magic)
-  {
-   if(m_other_magic.Search(magic)>=0)
-      return true;
-   return m_other_magic.InsertSort(magic);
-  }
-*/
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void COrderManagerBase::AddOtherMagicString(const string &magics[])
-  {
-   for(int i=0;i<ArraySize(magics);i++)
-      AddOtherMagic((int)magics[i]);
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
