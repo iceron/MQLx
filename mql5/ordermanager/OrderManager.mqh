@@ -88,11 +88,10 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
    }   
    else
      {
-      CHistoryOrderInfo h_ord;
-      h_ord.Ticket(order.Ticket());
+      ResetLastError();
       if(IsHedging())
       {
-         closed=m_trade.PositionClose(h_ord.Ticket());
+         closed=m_trade.PositionClose(order.Ticket());
       }   
       else
         {
