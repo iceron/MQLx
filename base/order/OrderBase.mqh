@@ -111,8 +111,10 @@ COrderBase::~COrderBase(void)
 //+------------------------------------------------------------------+
 bool COrderBase::Init(COrders *orders,CStops *stops)
   {
-   SetContainer(GetPointer(orders));
-   CreateStops(GetPointer(stops));
+   if (CheckPointer(orders))
+      SetContainer(GetPointer(orders));
+   if (CheckPointer(stops))
+      CreateStops(GetPointer(stops));
    return true;
   }
 //+------------------------------------------------------------------+

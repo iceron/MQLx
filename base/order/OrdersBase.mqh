@@ -110,6 +110,8 @@ COrder* COrdersBase::NewOrder(const ulong ticket,const string symbol,const int m
   {
    COrder *order=new COrder(ticket,symbol,type,volume,price);
    if(CheckPointer(order)==POINTER_DYNAMIC)
+   {
+      order.SetContainer(GetPointer(this));
       if(InsertSort(GetPointer(order)))
       {  
          order.Magic(magic);
@@ -118,6 +120,7 @@ COrder* COrdersBase::NewOrder(const ulong ticket,const string symbol,const int m
          else order.Initialized(false);
          return order;
       }   
+   }   
    return NULL;
   }
 //+------------------------------------------------------------------+

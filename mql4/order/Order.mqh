@@ -20,6 +20,7 @@ public:
                     ~COrder(void);
    virtual int       Compare(const CObject*,const int) const;                    
    virtual bool      IsSuspended(void);
+   virtual void      OnTick(void);
    virtual void      Ticket(const ulong ticket);
    virtual ulong     Ticket(void) const;
    virtual void      NewTicket(const bool updated);
@@ -133,6 +134,26 @@ int COrder::Compare(const CObject *node,const int mode=0) const
          return 0;
    }
    return COrderBase::Compare(node,mode);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrder::OnTick(void)
+  {   
+   if (!Initialized())
+   {
+      if (OrderSelect((int)Ticket(),SELECT_BY_TICKET))
+      {
+         m_type = (ENUM_ORDER_TYPE)::OrderType();
+         if (m_type<=1)
+         {
+            if (Init(m_orders,m_orders.Stops()))    
+                  Initialized(true);
+         }      
+      }
+   }
+   if (Initialized())
+      CheckStops();  
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
