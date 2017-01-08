@@ -61,12 +61,16 @@ void COrderStopBroker::Check(double &volume)
    if(!m_stoploss_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_stoploss_ticket))
+      {
          StopLossClosed(true);
+      }   
      }
    if(!m_takeprofit_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket))
+      {
          TakeProfitClosed(true);
+      }   
      }
    if(m_stoploss_closed || m_takeprofit_closed)
      {
@@ -93,7 +97,9 @@ void COrderStopBroker::Check(double &volume)
      {
       DeleteStopLines();
       if(m_stop.Main())
+      {
          m_order.IsSuspended(true);
+      }   
      }
   }
 //+------------------------------------------------------------------+

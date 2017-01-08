@@ -141,8 +141,8 @@ protected:
    virtual void      ManageOrders(void);
    virtual void      ManageOrdersHistory(void);
    virtual void      OnTradeTransaction(COrder*) {}
-   //virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
-   virtual COrder*   TradeOpen(const string,const ENUM_ORDER_TYPE);
+   virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
+   //virtual COrder*   TradeOpen(const string,const ENUM_ORDER_TYPE);
    //--- symbol manager
    virtual bool      RefreshRates(void);
    //--- deinitialization
@@ -254,7 +254,6 @@ COrders *CExpertAdvisorBase::OrdersHistory(void)
   {
    return m_order_man.OrdersHistory();
   }
-/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -262,7 +261,6 @@ CArrayInt *CExpertAdvisorBase::OtherMagic(void)
   {
    return m_order_man.OtherMagic();
   }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -284,7 +282,6 @@ CTimes *CExpertAdvisorBase::Times(void)
   {
    return GetPointer(m_times);
   }
-/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -292,8 +289,6 @@ bool CExpertAdvisorBase::AddOtherMagic(const int magic)
   {
    return m_order_man.AddOtherMagic(magic);
   }
-*/
-/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -301,7 +296,6 @@ CExpertAdvisorBase::AddOtherMagicString(const string &magics[])
   {
    m_order_man.AddOtherMagicString(magics);
   }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -741,16 +735,17 @@ bool CExpertAdvisorBase::IsNewBar(const string symbol,const int period)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-/*
+
 bool CExpertAdvisorBase::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
   {
    return m_order_man.TradeOpen(symbol,type);
   }
-*/
+/*
 COrder* CExpertAdvisorBase::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
   {
    return m_order_man.TradeOpen(symbol,type);
   }
+*/  
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -799,29 +794,32 @@ bool CExpertAdvisorBase::OnTick(void)
          if(m_order_man.CloseOrder(order,i))
             continue;
         }
+      
       if((m_position_reverse && 
          ((checkopenlong && order.OrderType()==ORDER_TYPE_SELL) ||
          (checkopenshort && order.OrderType()==ORDER_TYPE_BUY))) ||
          (checkcloselong && order.OrderType()==ORDER_TYPE_BUY) ||
          (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL))
-        {
+        {         
          if(m_order_man.CloseOrder(order,i))
             continue;
         }
      }
    m_order_man.OnTick();
-   
-   COrder *order=NULL;
    if(CheckPointer(m_signals) && 
       (m_every_tick || IsNewBar(m_symbol_name,m_period)) && 
       (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)
-         order=TradeOpen(m_symbol_name,ORDER_TYPE_BUY);
+      {
+         return TradeOpen(m_symbol_name,ORDER_TYPE_BUY);
+      }   
       if(checkopenshort)
-         order=TradeOpen(m_symbol_name,ORDER_TYPE_SELL); 
+      {
+         return TradeOpen(m_symbol_name,ORDER_TYPE_SELL); 
+      }   
      }
-   return order!=NULL;
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
