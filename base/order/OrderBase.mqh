@@ -18,6 +18,7 @@ class CStop;
 class COrderBase : public CObject
   {
 protected:
+   bool              m_initialized;
    bool              m_closed;
    bool              m_suspend;
    long              m_order_flags;
@@ -40,6 +41,8 @@ public:
    virtual void      SetContainer(COrders*);
    void              CreateStops(CStops*);
    bool              Init(COrders*,CStops*);
+   bool              Initialized(void);
+   void              Initialized(bool);
    void              MainStop(COrderStop*);
    COrderStop       *MainStop(void);
    //--- getters and setters     
@@ -85,7 +88,8 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-COrderBase::COrderBase(void) : m_closed(false),
+COrderBase::COrderBase(void) : m_initialized(true),
+                               m_closed(false),
                                m_suspend(false),
                                m_order_flags(0),
                                m_magic(0),
@@ -110,6 +114,20 @@ bool COrderBase::Init(COrders *orders,CStops *stops)
    SetContainer(GetPointer(orders));
    CreateStops(GetPointer(stops));
    return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderBase::Initialized(void)
+  {
+   return m_initialized;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderBase::Initialized(bool initialized)
+  {
+   m_initialized=initialized;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -301,7 +319,7 @@ void COrderBase::CreateStops(CStops *stops)
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrderBase::OnTick(void)
-  {   
+  {
    CheckStops();
   }
 //+------------------------------------------------------------------+
@@ -378,6 +396,7 @@ bool COrderBase::Save(const int handle)
   {
    if(handle==INVALID_HANDLE)
       return false;
+   file.WriteBool(m_initialized);
    file.WriteBool(m_closed);
    file.WriteBool(m_suspend);
    file.WriteInteger(m_magic);
@@ -396,6 +415,8 @@ bool COrderBase::Save(const int handle)
 bool COrderBase::Load(const int handle)
   {
    if(handle==INVALID_HANDLE)
+      return false;
+   if(!file.ReadBool(m_initialized))
       return false;
    if(!file.ReadBool(m_closed))
       return false;

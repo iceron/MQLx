@@ -789,11 +789,13 @@ bool CExpertAdvisorBase::OnTick(void)
       if(!CheckPointer(order))
          continue;
       order.OnTick();     
+      bool is_order_long = COrder::IsOrderTypeLong(order.OrderType());
+      bool is_order_short = COrder::IsOrderTypeShort(order.OrderType());
       if((m_position_reverse && 
-         ((checkopenlong && order.OrderType()==ORDER_TYPE_SELL) ||
-         (checkopenshort && order.OrderType()==ORDER_TYPE_BUY))) ||
-         (checkcloselong && order.OrderType()==ORDER_TYPE_BUY) ||
-         (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL) ||
+         ((checkopenlong && is_order_short) ||
+         (checkopenshort && is_order_long))) ||
+         (checkcloselong && is_order_long) ||
+         (checkcloseshort && is_order_short) ||
           order.IsSuspended())
         {         
          if(m_order_man.CloseOrder(order,i))

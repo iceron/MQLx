@@ -94,12 +94,17 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
          double volume = HistoryOrderGetDouble(trans.order,ORDER_VOLUME_INITIAL);
          double price=HistoryOrderGetDouble(trans.order,ORDER_PRICE_OPEN);
          ENUM_ORDER_TYPE order_type=trans.order_type;
-         if(order_type==ORDER_TYPE_BUY_STOP|| order_type==ORDER_TYPE_BUY_LIMIT)
-            order_type= ORDER_TYPE_BUY;
-         else if(order_type==ORDER_TYPE_SELL_STOP || order_type==ORDER_TYPE_SELL_LIMIT)
-            order_type=ORDER_TYPE_SELL;
          if((magic==m_magic || m_other_magic.Search((int)magic)>=0) && m_symbol_man.Search(symbol)>=0)
-            m_orders.NewOrder((int)ticket,symbol,(int)magic,order_type,volume,price);
+           {
+            //m_orders.NewOrder((int)ticket,symbol,(int)magic,order_type,volume,price);
+            COrder *temp = new COrder();
+            temp.Ticket(ticket);
+            int idx = m_orders.Search(temp);
+            COrder *order = m_orders.At(idx);
+            order.Price(price);
+            if (order.Init(GetPointer(m_orders),m_orders.Stops()))    
+               order.Initialized(true);
+           }
         }
      }
   }
@@ -120,6 +125,8 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
       price=PriceCalculate(type);
       lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
       ret=SendOrder(type,lotsize,price,0,0);
+      if(ret)
+         m_orders.NewOrder((int)m_trade.ResultOrder(),m_trade.RequestSymbol(),(int)m_trade.RequestMagic(),m_trade.RequestType(),m_trade.ResultVolume(),m_trade.ResultPrice());
      }
    return ret;
   }

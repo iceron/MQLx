@@ -26,6 +26,7 @@ public:
    virtual CObject  *GetContainer(void);
    virtual void      SetContainer(CObject*);
    virtual void      SetStops(CStops*);
+   virtual CStops   *Stops(void);
    //--- events                  
    virtual void      OnTick(void);
    //--- order creation
@@ -85,6 +86,13 @@ COrdersBase::SetStops(CStops *stops)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+CStops *COrdersBase::Stops(void)
+  {
+   return m_stops;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 /*
 bool COrdersBase::NewOrder(const ulong ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
@@ -105,7 +113,9 @@ COrder* COrdersBase::NewOrder(const ulong ticket,const string symbol,const int m
       if(InsertSort(GetPointer(order)))
       {  
          order.Magic(magic);
-         order.Init(GetPointer(this),m_stops);
+         if (type==ORDER_TYPE_BUY || type==ORDER_TYPE_SELL)
+            order.Init(GetPointer(this),m_stops);
+         else order.Initialized(false);
          return order;
       }   
    return NULL;
