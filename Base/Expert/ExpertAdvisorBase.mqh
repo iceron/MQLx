@@ -770,10 +770,10 @@ bool CExpertAdvisorBase::OnTick(void)
    if(!RefreshRates())
       return false;
    DetectNewBars();
-   bool checkopenlong=false,
-   checkopenshort=false,
-   checkcloselong=false,
-   checkcloseshort=false;
+   bool  checkopenlong=false,
+         checkopenshort=false,
+         checkcloselong=false,
+         checkcloseshort=false;
    if(CheckPointer(m_signals))
      {
       m_signals.Check();
@@ -788,36 +788,27 @@ bool CExpertAdvisorBase::OnTick(void)
       COrder *order=orders.At(i);
       if(!CheckPointer(order))
          continue;
-      order.OnTick();
-      if(order.IsSuspended())
-        {
-         if(m_order_man.CloseOrder(order,i))
-            continue;
-        }
-      
+      order.OnTick();     
       if((m_position_reverse && 
          ((checkopenlong && order.OrderType()==ORDER_TYPE_SELL) ||
          (checkopenshort && order.OrderType()==ORDER_TYPE_BUY))) ||
          (checkcloselong && order.OrderType()==ORDER_TYPE_BUY) ||
-         (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL))
+         (checkcloseshort && order.OrderType()==ORDER_TYPE_SELL) ||
+          order.IsSuspended())
         {         
          if(m_order_man.CloseOrder(order,i))
             continue;
         }
      }
    m_order_man.OnTick();
-   if(CheckPointer(m_signals) && 
+   if((checkopenlong || checkopenshort) && 
       (m_every_tick || IsNewBar(m_symbol_name,m_period)) && 
       (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)
-      {
          return TradeOpen(m_symbol_name,ORDER_TYPE_BUY);
-      }   
       if(checkopenshort)
-      {
          return TradeOpen(m_symbol_name,ORDER_TYPE_SELL); 
-      }   
      }
    return false;
   }

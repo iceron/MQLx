@@ -15,7 +15,9 @@ public:
                      COrderManager(void);
                     ~COrderManager(void);
    virtual bool      CloseOrder(COrder*,const int);
-   virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
+   //virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
+   virtual bool      TradeOpen(const string,ENUM_ORDER_TYPE);
+   virtual void      OnTradeTransaction(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
