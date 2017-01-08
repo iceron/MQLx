@@ -22,6 +22,7 @@ protected:
    //--- trade parameters
    bool              m_active;
    string            m_name;
+   int               m_distance;
    //--- signal parameters
    bool              m_every_tick;
    bool              m_one_trade_per_candle;
@@ -71,6 +72,8 @@ public:
    //--- setters and getters       
    string            Name(void) const;
    void              Name(const string);
+   int               Distance(void) const;
+   void              Distance(const int);
    string            SymbolName(void) const;
    void              SymbolName(const string);
    //--- object pointers
@@ -109,8 +112,8 @@ public:
    void              MaxOrders(const int);
    int               OrdersTotal(void) const;
    int               OrdersHistoryTotal(void) const;
-   int               PricePoints(void) const;
-   void              PricePoints(const int);
+   //int               PricePoints(void) const;
+   //void              PricePoints(const int);
    int               TradesTotal(void) const;
    //--- signal manager   
    int               Period(void) const;
@@ -141,7 +144,7 @@ protected:
    virtual void      ManageOrders(void);
    virtual void      ManageOrdersHistory(void);
    virtual void      OnTradeTransaction(COrder*) {}
-   virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE);
+   virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE,double,bool);
    //virtual COrder*   TradeOpen(const string,const ENUM_ORDER_TYPE);
    //--- symbol manager
    virtual bool      RefreshRates(void);
@@ -211,6 +214,20 @@ CExpertAdvisorBase::Name(const string name)
 string CExpertAdvisorBase::Name(void) const
   {
    return m_name;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::Distance(const int point_dist)
+  {
+   m_distance=point_dist;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int CExpertAdvisorBase::Distance(void) const
+  {
+   return m_distance;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -464,6 +481,7 @@ int CExpertAdvisorBase::OrdersHistoryTotal(void) const
   {
    return m_order_man.OrdersHistoryTotal();
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -471,6 +489,7 @@ int CExpertAdvisorBase::PricePoints(void) const
   {
    return m_order_man.PricePoints();
   }
+
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -478,6 +497,7 @@ CExpertAdvisorBase::PricePoints(const int points)
   {
    m_order_man.PricePoints(points);
   }
+*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -743,9 +763,9 @@ bool CExpertAdvisorBase::IsNewBar(const string symbol,const int period)
 //|                                                                  |
 //+------------------------------------------------------------------+
 
-bool CExpertAdvisorBase::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
+bool CExpertAdvisorBase::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type,double price,bool in_points=true)
   {
-   return m_order_man.TradeOpen(symbol,type);
+   return m_order_man.TradeOpen(symbol,type,price,in_points);
   }
 /*
 COrder* CExpertAdvisorBase::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
@@ -815,9 +835,9 @@ bool CExpertAdvisorBase::OnTick(void)
       (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)
-         return TradeOpen(m_symbol_name,ORDER_TYPE_BUY);
+         return TradeOpen(m_symbol_name,ORDER_TYPE_BUY,distance);
       if(checkopenshort)
-         return TradeOpen(m_symbol_name,ORDER_TYPE_SELL); 
+         return TradeOpen(m_symbol_name,ORDER_TYPE_SELL,distance); 
      }
    return false;
   }

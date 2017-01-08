@@ -23,7 +23,7 @@ public:
    virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
    virtual void      OnTradeTransaction(void);
    //virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
-   virtual bool      TradeOpen(const string,ENUM_ORDER_TYPE);
+   virtual bool      TradeOpen(const string,ENUM_ORDER_TYPE,double,bool);
    int               MagicClose(void) const;
    void              MagicClose(const int);
    virtual bool      Save(const int);
@@ -111,10 +111,10 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
+bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double price,bool in_points=true)
   {
    bool ret=false;
-   double lotsize=0.0,price=0.0;
+   double lotsize=0.0;
    int trades_total =TradesTotal();
    int orders_total = OrdersTotal();
    m_symbol=m_symbol_man.Get(symbol);
@@ -122,7 +122,8 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
       return true;
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
-      price=PriceCalculate(type);
+      if (in_points)
+         price=PriceCalculate(type,price);
       lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
       ret=SendOrder(type,lotsize,price,0,0);
       if(ret)

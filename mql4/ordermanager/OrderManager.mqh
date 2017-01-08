@@ -16,7 +16,7 @@ public:
                     ~COrderManager(void);
    virtual bool      CloseOrder(COrder*,const int);
    //virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
-   virtual bool      TradeOpen(const string,ENUM_ORDER_TYPE);
+   virtual bool      TradeOpen(const string,ENUM_ORDER_TYPE,double,bool);
    virtual void      OnTradeTransaction(void);
   };
 //+------------------------------------------------------------------+
@@ -57,7 +57,7 @@ void COrderManager::OnTradeTransaction(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManager::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
+bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double price,bool in_points=true)
   {
    bool ret=false;
    int trades_total = TradesTotal();
@@ -70,7 +70,7 @@ bool COrderManager::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       ENUM_ORDER_TYPE ordertype = type;
-      double price=PriceCalculate(ordertype);
+      double price=PriceCalculate(ordertype,price);
       double sl=0,tp=0;
       if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
         {

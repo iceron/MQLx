@@ -19,7 +19,7 @@ class COrderManagerBase : public CObject
   {
 protected:
    double            m_lotsize;
-   int               m_price_points;
+   //int               m_price_points;
    string            m_comment;
    int               m_magic;
    int               m_expiration;
@@ -113,7 +113,7 @@ public:
    virtual bool      IsHedging(void) const;
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
    //virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
-   virtual bool      TradeOpen(const string,ENUM_ORDER_TYPE);
+   virtual bool      TradeOpen(const string,ENUM_ORDER_TYPE,double,bool);
    //--- events
    virtual void      OnTradeTransaction(COrder*);
    virtual void      OnTick(void);
@@ -122,8 +122,8 @@ public:
    virtual bool      Load(const int);
 protected:
    //--- trade manager
-   virtual double    PriceCalculate(ENUM_ORDER_TYPE&);
-   virtual double    PriceCalculateCustom(ENUM_ORDER_TYPE&);
+   virtual double    PriceCalculate(ENUM_ORDER_TYPE&,double);
+   virtual double    PriceCalculateCustom(ENUM_ORDER_TYPE&,double);
    virtual double    StopLossCalculate(const ENUM_ORDER_TYPE,const double);
    virtual double    TakeProfitCalculate(const ENUM_ORDER_TYPE,const double);
    ulong             SendOrder(const ENUM_ORDER_TYPE,const double,const double,const double,const double);
@@ -136,7 +136,7 @@ protected:
 //|                                                                  |
 //+------------------------------------------------------------------+
 COrderManagerBase::COrderManagerBase() : m_lotsize(0.1),
-                                         m_price_points(0),
+                                         //m_price_points(0),
                                          m_comment(""),
                                          m_magic(0),
                                          m_expiration(0),
@@ -336,6 +336,7 @@ int COrderManagerBase::OrdersHistoryTotal(void) const
   {
    return m_orders_history.Total();
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -350,6 +351,7 @@ void COrderManagerBase::PricePoints(const int points)
   {
    m_price_points=points;
   }
+*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -434,7 +436,7 @@ COrder* COrderManagerBase::TradeOpen(const string,ENUM_ORDER_TYPE)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManagerBase::TradeOpen(const string,ENUM_ORDER_TYPE)
+bool COrderManagerBase::TradeOpen(const string,ENUM_ORDER_TYPE,double,bool)
   {
    return NULL;
   }
@@ -447,7 +449,7 @@ void COrderManagerBase::OnTradeTransaction(COrder*)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double COrderManagerBase::PriceCalculateCustom(ENUM_ORDER_TYPE&)
+double COrderManagerBase::PriceCalculateCustom(ENUM_ORDER_TYPE& type,double points=0)
   {
    return 0;
   }
@@ -633,34 +635,57 @@ bool COrderManagerBase::IsHedging(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE &type)
+double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE &type,double points=0)
   {
    double price=0;
-   double price_points=PricePoints();
    double point=m_symbol.Point();
    switch(type)
      {
       case ORDER_TYPE_BUY:
         {
          double ask=m_symbol.Ask();
-         if(price_points>0)
+         if(points>0)
             type=ORDER_TYPE_BUY_STOP;
-         else if(price_points<0)
+         else if(points<0)
             type=ORDER_TYPE_BUY_LIMIT;
-         price=ask+price_points*point;
+         price=ask+points*point;
          break;
         }
       case ORDER_TYPE_SELL:
         {
          double bid=m_symbol.Bid();
-         if(price_points>0)
+         if(points>0)
             type=ORDER_TYPE_SELL_LIMIT;
-         else if(price_points<0)
+         else if(points<0)
             type=ORDER_TYPE_SELL_STOP;
-         price=bid+price_points*point;
+         price=bid+points*point;
          break;
         }
-      default: price=PriceCalculateCustom(type);
+      case ORDER_TYPE_BUY_LIMIT:
+        {
+         double ask=m_symbol.Ask();
+         price=ask-points*point;
+         break;
+        }
+      case ORDER_TYPE_BUY_STOP:
+        {
+         double ask=m_symbol.Ask();
+         price=ask+points*point;
+         break;
+        }
+      case ORDER_TYPE_SELL_LIMIT:
+        {
+         double bid=m_symbol.Bid();
+         price=bid+points*point;
+         break;
+        }
+      case ORDER_TYPE_SELL_STOP:
+        {
+         double bid=m_symbol.Bid();
+         price=bid-points*point;
+         break;
+        }
+      default: price=PriceCalculateCustom(type,points);
      }
    return price;
   }
@@ -775,7 +800,7 @@ bool COrderManagerBase::Save(const int handle)
    if(handle==INVALID_HANDLE)
       return false;
    file.WriteDouble(m_lotsize);   
-   file.WriteInteger(m_price_points);
+   //file.WriteInteger(m_price_points);
    file.WriteString(m_comment);   
    file.WriteInteger(m_expiration);   
    file.WriteInteger(m_history_count);   
@@ -798,8 +823,8 @@ bool COrderManagerBase::Load(const int handle)
       return false;
    if(!file.ReadDouble(m_lotsize))
       return false;
-   if(!file.ReadInteger(m_price_points))
-      return false;
+   //if(!file.ReadInteger(m_price_points))
+      //return false;
    if(!file.ReadString(m_comment))
       return false;
    if(!file.ReadInteger(m_expiration))
