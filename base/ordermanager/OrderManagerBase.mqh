@@ -32,7 +32,7 @@ protected:
    int               m_max_trades;
    COrders           m_orders;
    COrders           m_orders_history;
-   CArrayInt         m_other_magic;
+   //CArrayInt         m_other_magic;
    CAccountInfo     *m_account;
    CSymbolInfo      *m_symbol;
    CSymbolManager   *m_symbol_man;
@@ -92,7 +92,7 @@ public:
    COrders          *Orders(void);
    COrders          *OrdersHistory(void);
    CStops           *Stops(void) const;
-   CArrayInt        *OtherMagic(void);
+   //CArrayInt        *OtherMagic(void);
    //--- current orders
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(COrder*);
@@ -108,8 +108,8 @@ public:
    //--- stop levels  
    virtual bool      AddStops(CStops*);
    //--- trade manager
-   virtual bool      AddOtherMagic(const int);
-   virtual void      AddOtherMagicString(const string&[]);
+   //virtual bool      AddOtherMagic(const int);
+   //virtual void      AddOtherMagicString(const string&[]);
    virtual bool      IsHedging(void) const;
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
    //virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
@@ -390,6 +390,7 @@ CStops *COrderManagerBase::Stops(void) const
   {
    return GetPointer(m_stops);
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -397,6 +398,7 @@ CArrayInt *COrderManagerBase::OtherMagic(void)
   {
    return GetPointer(m_other_magic);
   }
+*/  
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -678,6 +680,7 @@ double COrderManagerBase::TakeProfitCalculate(const ENUM_ORDER_TYPE type,const d
       return m_main_stop.TakeProfitTicks(type,price);
    return 0;
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -695,6 +698,7 @@ void COrderManagerBase::AddOtherMagicString(const string &magics[])
    for(int i=0;i<ArraySize(magics);i++)
       AddOtherMagic((int)magics[i]);
   }
+*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

@@ -79,13 +79,13 @@ public:
    CMoneys          *Moneys(void);
    COrders          *Orders(void);
    COrders          *OrdersHistory(void);
-   CArrayInt        *OtherMagic(void);
+   //CArrayInt        *OtherMagic(void);
    CStops           *Stops(void);
    CSignals         *Signals(void);
    CTimes           *Times(void);
    //--- order manager
-   bool              AddOtherMagic(const int);
-   void              AddOtherMagicString(const string&[]);
+   //bool              AddOtherMagic(const int);
+   //void              AddOtherMagicString(const string&[]);
    void              AsyncMode(const string,const bool);
    string            Comment(void) const;
    void              Comment(const string);
@@ -254,6 +254,7 @@ COrders *CExpertAdvisorBase::OrdersHistory(void)
   {
    return m_order_man.OrdersHistory();
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -261,6 +262,7 @@ CArrayInt *CExpertAdvisorBase::OtherMagic(void)
   {
    return m_order_man.OtherMagic();
   }
+*/  
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -282,6 +284,7 @@ CTimes *CExpertAdvisorBase::Times(void)
   {
    return GetPointer(m_times);
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -289,6 +292,7 @@ bool CExpertAdvisorBase::AddOtherMagic(const int magic)
   {
    return m_order_man.AddOtherMagic(magic);
   }
+ 
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -296,6 +300,7 @@ CExpertAdvisorBase::AddOtherMagicString(const string &magics[])
   {
    m_order_man.AddOtherMagicString(magics);
   }
+*/ 
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

@@ -54,7 +54,7 @@ bool COrderManager::Init(CSymbolManager *symbol_man,CAccountInfo *account,CEvent
 //+------------------------------------------------------------------+
 bool COrderManager::Validate(void) const
   {
-   if(m_magic==m_magic_close || m_other_magic.Search(m_magic_close)>=0)
+   if(m_magic==m_magic_close/* || m_other_magic.Search(m_magic_close)>=0*/)
       return false;
    return COrderManagerBase::Validate();
   }
@@ -94,7 +94,7 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
          double volume = HistoryOrderGetDouble(trans.order,ORDER_VOLUME_INITIAL);
          double price=HistoryOrderGetDouble(trans.order,ORDER_PRICE_OPEN);
          ENUM_ORDER_TYPE order_type=trans.order_type;
-         if((magic==m_magic || m_other_magic.Search((int)magic)>=0) && m_symbol_man.Search(symbol)>=0)
+         if((magic==m_magic/* || m_other_magic.Search((int)magic)>=0*/) && m_symbol_man.Search(symbol)>=0)
            {
             //m_orders.NewOrder((int)ticket,symbol,(int)magic,order_type,volume,price);
             COrder *temp = new COrder();
