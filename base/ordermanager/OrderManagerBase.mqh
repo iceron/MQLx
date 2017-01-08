@@ -58,7 +58,7 @@ public:
    virtual void      SetContainer(CObject*);
    virtual bool      Validate(void) const;
    //--- setters and getters
-   void              AsyncMode(const string,const bool);
+   //void              AsyncMode(const string,const bool);
    string            Comment(void) const;
    void              Comment(const string);
    bool              EnableTrade(void) const;
@@ -171,6 +171,7 @@ void COrderManagerBase::SetContainer(CObject *container)
   {
    m_container=container;
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -181,6 +182,7 @@ void COrderManagerBase::AsyncMode(const string symbol,const bool async)
    if(CheckPointer(m_symbol))
       m_trade.SetAsyncMode(async);
   }
+*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

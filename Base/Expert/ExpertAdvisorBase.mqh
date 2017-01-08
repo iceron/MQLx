@@ -86,7 +86,7 @@ public:
    //--- order manager
    //bool              AddOtherMagic(const int);
    //void              AddOtherMagicString(const string&[]);
-   void              AsyncMode(const string,const bool);
+   //void              AsyncMode(const string,const bool);
    string            Comment(void) const;
    void              Comment(const string);
    bool              EnableTrade(void) const;
@@ -301,6 +301,7 @@ CExpertAdvisorBase::AddOtherMagicString(const string &magics[])
    m_order_man.AddOtherMagicString(magics);
   }
 */ 
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -308,6 +309,7 @@ CExpertAdvisorBase::AsyncMode(const string symbol,const bool async)
   {
    m_order_man.AsyncMode(symbol,async);
   }
+*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
