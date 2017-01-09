@@ -23,6 +23,8 @@ protected:
    bool              m_active;
    string            m_name;
    int               m_distance;
+   double            m_distance_factor_long;
+   double            m_distance_factor_short;
    //--- signal parameters
    bool              m_every_tick;
    bool              m_one_trade_per_candle;
@@ -74,6 +76,10 @@ public:
    void              Name(const string);
    int               Distance(void) const;
    void              Distance(const int);
+   double            DistanceFactorLong(void) const;
+   void              DistanceFactorLong(const double);
+   double            DistanceFactorShort(void) const;
+   void              DistanceFactorShort(const double);
    string            SymbolName(void) const;
    void              SymbolName(const string);
    //--- object pointers
@@ -159,6 +165,10 @@ protected:
 //|                                                                  |
 //+------------------------------------------------------------------+
 CExpertAdvisorBase::CExpertAdvisorBase(void) : m_active(true),
+                                               m_name(NULL),
+                                               m_distance(0),
+                                               m_distance_factor_long(1),
+                                               m_distance_factor_short(-1),
                                                m_every_tick(true),
                                                m_symbol_name(NULL),
                                                m_one_trade_per_candle(true),
@@ -228,6 +238,34 @@ CExpertAdvisorBase::Distance(const int point_dist)
 int CExpertAdvisorBase::Distance(void) const
   {
    return m_distance;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::DistanceFactorLong(const double factor)
+  {
+   m_distance_factor_long=factor;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CExpertAdvisorBase::DistanceFactorLong(void) const
+  {
+   return m_distance_factor_long;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CExpertAdvisorBase::DistanceFactorShort(const double factor)
+  {
+   m_distance_factor_short=factor;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CExpertAdvisorBase::DistanceFactorShort(void) const
+  {
+   return m_distance_factor_short;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -835,9 +873,9 @@ bool CExpertAdvisorBase::OnTick(void)
       (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)
-         return TradeOpen(m_symbol_name,ORDER_TYPE_BUY,distance);
+         return TradeOpen(m_symbol_name,ORDER_TYPE_BUY,m_distance*m_distance_factor_long);
       if(checkopenshort)
-         return TradeOpen(m_symbol_name,ORDER_TYPE_SELL,distance); 
+         return TradeOpen(m_symbol_name,ORDER_TYPE_SELL,m_distance*m_distance_factor_short); 
      }
    return false;
   }
