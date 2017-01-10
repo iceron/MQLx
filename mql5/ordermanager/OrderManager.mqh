@@ -101,9 +101,12 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
             temp.Ticket(ticket);
             int idx = m_orders.Search(temp);
             COrder *order = m_orders.At(idx);
-            order.Price(price);
-            if (order.Init(GetPointer(m_orders),m_orders.Stops()))    
-               order.Initialized(true);
+            if (!order.Initialized())
+            {
+               order.Price(price);
+               if (order.Init(GetPointer(m_orders),m_orders.Stops()))    
+                  order.Initialized(true);
+            }   
            }
         }
      }
