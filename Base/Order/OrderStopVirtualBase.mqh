@@ -48,10 +48,24 @@ void COrderStopVirtualBase::Check(double &volume)
      }
    if(!m_stoploss_closed)
       if(m_stop.CheckStopLoss(m_order,GetPointer(this)))
+      {
          StopLossClosed(true);
+         //Print(__FUNCTION__+" stop loss closed");
+         if (CheckPointer(m_order_stops))
+            m_order_stops.UpdateVolume(Volume());
+         //else Print(__FUNCTION__+" order stops is null");
+         
+      }   
    if(!m_takeprofit_closed)
       if(m_stop.CheckTakeProfit(m_order,GetPointer(this)))
+      {
          TakeProfitClosed(true);
+         //Print(__FUNCTION__+" take profit closed");
+         if (CheckPointer(m_order_stops))
+            m_order_stops.UpdateVolume(Volume());
+         //else Print(__FUNCTION__+" order stops is null");
+         
+      }   
    if(m_stoploss_closed || m_takeprofit_closed)
      {
       if(m_stop.OCO())

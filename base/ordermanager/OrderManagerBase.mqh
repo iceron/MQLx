@@ -758,6 +758,8 @@ void COrderManagerBase::Deinit(const int reason=0)
   {
    DeinitStops();
    DeinitTrade();
+   m_orders.Shutdown();
+   m_orders_history.Shutdown();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

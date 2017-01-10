@@ -96,6 +96,7 @@ public:
    virtual bool      DeleteTakeProfit(void);
    virtual bool      IsClosed(void);
    virtual bool      Update(void) {return true;}
+   virtual void      UpdateVolume(double) {}
    //--- deinitialization 
    virtual void      Deinit(void);
    //--- recovery
@@ -386,7 +387,7 @@ void COrderStopBase::Init(COrder *order,CStop *stop,COrderStops *order_stops)
   {
    if(!CheckPointer(stop) || !CheckPointer(order) || !stop.Active())
       return;
-   SetContainer(m_order_stops);
+   SetContainer(order_stops);
    m_stop_name=stop.Name();
    m_order=order;
    m_stop=stop;

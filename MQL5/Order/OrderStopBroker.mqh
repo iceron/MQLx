@@ -63,30 +63,32 @@ void COrderStopBroker::Check(double &volume)
       if(m_stop.CheckStopOrder(volume,m_stoploss_ticket))
       {
          StopLossClosed(true);
+         if (CheckPointer(m_order_stops))
+            m_order_stops.UpdateVolume(Volume());
+                  
       }   
      }
    if(!m_takeprofit_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket))
       {
-         TakeProfitClosed(true);
+         TakeProfitClosed(true);  
+         if (CheckPointer(m_order_stops))
+            m_order_stops.UpdateVolume(Volume());
+                
       }   
      }
    if(m_stoploss_closed || m_takeprofit_closed)
      {
-      if(m_stop.OCO())
+      if(m_stoploss_closed && !m_takeprofit_closed)
         {
-         if(m_stoploss_closed && !m_takeprofit_closed)
-           {
-            if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
-               TakeProfitClosed(true);
-           }
-
-         if(m_takeprofit_closed && !m_stoploss_closed)
-           {
-            if(m_stop.DeleteStopOrder(m_stoploss_ticket))
-               StopLossClosed(true);
-           }
+         if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
+            TakeProfitClosed(true);
+        }
+      if(m_takeprofit_closed && !m_stoploss_closed)
+        {
+         if(m_stop.DeleteStopOrder(m_stoploss_ticket))
+            StopLossClosed(true);
         }
       if(m_stoploss_closed)
          DeleteStopLoss();

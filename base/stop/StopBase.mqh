@@ -118,6 +118,7 @@ public:
    void              Volume(double);
    double            Volume(void) const;
    void              VolumeType(const ENUM_VOLUME_TYPE);
+   ENUM_VOLUME_TYPE  VolumeType(void) const;
    //--- stop order checking
    virtual bool      CheckStopLoss(COrder*,COrderStop*);
    virtual bool      CheckTakeProfit(COrder*,COrderStop*);
@@ -569,6 +570,13 @@ CStopBase::VolumeType(const ENUM_VOLUME_TYPE type)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+ENUM_VOLUME_TYPE CStopBase::VolumeType(void) const
+  {
+   return m_volume_type;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CStopBase::CheckStopOrder(double &,const ulong)
   {
    return false;
@@ -690,14 +698,19 @@ double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
    if(!CheckPointer(m_symbol))
       return 0;
    double lotsize=0.0;
-   if(m_volume_type==VOLUME_TYPE_FIXED)
-      lotsize=orderstop.Volume();
-   else if(m_volume_type==VOLUME_TYPE_PERCENT_REMAINING)
-      lotsize=orderstop.Volume()*order.Volume();
-   if(m_volume_type==VOLUME_TYPE_PERCENT_TOTAL)
-      lotsize=orderstop.Volume()*order.VolumeInitial();
-   else if(m_volume_type==VOLUME_TYPE_REMAINING)
-      lotsize=order.Volume();
+   if (Main())
+      lotsize = order.Volume();
+   else
+   {
+      if(m_volume_type==VOLUME_TYPE_FIXED)
+         lotsize=orderstop.Volume();
+      else if(m_volume_type==VOLUME_TYPE_PERCENT_REMAINING)
+         lotsize=orderstop.Volume()*order.Volume();
+      if(m_volume_type==VOLUME_TYPE_PERCENT_TOTAL)
+         lotsize=orderstop.Volume()*order.VolumeInitial();
+      else if(m_volume_type==VOLUME_TYPE_REMAINING)
+         lotsize=order.Volume();
+   }
    double maxvol=m_symbol.LotsMax();
    double minvol=m_symbol.LotsMin();
    if(lotsize<minvol)

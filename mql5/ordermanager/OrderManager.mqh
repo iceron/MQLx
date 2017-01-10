@@ -97,9 +97,9 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
          if((magic==m_magic/* || m_other_magic.Search((int)magic)>=0*/) && m_symbol_man.Search(symbol)>=0)
            {
             //m_orders.NewOrder((int)ticket,symbol,(int)magic,order_type,volume,price);
-            COrder *temp = new COrder();
+            COrder temp;
             temp.Ticket(ticket);
-            int idx = m_orders.Search(temp);
+            int idx = m_orders.Search(GetPointer(temp));
             COrder *order = m_orders.At(idx);
             if (!order.Initialized())
             {

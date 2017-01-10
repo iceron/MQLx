@@ -45,13 +45,13 @@ bool COrderStopPending::Update(void)
       {
          order_stoploss = OrderGetDouble(ORDER_PRICE_OPEN);
          if (MathAbs(order_stoploss-StopLoss())>=ticksize)
-         StopLoss(order_stoploss);
+            StopLoss(order_stoploss);
       }
       if (OrderSelect(m_takeprofit_ticket))
       {
          order_takeprofit = OrderGetDouble(ORDER_PRICE_OPEN);
          if (MathAbs(order_takeprofit-TakeProfit())>=ticksize)
-         TakeProfit(order_takeprofit);
+            TakeProfit(order_takeprofit);
       }     
       return true;
      }

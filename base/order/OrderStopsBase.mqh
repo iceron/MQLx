@@ -34,6 +34,7 @@ public:
    virtual void      Check(double &volume);
    virtual bool      CheckNewTicket(COrderStop*);
    virtual bool      Close(void);
+   virtual void      UpdateVolume() {}
    //--- hiding and showing of stop lines
    virtual void      Show(const bool);
    //--- recovery
