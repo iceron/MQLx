@@ -153,7 +153,7 @@ void COrder::OnTick(void)
       }
    }
    if (Initialized())
-      CheckStops();  
+      COrderBase::OnTick();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
