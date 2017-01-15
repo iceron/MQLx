@@ -35,7 +35,6 @@ COrderStops::UpdateVolume(double deducted)
    double old_volume = m_order.Volume()+deducted;
    double new_volume = m_order.Volume();
    double factor=new_volume/old_volume;
-   //Print(__FUNCTION__+" old: "+old_volume+" new: "+new_volume+" minus: "+deducted);
    for(int i=0;i<Total();i++)
      {
       COrderStop *orderstop=At(i);
