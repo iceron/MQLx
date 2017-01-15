@@ -430,7 +430,7 @@ void COrderStopBase::Deinit(void)
 //+------------------------------------------------------------------+
 void COrderStopBase::Recreate(void)
   {
-   if (m_closed)
+   if(m_closed)
       return;
    if(m_stop.StopLossVisible() && !m_stoploss_closed)
       m_objsl=m_stop.CreateStopLossObject(0,StopLossName(),0,m_stoploss.At(m_stoploss.Total()-1));
@@ -484,22 +484,28 @@ bool COrderStopBase::CheckTrailing(void)
 //+------------------------------------------------------------------+
 bool COrderStopBase::Close(void)
   {
-   if (m_closed)
-      return true;
    bool res1=false,res2=false,result=false;
-   if(m_stoploss_closed || StopLoss()==0 || m_stoploss_ticket==0)
-      res1=true;
-   else if(m_stoploss_ticket>0 && !m_stoploss_closed)
-     {
-      if(m_stop.DeleteStopOrder(m_stoploss_ticket))
-         res1=DeleteStopLoss();
+   if(m_order.IsClosed() || m_order.IsSuspended())
+     {      
+      m_stop.DeleteStopOrder(m_stoploss_ticket);
+      m_stop.DeleteStopOrder(m_takeprofit_ticket);
      }
-   if(m_takeprofit_closed || TakeProfit()==0 || m_takeprofit_ticket==0)
-      res2=true;
-   else if(m_takeprofit_ticket>0 && !m_takeprofit_closed)
+   else
      {
-      if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
-         res2=DeleteTakeProfit();
+      if(m_stoploss_closed || StopLoss()==0 || m_stoploss_ticket==0)
+         res1=true;
+      else if(m_stoploss_ticket>0 && !m_stoploss_closed)
+        {
+         if(m_stop.DeleteStopOrder(m_stoploss_ticket))
+            res1=DeleteStopLoss();
+        }
+      if(m_takeprofit_closed || TakeProfit()==0 || m_takeprofit_ticket==0)
+         res2=true;
+      else if(m_takeprofit_ticket>0 && !m_takeprofit_closed)
+        {
+         if(m_stop.DeleteStopOrder(m_takeprofit_ticket))
+            res2=DeleteTakeProfit();
+        }
      }
    if(res1 && res2)
       result=DeleteEntry() && DeleteStopLoss() && DeleteTakeProfit();

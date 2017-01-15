@@ -71,16 +71,19 @@ bool CStop::DeleteStopOrder(const ulong ticket)
       return true;
    if(!OrderSelect((int)ticket,SELECT_BY_TICKET))
       return true;
-   if(OrderType()>1 && OrderCloseTime()==0)
-     {
-      m_symbol=m_symbol_man.Get(OrderSymbol());
-      if(!CheckPointer(m_symbol))
-         return false;
-      m_trade=m_trade_man.Get(m_symbol.Name());
-      if(!CheckPointer(m_trade))
-         return false;
-      return m_trade.OrderDelete(ticket);
-     }
+   m_symbol=m_symbol_man.Get(OrderSymbol());
+   if(!CheckPointer(m_symbol))
+      return false;
+   m_trade=m_trade_man.Get(m_symbol.Name());
+   if(!CheckPointer(m_trade))
+      return false;
+   if (OrderCloseTime()==0)
+   {
+      if (OrderType()<=1)
+         return m_trade.OrderClose(ticket);
+      else if(OrderType()>1)   
+         return m_trade.OrderDelete(ticket);
+   }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -109,13 +112,6 @@ double CStop::StopLossPrice(COrder *order,COrderStop *orderstop)
       val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.Symbol(),order.OrderType(),order.Price());
    if(Pending() && val>0.0)
       orderstop.StopLossTicket(OpenStop(order,orderstop,val));
-   /*
-   Refresh(order.Symbol());
-   if (!CheckPointer(m_symbol))
-   {
-      Print("pointer does not exist");
-   }
-   */
    return NormalizeDouble(val,m_symbol.Digits());
   }
 //+------------------------------------------------------------------+
