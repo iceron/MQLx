@@ -13,7 +13,7 @@ class COrderStops : public COrderStopsBase
 public:
                      COrderStops(void);
                     ~COrderStops(void);
-   virtual void      UpdateVolume(double);
+   virtual void      UpdateVolume(const double);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
