@@ -92,10 +92,7 @@ bool COrder::NewTicket(void) const
 bool COrder::IsSuspended(void)
   {
    if(m_suspend==true)
-   {
-      Print(__FUNCTION__+": order already suspended ");
       return true;
-   }   
    if(OrdersTotal()==0)
      {
       IsSuspended(true);

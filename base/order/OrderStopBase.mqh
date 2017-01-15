@@ -487,8 +487,8 @@ bool COrderStopBase::Close(void)
    bool res1=false,res2=false,result=false;
    if(m_order.IsClosed() || m_order.IsSuspended())
      {      
-      m_stop.DeleteStopOrder(m_stoploss_ticket);
-      m_stop.DeleteStopOrder(m_takeprofit_ticket);
+      res1 = m_stop.DeleteStopOrder(m_stoploss_ticket);
+      res2 = m_stop.DeleteStopOrder(m_takeprofit_ticket);
      }
    else
      {
