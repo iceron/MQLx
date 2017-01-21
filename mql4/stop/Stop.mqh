@@ -79,8 +79,8 @@ bool CStop::DeleteStopOrder(const ulong ticket)
       return false;
    if (OrderCloseTime()==0)
    {
-      //if (OrderType()<=1)
-         //return m_trade.OrderClose(ticket);
+      if (OrderType()<=1)
+         return m_trade.OrderClose(ticket);
       if(OrderType()>1)   
          return m_trade.OrderDelete(ticket);
    }

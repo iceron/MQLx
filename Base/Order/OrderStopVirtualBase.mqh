@@ -76,7 +76,7 @@ void COrderStopVirtualBase::Check(double &volume)
      }
    if(m_closed || (m_stoploss_closed && m_takeprofit_closed))
      {
-      if(m_stop.Main())
+      //if(m_stop.Main())
          m_order.IsSuspended(true);
      }
   }
