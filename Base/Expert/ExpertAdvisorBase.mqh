@@ -25,6 +25,7 @@ protected:
    int               m_distance;
    double            m_distance_factor_long;
    double            m_distance_factor_short;
+   bool              m_on_tick_process;
    //--- signal parameters
    bool              m_every_tick;
    bool              m_one_trade_per_candle;
@@ -169,6 +170,7 @@ CExpertAdvisorBase::CExpertAdvisorBase(void) : m_active(true),
                                                m_distance(0),
                                                m_distance_factor_long(1),
                                                m_distance_factor_short(-1),
+                                               m_on_tick_process(false),
                                                m_every_tick(true),
                                                m_symbol_name(NULL),
                                                m_one_trade_per_candle(true),
@@ -832,6 +834,9 @@ bool CExpertAdvisorBase::OnTick(void)
   {
    if(!Active())
       return false;
+   if (m_on_tick_process)
+      return false;
+   m_on_tick_process = true;
    if(!RefreshRates())
       return false;
    DetectNewBars();
@@ -877,6 +882,7 @@ bool CExpertAdvisorBase::OnTick(void)
       if(checkopenshort)
          return TradeOpen(m_symbol_name,ORDER_TYPE_SELL,m_distance*m_distance_factor_short); 
      }
+   m_on_tick_process = false;
    return false;
   }
 //+------------------------------------------------------------------+
