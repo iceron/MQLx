@@ -98,13 +98,11 @@ bool COrder::IsSuspended(void)
       IsSuspended(true);
       return true;
      }
-   /*
    if(Volume()<=0.0)
      {
       IsSuspended(true);
       return true;
      }
-   */  
    if(OrderSelect((int)Ticket(),SELECT_BY_TICKET))
      {
       if(OrderCloseTime()>0)

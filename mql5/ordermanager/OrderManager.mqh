@@ -99,14 +99,14 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
             //m_orders.NewOrder((int)ticket,symbol,(int)magic,order_type,volume,price);
             COrder temp;
             temp.Ticket(ticket);
-            int idx = m_orders.Search(GetPointer(temp));
-            COrder *order = m_orders.At(idx);
-            if (!order.Initialized())
-            {
+            int idx=m_orders.Search(GetPointer(temp));
+            COrder *order=m_orders.At(idx);
+            if(!order.Initialized())
+              {
                order.Price(price);
-               if (order.Init(GetPointer(m_orders),m_orders.Stops()))    
+               if(order.Init(GetPointer(m_orders),m_orders.Stops()))
                   order.Initialized(true);
-            }   
+              }
            }
         }
      }
@@ -125,7 +125,7 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double pr
       return true;
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
-      if (in_points)
+      if(in_points)
          price=PriceCalculate(type,price);
       lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
       ret=SendOrder(type,lotsize,price,0,0);
@@ -166,9 +166,7 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
   {
    bool closed=true;
    COrderInfo ord;
-   if(!CheckPointer(order))
-      return true;
-   if(order.Volume()>0)
+   if(order.Volume()>0 || IsHedging())
      {
       if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),order.Symbol())!=0)
          m_symbol=m_symbol_man.Get(order.Symbol());
@@ -177,14 +175,24 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
       m_trade.SetExpertMagicNumber(m_magic_close);
       if(ord.Select(order.Ticket()))
         {
-         closed=m_trade.OrderDelete(order.Ticket());
+         if(m_trade.OrderDelete(order.Ticket()))
+           {
+            uint res=m_trade.ResultRetcode();
+            if(res==TRADE_RETCODE_DONE || res==TRADE_RETCODE_PLACED)
+               closed=true;
+           }
         }
       else
         {
          ResetLastError();
          if(IsHedging())
            {
-            closed=m_trade.PositionClose(order.Ticket());
+            if(m_trade.PositionClose(order.Ticket()))
+            {
+               uint res=m_trade.ResultRetcode();
+               if(res==TRADE_RETCODE_DONE || res==TRADE_RETCODE_PLACED)
+                  closed = true;
+            }  
            }
          else
            {

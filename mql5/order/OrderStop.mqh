@@ -45,9 +45,7 @@ COrderStop::UpdateVolume(double factor)
       new_lotsize = NormalizeDouble(Volume()*factor,(int)-MathLog10(volume_min));   
       if (new_lotsize<volume_min)
          new_lotsize = volume_min;
-   }   
-      
-   //Print(__FUNCTION__+" name: "+m_stop.Name()+" factor: "+factor+" volume: "+Volume()+" new: "+new_lotsize);
+   }         
    Volume(new_lotsize);
    if (new_lotsize<=0)
       return;

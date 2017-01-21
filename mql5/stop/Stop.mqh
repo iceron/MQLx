@@ -6,6 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Trade\OrderInfo.mqh>
+#include <Trade\PositionInfo.mqh>
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -29,7 +30,7 @@ public:
    virtual double    TakeProfitPrice(COrder*,COrderStop*);
    virtual bool      IsHedging(void) const;
 protected:
-   virtual bool      OpenStop(COrder*,COrderStop*,double);   
+   virtual bool      OpenStop(COrder*,COrderStop*,double);
    virtual bool      CloseStop(COrder*,COrderStop*,const double);
   };
 //+------------------------------------------------------------------+
@@ -120,24 +121,49 @@ bool CStop::DeleteStopOrder(const ulong ticket)
   {
    if(ticket<=0)
       return true;
-   if(!OrderSelect(ticket))
-      return true;
+   bool result=false;
    COrderInfo ord;
-   if(!ord.Select(ticket))
-      return false;
-   m_symbol=m_symbol_man.Get(ord.Symbol());
-   if(!CheckPointer(m_symbol))
-      return false;
-   m_trade=m_trade_man.Get(m_symbol.Name());
-   if(!CheckPointer(m_trade))
-      return false;
-   if(m_trade.OrderDelete(ticket))
+   if(ord.Select(ticket))
      {
-      uint result=m_trade.ResultRetcode();
-      if(result==TRADE_RETCODE_DONE || result==TRADE_RETCODE_PLACED)
-         return true;
+      m_symbol=m_symbol_man.Get(ord.Symbol());
+      if(!CheckPointer(m_symbol))
+         return false;
+      m_trade=m_trade_man.Get(m_symbol.Name());
+      if(!CheckPointer(m_trade))
+         return false;
+      if(m_trade.OrderDelete(ticket))
+        {
+         uint res=m_trade.ResultRetcode();
+         if(res==TRADE_RETCODE_DONE || res==TRADE_RETCODE_PLACED)
+            result=true;
+        }
      }
-   return false;
+   else
+     {
+      ResetLastError();
+      if(IsHedging())
+        {   
+         CPositionInfo pos;
+         if (pos.SelectByTicket(ticket))
+         {
+            m_symbol=m_symbol_man.Get(pos.Symbol());
+            if(!CheckPointer(m_symbol))
+               return false;
+            m_trade=m_trade_man.Get(m_symbol.Name());
+            if(!CheckPointer(m_trade))
+               return false;
+            if(m_trade.PositionClose(ticket))
+            {
+               uint res=m_trade.ResultRetcode();
+               if(res==TRADE_RETCODE_DONE || res==TRADE_RETCODE_PLACED)
+                  result = true;
+            }   
+         }
+        }
+      else
+         result=true;
+     }
+   return result;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -193,7 +219,7 @@ bool CStop::OpenStop(COrder *order,COrderStop *orderstop,double val)
 //+------------------------------------------------------------------+
 ulong CStop::Buy(const double lotsize,const double val)
   {
-   if (m_trade.Buy(lotsize,val,0,0,m_comment))
+   if(m_trade.Buy(lotsize,val,0,0,m_comment))
       return m_trade.ResultOrder();
    return 0;
   }
@@ -202,7 +228,7 @@ ulong CStop::Buy(const double lotsize,const double val)
 //+------------------------------------------------------------------+
 ulong CStop::Sell(const double lotsize,const double val)
   {
-   if (m_trade.Sell(lotsize,val,0,0,m_comment))
+   if(m_trade.Sell(lotsize,val,0,0,m_comment))
       return m_trade.ResultOrder();
    return 0;
   }
