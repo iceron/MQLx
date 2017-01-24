@@ -148,7 +148,7 @@ bool COrderStopsBase::Close(void)
          if(CheckPointer(order_stop))
            {
             if(!order_stop.Close())
-               res=false;
+               res=false; 
            }
         }
      }

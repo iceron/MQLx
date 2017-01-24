@@ -766,14 +766,17 @@ void CExpertAdvisorBase::ManageOrdersHistory(void)
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::OnTick(void)
-  {
+  {   
    if(!Active())
       return false;
    if(m_on_tick_process)
       return false;
    m_on_tick_process=true;
    if(!RefreshRates())
+   {
+      m_on_tick_process=true;
       return false;
+   }   
    DetectNewBars();
    bool  checkopenlong=false,
    checkopenshort=false,
@@ -808,14 +811,15 @@ bool CExpertAdvisorBase::OnTick(void)
         }
      }
    m_order_man.OnTick();
+   bool result = false;
    if((checkopenlong || checkopenshort) && 
       (m_every_tick || IsNewBar(m_symbol_name,m_period)) && 
       (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)
-         return TradeOpen(m_symbol_name,ORDER_TYPE_BUY,m_distance*m_distance_factor_long);
+         result = TradeOpen(m_symbol_name,ORDER_TYPE_BUY,m_distance*m_distance_factor_long);
       if(checkopenshort)
-         return TradeOpen(m_symbol_name,ORDER_TYPE_SELL,m_distance*m_distance_factor_short);
+         result = TradeOpen(m_symbol_name,ORDER_TYPE_SELL,m_distance*m_distance_factor_short);
      }
    m_on_tick_process=false;
    return false;
