@@ -142,10 +142,10 @@ bool CStop::DeleteStopOrder(const ulong ticket)
      {
       ResetLastError();
       if(IsHedging())
-        {   
+        {
          CPositionInfo pos;
-         if (pos.SelectByTicket(ticket))
-         {
+         if(pos.SelectByTicket(ticket))
+           {
             m_symbol=m_symbol_man.Get(pos.Symbol());
             if(!CheckPointer(m_symbol))
                return false;
@@ -153,12 +153,12 @@ bool CStop::DeleteStopOrder(const ulong ticket)
             if(!CheckPointer(m_trade))
                return false;
             if(m_trade.PositionClose(ticket))
-            {
+              {
                uint res=m_trade.ResultRetcode();
                if(res==TRADE_RETCODE_DONE || res==TRADE_RETCODE_PLACED)
-                  result = true;
-            }   
-         }
+                  result=true;
+              }
+           }
         }
       else
          result=true;

@@ -12,7 +12,7 @@ class CExpertAdvisor : public CExpertAdvisorBase
   {
 public:
                      CExpertAdvisor(void);
-                    ~CExpertAdvisor(void);                              
+                    ~CExpertAdvisor(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

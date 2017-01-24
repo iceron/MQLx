@@ -32,7 +32,6 @@ protected:
    int               m_max_trades;
    COrders           m_orders;
    COrders           m_orders_history;
-   //CArrayInt         m_other_magic;
    CAccountInfo     *m_account;
    CSymbolInfo      *m_symbol;
    CSymbolManager   *m_symbol_man;
@@ -58,7 +57,6 @@ public:
    virtual void      SetContainer(CObject*);
    virtual bool      Validate(void) const;
    //--- setters and getters
-   //void              AsyncMode(const string,const bool);
    string            Comment(void) const;
    void              Comment(const string);
    bool              EnableTrade(void) const;
@@ -92,7 +90,6 @@ public:
    COrders          *Orders(void);
    COrders          *OrdersHistory(void);
    CStops           *Stops(void) const;
-   //CArrayInt        *OtherMagic(void);
    //--- current orders
    virtual void      ArchiveOrders(void);
    virtual bool      ArchiveOrder(COrder*);
@@ -108,11 +105,8 @@ public:
    //--- stop levels  
    virtual bool      AddStops(CStops*);
    //--- trade manager
-   //virtual bool      AddOtherMagic(const int);
-   //virtual void      AddOtherMagicString(const string&[]);
    virtual bool      IsHedging(void) const;
    bool              IsPositionAllowed(ENUM_ORDER_TYPE) const;
-   //virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
    virtual bool      TradeOpen(const string,ENUM_ORDER_TYPE,double,bool);
    //--- events
    virtual void      OnTradeTransaction(COrder*);
@@ -136,7 +130,6 @@ protected:
 //|                                                                  |
 //+------------------------------------------------------------------+
 COrderManagerBase::COrderManagerBase() : m_lotsize(0.1),
-                                         //m_price_points(0),
                                          m_comment(""),
                                          m_magic(0),
                                          m_expiration(0),
@@ -171,18 +164,6 @@ void COrderManagerBase::SetContainer(CObject *container)
   {
    m_container=container;
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void COrderManagerBase::AsyncMode(const string symbol,const bool async)
-  {
-   if(!CheckPointer(m_symbol) || StringCompare(m_symbol.Name(),symbol)!=0)
-      m_symbol=m_symbol_man.Get(symbol);
-   if(CheckPointer(m_symbol))
-      m_trade.SetAsyncMode(async);
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -336,22 +317,6 @@ int COrderManagerBase::OrdersHistoryTotal(void) const
   {
    return m_orders_history.Total();
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-int COrderManagerBase::PricePoints(void) const
-  {
-   return m_price_points;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void COrderManagerBase::PricePoints(const int points)
-  {
-   m_price_points=points;
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -394,15 +359,6 @@ CStops *COrderManagerBase::Stops(void) const
   {
    return GetPointer(m_stops);
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-CArrayInt *COrderManagerBase::OtherMagic(void)
-  {
-   return GetPointer(m_other_magic);
-  }
-*/  
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -424,15 +380,6 @@ void COrderManagerBase::Expiration(const int expiration)
   {
    m_expiration=expiration;
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-COrder* COrderManagerBase::TradeOpen(const string,ENUM_ORDER_TYPE)
-  {
-   return NULL;
-  }
-*/  
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -449,7 +396,7 @@ void COrderManagerBase::OnTradeTransaction(COrder*)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-double COrderManagerBase::PriceCalculateCustom(ENUM_ORDER_TYPE& type,double points=0)
+double COrderManagerBase::PriceCalculateCustom(ENUM_ORDER_TYPE &type,double points=0)
   {
    return 0;
   }
@@ -707,25 +654,6 @@ double COrderManagerBase::TakeProfitCalculate(const ENUM_ORDER_TYPE type,const d
       return m_main_stop.TakeProfitTicks(type,price);
    return 0;
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool COrderManagerBase::AddOtherMagic(const int magic)
-  {
-   if(m_other_magic.Search(magic)>=0)
-      return true;
-   return m_other_magic.InsertSort(magic);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void COrderManagerBase::AddOtherMagicString(const string &magics[])
-  {
-   for(int i=0;i<ArraySize(magics);i++)
-      AddOtherMagic((int)magics[i]);
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -798,22 +726,22 @@ double COrderManagerBase::LotSizeCalculate(const double price,const ENUM_ORDER_T
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrderManagerBase::Save(const int handle)
-  {      
+  {
    if(handle==INVALID_HANDLE)
       return false;
-   file.WriteDouble(m_lotsize);   
-   //file.WriteInteger(m_price_points);
-   file.WriteString(m_comment);   
-   file.WriteInteger(m_expiration);   
-   file.WriteInteger(m_history_count);   
+   file.WriteDouble(m_lotsize);
+//file.WriteInteger(m_price_points);
+   file.WriteString(m_comment);
+   file.WriteInteger(m_expiration);
+   file.WriteInteger(m_history_count);
    file.WriteInteger(m_max_orders_history);
    file.WriteBool(m_trade_allowed);
    file.WriteBool(m_long_allowed);
    file.WriteBool(m_short_allowed);
    file.WriteInteger(m_max_orders);
-   file.WriteInteger(m_max_trades);   
+   file.WriteInteger(m_max_trades);
    file.WriteObject(GetPointer(m_orders));
-   file.WriteObject(GetPointer(m_orders_history));   
+   file.WriteObject(GetPointer(m_orders_history));
    return true;
   }
 //+------------------------------------------------------------------+
@@ -825,8 +753,6 @@ bool COrderManagerBase::Load(const int handle)
       return false;
    if(!file.ReadDouble(m_lotsize))
       return false;
-   //if(!file.ReadInteger(m_price_points))
-      //return false;
    if(!file.ReadString(m_comment))
       return false;
    if(!file.ReadInteger(m_expiration))

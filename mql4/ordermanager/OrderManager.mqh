@@ -15,7 +15,6 @@ public:
                      COrderManager(void);
                     ~COrderManager(void);
    virtual bool      CloseOrder(COrder*,const int);
-   //virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
    virtual bool      TradeOpen(const string,ENUM_ORDER_TYPE,double,bool);
    virtual void      OnTradeTransaction(void);
    virtual void      OnTradeTransaction(int);
@@ -32,38 +31,14 @@ COrderManager::COrderManager(void)
 COrderManager::~COrderManager(void)
   {
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void COrderManager::OnTradeTransaction(void)
-  {
-   COrder *temp=new COrder();
-   int total= ::OrdersTotal();
-   for(int i=0;i<total;i++)
-     {
-      if(!OrderSelect(i,SELECT_BY_POS))
-         continue;
-      //if(OrderMagicNumber()!=m_magic && m_other_magic.Search(OrderMagicNumber())<0)
-         //continue;
-      if(m_symbol_man.Search(OrderSymbol())==-1)
-         continue;
-      temp.Ticket(OrderTicket());
-      if(m_orders.Search(temp)>=0)
-         continue;
-      m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
-     }
-   delete temp;
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrderManager::OnTradeTransaction(int ticket)
   {
-   if (ticket>0)
-      if (OrderSelect(ticket,SELECT_BY_TICKET))
-         m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());    
+   if(ticket>0)
+      if(OrderSelect(ticket,SELECT_BY_TICKET))
+         m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -90,51 +65,14 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double pr
       double lotsize=LotSizeCalculate(price,type,sl);
       int ticket=(int)SendOrder(type,lotsize,price,sl,tp);
       if(ticket>0)
-      {
-         if (OrderSelect(ticket,SELECT_BY_TICKET))
-            m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());    
+        {
+         if(OrderSelect(ticket,SELECT_BY_TICKET))
+            m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
          return true;
-      }   
+        }
      }
    return false;
   }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-COrder* COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
-  {
-   int trades_total = TradesTotal();
-   int orders_total = OrdersTotal();
-   m_symbol = m_symbol_man.Get(symbol);
-   if (!CheckPointer(m_symbol))
-      return NULL;
-   if(!IsPositionAllowed(type))
-      return NULL;
-   if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
-     {
-      ENUM_ORDER_TYPE ordertype = type;
-      double price=PriceCalculate(ordertype);
-      double sl=0,tp=0;
-      if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
-        {
-         sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(symbol,type,price):m_main_stop.StopLossCalculate(symbol,type,price);
-         tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(symbol,type,price):m_main_stop.TakeProfitCalculate(symbol,type,price);
-        }
-      double lotsize=LotSizeCalculate(price,type,sl);
-      ulong ticket = SendOrder(type,lotsize,price,sl,tp);
-      if (ticket>0)
-      {
-         if (OrderSelect((int)ticket,SELECT_BY_TICKET))
-            return m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
-      }            
-     }
-   return NULL;
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

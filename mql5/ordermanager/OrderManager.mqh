@@ -22,7 +22,6 @@ public:
    virtual bool      IsHedging(void) const;
    virtual void      OnTradeTransaction(const MqlTradeTransaction&,const MqlTradeRequest&,const MqlTradeResult&);
    virtual void      OnTradeTransaction(void);
-   //virtual COrder   *TradeOpen(const string,ENUM_ORDER_TYPE);
    virtual bool      TradeOpen(const string,ENUM_ORDER_TYPE,double,bool);
    int               MagicClose(void) const;
    void              MagicClose(const int);
@@ -54,7 +53,7 @@ bool COrderManager::Init(CSymbolManager *symbol_man,CAccountInfo *account,CEvent
 //+------------------------------------------------------------------+
 bool COrderManager::Validate(void) const
   {
-   if(m_magic==m_magic_close/* || m_other_magic.Search(m_magic_close)>=0*/)
+   if(m_magic==m_magic_close)
       return false;
    return COrderManagerBase::Validate();
   }
@@ -94,9 +93,8 @@ void COrderManager::OnTradeTransaction(const MqlTradeTransaction &trans,const Mq
          double volume = HistoryOrderGetDouble(trans.order,ORDER_VOLUME_INITIAL);
          double price=HistoryOrderGetDouble(trans.order,ORDER_PRICE_OPEN);
          ENUM_ORDER_TYPE order_type=trans.order_type;
-         if((magic==m_magic/* || m_other_magic.Search((int)magic)>=0*/) && m_symbol_man.Search(symbol)>=0)
+         if(magic==m_magic && m_symbol_man.Search(symbol)>=0)
            {
-            //m_orders.NewOrder((int)ticket,symbol,(int)magic,order_type,volume,price);
             COrder temp;
             temp.Ticket(ticket);
             int idx=m_orders.Search(GetPointer(temp));
@@ -137,31 +135,6 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double pr
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-COrder* COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type)
-  {
-   double lotsize=0.0,price=0.0;
-   int trades_total =TradesTotal();
-   int orders_total = OrdersTotal();
-   m_symbol=m_symbol_man.Get(symbol);
-   if(!IsPositionAllowed(type))
-      return NULL;
-   if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
-     {
-      price=PriceCalculate(type);
-      lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
-      if (SendOrder(type,lotsize,price,0,0))
-         return m_orders.NewOrder((int)m_trade.ResultOrder(),m_trade.RequestSymbol(),(int)m_trade.RequestMagic(),m_trade.RequestType(),m_trade.ResultVolume(),m_trade.ResultPrice());
-     }      
-   return NULL;
-  }
-*/
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool COrderManager::CloseOrder(COrder *order,const int index)
   {
    bool closed=true;
@@ -188,11 +161,11 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
          if(IsHedging())
            {
             if(m_trade.PositionClose(order.Ticket()))
-            {
+              {
                uint res=m_trade.ResultRetcode();
                if(res==TRADE_RETCODE_DONE || res==TRADE_RETCODE_PLACED)
-                  closed = true;
-            }  
+                  closed=true;
+              }
            }
          else
            {

@@ -118,13 +118,13 @@ bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop)
 COrderStopsBase::Check(double &volume)
   {
    if(!Active())
-      return;   
+      return;
    for(int i=0;i<Total();i++)
      {
-      COrderStop *order_stop=(COrderStop *)At(i);      
+      COrderStop *order_stop=(COrderStop *)At(i);
         {
          if(order_stop.IsClosed())
-            continue;         
+            continue;
          order_stop.CheckTrailing();
          order_stop.Update();
          order_stop.Check(volume);

@@ -23,14 +23,13 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_ORDERS;}
    //--- initialization
    virtual bool      Init(CStops*);
-   virtual CObject  *GetContainer(void);
+   virtual CObject *GetContainer(void);
    virtual void      SetContainer(CObject*);
    virtual void      SetStops(CStops*);
    virtual CStops   *Stops(void);
    //--- events                  
    virtual void      OnTick(void);
    //--- order creation
-   //virtual bool      NewOrder(const ulong,const string,const int,const ENUM_ORDER_TYPE,const double,const double);
    virtual COrder   *NewOrder(const ulong,const string,const int,const ENUM_ORDER_TYPE,const double,const double);
    //--- archiving
    virtual bool      CloseStops(void);
@@ -93,34 +92,21 @@ CStops *COrdersBase::Stops(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-/*
-bool COrdersBase::NewOrder(const ulong ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
+COrder *COrdersBase::NewOrder(const ulong ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
   {
    COrder *order=new COrder(ticket,symbol,type,volume,price);
    if(CheckPointer(order)==POINTER_DYNAMIC)
-      if(InsertSort(GetPointer(order)))
-      {  
-         order.Magic(magic);
-         return order.Init(GetPointer(this),m_stops);
-      }   
-   return false;
-  }
-*/
-COrder* COrdersBase::NewOrder(const ulong ticket,const string symbol,const int magic,const ENUM_ORDER_TYPE type,const double volume,const double price)
-  {
-   COrder *order=new COrder(ticket,symbol,type,volume,price);
-   if(CheckPointer(order)==POINTER_DYNAMIC)
-   {
+     {
       order.SetContainer(GetPointer(this));
       if(InsertSort(GetPointer(order)))
-      {  
+        {
          order.Magic(magic);
-         if (type==ORDER_TYPE_BUY || type==ORDER_TYPE_SELL)
+         if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_SELL)
             order.Init(GetPointer(this),m_stops);
          else order.Initialized(false);
          return order;
-      }   
-   }   
+        }
+     }
    return NULL;
   }
 //+------------------------------------------------------------------+
@@ -169,8 +155,8 @@ bool COrdersBase::CreateElement(const int index)
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool COrdersBase::Save(const int handle)
-  {   
-   if (handle==INVALID_HANDLE)
+  {
+   if(handle==INVALID_HANDLE)
       return false;
    return CArrayObj::Save(handle);
   }
@@ -179,9 +165,9 @@ bool COrdersBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool COrdersBase::Load(const int handle)
   {
-   if (handle==INVALID_HANDLE)
-      return false;   
-   return CArrayObj::Load(handle);   
+   if(handle==INVALID_HANDLE)
+      return false;
+   return CArrayObj::Load(handle);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

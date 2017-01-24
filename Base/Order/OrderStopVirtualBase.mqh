@@ -48,18 +48,18 @@ void COrderStopVirtualBase::Check(double &volume)
      }
    if(!m_stoploss_closed)
       if(m_stop.CheckStopLoss(m_order,GetPointer(this)))
-      {
+        {
          StopLossClosed(true);
-         if (CheckPointer(m_order_stops))
-            m_order_stops.UpdateVolume(Volume());        
-      }   
+         if(CheckPointer(m_order_stops))
+            m_order_stops.UpdateVolume(Volume());
+        }
    if(!m_takeprofit_closed)
       if(m_stop.CheckTakeProfit(m_order,GetPointer(this)))
-      {
+        {
          TakeProfitClosed(true);
-         if (CheckPointer(m_order_stops))
-            m_order_stops.UpdateVolume(Volume());         
-      }   
+         if(CheckPointer(m_order_stops))
+            m_order_stops.UpdateVolume(Volume());
+        }
    if(m_stoploss_closed || m_takeprofit_closed)
      {
       if(m_stop.OCO())
@@ -76,8 +76,7 @@ void COrderStopVirtualBase::Check(double &volume)
      }
    if(m_closed || (m_stoploss_closed && m_takeprofit_closed))
      {
-      //if(m_stop.Main())
-         m_order.IsSuspended(true);
+      m_order.IsSuspended(true);
      }
   }
 //+------------------------------------------------------------------+

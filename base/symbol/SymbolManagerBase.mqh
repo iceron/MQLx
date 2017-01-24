@@ -69,7 +69,7 @@ CSymbolManagerBase::Deinit(void)
 bool CSymbolManagerBase::Add(CSymbolInfo *node)
   {
    if(Search(node.Name())==-1)
-      return CArrayObj::Add(node);       
+      return CArrayObj::Add(node);
    return false;
   }
 //+------------------------------------------------------------------+
@@ -140,7 +140,7 @@ void CSymbolManagerBase::SetPrimary(const int idx)
 //+------------------------------------------------------------------+
 CSymbolInfo *CSymbolManagerBase::GetPrimary(void)
   {
-   if (!CheckPointer(m_symbol_primary) && Total()>0)
+   if(!CheckPointer(m_symbol_primary) && Total()>0)
       SetPrimary(0);
    return m_symbol_primary;
   }

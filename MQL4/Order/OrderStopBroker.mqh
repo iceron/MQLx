@@ -81,28 +81,28 @@ bool COrderStopBroker::ModifyTakeProfit(const double takeprofit)
 //+------------------------------------------------------------------+
 bool COrderStopBroker::UpdateOrderStop(const double stoploss,const double takeprofit)
   {
-   bool modify=true,modify_sl=true,modify_tp=true;   
+   bool modify=true,modify_sl=true,modify_tp=true;
    if(stoploss>0 && takeprofit>0)
-   {
+     {
       modify=m_stop.Move(m_order.Ticket(),stoploss,takeprofit);
-      if (modify)
-      {  
+      if(modify)
+        {
          StopLoss(stoploss);
-         TakeProfit(takeprofit);   
-      }         
-   }   
+         TakeProfit(takeprofit);
+        }
+     }
    else if(stoploss>0)
-   {
+     {
       modify_sl=m_stop.MoveStopLoss(m_order.Ticket(),stoploss);
-      if (modify_sl)
+      if(modify_sl)
          StopLoss(stoploss);
-   }   
+     }
    else if(takeprofit>0)
-   {
+     {
       modify_tp=m_stop.MoveTakeProfit(m_order.Ticket(),takeprofit);
-      if (modify_tp)
-         TakeProfit(takeprofit);   
-   }      
+      if(modify_tp)
+         TakeProfit(takeprofit);
+     }
    return modify && modify_sl && modify_tp;
   }
 //+------------------------------------------------------------------+
@@ -114,15 +114,15 @@ bool COrderStopBroker::Update(void)
       return true;
    if(m_order.IsClosed() || m_order.IsSuspended())
       return true;
-   bool result=false;   
+   bool result=false;
    if(!CheckPointer(m_objsl) && !CheckPointer(m_objtp))
      {
       if(!OrderSelect((int)m_order.Ticket(),SELECT_BY_TICKET))
          return false;
-      double ticksize = SymbolInfoDouble(OrderSymbol(),SYMBOL_TRADE_TICK_SIZE);      
-      if (MathAbs(OrderStopLoss()-StopLoss())>=ticksize)
+      double ticksize=SymbolInfoDouble(OrderSymbol(),SYMBOL_TRADE_TICK_SIZE);
+      if(MathAbs(OrderStopLoss()-StopLoss())>=ticksize)
          StopLoss(OrderStopLoss());
-      if (MathAbs(OrderTakeProfit()-TakeProfit())>=ticksize)
+      if(MathAbs(OrderTakeProfit()-TakeProfit())>=ticksize)
          TakeProfit(OrderTakeProfit());
       return true;
      }
@@ -140,10 +140,10 @@ bool COrderStopBroker::Update(void)
          stoploss=m_objsl.GetPrice();
       if(CheckPointer(m_objtp))
          takeprofit=m_objtp.GetPrice();
-      if (stoploss==StopLoss())
-         stoploss = 0;
-      if (takeprofit==TakeProfit())
-         takeprofit = 0;
+      if(stoploss==StopLoss())
+         stoploss= 0;
+      if(takeprofit==TakeProfit())
+         takeprofit= 0;
       result=UpdateOrderStop(stoploss,takeprofit);
      }
    return result;

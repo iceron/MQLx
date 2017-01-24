@@ -77,13 +77,13 @@ bool CStop::DeleteStopOrder(const ulong ticket)
    m_trade=m_trade_man.Get(m_symbol.Name());
    if(!CheckPointer(m_trade))
       return false;
-   if (OrderCloseTime()==0)
-   {
-      if (OrderType()<=1)
+   if(OrderCloseTime()==0)
+     {
+      if(OrderType()<=1)
          return m_trade.OrderClose(ticket);
-      if(OrderType()>1)   
+      if(OrderType()>1)
          return m_trade.OrderDelete(ticket);
-   }
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -147,15 +147,15 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
    int ticket=(int) order.Ticket();
    if(m_stop_type==STOP_TYPE_VIRTUAL)
      {
-      if (!OrderSelect(ticket,SELECT_BY_TICKET))
+      if(!OrderSelect(ticket,SELECT_BY_TICKET))
          return false;
-      m_symbol= m_symbol_man.Get(OrderSymbol());      
-      if (!CheckPointer(m_symbol))
+      m_symbol=m_symbol_man.Get(OrderSymbol());
+      if(!CheckPointer(m_symbol))
          return false;
-      m_trade = m_trade_man.Get(m_symbol.Name());
-      if (!CheckPointer(m_trade))
+      m_trade=m_trade_man.Get(m_symbol.Name());
+      if(!CheckPointer(m_trade))
          return false;
-      double lotsize_calc = LotSizeCalculate(order,orderstop);
+      double lotsize_calc=LotSizeCalculate(order,orderstop);
       double lotsize=MathMin(order.Volume(),lotsize_calc);
       res=m_trade.OrderClose(ticket,lotsize,price);
       if(res)
@@ -175,9 +175,9 @@ ulong CStop::GetNewTicket(COrder *order,COrderStop *orderstop)
    int total= ::OrdersTotal();
    for(int i=0;i<total;i++)
      {
-      if(!OrderSelect(i,SELECT_BY_POS)) 
+      if(!OrderSelect(i,SELECT_BY_POS))
          continue;
-      if(OrderMagicNumber()==order.Magic()) 
+      if(OrderMagicNumber()==order.Magic())
          return OrderTicket();
      }
    return 0;
@@ -189,15 +189,15 @@ bool CStop::Move(const ulong ticket,const double stoploss,const double takeprofi
   {
    if(OrderSelect((int)ticket,SELECT_BY_TICKET))
      {
-      m_symbol= m_symbol_man.Get(OrderSymbol());      
-      if (!CheckPointer(m_symbol))
+      m_symbol=m_symbol_man.Get(OrderSymbol());
+      if(!CheckPointer(m_symbol))
          return false;
-      m_trade = m_trade_man.Get(m_symbol.Name());
-      if (!CheckPointer(m_trade))
+      m_trade=m_trade_man.Get(m_symbol.Name());
+      if(!CheckPointer(m_trade))
          return false;
-      if(MathAbs(stoploss-OrderStopLoss())<m_symbol.TickSize()) 
+      if(MathAbs(stoploss-OrderStopLoss())<m_symbol.TickSize())
          return false;
-      if(MathAbs(takeprofit-OrderTakeProfit())<m_symbol.TickSize()) 
+      if(MathAbs(takeprofit-OrderTakeProfit())<m_symbol.TickSize())
          return false;
       return m_trade.OrderModify(OrderTicket(),OrderOpenPrice(),stoploss,takeprofit,0,OrderExpiration());
      }

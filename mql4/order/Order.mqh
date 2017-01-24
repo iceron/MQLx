@@ -18,7 +18,7 @@ public:
                      COrder(void);
                      COrder(const ulong ticket,const string symbol,const ENUM_ORDER_TYPE type,const double volume,const double price);
                     ~COrder(void);
-   virtual int       Compare(const CObject*,const int) const;                    
+   virtual int       Compare(const CObject*,const int) const;
    virtual bool      IsSuspended(void);
    virtual void      OnTick(void);
    virtual void      Ticket(const ulong ticket);
@@ -63,7 +63,7 @@ COrder::~COrder(void)
 //+------------------------------------------------------------------+
 COrder::Ticket(const ulong ticket)
   {
-   m_ticket_current.InsertSort((int)ticket);   
+   m_ticket_current.InsertSort((int)ticket);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -127,32 +127,32 @@ bool COrder::IsSuspended(void)
 int COrder::Compare(const CObject *node,const int mode=0) const
   {
    const COrder *order=node;
-   for (int i=0;i<m_ticket_current.Total();i++)
-   {
-      int ticket = m_ticket_current.At(i);
-      if (ticket==order.Ticket())
+   for(int i=0;i<m_ticket_current.Total();i++)
+     {
+      int ticket=m_ticket_current.At(i);
+      if(ticket==order.Ticket())
          return 0;
-   }
+     }
    return COrderBase::Compare(node,mode);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void COrder::OnTick(void)
-  {   
-   if (!Initialized())
-   {
-      if (OrderSelect((int)Ticket(),SELECT_BY_TICKET))
-      {
-         m_type = (ENUM_ORDER_TYPE)::OrderType();
-         if (m_type<=1)
-         {
-            if (Init(m_orders,m_orders.Stops()))    
-                  Initialized(true);
-         }      
-      }
-   }
-   if (Initialized())
+  {
+   if(!Initialized())
+     {
+      if(OrderSelect((int)Ticket(),SELECT_BY_TICKET))
+        {
+         m_type=(ENUM_ORDER_TYPE)::OrderType();
+         if(m_type<=1)
+           {
+            if(Init(m_orders,m_orders.Stops()))
+               Initialized(true);
+           }
+        }
+     }
+   if(Initialized())
       COrderBase::OnTick();
   }
 //+------------------------------------------------------------------+

@@ -19,7 +19,7 @@ protected:
 public:
                      CExpertAdvisorsBase(void);
                     ~CExpertAdvisorsBase(void);
-   virtual int       Type(void) const {return CLASS_TYPE_EXPERTS;}   
+   virtual int       Type(void) const {return CLASS_TYPE_EXPERTS;}
    //--- getters and setters
    void              SetContainer(CObject *container);
    CObject          *GetContainer(void);
@@ -130,7 +130,7 @@ void CExpertAdvisorsBase::OnTick(void)
    if(!Active()) return;
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *e= At(i);
+      CExpertAdvisor *e=At(i);
       e.OnTick();
      }
   }
@@ -209,7 +209,7 @@ void CExpertAdvisorsBase::OnDeinit(const int reason=0)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::CreateElement(const int index)
   {
-   CExpertAdvisor*expert_advisor=new CExpertAdvisor();   
+   CExpertAdvisor*expert_advisor=new CExpertAdvisor();
    if(!CheckPointer(expert_advisor))
       return(false);
    expert_advisor.SetContainer(GetPointer(this));
@@ -226,10 +226,10 @@ bool CExpertAdvisorsBase::Save(const int handle)
   {
    for(int i=0;i<Total();i++)
      {
-      CExpertAdvisor *e= At(i);
-      if (!e.Save(handle))
+      CExpertAdvisor *e=At(i);
+      if(!e.Save(handle))
          return false;
-     }   
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -240,7 +240,7 @@ bool CExpertAdvisorsBase::Load(const int handle)
    for(int i=0;i<Total();i++)
      {
       CExpertAdvisor *e=At(i);
-      if (!e.Load(handle))
+      if(!e.Load(handle))
          return false;
      }
    return true;

@@ -98,7 +98,7 @@ COrderBase::COrderBase(void) : m_initialized(true),
                                m_type(0),
                                m_volume(0.0),
                                m_volume_initial(0.0)
-  {   
+  {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -111,9 +111,9 @@ COrderBase::~COrderBase(void)
 //+------------------------------------------------------------------+
 bool COrderBase::Init(COrders *orders,CStops *stops)
   {
-   if (CheckPointer(orders))
+   if(CheckPointer(orders))
       SetContainer(GetPointer(orders));
-   if (CheckPointer(stops))
+   if(CheckPointer(stops))
       CreateStops(GetPointer(stops));
    m_order_stops.SetContainer(GetPointer(this));
    return true;

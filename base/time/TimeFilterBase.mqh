@@ -45,7 +45,7 @@ bool CTimeFilterBase::Init(CTimes *times)
      {
       CTimeFilter *filter=m_time_filters.At(i);
       filter.Reverse(!Reverse());
-      if (!filter.Init(times))
+      if(!filter.Init(times))
          return false;
      }
    return true;
@@ -62,16 +62,16 @@ bool CTimeFilterBase::Validate(void)
       PrintFormat("Invalid setting for start and end times.");
       return false;
      }
-   if (!CheckPointer(m_symbol_man))
-   {
+   if(!CheckPointer(m_symbol_man))
+     {
       PrintFormat("NULL pointer: symbol manager");
       return false;
-   }   
-   if (m_symbol_man.Total()==0)
-   {
+     }
+   if(m_symbol_man.Total()==0)
+     {
       PrintFormat("no entry under symbol manager");
       return false;
-   }  
+     }
    return true;
   }
 //+------------------------------------------------------------------+
@@ -92,11 +92,11 @@ bool CTimeFilterBase::Set(const int gmt,const int starthour,const int endhour,co
 //+------------------------------------------------------------------+
 bool CTimeFilterBase::Evaluate(void)
   {
-   if(!Active()) 
+   if(!Active())
       return true;
    bool result=true;
    MqlDateTime time;
-   CSymbolInfo *symbol = m_symbol_man.GetPrimary();   
+   CSymbolInfo *symbol=m_symbol_man.GetPrimary();
    datetime current=symbol.Time();
    TimeToStruct(current,time);
    m_filter_start.year= time.year;

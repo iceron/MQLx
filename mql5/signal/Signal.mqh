@@ -12,7 +12,7 @@ class CSignal : public CSignalBase
   {
 public:
                      CSignal();
-                     ~CSignal();
+                    ~CSignal();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |

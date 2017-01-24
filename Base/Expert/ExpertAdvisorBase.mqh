@@ -94,9 +94,6 @@ public:
    CSignals         *Signals(void);
    CTimes           *Times(void);
    //--- order manager
-   //bool              AddOtherMagic(const int);
-   //void              AddOtherMagicString(const string&[]);
-   //void              AsyncMode(const string,const bool);
    string            Comment(void) const;
    void              Comment(const string);
    bool              EnableTrade(void) const;
@@ -119,8 +116,6 @@ public:
    void              MaxOrders(const int);
    int               OrdersTotal(void) const;
    int               OrdersHistoryTotal(void) const;
-   //int               PricePoints(void) const;
-   //void              PricePoints(const int);
    int               TradesTotal(void) const;
    //--- signal manager   
    int               Period(void) const;
@@ -152,7 +147,6 @@ protected:
    virtual void      ManageOrdersHistory(void);
    virtual void      OnTradeTransaction(COrder*) {}
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE,double,bool);
-   //virtual COrder*   TradeOpen(const string,const ENUM_ORDER_TYPE);
    //--- symbol manager
    virtual bool      RefreshRates(void);
    //--- deinitialization
@@ -311,15 +305,6 @@ COrders *CExpertAdvisorBase::OrdersHistory(void)
   {
    return m_order_man.OrdersHistory();
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-CArrayInt *CExpertAdvisorBase::OtherMagic(void)
-  {
-   return m_order_man.OtherMagic();
-  }
-*/  
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -341,32 +326,6 @@ CTimes *CExpertAdvisorBase::Times(void)
   {
    return GetPointer(m_times);
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CExpertAdvisorBase::AddOtherMagic(const int magic)
-  {
-   return m_order_man.AddOtherMagic(magic);
-  }
- 
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-CExpertAdvisorBase::AddOtherMagicString(const string &magics[])
-  {
-   m_order_man.AddOtherMagicString(magics);
-  }
-*/ 
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-CExpertAdvisorBase::AsyncMode(const string symbol,const bool async)
-  {
-   m_order_man.AsyncMode(symbol,async);
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -521,23 +480,6 @@ int CExpertAdvisorBase::OrdersHistoryTotal(void) const
   {
    return m_order_man.OrdersHistoryTotal();
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-int CExpertAdvisorBase::PricePoints(void) const
-  {
-   return m_order_man.PricePoints();
-  }
-
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-CExpertAdvisorBase::PricePoints(const int points)
-  {
-   m_order_man.PricePoints(points);
-  }
-*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -802,17 +744,10 @@ bool CExpertAdvisorBase::IsNewBar(const string symbol,const int period)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-
 bool CExpertAdvisorBase::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type,double price,bool in_points=true)
   {
    return m_order_man.TradeOpen(symbol,type,price,in_points);
   }
-/*
-COrder* CExpertAdvisorBase::TradeOpen(const string symbol,const ENUM_ORDER_TYPE type)
-  {
-   return m_order_man.TradeOpen(symbol,type);
-  }
-*/  
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -834,16 +769,16 @@ bool CExpertAdvisorBase::OnTick(void)
   {
    if(!Active())
       return false;
-   if (m_on_tick_process)
+   if(m_on_tick_process)
       return false;
-   m_on_tick_process = true;
+   m_on_tick_process=true;
    if(!RefreshRates())
       return false;
    DetectNewBars();
    bool  checkopenlong=false,
-         checkopenshort=false,
-         checkcloselong=false,
-         checkcloseshort=false;
+   checkopenshort=false,
+   checkcloselong=false,
+   checkcloseshort=false;
    if(CheckPointer(m_signals))
      {
       m_signals.Check();
@@ -858,16 +793,16 @@ bool CExpertAdvisorBase::OnTick(void)
       COrder *order=orders.At(i);
       if(!CheckPointer(order))
          continue;
-      order.OnTick();     
-      bool is_order_long = COrder::IsOrderTypeLong(order.OrderType());
-      bool is_order_short = COrder::IsOrderTypeShort(order.OrderType());
+      order.OnTick();
+      bool is_order_long=COrder::IsOrderTypeLong(order.OrderType());
+      bool is_order_short=COrder::IsOrderTypeShort(order.OrderType());
       if((m_position_reverse && 
-         ((checkopenlong && is_order_short) ||
-         (checkopenshort && is_order_long))) ||
-         (checkcloselong && is_order_long) ||
-         (checkcloseshort && is_order_short) ||
-          order.IsSuspended())
-        {         
+         ((checkopenlong && is_order_short) || 
+         (checkopenshort && is_order_long))) || 
+         (checkcloselong && is_order_long) || 
+         (checkcloseshort && is_order_short) || 
+         order.IsSuspended())
+        {
          if(m_order_man.CloseOrder(order,i))
             continue;
         }
@@ -880,9 +815,9 @@ bool CExpertAdvisorBase::OnTick(void)
       if(checkopenlong)
          return TradeOpen(m_symbol_name,ORDER_TYPE_BUY,m_distance*m_distance_factor_long);
       if(checkopenshort)
-         return TradeOpen(m_symbol_name,ORDER_TYPE_SELL,m_distance*m_distance_factor_short); 
+         return TradeOpen(m_symbol_name,ORDER_TYPE_SELL,m_distance*m_distance_factor_short);
      }
-   m_on_tick_process = false;
+   m_on_tick_process=false;
    return false;
   }
 //+------------------------------------------------------------------+

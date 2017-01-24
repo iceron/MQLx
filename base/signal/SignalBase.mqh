@@ -40,7 +40,7 @@ public:
                     ~CSignalBase(void);
    virtual int       Type(void) const {return(CLASS_TYPE_SIGNAL);}
    virtual bool      Init(CSymbolManager*,CEventAggregator*);
-   virtual CObject  *GetContainer(void);
+   virtual CObject *GetContainer(void);
    virtual void      SetContainer(CObject*);
    virtual bool      Validate(void);
    virtual bool      Calculate(void);
@@ -162,18 +162,18 @@ void CSignalBase::Check(void)
       return;
    int res=CMD_NEUTRAL;
    if(LongCondition())
-   {
+     {
       m_signal_open=CMD_LONG;
-   }   
+     }
    else if(ShortCondition())
-   {
+     {
       m_signal_open=CMD_SHORT;
-   }   
+     }
    if(m_invert)
-   {
+     {
       SignalInvert(m_signal_open);
       SignalInvert(m_signal_close);
-   }   
+     }
    Update();
   }
 //+------------------------------------------------------------------+

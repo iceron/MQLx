@@ -31,7 +31,7 @@ COrderStops::~COrderStops(void)
 //|                                                                  |
 //+------------------------------------------------------------------+
 COrderStops::UpdateVolume(double deducted)
-  {   
+  {
    double old_volume = m_order.Volume()+deducted;
    double new_volume = m_order.Volume();
    double factor=new_volume/old_volume;

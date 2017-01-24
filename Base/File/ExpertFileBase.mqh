@@ -14,13 +14,9 @@ class CExpertFileBase : public CFileBin
 public:
                      CExpertFileBase(void);
                     ~CExpertFileBase(void);
-   void              Handle(const int handle) { m_handle = handle; };
+   void              Handle(const int handle) { m_handle=handle; };
    uint              WriteBool(const bool value);
    bool              ReadBool(bool &value);
-   //template<typename T>
-   //bool              WriteObject(T *object);
-   //template<typename T>
-   //bool              ReadObject(T *object);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -41,10 +37,10 @@ uint CExpertFileBase::WriteBool(const bool value)
   {
 //--- check handle
    if(m_handle!=INVALID_HANDLE)
-   {
-      int int_val = value;
+     {
+      int int_val=value;
       return(FileWriteInteger(m_handle,int_val,sizeof(int)));
-   }   
+     }
 //--- failure
    return(0);
   }
@@ -58,7 +54,7 @@ bool CExpertFileBase::ReadBool(bool &value)
      {
       ResetLastError();
       int int_val=FileReadInteger(m_handle,sizeof(int));
-      value = (bool) int_val;
+      value=(bool) int_val;
       return(GetLastError()==0);
      }
 //--- failure
@@ -100,3 +96,4 @@ bool CExpertFileBase::ReadObject(T *object)
 #endif
 //+------------------------------------------------------------------+
 CExpertFile file;
+//+------------------------------------------------------------------+

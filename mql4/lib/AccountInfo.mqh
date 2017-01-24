@@ -47,13 +47,13 @@ public:
    string            InfoString(const ENUM_ACCOUNT_INFO_STRING prop_id) const;
    //--- checks
    //double            OrderProfitCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
-                                      //const double volume,const double price_open,const double price_close) const;
+   //const double volume,const double price_open,const double price_close) const;
    //double            MarginCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
-                                 //const double volume,const double price) const;
+   //const double volume,const double price) const;
    //double            FreeMarginCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
-                                     //const double volume,const double price) const;
+   //const double volume,const double price) const;
    //double            MaxLotCheck(const string symbol,const ENUM_ORDER_TYPE trade_operation,
-                                 //const double price,const double percent=100) const;
+   //const double price,const double percent=100) const;
   };
 //+------------------------------------------------------------------+
 //| Constructor                                                      |
@@ -128,6 +128,9 @@ string CAccountInfo::StopoutModeDescription(void) const
 //---
    return(str);
   }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 /*
 //+------------------------------------------------------------------+
 //| Get the property value "ACCOUNT_MARGIN_MODE"                     |

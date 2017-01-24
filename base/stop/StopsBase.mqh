@@ -23,7 +23,7 @@ public:
    virtual int       Type(void) const {return CLASS_TYPE_STOPS;}
    //--- initialization
    virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
-   virtual CObject  *GetContainer(void);
+   virtual CObject *GetContainer(void);
    virtual void      SetContainer(CObject*);
    virtual bool      Validate(void) const;
    //--- setters and getters

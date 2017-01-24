@@ -13,7 +13,7 @@ class CExpertAdvisors : public CExpertAdvisorsBase
 public:
                      CExpertAdvisors(void);
                     ~CExpertAdvisors(void);
-   virtual void      OnTradeTransaction(const MqlTradeTransaction& trans,const MqlTradeRequest& request,const MqlTradeResult& result);                    
+   virtual void      OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -30,7 +30,7 @@ CExpertAdvisors::~CExpertAdvisors(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CExpertAdvisors::OnTradeTransaction(const MqlTradeTransaction& trans,const MqlTradeRequest& request,const MqlTradeResult& result)
+CExpertAdvisors::OnTradeTransaction(const MqlTradeTransaction &trans,const MqlTradeRequest &request,const MqlTradeResult &result)
   {
    if(!Active()) return;
    for(int i=0;i<Total();i++)

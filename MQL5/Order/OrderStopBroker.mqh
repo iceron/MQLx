@@ -61,22 +61,22 @@ void COrderStopBroker::Check(double &volume)
    if(!m_stoploss_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_stoploss_ticket))
-      {
+        {
          StopLossClosed(true);
-         if (CheckPointer(m_order_stops))
+         if(CheckPointer(m_order_stops))
             m_order_stops.UpdateVolume(Volume());
-                  
-      }   
+
+        }
      }
    if(!m_takeprofit_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket))
-      {
-         TakeProfitClosed(true);  
-         if (CheckPointer(m_order_stops))
+        {
+         TakeProfitClosed(true);
+         if(CheckPointer(m_order_stops))
             m_order_stops.UpdateVolume(Volume());
-                
-      }   
+
+        }
      }
    if(m_stoploss_closed || m_takeprofit_closed)
      {
@@ -99,9 +99,9 @@ void COrderStopBroker::Check(double &volume)
      {
       DeleteStopLines();
       if(m_stop.Main())
-      {
+        {
          m_order.IsSuspended(true);
-      }   
+        }
      }
   }
 //+------------------------------------------------------------------+
@@ -109,9 +109,6 @@ void COrderStopBroker::Check(double &volume)
 //+------------------------------------------------------------------+
 bool COrderStopBroker::ModifyStopLoss(const double stoploss)
   {
-/*
-   return MoveStopLoss(stoploss);
-   */
    if(m_stop.OrderModify(m_stoploss_ticket,stoploss))
       return MoveStopLoss(stoploss);
    return false;
@@ -121,9 +118,6 @@ bool COrderStopBroker::ModifyStopLoss(const double stoploss)
 //+------------------------------------------------------------------+
 bool COrderStopBroker::ModifyTakeProfit(const double takeprofit)
   {
-/*
-   return MoveTakeProfit(takeprofit);
-   */
    if(m_stop.OrderModify(m_takeprofit_ticket,takeprofit))
       return MoveTakeProfit(takeprofit);
    return false;
@@ -133,19 +127,19 @@ bool COrderStopBroker::ModifyTakeProfit(const double takeprofit)
 //+------------------------------------------------------------------+
 bool COrderStopBroker::UpdateOrderStop(const double stoploss,const double takeprofit)
   {
-   bool modify_sl=true,modify_tp=true;   
+   bool modify_sl=true,modify_tp=true;
    if(stoploss>0)
-   {
+     {
       modify_sl=m_stop.MoveStopLoss(StopLossTicket(),stoploss);
-      if (modify_sl)
+      if(modify_sl)
          StopLoss(stoploss);
-   }   
+     }
    if(takeprofit>0)
-   {
+     {
       modify_tp=m_stop.MoveTakeProfit(TakeProfitTicket(),takeprofit);
-      if (modify_tp)
+      if(modify_tp)
          TakeProfit(takeprofit);
-   }   
+     }
    return modify_sl && modify_tp;
   }
 //+------------------------------------------------------------------+
@@ -161,23 +155,23 @@ bool COrderStopBroker::Update(void)
    if(!CheckPointer(m_objsl) && !CheckPointer(m_objtp))
      {
       double order_stoploss=0,order_takeprofit=0;
-      double ticksize = SymbolInfoDouble(m_order.Symbol(),SYMBOL_TRADE_TICK_SIZE);    
-      if (OrderSelect(m_stoploss_ticket))
-      {
-         order_stoploss = OrderGetDouble(ORDER_PRICE_OPEN);
-         if (MathAbs(order_stoploss-StopLoss())>=ticksize)
-         StopLoss(order_stoploss);
-      }
-      if (OrderSelect(m_takeprofit_ticket))
-      {
-         order_takeprofit = OrderGetDouble(ORDER_PRICE_OPEN);
-         if (MathAbs(order_takeprofit-TakeProfit())>=ticksize)
-         TakeProfit(order_takeprofit);
-      }     
+      double ticksize=SymbolInfoDouble(m_order.Symbol(),SYMBOL_TRADE_TICK_SIZE);
+      if(OrderSelect(m_stoploss_ticket))
+        {
+         order_stoploss=OrderGetDouble(ORDER_PRICE_OPEN);
+         if(MathAbs(order_stoploss-StopLoss())>=ticksize)
+            StopLoss(order_stoploss);
+        }
+      if(OrderSelect(m_takeprofit_ticket))
+        {
+         order_takeprofit=OrderGetDouble(ORDER_PRICE_OPEN);
+         if(MathAbs(order_takeprofit-TakeProfit())>=ticksize)
+            TakeProfit(order_takeprofit);
+        }
       return true;
      }
    double sl_line = 0;
-   double tp_line = 0;   
+   double tp_line = 0;
    if(CheckPointer(m_objsl))
       sl_line=m_objsl.GetPrice();
    if(CheckPointer(m_objtp))

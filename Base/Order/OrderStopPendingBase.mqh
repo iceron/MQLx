@@ -62,22 +62,22 @@ COrderStopPendingBase::Check(double &volume)
    if(!m_stoploss_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_stoploss_ticket))
-      {
+        {
          StopLossClosed(true);
-         if (CheckPointer(m_order_stops))
+         if(CheckPointer(m_order_stops))
             m_order_stops.UpdateVolume(Volume());
-         
-      }   
+
+        }
      }
    if(!m_takeprofit_closed)
      {
       if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket))
-      {
+        {
          TakeProfitClosed(true);
-         if (CheckPointer(m_order_stops))
+         if(CheckPointer(m_order_stops))
             m_order_stops.UpdateVolume(Volume());
-         
-      }   
+
+        }
      }
    if(m_stoploss_closed || m_takeprofit_closed)
      {
@@ -103,8 +103,7 @@ COrderStopPendingBase::Check(double &volume)
    if((m_stoploss_closed && m_takeprofit_closed) || volume<=0)
      {
       DeleteStopLines();
-      //if(m_stop.Main())
-         m_order.IsSuspended(true);
+      m_order.IsSuspended(true);
      }
   }
 //+------------------------------------------------------------------+
@@ -130,19 +129,19 @@ bool COrderStopPendingBase::ModifyTakeProfit(const double takeprofit)
 //+------------------------------------------------------------------+
 bool COrderStopPendingBase::UpdateOrderStop(const double stoploss,const double takeprofit)
   {
-   bool modify_sl=true,modify_tp=true;   
+   bool modify_sl=true,modify_tp=true;
    if(stoploss>0)
-   {
+     {
       modify_sl=m_stop.MoveStopLoss(StopLossTicket(),stoploss);
-      if (modify_sl)
+      if(modify_sl)
          StopLoss(stoploss);
-   }   
+     }
    if(takeprofit>0)
-   {
+     {
       modify_tp=m_stop.MoveTakeProfit(TakeProfitTicket(),takeprofit);
-      if (modify_tp)
+      if(modify_tp)
          TakeProfit(takeprofit);
-   }   
+     }
    return modify_sl && modify_tp;
   }
 //+------------------------------------------------------------------+

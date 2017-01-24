@@ -22,7 +22,7 @@ public:
                     ~CStopLineBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_STOPLINE;}
    virtual void      SetContainer(CStop*);
-   virtual CStop*    GetContainer(void);
+   virtual CStop    *GetContainer(void);
    bool              Active(void) const;
    void              Active(const bool);
    virtual bool      ChartObjectExists(void) const;

@@ -698,10 +698,10 @@ double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
    if(!CheckPointer(m_symbol))
       return 0;
    double lotsize=0.0;
-   if (Main())
-      lotsize = order.Volume();
+   if(Main())
+      lotsize=order.Volume();
    else
-   {
+     {
       if(m_volume_type==VOLUME_TYPE_FIXED)
          lotsize=orderstop.Volume();
       else if(m_volume_type==VOLUME_TYPE_PERCENT_REMAINING)
@@ -710,7 +710,7 @@ double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
          lotsize=orderstop.Volume()*order.VolumeInitial();
       else if(m_volume_type==VOLUME_TYPE_REMAINING)
          lotsize=order.Volume();
-   }
+     }
    double maxvol=m_symbol.LotsMax();
    double minvol=m_symbol.LotsMin();
    if(lotsize<minvol)
@@ -729,7 +729,7 @@ double CStopBase::StopLossCalculate(const string symbol,const ENUM_ORDER_TYPE ty
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
       return price-m_stoploss*m_symbol.Point();
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
-      return price+m_stoploss*m_symbol.Point();   
+      return price+m_stoploss*m_symbol.Point();
    return 0;
   }
 //+------------------------------------------------------------------+
@@ -742,7 +742,7 @@ double CStopBase::TakeProfitCalculate(const string symbol,const ENUM_ORDER_TYPE 
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)
       return price+m_takeprofit*m_symbol.Point();
    else if(type==ORDER_TYPE_SELL || type==ORDER_TYPE_SELL_STOP || type==ORDER_TYPE_SELL_LIMIT)
-      return price-m_takeprofit*m_symbol.Point();   
+      return price-m_takeprofit*m_symbol.Point();
    return 0;
   }
 //+------------------------------------------------------------------+
