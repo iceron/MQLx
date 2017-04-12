@@ -163,12 +163,25 @@ void CSignalBase::Check(void)
    int res=CMD_NEUTRAL;
    if(LongCondition())
      {
-      m_signal_open=CMD_LONG;
+      if (Entry())
+         m_signal_open=CMD_LONG;
+      if (Exit())
+         m_signal_close=CMD_LONG;
      }
    else if(ShortCondition())
      {
-      m_signal_open=CMD_SHORT;
+      if (Entry())
+         m_signal_open=CMD_SHORT;
+      if (Exit())
+         m_signal_close=CMD_SHORT;
      }
+   else
+   {
+      if (Entry())
+         m_signal_open=CMD_NEUTRAL;
+      if (Exit())
+         m_signal_close=CMD_NEUTRAL;
+   }
    if(m_invert)
      {
       SignalInvert(m_signal_open);

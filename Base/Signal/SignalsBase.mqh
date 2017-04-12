@@ -122,7 +122,7 @@ CSignalsBase::Check(void)
    m_signal_close=CMD_NEUTRAL;
    for(int i=0;i<Total();i++)
      {
-      CSignal *signal=At(i);
+      CSignal *signal=At(i);      
       signal.Check();
       if(signal.Entry())
         {
@@ -130,11 +130,13 @@ CSignalsBase::Check(void)
            {
             ENUM_CMD signal_open=signal.SignalOpen();
             if(m_signal_open==CMD_NEUTRAL)
-              {
-               m_signal_open=signal_open;
+              {    
+               if (signal_open==CMD_NEUTRAL)     
+                  m_signal_open=CMD_VOID;
+               else m_signal_open=signal_open;
               }
             else if(m_signal_open!=signal_open)
-              {
+              {               
                m_signal_open=CMD_VOID;
               }
            }
