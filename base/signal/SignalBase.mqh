@@ -78,7 +78,7 @@ public:
 //+------------------------------------------------------------------+
 CSignalBase::CSignalBase(void) : m_active(true),
                                  m_use_open(true),
-                                 m_use_close(true),
+                                 m_use_close(false),
                                  m_signal_open(CMD_NEUTRAL),
                                  m_signal_close(CMD_NEUTRAL),
                                  m_invert(false)
