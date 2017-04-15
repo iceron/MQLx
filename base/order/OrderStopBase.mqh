@@ -444,8 +444,8 @@ void COrderStopBase::Recreate(void)
 //+------------------------------------------------------------------+
 bool COrderStopBase::IsStopLossValid(const double stoploss) const
   {
-   return (stoploss>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && stoploss>StopLoss()) ||
-           (m_order.OrderType()==ORDER_TYPE_SELL && stoploss<StopLoss())));
+   return (stoploss>0 && ((m_order.OrderType()==ORDER_TYPE_BUY && (stoploss>StopLoss() || StopLoss()==0)) ||
+           (m_order.OrderType()==ORDER_TYPE_SELL && (stoploss<StopLoss() || StopLoss()==0))));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

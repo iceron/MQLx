@@ -116,7 +116,7 @@ bool CTrailsBase::Validate(void) const
 double CTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const double entry_price,const double price,const ENUM_TRAIL_TARGET mode)
   {
    if(!Active())
-      return 0;
+      return 0;   
    double val=0.0,ret=0.0;
    for(int i=0;i<Total();i++)
      {
@@ -130,12 +130,18 @@ double CTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const d
          continue;
       val=trail.Check(symbol,type,entry_price,price,mode);
       if((type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_TAKEPROFIT))
+      {
          if(val>ret || ret==0.0)
             ret=val;
+      }      
       else if((type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_TAKEPROFIT))
-      if(val<ret || ret==0.0)
-         ret=val;
+      {
+         //Print("val: "+val+" ret: "+ret);
+         if(val<ret || ret==0.0)
+            ret=val;
+      }      
      }
+   //Print("final value: "+ret);
    return ret;
   }
 //+------------------------------------------------------------------+
