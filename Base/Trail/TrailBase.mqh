@@ -245,8 +245,7 @@ double CTrailBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const do
      {
       if(m_step>0 && (price>=activation-m_trail*point || activation==0.0) && (new_price>price+m_step*point))
          next_stop=new_price;
-      else next_stop=activation-m_trail*point;
-      //Print("next stop: "+next_stop+" entry_price: "+entry_price+" activation price: "+activation+" price: "+price+" newprice: "+new_price);
+      else next_stop=activation-m_trail*point;      
       if((deactivation>0 && next_stop>=deactivation && next_stop>0.0) || (deactivation==0))
          if(next_stop<=new_price)
             return next_stop;
@@ -255,15 +254,10 @@ double CTrailBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const do
      {
       if(m_step>0 && (price<=activation+m_trail*point || activation==0.0) && (new_price<price-m_step*point))
          next_stop=new_price;
-      else next_stop=activation+m_trail*point;
-      //Print("next stop: "+next_stop+" entry_price: "+entry_price+" activation price: "+activation+" price: "+price+" newprice: "+new_price+" res: "+(next_stop>=new_price));
+      else next_stop=activation+m_trail*point;      
       if((deactivation>0 && next_stop<=deactivation && next_stop>0.0) || (deactivation==0))
-      {
          if(next_stop>=new_price)
             return next_stop;
-         //Print("next stop greater than new price");
-      }
-      //else Print("not satisfied deactivation");      
      }
    return 0;
   }

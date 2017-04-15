@@ -136,12 +136,10 @@ double CTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const d
       }      
       else if((type==ORDER_TYPE_SELL && trail_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && trail_target==TRAIL_TARGET_TAKEPROFIT))
       {
-         //Print("val: "+val+" ret: "+ret);
          if(val<ret || ret==0.0)
             ret=val;
       }      
      }
-   //Print("final value: "+ret);
    return ret;
   }
 //+------------------------------------------------------------------+
