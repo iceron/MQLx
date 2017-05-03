@@ -63,6 +63,12 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double pr
          tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(symbol,type,price):m_main_stop.TakeProfitCalculate(symbol,type,price);
         }
       double lotsize=LotSizeCalculate(price,type,sl);
+      if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
+      {
+         if (!m_main_stop.Broker())
+         sl = 0;
+         tp = 0;
+      }
       int ticket=(int)SendOrder(type,lotsize,price,sl,tp);
       if(ticket>0)
         {

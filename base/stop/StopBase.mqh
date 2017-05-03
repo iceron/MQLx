@@ -723,7 +723,7 @@ double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
 //|                                                                  |
 //+------------------------------------------------------------------+
 double CStopBase::StopLossCalculate(const string symbol,const ENUM_ORDER_TYPE type,const double price)
-  {
+  {   
    if(!Refresh(symbol))
       return 0;
    if(type==ORDER_TYPE_BUY || type==ORDER_TYPE_BUY_STOP || type==ORDER_TYPE_BUY_LIMIT)

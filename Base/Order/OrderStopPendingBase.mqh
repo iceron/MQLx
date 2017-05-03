@@ -100,11 +100,16 @@ COrderStopPendingBase::Check(double &volume)
       if(m_takeprofit_closed)
          DeleteTakeProfit();
      }
+   
    if((m_stoploss_closed && m_takeprofit_closed) || volume<=0)
      {
       DeleteStopLines();
-      m_order.IsSuspended(true);
+      if (m_stop.Main())
+      {
+         m_order.IsSuspended(true);
+      }   
      }
+     
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
