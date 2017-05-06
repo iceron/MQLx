@@ -817,9 +817,13 @@ bool CExpertAdvisorBase::OnTick(void)
       (!CheckPointer(m_times) || m_times.Evaluate()))
      {
       if(checkopenlong)
+      {
          result = TradeOpen(m_symbol_name,ORDER_TYPE_BUY,m_distance*m_distance_factor_long);
+      }   
       if(checkopenshort)
+      {
          result = TradeOpen(m_symbol_name,ORDER_TYPE_SELL,m_distance*m_distance_factor_short);
+      }   
      }
    m_on_tick_process=false;
    return false;

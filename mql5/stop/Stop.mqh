@@ -23,6 +23,7 @@ public:
    virtual ulong     Sell(const double,const double);
    virtual bool      CheckStopOrder(double&,const ulong) const;
    virtual bool      DeleteStopOrder(const ulong);
+   virtual bool      DeleteMarketStop(const ulong);
    virtual bool      Move(const ulong,const double,const double);
    virtual bool      MoveStopLoss(const ulong,const double);
    virtual bool      MoveTakeProfit(const ulong,const double);
@@ -141,9 +142,9 @@ bool CStop::DeleteStopOrder(const ulong ticket)
    else
      {
       ResetLastError();
-      if(IsHedging())
+      CPositionInfo pos;
+      if(!IsHedging())
         {
-         CPositionInfo pos;
          if(pos.SelectByTicket(ticket))
            {
             m_symbol=m_symbol_man.Get(pos.Symbol());
@@ -161,8 +162,49 @@ bool CStop::DeleteStopOrder(const ulong ticket)
            }
         }
       else
-         result=true;
+        {
+         result = true;        
+        }
      }
+   return result;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStop::DeleteMarketStop(const ulong ticket)
+  {
+   if(ticket<=0)
+      return true;
+   if (!IsHedging())
+      return true;
+   bool result=false;
+   CPositionInfo pos;
+   if(pos.SelectByTicket(ticket))
+     {
+      double vol;
+      pos.InfoDouble(POSITION_VOLUME,vol);     
+      if(pos.Volume()>0)
+        {
+         if(!CheckPointer(m_symbol))
+            return false;
+         m_trade=m_trade_man.Get(m_symbol.Name());
+         if(!CheckPointer(m_trade))
+            return false;
+         if(m_trade.PositionClose(ticket))
+           {
+            uint res=m_trade.ResultRetcode();
+            if(res==TRADE_RETCODE_DONE || res==TRADE_RETCODE_PLACED)
+               result=true;
+           }
+        }
+       else result = true;
+       
+     }
+   else 
+   {
+      ResetLastError();
+      result=true;
+   }   
    return result;
   }
 //+------------------------------------------------------------------+

@@ -16,6 +16,7 @@ public:
                     ~COrderStopPendingBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_ORDERSTOP_PENDING;}
    virtual void      Check(double&);
+   virtual bool      Close(void);
 protected:
    virtual bool      ModifyStopLoss(const double);
    virtual bool      ModifyTakeProfit(const double);
@@ -66,7 +67,6 @@ COrderStopPendingBase::Check(double &volume)
          StopLossClosed(true);
          if(CheckPointer(m_order_stops))
             m_order_stops.UpdateVolume(Volume());
-
         }
      }
    if(!m_takeprofit_closed)
@@ -76,7 +76,6 @@ COrderStopPendingBase::Check(double &volume)
          TakeProfitClosed(true);
          if(CheckPointer(m_order_stops))
             m_order_stops.UpdateVolume(Volume());
-
         }
      }
    if(m_stoploss_closed || m_takeprofit_closed)
@@ -148,6 +147,35 @@ bool COrderStopPendingBase::UpdateOrderStop(const double stoploss,const double t
          TakeProfit(takeprofit);
      }
    return modify_sl && modify_tp;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStopPendingBase::Close(void)
+  {
+   if (COrderStopBase::Close())
+   {
+      if (m_order.IsSuspended())
+      {
+         bool stoploss_closed=false,takeprofit_closed=false;
+         if (m_stoploss_closed)
+         {
+            if (m_stoploss_ticket>0)
+               stoploss_closed = m_stop.DeleteMarketStop(m_stoploss_ticket);
+            else stoploss_closed = true;
+         }
+         if (m_takeprofit_closed)
+         {
+            if (m_takeprofit_ticket>0)
+               takeprofit_closed = m_stop.DeleteMarketStop(m_takeprofit_ticket);
+            else takeprofit_closed = true;
+         }
+         if (stoploss_closed && takeprofit_closed)
+            return true;
+      }
+      else return true;
+   }
+   return false;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

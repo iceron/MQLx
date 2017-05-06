@@ -337,10 +337,9 @@ void COrderBase::CheckStops(void)
 //+------------------------------------------------------------------+
 bool COrderBase::Close(void)
   {
+   IsSuspended(true);
    if(CloseStops())
       IsClosed(true);
-   else
-      IsSuspended(true);
    return IsClosed();
   }
 //+------------------------------------------------------------------+

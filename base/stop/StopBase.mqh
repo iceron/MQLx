@@ -124,6 +124,7 @@ public:
    virtual bool      CheckTakeProfit(COrder*,COrderStop*);
    virtual bool      CheckStopOrder(double&,const ulong);
    virtual bool      DeleteStopOrder(const ulong)=0;
+   virtual bool      DeleteMarketStop(const ulong)=0;
    virtual bool      OrderModify(const ulong,const double);
    //--- stop order object creation
    virtual CStopLine *CreateEntryObject(const long,const string,const int,const double);
@@ -135,7 +136,7 @@ public:
    virtual double    StopLossCustom(const string,const ENUM_ORDER_TYPE,const double);
    virtual double    StopLossPrice(COrder*,COrderStop*);
    virtual double    StopLossTicks(const ENUM_ORDER_TYPE,const double);
-   virtual double    TakeProfitCalculate(const string,const ENUM_ORDER_TYPE,const double price);
+   virtual double    TakeProfitCalculate(const string,const ENUM_ORDER_TYPE,const double);
    virtual double    TakeProfitCustom(const string,const ENUM_ORDER_TYPE,const double);
    virtual double    TakeProfitPrice(COrder*,COrderStop*);
    virtual double    TakeProfitTicks(const ENUM_ORDER_TYPE,const double);
