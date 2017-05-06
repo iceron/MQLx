@@ -16,6 +16,7 @@ public:
                     ~CStop(void);
    virtual bool      CheckStopOrder(double &,const ulong) const;
    virtual bool      DeleteStopOrder(const ulong);
+   virtual bool      DeleteMarketStop(const ulong);
    virtual bool      Move(const ulong,const double,const double);
    virtual bool      MoveStopLoss(const ulong,const double);
    virtual bool      MoveTakeProfit(const ulong,const double);
@@ -240,5 +241,31 @@ bool CStop::MoveTakeProfit(const ulong ticket,const double takeprofit)
       return m_trade.OrderModify(OrderTicket(),OrderOpenPrice(),OrderStopLoss(),takeprofit,0,OrderExpiration());
      }
    return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CStop::DeleteMarketStop(const ulong ticket)
+  {
+   if(ticket<=0)
+      return true;
+   bool result=false;
+   if(OrderSelect((int)ticket,SELECT_BY_TICKET))
+     {
+      if (OrderCloseTime()>0)
+         return true;      
+      if(!CheckPointer(m_symbol))
+         return false;
+      m_trade=m_trade_man.Get(m_symbol.Name());
+      if(!CheckPointer(m_trade))
+         return false;
+      result = m_trade.OrderClose(ticket);      
+     }
+   else 
+   {
+      ResetLastError();
+      result=true;
+   }   
+   return result;
   }
 //+------------------------------------------------------------------+
