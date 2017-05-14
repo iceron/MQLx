@@ -55,7 +55,8 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double pr
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       ENUM_ORDER_TYPE ordertype=type;
-      price=PriceCalculate(ordertype,price);
+      if(in_points)
+         price=PriceCalculate(type);
       double sl=0,tp=0;
       if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
         {
@@ -66,15 +67,23 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double pr
       if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
       {
          if (!m_main_stop.Broker())
-         sl = 0;
-         tp = 0;
+         {
+            sl = 0;
+            tp = 0;
+         }
       }
       int ticket=(int)SendOrder(type,lotsize,price,sl,tp);
       if(ticket>0)
         {
          if(OrderSelect(ticket,SELECT_BY_TICKET))
-            m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());
-         return true;
+         {
+            COrder *order = m_orders.NewOrder(OrderTicket(),OrderSymbol(),OrderMagicNumber(),(ENUM_ORDER_TYPE)::OrderType(),::OrderLots(),::OrderOpenPrice());            
+            if (CheckPointer(order))
+            {
+               LatestOrder(GetPointer(order));
+               return true;
+            }   
+         }         
         }
      }
    return false;
@@ -82,7 +91,7 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double pr
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManager::CloseOrder(COrder *order,const int index)
+bool COrderManager::CloseOrder(COrder *order,const int index=-1)
   {
    bool closed=true;
    if(CheckPointer(order)==POINTER_DYNAMIC)
@@ -100,7 +109,8 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
         }
       if(closed)
         {
-         if(ArchiveOrder(m_orders.Detach(index)))
+         int idx = index>=0?index:FindOrderIndex(GetPointer(order));
+         if(ArchiveOrder(m_orders.Detach(idx)))
            {
             order.Close();
             order.Volume(0);

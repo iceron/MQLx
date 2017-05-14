@@ -124,18 +124,25 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double pr
    if(m_max_orders>orders_total && (m_max_trades>trades_total || m_max_trades<=0))
      {
       if(in_points)
-         price=PriceCalculate(type,price);
+         price=PriceCalculate(type);
       lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
       ret=SendOrder(type,lotsize,price,0,0);
       if(ret)
-         m_orders.NewOrder((int)m_trade.ResultOrder(),m_trade.RequestSymbol(),(int)m_trade.RequestMagic(),m_trade.RequestType(),m_trade.ResultVolume(),m_trade.ResultPrice());
+      {
+         COrder *order = m_orders.NewOrder((int)m_trade.ResultOrder(),m_trade.RequestSymbol(),(int)m_trade.RequestMagic(),m_trade.RequestType(),m_trade.ResultVolume(),m_trade.ResultPrice());
+         if (CheckPointer(order))
+         {
+            LatestOrder(GetPointer(order));
+            return true;
+         }
+      }         
      }
    return ret;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderManager::CloseOrder(COrder *order,const int index)
+bool COrderManager::CloseOrder(COrder *order,const int index=-1)
   {
    bool closed=true;
    COrderInfo ord;
@@ -179,7 +186,8 @@ bool COrderManager::CloseOrder(COrder *order,const int index)
      }
    if(closed)
      {
-      if(ArchiveOrder(m_orders.Detach(index)))
+      int idx = index>=0?index:FindOrderIndex(GetPointer(order));
+      if(ArchiveOrder(m_orders.Detach(idx)))
         {
          order.Close();
          order.Volume(0);

@@ -30,6 +30,7 @@ protected:
    bool              m_short_allowed;
    int               m_max_orders;
    int               m_max_trades;
+   COrder           *m_latest_order;
    COrders           m_orders;
    COrders           m_orders_history;
    CAccountInfo     *m_account;
@@ -87,6 +88,8 @@ public:
    //--- object pointers
    CStop            *MainStop(void) const;
    CMoneys          *Moneys(void) const;
+   COrder           *LatestOrder(void);
+   void              LatestOrder(COrder*);
    COrders          *Orders(void);
    COrders          *OrdersHistory(void);
    CStops           *Stops(void) const;
@@ -116,6 +119,7 @@ public:
    virtual bool      Load(const int);
 protected:
    //--- trade manager
+   int               FindOrderIndex(COrder*,const int);
    virtual double    PriceCalculate(ENUM_ORDER_TYPE&,double);
    virtual double    PriceCalculateCustom(ENUM_ORDER_TYPE&,double);
    virtual double    StopLossCalculate(const ENUM_ORDER_TYPE,const double);
@@ -348,6 +352,20 @@ COrders *COrderManagerBase::Orders(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+COrder *COrderManagerBase::LatestOrder(void)
+  {
+   return GetPointer(m_latest_order);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::LatestOrder(COrder *latest)
+  {
+   m_latest_order=latest;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 COrders *COrderManagerBase::OrdersHistory()
   {
    return GetPointer(m_orders_history);
@@ -392,6 +410,29 @@ bool COrderManagerBase::TradeOpen(const string,ENUM_ORDER_TYPE,double,bool)
 //+------------------------------------------------------------------+
 void COrderManagerBase::OnTradeTransaction(COrder*)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int COrderManagerBase::FindOrderIndex(COrder *order,const int mode=MODE_TRADES)
+  {
+   if (CheckPointer(order))
+   {      
+      COrders *orders;
+      if (mode==MODE_TRADES)
+         orders = GetPointer(m_orders);
+      else if (mode==MODE_HISTORY)
+         orders = GetPointer(m_orders_history);
+      for (int i=0;i<orders.Total();i++)
+      {
+         COrder *ord = orders.At(i);
+         if (!CheckPointer(ord))
+            continue;
+         if (order.Compare(GetPointer(ord)))
+            return i;
+      }
+   }   
+   return 0;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -586,55 +627,51 @@ double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE &type,double points=0)
   {
    double price=0;
    double point=m_symbol.Point();
+   double ask=m_symbol.Ask();  
+   double bid=m_symbol.Bid();
    switch(type)
      {
       case ORDER_TYPE_BUY:
-        {
-         double ask=m_symbol.Ask();
+        {                
          if(points>0)
             type=ORDER_TYPE_BUY_STOP;
          else if(points<0)
             type=ORDER_TYPE_BUY_LIMIT;
-         price=ask+points*point;
+         else price = 0;
          break;
         }
       case ORDER_TYPE_SELL:
-        {
-         double bid=m_symbol.Bid();
+        {         
          if(points>0)
             type=ORDER_TYPE_SELL_LIMIT;
          else if(points<0)
             type=ORDER_TYPE_SELL_STOP;
-         price=bid+points*point;
+         else price = 0;
          break;
         }
       case ORDER_TYPE_BUY_LIMIT:
         {
-         double ask=m_symbol.Ask();
          price=ask-points*point;
          break;
         }
       case ORDER_TYPE_BUY_STOP:
         {
-         double ask=m_symbol.Ask();
          price=ask+points*point;
          break;
         }
       case ORDER_TYPE_SELL_LIMIT:
         {
-         double bid=m_symbol.Bid();
          price=bid+points*point;
          break;
         }
       case ORDER_TYPE_SELL_STOP:
         {
-         double bid=m_symbol.Bid();
          price=bid-points*point;
          break;
         }
       default: price=PriceCalculateCustom(type,points);
      }
-   return price;
+   return NormalizeDouble(price,m_symbol.Digits());
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
