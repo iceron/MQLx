@@ -131,9 +131,7 @@ CSignalsBase::Check(void)
             ENUM_CMD signal_open=signal.SignalOpen();
             if(m_signal_open==CMD_NEUTRAL)
               {    
-               if (signal_open==CMD_NEUTRAL)     
-                  m_signal_open=CMD_VOID;
-               else m_signal_open=signal_open;
+               m_signal_open=signal_open;
               }
             else if(m_signal_open!=signal_open)
               {               

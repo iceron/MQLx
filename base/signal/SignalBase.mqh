@@ -43,13 +43,13 @@ public:
    virtual CObject *GetContainer(void);
    virtual void      SetContainer(CObject*);
    virtual bool      Validate(void);
-   virtual bool      Calculate(void);
+   virtual bool      Calculate(void)=0;
    virtual void      Check(void);
    virtual bool      CheckFilters(void);
    virtual double    GetDirection(void);
-   virtual bool      LongCondition(void);
-   virtual bool      ShortCondition(void);
-   virtual void      Update(void);
+   virtual bool      LongCondition(void)=0;
+   virtual bool      ShortCondition(void)=0;
+   virtual void      Update(void)=0;
    bool              Active(void);
    void              Active(const bool);
    bool              Entry(void);
@@ -126,19 +126,6 @@ bool CSignalBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CSignalBase::Calculate(void)
-  {
-   return true;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void CSignalBase::Update(void)
-  {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 bool CSignalBase::Refresh(void)
   {
    for(int i=0;i<m_indicators.Total();i++)
@@ -188,20 +175,6 @@ void CSignalBase::Check(void)
       SignalInvert(m_signal_close);
      }
    Update();
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CSignalBase::LongCondition(void)
-  {
-   return true;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CSignalBase::ShortCondition(void)
-  {
-   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
