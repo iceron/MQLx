@@ -119,7 +119,7 @@ public:
    virtual bool      Load(const int);
 protected:
    //--- trade manager
-   int               FindOrderIndex(COrder*,const int);
+   int               FindOrderIndex(COrder*,const bool);
    virtual double    PriceCalculate(ENUM_ORDER_TYPE&,double);
    virtual double    PriceCalculateCustom(ENUM_ORDER_TYPE&,double);
    virtual double    StopLossCalculate(const ENUM_ORDER_TYPE,const double);
@@ -414,15 +414,14 @@ void COrderManagerBase::OnTradeTransaction(COrder*)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int COrderManagerBase::FindOrderIndex(COrder *order,const int mode=MODE_TRADES)
+int COrderManagerBase::FindOrderIndex(COrder *order,const bool history=false)
   {
    if (CheckPointer(order))
    {      
       COrders *orders;
-      if (mode==MODE_TRADES)
+      if (!history)
          orders = GetPointer(m_orders);
-      else if (mode==MODE_HISTORY)
-         orders = GetPointer(m_orders_history);
+      else orders = GetPointer(m_orders_history);
       for (int i=0;i<orders.Total();i++)
       {
          COrder *ord = orders.At(i);
@@ -632,12 +631,12 @@ double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE &type,double points=0)
    switch(type)
      {
       case ORDER_TYPE_BUY:
-        {                
+        {              
          if(points>0)
             type=ORDER_TYPE_BUY_STOP;
          else if(points<0)
             type=ORDER_TYPE_BUY_LIMIT;
-         else price = 0;
+         else price = ask;
          break;
         }
       case ORDER_TYPE_SELL:
@@ -646,7 +645,7 @@ double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE &type,double points=0)
             type=ORDER_TYPE_SELL_LIMIT;
          else if(points<0)
             type=ORDER_TYPE_SELL_STOP;
-         else price = 0;
+         else price = bid;
          break;
         }
       case ORDER_TYPE_BUY_LIMIT:
