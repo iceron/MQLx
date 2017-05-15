@@ -29,6 +29,7 @@ protected:
    //--- signal parameters
    bool              m_every_tick;
    bool              m_one_trade_per_candle;
+   datetime          m_last_trade_time;
    string            m_symbol_name;
    int               m_period;
    bool              m_position_reverse;
@@ -146,6 +147,7 @@ protected:
    virtual void      ManageOrders(void);
    virtual void      ManageOrdersHistory(void);
    virtual void      OnTradeTransaction(COrder*) {}
+   virtual datetime  Time(const int);
    virtual bool      TradeOpen(const string,const ENUM_ORDER_TYPE,double,bool);
    //--- symbol manager
    virtual bool      RefreshRates(void);
@@ -168,6 +170,7 @@ CExpertAdvisorBase::CExpertAdvisorBase(void) : m_active(true),
                                                m_every_tick(true),
                                                m_symbol_name(NULL),
                                                m_one_trade_per_candle(true),
+                                               m_last_trade_time(0),
                                                m_period(PERIOD_CURRENT),
                                                m_position_reverse(true)
   {
@@ -751,6 +754,19 @@ bool CExpertAdvisorBase::TradeOpen(const string symbol,const ENUM_ORDER_TYPE typ
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+datetime CExpertAdvisorBase::Time(const int index=0)
+  {
+   if (index>=0)
+   {
+      double time[];
+      if(CopyTime(m_symbol_name,m_period,index,1,time)>0) 
+           return(time[0]);
+   }     
+   return(-1);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 void CExpertAdvisorBase::ManageOrders(void)
   {
    m_order_man.ManageOrders();
@@ -814,7 +830,8 @@ bool CExpertAdvisorBase::OnTick(void)
    bool result = false;
    if((checkopenlong || checkopenshort) && 
       (m_every_tick || IsNewBar(m_symbol_name,m_period)) && 
-      (!CheckPointer(m_times) || m_times.Evaluate()))
+      (!CheckPointer(m_times) || m_times.Evaluate()) &&
+      (!m_one_trade_per_candle || m_last_trade_time<Time(0)))
      {
       if(checkopenlong)
       {
@@ -824,6 +841,8 @@ bool CExpertAdvisorBase::OnTick(void)
       {
          result = TradeOpen(m_symbol_name,ORDER_TYPE_SELL,m_distance*m_distance_factor_short);
       }   
+      if (result)
+         m_last_trade_time = TimeCurrent();
      }
    m_on_tick_process=false;
    return false;
