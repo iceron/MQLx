@@ -15,7 +15,7 @@ public:
                      CMoneyFixedRiskBase(double);
                     ~CMoneyFixedRiskBase(void);
    virtual bool      Validate(void);
-   virtual void      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
+   virtual bool      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
