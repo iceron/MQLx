@@ -17,9 +17,8 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRisk::CMoneyFixedRisk(double risk)
+CMoneyFixedRisk::CMoneyFixedRisk(double risk) : CMoneyFixedRiskBase(risk)
   {
-   Risk(risk);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
