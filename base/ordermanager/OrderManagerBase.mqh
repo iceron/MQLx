@@ -127,6 +127,8 @@ protected:
    ulong             SendOrder(const ENUM_ORDER_TYPE,const double,const double,const double,const double);
    //--- deinitialization  
    virtual void      Deinit(const int);
+   virtual void      DeinitAccount(void);
+   virtual void      DeinitMoneys(void);
    virtual void      DeinitStops(void);
    virtual void      DeinitTrade(void);
   };
@@ -720,10 +722,28 @@ bool COrderManagerBase::AddStops(CStops *stops)
 //+------------------------------------------------------------------+
 void COrderManagerBase::Deinit(const int reason=0)
   {
+   DeinitAccount();
    DeinitStops();
    DeinitTrade();
+   DeinitMoneys();
    m_orders.Shutdown();
    m_orders_history.Shutdown();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::DeinitAccount()
+  {
+   if(CheckPointer(m_account))
+      delete m_account;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void COrderManagerBase::DeinitMoneys()
+  {
+   if(CheckPointer(m_moneys))
+      delete m_moneys;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -755,7 +775,11 @@ bool COrderManagerBase::AddMoneys(CMoneys *moneys)
 double COrderManagerBase::LotSizeCalculate(const double price,const ENUM_ORDER_TYPE type,const double stoploss)
   {
    if(CheckPointer(m_moneys))
-      return m_moneys.Volume(m_symbol.Name(),0,type,stoploss);
+   {
+      double volume = m_moneys.Volume(m_symbol.Name(),0,type,stoploss);
+      if (volume>0)
+         return volume;
+   }
    return m_lotsize;
   }
 //+------------------------------------------------------------------+

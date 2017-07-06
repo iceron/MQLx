@@ -159,7 +159,7 @@ bool CMoneyBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CE
 //+------------------------------------------------------------------+
 bool CMoneyBase::InitSymbol(CSymbolManager *symbolmanager)
   {
-   m_symbol_man=symbolmanager;
+   m_symbol_man=symbolmanager;   
    return CheckPointer(m_symbol_man);
   }
 //+------------------------------------------------------------------+
@@ -193,6 +193,7 @@ bool CMoneyBase::UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,c
 //+------------------------------------------------------------------+
 void CMoneyBase::OnLotSizeUpdated(void)
   {
+   m_symbol = m_symbol_man.Get();
    double maxvol=m_symbol.LotsMax();
    double minvol=m_symbol.LotsMin();
    if(m_volume<minvol)

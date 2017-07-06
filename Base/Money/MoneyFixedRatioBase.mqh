@@ -15,7 +15,7 @@ protected:
    double            m_volume_base;
    double            m_volume_inc;
 public:
-                     CMoneyFixedRatioBase(double,double);
+                     CMoneyFixedRatioBase(double,double,double);
                     ~CMoneyFixedRatioBase(void);
    virtual bool      Validate(void);
    virtual bool      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
@@ -27,10 +27,11 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRatioBase::CMoneyFixedRatioBase(double volume_base,double volume_inc) : m_volume_base(volume_base),
-                                                                                   m_volume_inc(volume_inc)
+CMoneyFixedRatioBase::CMoneyFixedRatioBase(double volume_base,double volume_inc,double balance_inc) : m_volume_base(volume_base),
+                                                                                                      m_volume_inc(volume_inc)
 
   {
+   m_balance_inc = balance_inc;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -87,7 +88,7 @@ bool CMoneyFixedRatioBase::UpdateLotSize(const string symbol,const double price,
    double last_volume=m_volume;
    if(CheckPointer(m_symbol))
      {
-      double balance=m_equity==false?m_account.Balance():m_account.Equity();
+      double balance=m_equity==false?m_account.Balance():m_account.Equity();      
       m_volume=m_volume_base+((int)(balance/m_balance_inc))*m_volume_inc;
       m_balance=balance;
      }
