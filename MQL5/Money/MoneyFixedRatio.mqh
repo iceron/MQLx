@@ -11,13 +11,13 @@
 class CMoneyFixedRatio : public CMoneyFixedRatioBase
   {
 public:
-                     CMoneyFixedRatio(void);
+                     CMoneyFixedRatio(double,double);
                     ~CMoneyFixedRatio(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRatio::CMoneyFixedRatio(void)
+CMoneyFixedRatio::CMoneyFixedRatio(double volume_base,double volume_inc) : CMoneyFixedRatioBase(volume_base,volume_inc)
   {
   }
 //+------------------------------------------------------------------+

@@ -11,14 +11,15 @@
 class CMoneyFixedRisk : public CMoneyFixedRiskBase
   {
 public:
-                     CMoneyFixedRisk(void);
+                     CMoneyFixedRisk(double);
                     ~CMoneyFixedRisk(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRisk::CMoneyFixedRisk(void)
+CMoneyFixedRisk::CMoneyFixedRisk(double risk)
   {
+   Risk(risk);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

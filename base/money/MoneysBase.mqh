@@ -6,6 +6,7 @@
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
 #include <Arrays\ArrayObj.mqh>
+#include "MoneyFixedLotBase.mqh"
 #include "MoneyFixedFractionalBase.mqh"
 #include "MoneyFixedRatioBase.mqh"
 #include "MoneyFixedRiskPerPointBase.mqh"

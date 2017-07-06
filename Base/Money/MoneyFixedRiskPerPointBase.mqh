@@ -14,7 +14,7 @@ class CMoneyFixedRiskPerPointBase : public CMoney
 protected:
    double            m_risk;
 public:
-                     CMoneyFixedRiskPerPointBase(void);
+                     CMoneyFixedRiskPerPointBase(double);
                     ~CMoneyFixedRiskPerPointBase(void);
    virtual bool      Validate(void);
    virtual bool      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
@@ -24,7 +24,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPointBase::CMoneyFixedRiskPerPointBase(void) : m_risk(0)
+CMoneyFixedRiskPerPointBase::CMoneyFixedRiskPerPointBase(double risk) : m_risk(risk)
   {
   }
 //+------------------------------------------------------------------+

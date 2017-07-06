@@ -11,13 +11,13 @@
 class CMoneyFixedRiskPerPoint : public CMoneyFixedRiskPerPointBase
   {
 public:
-                     CMoneyFixedRiskPerPoint(void);
+                     CMoneyFixedRiskPerPoint(double);
                     ~CMoneyFixedRiskPerPoint(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPoint::CMoneyFixedRiskPerPoint(void)
+CMoneyFixedRiskPerPoint::CMoneyFixedRiskPerPoint(double risk) : CMoneyFixedRiskPerPointBase(risk)
   {
   }
 //+------------------------------------------------------------------+

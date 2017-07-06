@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                       MoneyFixedRiskPerPoint.mqh |
+//|                                                MoneyFixedLot.mqh |
 //|                                                   Enrico Lambino |
 //|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
@@ -8,22 +8,23 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CMoneyFixedRiskPerPoint : public CMoneyFixedRiskPerPointBase
+class CMoneyFixedLot : public CMoneyFixedLotBase
   {
 public:
-                     CMoneyFixedRiskPerPoint(double);
-                    ~CMoneyFixedRiskPerPoint(void);
+                     CMoneyFixedLot(double);
+                    ~CMoneyFixedLot(void);
+   virtual bool      Validate(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPoint::CMoneyFixedRiskPerPoint(double risk) : CMoneyFixedRiskPerPointBase(risk)
+CMoneyFixedLot::CMoneyFixedLot(double volume) : CMoneyFixedLotBase(volume)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPoint::~CMoneyFixedRiskPerPoint(void)
+CMoneyFixedLot::~CMoneyFixedLot(void)
   {
   }
 //+------------------------------------------------------------------+

@@ -14,7 +14,7 @@ class CMoneyFixedFractionalBase : public CMoney
 protected:
    double            m_risk;
 public:
-                     CMoneyFixedFractionalBase(void);
+                     CMoneyFixedFractionalBase(double);
                     ~CMoneyFixedFractionalBase(void);
    virtual bool      Validate(void);
    virtual bool      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
@@ -24,7 +24,7 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedFractionalBase::CMoneyFixedFractionalBase(void)
+CMoneyFixedFractionalBase::CMoneyFixedFractionalBase(double risk_percent) : m_risk(risk_percent)
   {
   }
 //+------------------------------------------------------------------+

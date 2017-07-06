@@ -11,13 +11,13 @@
 class CMoneyFixedFractional : public CMoneyFixedFractionalBase
   {
 public:
-                     CMoneyFixedFractional(void);
+                     CMoneyFixedFractional(double);
                     ~CMoneyFixedFractional(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedFractional::CMoneyFixedFractional(void)
+CMoneyFixedFractional::CMoneyFixedFractional(double risk_percent) : CMoneyFixedFractionalBase(risk_percent)
   {
   }
 //+------------------------------------------------------------------+

@@ -15,7 +15,7 @@ protected:
    double            m_volume_base;
    double            m_volume_inc;
 public:
-                     CMoneyFixedRatioBase(void);
+                     CMoneyFixedRatioBase(double,double);
                     ~CMoneyFixedRatioBase(void);
    virtual bool      Validate(void);
    virtual bool      UpdateLotSize(const string,const double,const ENUM_ORDER_TYPE,const double);
@@ -27,8 +27,8 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRatioBase::CMoneyFixedRatioBase(void) : m_volume_base(0),
-                                                   m_volume_inc(0)
+CMoneyFixedRatioBase::CMoneyFixedRatioBase(double volume_base,double volume_inc) : m_volume_base(volume_base),
+                                                                                   m_volume_inc(volume_inc)
 
   {
   }

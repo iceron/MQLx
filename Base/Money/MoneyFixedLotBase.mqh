@@ -1,29 +1,50 @@
 //+------------------------------------------------------------------+
-//|                                       MoneyFixedRiskPerPoint.mqh |
+//|                                            MoneyFixedLotBase.mqh |
 //|                                                   Enrico Lambino |
 //|                             https://www.mql5.com/en/users/iceron |
 //+------------------------------------------------------------------+
 #property copyright "Enrico Lambino"
 #property link      "https://www.mql5.com/en/users/iceron"
+#include "MoneyBase.mqh"
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-class CMoneyFixedRiskPerPoint : public CMoneyFixedRiskPerPointBase
+class CMoneyFixedLotBase : public CMoney
   {
 public:
-                     CMoneyFixedRiskPerPoint(double);
-                    ~CMoneyFixedRiskPerPoint(void);
+                     CMoneyFixedLotBase(double);
+                    ~CMoneyFixedLotBase(void);
+   virtual bool      Validate(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPoint::CMoneyFixedRiskPerPoint(double risk) : CMoneyFixedRiskPerPointBase(risk)
+CMoneyFixedLotBase::CMoneyFixedLotBase(double volume)
+  {
+   Volume(volume);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CMoneyFixedLotBase::~CMoneyFixedLotBase(void)
   {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CMoneyFixedRiskPerPoint::~CMoneyFixedRiskPerPoint(void)
+bool CMoneyFixedLotBase::Validate(void)
   {
+   if(m_volume<0)
+     {
+      PrintFormat("invalid volume: "+(string)m_volume);
+      return false;
+     }
+   return true;
   }
+//+------------------------------------------------------------------+
+#ifdef __MQL5__
+#include "..\..\MQL5\Money\MoneyFixedLot.mqh"
+#else
+#include "..\..\MQL4\Money\MoneyFixedLot.mqh"
+#endif
 //+------------------------------------------------------------------+
