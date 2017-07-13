@@ -27,8 +27,8 @@ protected:
    int               m_elapsed;
    datetime          m_time_start;
 public:
-                     CTimerBase(const uint,const uint,const uint,const uint,const uint,const uint);
                      CTimerBase(const int);
+                     CTimerBase(const uint,const uint,const uint,const uint,const uint,const uint);                     
                     ~CTimerBase(void);
    //--- initialization
    virtual bool      Set(const uint,const uint,const uint,const uint,const uint,const uint);

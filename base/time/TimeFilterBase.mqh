@@ -16,6 +16,7 @@ protected:
    MqlDateTime       m_filter_end;
    CArrayObj         m_time_filters;
 public:
+                     CTimeFilterBase(void);
                      CTimeFilterBase(const int,const int,const int,const int,const int,const int,const int);
                     ~CTimeFilterBase(void);
    virtual bool      Init(CTimes*);
@@ -30,6 +31,12 @@ public:
 CTimeFilterBase::CTimeFilterBase(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0)
   {
    Set(gmt,starthour,endhour,startminute,endminute,startseconds,endseconds);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CTimeFilterBase::CTimeFilterBase(void)
+  {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

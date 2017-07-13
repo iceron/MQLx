@@ -27,6 +27,7 @@ class CTimeDaysBase : public CTime
 protected:
    long              m_day_flags;
 public:
+                     CTimeDaysBase(void);
                      CTimeDaysBase(const bool sun=false,const bool mon=true,const bool tue=true,const bool wed=true,const bool thu=true,const bool fri=true,const bool sat=false);
                     ~CTimeDaysBase(void);
    //--- initialization                    
@@ -56,6 +57,12 @@ CTimeDaysBase::CTimeDaysBase(const bool sun=false,const bool mon=true,const bool
                              const bool thu=true,const bool fri=true,const bool sat=false) : m_day_flags(0)
   {
    Set(sun,mon,tue,wed,thu,fri,sat);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CTimeDaysBase::CTimeDaysBase(void)
+  {
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
