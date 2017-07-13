@@ -250,7 +250,7 @@ bool CTimerBase::Evaluate(datetime current=0)
       current= TimeCurrent();
    m_elapsed=(int)(current-m_time_start);
    if(m_elapsed>=m_total) result=false;
-   return Reverse()?result:!result;
+   return Reverse()?!result:result;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

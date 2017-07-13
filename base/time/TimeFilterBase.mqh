@@ -19,7 +19,7 @@ public:
                      CTimeFilterBase(void);
                      CTimeFilterBase(const int,const int,const int,const int,const int,const int,const int);
                     ~CTimeFilterBase(void);
-   virtual bool      Init(CTimes*);
+   virtual bool      Init(CSymbolManager*,CEventAggregator*);
    virtual bool      Validate(void);
    virtual bool      Evaluate(datetime);
    virtual bool      Set(const int,const int,const int,const int,const int,const int,const int);
@@ -47,14 +47,13 @@ CTimeFilterBase::~CTimeFilterBase(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeFilterBase::Init(CTimes *times)
+bool CTimeFilterBase::Init(CSymbolManager *symbol_man,CEventAggregator *event_man=NULL)
   {
-   CTimeFilterBase::Init(times);
+   CTime::Init(symbol_man,event_man);
    for(int i=0;i<m_time_filters.Total();i++)
      {
       CTimeFilter *filter=m_time_filters.At(i);
-      filter.Reverse(!Reverse());
-      if(!filter.Init(times))
+      if(!filter.Init(symbol_man,event_man))
          return false;
      }
    return true;
@@ -68,7 +67,8 @@ bool CTimeFilterBase::Validate(void)
    datetime t_end=StructToTime(m_filter_end);
    if(m_filter_start.hour==m_filter_end.hour && m_filter_start.min==m_filter_end.min && m_filter_start.sec==m_filter_end.sec)
      {
-      Active(false);
+      //Active(false);
+      PrintFormat("Warning: time filter has default setting");
      }
    if(!CheckPointer(m_symbol_man))
      {
@@ -113,7 +113,6 @@ bool CTimeFilterBase::Evaluate(datetime current=0)
       return true;
    bool result=true;
    MqlDateTime time;
-   CSymbolInfo *symbol=m_symbol_man.GetPrimary();
    if(current==0)
       current=TimeCurrent();
    TimeToStruct(current,time);
@@ -143,17 +142,19 @@ bool CTimeFilterBase::Evaluate(datetime current=0)
         }
      }
    datetime f_start=StructToTime(m_filter_start);
-   datetime f_end=StructToTime(m_filter_end);
-   if(f_start<f_end && !(current>=f_start && current<f_end))
-      result=false;
-   result=Reverse()?result:!result;
+   datetime f_end=StructToTime(m_filter_end);      
+   result=current>=f_start && current<f_end;   
+   result=Reverse()?!result:result;
+   Print(f_start+" "+current+" "+f_end+" "+result+" "+Reverse());
    if(!result)
      {
       for(int i=0;i<m_time_filters.Total();i++)
         {
          CTimeFilter *filter=m_time_filters.At(i);
-         if(filter.Evaluate())
+         if(filter.Evaluate(current))
+         {
             return true;
+         }   
         }
      }
    return result;

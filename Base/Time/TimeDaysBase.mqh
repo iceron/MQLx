@@ -218,29 +218,13 @@ bool CTimeDaysBase::Evaluate(datetime current=0)
       case 5: result=Friday();      break;
       case 6: result=Saturday();    break;
      }
-   return Reverse()?result:!result;
+   return Reverse()?!result:result;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void CTimeDaysBase::Set(const bool sun=false,const bool mon=true,const bool tue=true,const bool wed=true,const bool thu=true,const bool fri=true,const bool sat=false)
   {
-/*
-   if(sun)
-      m_day_flags|=TIME_DAY_FLAG_SUN;
-   if(mon)
-      m_day_flags|=TIME_DAY_FLAG_MON;
-   if(tue)
-      m_day_flags|=TIME_DAY_FLAG_TUE;
-   if(wed)
-      m_day_flags|=TIME_DAY_FLAG_WED;
-   if(thu)
-      m_day_flags|=TIME_DAY_FLAG_THU;
-   if(fri)
-      m_day_flags|=TIME_DAY_FLAG_FRI;
-   if(sat)
-      m_day_flags|=TIME_DAY_FLAG_SAT;
-   */
    Sunday(sun);
    Monday(mon);
    Tuesday(tue);
