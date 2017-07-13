@@ -145,7 +145,6 @@ bool CTimeFilterBase::Evaluate(datetime current=0)
    datetime f_end=StructToTime(m_filter_end);      
    result=current>=f_start && current<f_end;   
    result=Reverse()?!result:result;
-   Print(f_start+" "+current+" "+f_end+" "+result+" "+Reverse());
    if(!result)
      {
       for(int i=0;i<m_time_filters.Total();i++)
