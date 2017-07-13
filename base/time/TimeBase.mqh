@@ -8,7 +8,6 @@
 #include "..\..\Common\Enum\ENUM_CLASS_TYPE.mqh"
 #include "..\Symbol\SymbolManagerBase.mqh"
 #include "..\Event\EventAggregatorBase.mqh"
-class CTimes;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
