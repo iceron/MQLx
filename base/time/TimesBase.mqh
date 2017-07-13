@@ -10,7 +10,6 @@
 #include "TimeFilterBase.mqh"
 #include "TimeRangeBase.mqh"
 #include "TimerBase.mqh"
-class CExpertAdvisor;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -35,7 +34,7 @@ public:
    void              Active(const bool);
    int               Selected(void);
    //--- checking
-   virtual bool      Evaluate(void) const;
+   virtual bool      Evaluate(datetime) const;
    //--- recovery
    virtual bool      CreateElement(const int);
   };
@@ -120,14 +119,14 @@ bool CTimesBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimesBase::Evaluate(void) const
+bool CTimesBase::Evaluate(datetime current) const
   {
    if(!Active()) return true;
    for(int i=0;i<Total();i++)
      {
       CTime *time=At(i);
       if(CheckPointer(time))
-         if(!time.Evaluate())
+         if(!time.Evaluate(current))
             return false;
      }
    return true;

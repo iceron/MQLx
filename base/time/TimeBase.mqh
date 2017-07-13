@@ -17,7 +17,6 @@ class CTimeBase : public CObject
 protected:
    bool              m_active;
    bool              m_reverse;
-   datetime          m_time_start;
    CSymbolManager   *m_symbol_man;
    CEventAggregator *m_event_man;
    CObject          *m_container;
@@ -35,17 +34,14 @@ public:
    void              Active(const bool);
    bool              Reverse(void);
    void              Reverse(const bool);
-   datetime          TimeStart(void) const;
-   void              TimeStart(const datetime);
    //--- checking
-   virtual bool      Evaluate(void)=0;
+   virtual bool      Evaluate(datetime)=0;
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 CTimeBase::CTimeBase(void) : m_active(true),
-                             m_reverse(false),
-                             m_time_start(TimeCurrent())
+                             m_reverse(false)                             
   {
   }
 //+------------------------------------------------------------------+
@@ -103,6 +99,7 @@ void CTimeBase::Reverse(const bool reverse)
   {
    m_reverse=reverse;
   }
+/*
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -117,6 +114,7 @@ void CTimeBase::TimeStart(const datetime st)
   {
    m_time_start=st;
   }
+*/
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

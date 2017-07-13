@@ -25,8 +25,10 @@ protected:
    uint              m_seconds;
    int               m_total;
    int               m_elapsed;
+   datetime          m_time_start;
 public:
-                     CTimerBase(void);
+                     CTimerBase(const uint,const uint,const uint,const uint,const uint,const uint);
+                     CTimerBase(const int);
                     ~CTimerBase(void);
    //--- initialization
    virtual bool      Set(const uint,const uint,const uint,const uint,const uint,const uint);
@@ -45,22 +47,40 @@ public:
    uint              Seconds(void) const;
    void              Seconds(const uint);
    bool              Total(void) const;
+   datetime          TimeStart(void) const;
+   void              TimeStart(const datetime);
    //--- processing   
    virtual bool      Elapsed(void) const;
-   virtual bool      Evaluate(void);
+   virtual bool      Evaluate(datetime);
    virtual void      RecalculateTotal(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CTimerBase::CTimerBase(void) : m_years(0),
-                               m_months(0),
-                               m_days(0),
-                               m_hours(0),
-                               m_minutes(0),
-                               m_seconds(0),
-                               m_total(0)
+CTimerBase::CTimerBase(const uint years,const uint months,const uint days,const uint hours,const uint minutes,const uint seconds) : m_years(0),
+                                                                                                                                    m_months(0),
+                                                                                                                                    m_days(0),
+                                                                                                                                    m_hours(0),
+                                                                                                                                    m_minutes(0),
+                                                                                                                                    m_seconds(0),
+                                                                                                                                    m_total(0),
+                                                                                                                                    m_time_start(0)
   {
+   Set(years,months,days,hours,minutes,seconds);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CTimerBase::CTimerBase(const int total_time) : m_years(0),
+                                               m_months(0),
+                                               m_days(0),
+                                               m_hours(0),
+                                               m_minutes(0),
+                                               m_seconds(0),
+                                               m_total(0),
+                                               m_time_start(0)
+  {
+   m_total=total_time;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -201,17 +221,34 @@ void CTimerBase::RecalculateTotal(void)
             (m_months*MONTH_SECONDS)+
             (m_days*DAY_SECONDS)+
             (m_hours*HOUR_SECONDS)+
-            (m_minutes*MINUTE_SECONDS));
+            (m_minutes*MINUTE_SECONDS)+
+             m_seconds);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimerBase::Evaluate(void)
+datetime CTimerBase::TimeStart(void) const
+  {
+   return m_time_start;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CTimerBase::TimeStart(const datetime time_start)
+  {
+   m_time_start=time_start;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimerBase::Evaluate(datetime current=0)
   {
    if(!Active())
       return true;
    bool result=true;
-   m_elapsed=(int)(TimeCurrent()-m_time_start);
+   if(current==0)
+      current= TimeCurrent();
+   m_elapsed=(int)(current-m_time_start);
    if(m_elapsed>=m_total) result=false;
    return Reverse()?result:!result;
   }

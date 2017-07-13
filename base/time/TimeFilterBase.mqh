@@ -16,18 +16,20 @@ protected:
    MqlDateTime       m_filter_end;
    CArrayObj         m_time_filters;
 public:
-                     CTimeFilterBase(void);
+                     CTimeFilterBase(const int,const int,const int,const int,const int,const int,const int);
                     ~CTimeFilterBase(void);
    virtual bool      Init(CTimes*);
    virtual bool      Validate(void);
-   virtual bool      Evaluate(void);
+   virtual bool      Evaluate(datetime);
    virtual bool      Set(const int,const int,const int,const int,const int,const int,const int);
+   virtual bool      AddFilter(CTimeFilterBase*);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CTimeFilterBase::CTimeFilterBase(void)
+CTimeFilterBase::CTimeFilterBase(const int gmt,const int starthour,const int endhour,const int startminute=0,const int endminute=0,const int startseconds=0,const int endseconds=0)
   {
+   Set(gmt,starthour,endhour,startminute,endminute,startseconds,endseconds);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -57,10 +59,9 @@ bool CTimeFilterBase::Validate(void)
   {
    datetime t_start=StructToTime(m_filter_start);
    datetime t_end=StructToTime(m_filter_end);
-   if(t_end<t_start)
+   if(m_filter_start.hour==m_filter_end.hour && m_filter_start.min==m_filter_end.min && m_filter_start.sec==m_filter_end.sec)
      {
-      PrintFormat("Invalid setting for start and end times.");
-      return false;
+      Active(false);
      }
    if(!CheckPointer(m_symbol_man))
      {
@@ -73,6 +74,15 @@ bool CTimeFilterBase::Validate(void)
       return false;
      }
    return true;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CTimeFilterBase::AddFilter(CTimeFilterBase *time)
+  {
+   if (CheckPointer(time))
+      return m_time_filters.Add(time);
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -90,14 +100,15 @@ bool CTimeFilterBase::Set(const int gmt,const int starthour,const int endhour,co
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeFilterBase::Evaluate(void)
+bool CTimeFilterBase::Evaluate(datetime current=0)
   {
    if(!Active())
       return true;
    bool result=true;
    MqlDateTime time;
    CSymbolInfo *symbol=m_symbol_man.GetPrimary();
-   datetime current=symbol.Time();
+   if(current==0)
+      current=TimeCurrent();
    TimeToStruct(current,time);
    m_filter_start.year= time.year;
    m_filter_start.mon = time.mon;
@@ -109,9 +120,24 @@ bool CTimeFilterBase::Evaluate(void)
    m_filter_end.day = time.day;
    m_filter_end.day_of_week = time.day_of_week;
    m_filter_end.day_of_year = time.day_of_year;
+   if(m_filter_start.hour>=m_filter_end.hour)
+     {
+      if(time.hour>=m_filter_start.hour)
+        {
+         m_filter_end.day++;
+         m_filter_end.day_of_week++;
+         m_filter_end.day_of_year++;
+        }
+      else if(time.hour<=m_filter_end.hour)
+        {
+         m_filter_start.day--;
+         m_filter_start.day_of_week--;
+         m_filter_start.day_of_year--;
+        }
+     }
    datetime f_start=StructToTime(m_filter_start);
    datetime f_end=StructToTime(m_filter_end);
-   if(!(current>=f_start && current<=f_end))
+   if(f_start<f_end && !(current>=f_start && current<f_end))
       result=false;
    result=Reverse()?result:!result;
    if(!result)
@@ -129,6 +155,6 @@ bool CTimeFilterBase::Evaluate(void)
 #ifdef __MQL5__
 #include "..\..\MQL5\Time\TimeFilter.mqh"
 #else
-#include "..\..\MQL5\Time\TimeFilter.mqh"
+#include "..\..\MQL4\Time\TimeFilter.mqh"
 #endif
 //+------------------------------------------------------------------+

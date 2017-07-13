@@ -11,13 +11,20 @@
 class CTimer : public CTimerBase
   {
 public:
-                     CTimer(void);
+                     CTimer(const int);
+                     CTimer(const uint,const uint,const uint,const uint,const uint,const uint);
                     ~CTimer(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CTimer::CTimer(void)
+CTimer::CTimer(const uint years,const uint months,const uint days,const uint hours,const uint minutes,const uint seconds) : CTimerBase(years,months,days,hours,minutes,seconds)
+  {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CTimer::CTimer(const int total) : CTimerBase(total)
   {
   }
 //+------------------------------------------------------------------+

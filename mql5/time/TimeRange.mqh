@@ -11,13 +11,13 @@
 class CTimeRange : public CTimeRangeBase
   {
 public:
-                     CTimeRange(void);
+                     CTimeRange(datetime,datetime);
                     ~CTimeRange(void);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CTimeRange::CTimeRange(void)
+CTimeRange::CTimeRange(datetime begin,datetime end) : CTimeRangeBase(begin,end)
   {
   }
 //+------------------------------------------------------------------+

@@ -27,11 +27,11 @@ class CTimeDaysBase : public CTime
 protected:
    long              m_day_flags;
 public:
-                     CTimeDaysBase(void);
+                     CTimeDaysBase(const bool sun=false,const bool mon=true,const bool tue=true,const bool wed=true,const bool thu=true,const bool fri=true,const bool sat=false);
                     ~CTimeDaysBase(void);
    //--- initialization                    
    virtual bool      Validate(void);
-   virtual bool      Evaluate(void);
+   virtual bool      Evaluate(datetime);
    virtual void      Set(const bool,const bool,const bool,const bool,const bool,const bool,const bool);
    //--- setters and getters
    bool              Sunday(void) const;
@@ -52,8 +52,10 @@ public:
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CTimeDaysBase::CTimeDaysBase(void) : m_day_flags(0)
+CTimeDaysBase::CTimeDaysBase(const bool sun=false,const bool mon=true,const bool tue=true,const bool wed=true,
+                             const bool thu=true,const bool fri=true,const bool sat=false) : m_day_flags(0)
   {
+   Set(sun,mon,tue,wed,thu,fri,sat);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -190,13 +192,14 @@ void CTimeDaysBase::Saturday(const bool set)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeDaysBase::Evaluate(void)
+bool CTimeDaysBase::Evaluate(datetime current=0)
   {
    if(!Active())
       return true;
    bool result=false;
    MqlDateTime time;
-   datetime current=TimeCurrent();
+   if(current==0)
+      current=TimeCurrent();
    TimeToStruct(current,time);
    switch(time.day_of_week)
      {
@@ -215,6 +218,7 @@ bool CTimeDaysBase::Evaluate(void)
 //+------------------------------------------------------------------+
 void CTimeDaysBase::Set(const bool sun=false,const bool mon=true,const bool tue=true,const bool wed=true,const bool thu=true,const bool fri=true,const bool sat=false)
   {
+/*
    if(sun)
       m_day_flags|=TIME_DAY_FLAG_SUN;
    if(mon)
@@ -229,6 +233,14 @@ void CTimeDaysBase::Set(const bool sun=false,const bool mon=true,const bool tue=
       m_day_flags|=TIME_DAY_FLAG_FRI;
    if(sat)
       m_day_flags|=TIME_DAY_FLAG_SAT;
+   */
+   Sunday(sun);
+   Monday(mon);
+   Tuesday(tue);
+   Wednesday(wed);
+   Thursday(thu);
+   Friday(fri);
+   Saturday(sat);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

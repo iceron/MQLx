@@ -15,9 +15,9 @@ protected:
    datetime          m_begin;
    datetime          m_end;
 public:
-                     CTimeRangeBase(void);
+                     CTimeRangeBase(datetime,datetime);
                     ~CTimeRangeBase(void);
-   //--- initialization                    
+   //--- initialization                    datetime,datetime
    virtual bool      Set(datetime,datetime);
    virtual bool      Validate(void);
    //--- setters and getters
@@ -26,14 +26,15 @@ public:
    datetime          End(void) const;
    void              End(const datetime);
    //--- processing
-   virtual bool      Evaluate(void);
+   virtual bool      Evaluate(datetime);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-CTimeRangeBase::CTimeRangeBase(void) : m_begin(0),
-                                       m_end(0)
+CTimeRangeBase::CTimeRangeBase(datetime begin,datetime end) : m_begin(0),
+                                                              m_end(0)
   {
+   Set(begin,end);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -93,13 +94,15 @@ bool CTimeRangeBase::Validate(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimeRangeBase::Evaluate(void)
+bool CTimeRangeBase::Evaluate(datetime current=0)
   {
    if(!Active())
       return true;
-   datetime current=TimeCurrent();
+   if(current==0)
+      current=TimeCurrent();
+   Print(m_begin+" "+current+" "+m_end);
    bool result=current>=m_begin && current<m_end;
-   return Reverse()?result:!result;
+   return Reverse()?!result:result;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
