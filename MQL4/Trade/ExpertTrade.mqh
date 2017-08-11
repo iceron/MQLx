@@ -53,6 +53,7 @@ public:
    virtual bool      OrderDelete(const ulong);
    virtual bool      OrderClose(const ulong,const double,const double);
    virtual bool      OrderCloseAll(CArrayInt *,const bool);
+   virtual bool      OrderCloseBy(const ulong,const ulong);
    virtual bool      OrderModify(const ulong,const double,const double,const double,const ENUM_ORDER_TYPE_TIME,const datetime,const double);
    virtual ulong     OrderOpen(const string,const ENUM_ORDER_TYPE,const double,const double,const double,const double,const double,const ENUM_ORDER_TYPE_TIME,const datetime,const string);
   };
@@ -226,6 +227,13 @@ bool CExpertTrade::OrderClose(const ulong ticket,const double lotsize=0.0,const 
      }
    double lots=(lotsize>0.0 || lotsize>OrderLots())?lotsize:OrderLots();
    return ::OrderClose((int)ticket,lots,close_price,deviation,m_color_exit);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CExpertTrade::OrderCloseBy(const ulong ticket,const ulong opposite)
+  {
+   return ::OrderCloseBy((int)ticket,(int)opposite);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

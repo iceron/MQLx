@@ -50,16 +50,38 @@ CStop::~CStop(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStop::CheckStopOrder(double &volume_remaining,COrder *main,COrderStop *orderstop)
+bool CStop::CheckStopOrder(ENUM_STOP_MODE mode,COrder *order,COrderStop *orderstop)
   {
-   if(ticket<=0)
-      return false;
-   if(!OrderSelect((int)ticket,SELECT_BY_TICKET))
-      return false;
-   if(OrderType()<=1)
+   int ticket=0;
+   if(mode==MODE_STOPLOSS)
+      ticket=(int)orderstop.StopLossTicket();
+   if(mode==MODE_TAKEPROFIT)
+      ticket=(int)orderstop.TakeProfitTicket();
+   if(ticket>0)
      {
-      volume_remaining-=OrderLots();
-      return true;
+      if(OrderSelect(ticket,SELECT_BY_TICKET))
+        {
+         if(OrderType()<=1)
+           {
+            double lots=OrderLots();
+            if(OrderSelect((int)order.Ticket(),SELECT_BY_TICKET))
+              {
+               m_symbol=m_symbol_man.Get(OrderSymbol());
+               if(CheckPointer(m_symbol))
+                 {
+                  double divisor=MathMin(m_symbol.LotsStep(),m_symbol.LotsMin());
+                  bool final_close=int(OrderLots()/divisor)==int(lots/divisor);
+                  if(m_trade.OrderCloseBy(OrderTicket(),ticket))
+                    {
+                     order.Volume(order.Volume()-lots);
+                     if (!final_close)
+                        orderstop.NewTicket(true);
+                     return true;
+                    }
+                 }
+              }
+           }
+        }
      }
    return false;
   }
@@ -162,7 +184,7 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
       if(res)
         {
          if(lotsize<order.Volume())
-            order.NewTicket(true);
+            orderstop.NewTicket(true);
          order.Volume(order.Volume()-lotsize);
         }
      }
@@ -252,20 +274,20 @@ bool CStop::DeleteMarketStop(const ulong ticket)
    bool result=false;
    if(OrderSelect((int)ticket,SELECT_BY_TICKET))
      {
-      if (OrderCloseTime()>0)
-         return true;      
+      if(OrderCloseTime()>0)
+         return true;
       if(!CheckPointer(m_symbol))
          return false;
       m_trade=m_trade_man.Get(m_symbol.Name());
       if(!CheckPointer(m_trade))
          return false;
-      result = m_trade.OrderClose(ticket);      
+      result=m_trade.OrderClose(ticket);
      }
-   else 
-   {
+   else
+     {
       ResetLastError();
       result=true;
-   }   
+     }
    return result;
   }
 //+------------------------------------------------------------------+

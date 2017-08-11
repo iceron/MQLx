@@ -29,7 +29,7 @@ public:
    //--- initialization
    virtual CObject *GetContainer(void);
    virtual void      SetContainer(COrder*);
-   virtual bool      NewOrderStop(COrder*,CStop*);
+   virtual bool      NewOrderStop(COrder*,CStop*)=0;
    //--- checking
    virtual void      Check(double &volume);
    virtual bool      CheckNewTicket(COrderStop*);
@@ -93,30 +93,6 @@ bool COrderStopsBase::CheckNewTicket(COrderStop *order_stop)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop)
-  {
-   /*
-   COrderStop *order_stop=NULL;
-   if(CheckPointer(stop))
-     {
-      switch(stop.StopType())
-        {
-         case STOP_TYPE_BROKER:  order_stop = new COrderStopBroker();  break;
-         case STOP_TYPE_PENDING: order_stop = new COrderStopPending(); break;
-         case STOP_TYPE_VIRTUAL: order_stop = new COrderStopVirtual(); break;
-        }
-     }
-   if(CheckPointer(order_stop))
-     {
-      order_stop.Init(order,stop,GetPointer(this));
-      return Add(order_stop);
-     }
-   */
-   return false;   
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 COrderStopsBase::Check(double &volume)
   {
    if(!Active())
@@ -124,6 +100,7 @@ COrderStopsBase::Check(double &volume)
    for(int i=0;i<Total();i++)
      {
       COrderStop *order_stop=(COrderStop *)At(i);
+      if(CheckPointer(order_stop))
         {
          if(order_stop.IsClosed())
             continue;
@@ -150,7 +127,7 @@ bool COrderStopsBase::Close(void)
          if(CheckPointer(order_stop))
            {
             if(!order_stop.Close())
-               res=false; 
+               res=false;
            }
         }
      }
