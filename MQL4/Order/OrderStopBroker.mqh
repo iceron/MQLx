@@ -13,7 +13,7 @@ class COrderStopBroker : public COrderStopBrokerBase
 public:
                      COrderStopBroker(void);
                     ~COrderStopBroker(void);
-   virtual void      Check(double &);
+   //virtual void      Check(double &);
    virtual bool      Update(void);
 protected:
    virtual bool      ModifyStops(const double,const double);
@@ -32,22 +32,6 @@ COrderStopBroker::COrderStopBroker(void)
 //+------------------------------------------------------------------+
 COrderStopBroker::~COrderStopBroker(void)
   {
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-void COrderStopBroker::Check(double &volume)
-  {
-   if(!CheckPointer(m_stop) || !Active())
-      return;
-   if(m_order.IsClosed() || m_order.IsSuspended())
-     {
-      bool delete_sl=false,delete_tp=false;
-      delete_sl=DeleteStopLoss();
-      delete_tp=DeleteTakeProfit();
-      if(delete_sl && delete_tp)
-         DeleteEntry();
-     }
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

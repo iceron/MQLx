@@ -62,7 +62,7 @@ COrderStopPendingBase::Check(double &volume)
      }
    if(!m_stoploss_closed)
      {
-      if(m_stop.CheckStopOrder(volume,m_stoploss_ticket))
+      if(m_stop.CheckStopOrder(MODE_STOPLOSS,GetPointer(m_order),GetPointer(this)))
         {
          StopLossClosed(true);
          if(CheckPointer(m_order_stops))
@@ -71,7 +71,7 @@ COrderStopPendingBase::Check(double &volume)
      }
    if(!m_takeprofit_closed)
      {
-      if(m_stop.CheckStopOrder(volume,m_takeprofit_ticket))
+      if(m_stop.CheckStopOrder(MODE_TAKEPROFIT,GetPointer(m_order),GetPointer(this)))
         {
          TakeProfitClosed(true);
          if(CheckPointer(m_order_stops))

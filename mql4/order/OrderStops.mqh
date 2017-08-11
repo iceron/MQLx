@@ -13,6 +13,7 @@ class COrderStops : public COrderStopsBase
 public:
                      COrderStops(void);
                     ~COrderStops(void);
+   virtual bool      NewOrderStop(COrder*,CStop*);
    virtual bool      CheckNewTicket(COrderStop*);
    virtual ulong     GetNewTicket(COrderStop*);
    virtual bool      UpdateStopsByTicket(const ulong);
@@ -28,6 +29,28 @@ COrderStops::COrderStops(void)
 //+------------------------------------------------------------------+
 COrderStops::~COrderStops(void)
   {
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool COrderStops::NewOrderStop(COrder *order,CStop *stop)
+  {
+   COrderStop *order_stop=NULL;
+   if(CheckPointer(stop))
+     {
+      switch(stop.StopType())
+        {
+         case STOP_TYPE_BROKER:  order_stop = new COrderStopBroker();  break;
+         case STOP_TYPE_PENDING: order_stop = new COrderStopPending(); break;
+         case STOP_TYPE_VIRTUAL: order_stop = new COrderStopVirtual(); break;
+        }
+     }
+   if(CheckPointer(order_stop))
+     {
+      order_stop.Init(order,stop,GetPointer(this));
+      return Add(order_stop);
+     }
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

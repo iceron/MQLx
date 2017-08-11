@@ -21,7 +21,8 @@ public:
    virtual bool      Init(CSymbolManager*,CAccountInfo*,CEventAggregator*);
    virtual ulong     Buy(const double,const double);
    virtual ulong     Sell(const double,const double);
-   virtual bool      CheckStopOrder(double&,const ulong) const;
+   virtual bool      CloseBy(const ulong ticket);
+   virtual bool      CheckStopOrder(ENUM_STOP_MODE,COrder*,COrderStop*);
    virtual bool      DeleteStopOrder(const ulong);
    virtual bool      DeleteMarketStop(const ulong);
    virtual bool      Move(const ulong,const double,const double);
@@ -72,11 +73,17 @@ bool CStop::IsHedging(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
+bool CStop::CheckStopOrder(ENUM_STOP_MODE mode,COrder *order,COrderStop *orderstop)
   {
    COrderInfo ord;
    CHistoryOrderInfo h_ord;
-   HistorySelect(0,TimeCurrent());
+   ulong ticket = 0;
+   if (mode==MODE_STOPLOSS)
+      ticket = orderstop.StopLossTicket();
+   else if (mode==MODE_TAKEPROFIT)
+      ticket = orderstop.TakeProfitTicket();
+   if(!HistorySelect(0,TimeCurrent()))
+      return false;
    if(ticket>0)
      {
       if(ord.Select(ticket)) return false;
@@ -88,7 +95,11 @@ bool CStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
            {
             if(h_ord.State()==ORDER_STATE_FILLED)
               {
-               volume_remaining-=h_ord.VolumeInitial();
+               if (IsHedging())
+               {
+                  m_trade.PositionCloseBy(order.Ticket(),ticket);
+               }
+               order.Volume(order.Volume()-orderstop.Volume());
                return true;
               }
            }
@@ -104,7 +115,7 @@ bool CStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
                     {
                      if(state==ORDER_STATE_FILLED)
                        {
-                        volume_remaining-=h_ord.VolumeInitial();
+                        order.Volume(order.Volume()-orderstop.Volume());
                         return true;
                        }
                     }
@@ -143,7 +154,7 @@ bool CStop::DeleteStopOrder(const ulong ticket)
      {
       ResetLastError();
       CPositionInfo pos;
-      if(!IsHedging())
+      if(IsHedging())
         {
          if(pos.SelectByTicket(ticket))
            {
@@ -163,7 +174,7 @@ bool CStop::DeleteStopOrder(const ulong ticket)
         }
       else
         {
-         result = true;        
+         result=true;
         }
      }
    return result;
@@ -175,14 +186,14 @@ bool CStop::DeleteMarketStop(const ulong ticket)
   {
    if(ticket<=0)
       return true;
-   if (!IsHedging())
+   if(!IsHedging())
       return true;
    bool result=false;
    CPositionInfo pos;
    if(pos.SelectByTicket(ticket))
      {
       double vol;
-      pos.InfoDouble(POSITION_VOLUME,vol);     
+      pos.InfoDouble(POSITION_VOLUME,vol);
       if(pos.Volume()>0)
         {
          if(!CheckPointer(m_symbol))
@@ -197,14 +208,14 @@ bool CStop::DeleteMarketStop(const ulong ticket)
                result=true;
            }
         }
-       else result = true;
-       
+      else result=true;
+
      }
-   else 
-   {
+   else
+     {
       ResetLastError();
       result=true;
-   }   
+     }
    return result;
   }
 //+------------------------------------------------------------------+
@@ -213,7 +224,7 @@ bool CStop::DeleteMarketStop(const ulong ticket)
 double CStop::TakeProfitPrice(COrder *order,COrderStop *orderstop)
   {
    double val=m_takeprofit>0?TakeProfitCalculate(order.Symbol(),order.OrderType(),order.Price()):TakeProfitCustom(order.Symbol(),order.OrderType(),order.Price());
-   if((m_stop_type==STOP_TYPE_PENDING || m_main) && (val>0.0))
+   if(Pending() && (val>0.0))
       if(OpenStop(order,orderstop,val))
          orderstop.TakeProfitTicket(m_trade.ResultOrder());
    return val==0?val:NormalizeDouble(val,m_symbol.Digits());
@@ -224,7 +235,7 @@ double CStop::TakeProfitPrice(COrder *order,COrderStop *orderstop)
 double CStop::StopLossPrice(COrder *order,COrderStop *orderstop)
   {
    double val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.Symbol(),order.OrderType(),order.Price());
-   if((Pending() || Broker()) && (val>0.0))
+   if(Pending() && (val>0.0))
      {
       if(OpenStop(order,orderstop,val))
          orderstop.StopLossTicket(m_trade.ResultOrder());
@@ -294,11 +305,7 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
          double lotsize=MathMin(order.Volume(),LotSizeCalculate(order,orderstop));
          if(IsHedging())
            {
-            if(OrderSelect(order.Ticket()))
-              {
-               long pos_id=OrderGetInteger(ORDER_POSITION_ID);
-               res=m_trade.PositionClose(pos_id);
-              }
+            res=m_trade.PositionClose(order.Ticket());
            }
          else
            {
@@ -318,26 +325,39 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
 //+------------------------------------------------------------------+
 bool CStop::Move(const ulong ticket,const double stoploss,const double takeprofit)
   {
-   return MoveStopLoss(ticket,stoploss) && MoveTakeProfit(ticket,takeprofit);
+   if(PositionSelectByTicket((int)ticket))
+     {
+      m_symbol=m_symbol_man.Get(PositionGetString(POSITION_SYMBOL));
+      if(!CheckPointer(m_symbol))
+         return false;
+      m_trade=m_trade_man.Get(m_symbol.Name());
+      if(!CheckPointer(m_trade))
+         return false;
+      if(MathAbs(stoploss-PositionGetDouble(POSITION_SL))<m_symbol.TickSize())
+         return false;
+      if(MathAbs(takeprofit-PositionGetDouble(POSITION_TP))<m_symbol.TickSize())
+         return false;
+      return m_trade.PositionModify(ticket,stoploss,takeprofit);
+     }
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CStop::MoveStopLoss(const ulong ticket,const double stoploss)
   {
-   COrderInfo order;
-   if(order.Select(ticket))
+   if(PositionSelectByTicket((int)ticket))
      {
-      m_symbol=m_symbol_man.Get(order.Symbol());
+      m_symbol=m_symbol_man.Get(PositionGetString(POSITION_SYMBOL));
       if(!CheckPointer(m_symbol))
          return false;
       m_trade=m_trade_man.Get(m_symbol.Name());
       if(!CheckPointer(m_trade))
          return false;
-      double price_open=order.PriceOpen();
-      if(MathAbs(stoploss-price_open)<m_symbol.TickSize())
+      if(MathAbs(stoploss-PositionGetDouble(POSITION_SL))<m_symbol.TickSize())
          return false;
-      return OrderModify(order.Ticket(),stoploss);
+      double takeprofit=PositionGetDouble(POSITION_TP);
+      return m_trade.PositionModify(ticket,stoploss,takeprofit);
      }
    return false;
   }
@@ -346,19 +366,18 @@ bool CStop::MoveStopLoss(const ulong ticket,const double stoploss)
 //+------------------------------------------------------------------+
 bool CStop::MoveTakeProfit(const ulong ticket,const double takeprofit)
   {
-   COrderInfo order;
-   if(order.Select(ticket))
+   if(PositionSelectByTicket((int)ticket))
      {
-      m_symbol=m_symbol_man.Get(order.Symbol());
+      m_symbol=m_symbol_man.Get(PositionGetString(POSITION_SYMBOL));
       if(!CheckPointer(m_symbol))
          return false;
       m_trade=m_trade_man.Get(m_symbol.Name());
       if(!CheckPointer(m_trade))
          return false;
-      double price_open=order.PriceOpen();
-      if(MathAbs(takeprofit-price_open)<m_symbol.TickSize())
+      if(MathAbs(takeprofit-PositionGetDouble(POSITION_TP))<m_symbol.TickSize())
          return false;
-      return OrderModify(order.Ticket(),takeprofit);
+      double stoploss=PositionGetDouble(POSITION_SL);
+      return m_trade.PositionModify(ticket,stoploss,takeprofit);
      }
    return false;
   }

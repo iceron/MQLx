@@ -13,6 +13,7 @@ class COrderStop : public COrderStopBase
 public:
                      COrderStop(void);
                     ~COrderStop(void);
+   virtual bool      NewOrderStop(COrder*,CStop*);
    virtual void      UpdateVolume(double);
   };
 //+------------------------------------------------------------------+

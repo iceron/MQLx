@@ -405,7 +405,7 @@ void COrderManagerBase::Expiration(const int expiration)
 //+------------------------------------------------------------------+
 bool COrderManagerBase::TradeOpen(const string,ENUM_ORDER_TYPE,double,bool)
   {
-   return NULL;
+   return false;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

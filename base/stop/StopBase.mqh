@@ -7,6 +7,7 @@
 #property link      "https://www.mql5.com/en/users/iceron"
 #include "..\..\Common\Enum\ENUM_TRAIL_TARGET.mqh"
 #include "..\..\Common\Enum\ENUM_STOP_TYPE.mqh"
+#include "..\..\Common\Enum\ENUM_STOP_MODE.mqh"
 #include "..\Lib\AccountInfo.mqh"
 #include "..\Stop\StopLineBase.mqh"
 #include "..\Trade\TradeManagerBase.mqh"
@@ -122,7 +123,7 @@ public:
    //--- stop order checking
    virtual bool      CheckStopLoss(COrder*,COrderStop*);
    virtual bool      CheckTakeProfit(COrder*,COrderStop*);
-   virtual bool      CheckStopOrder(double&,const ulong);
+   virtual bool      CheckStopOrder(ENUM_STOP_MODE,COrder*,COrderStop*)=0;
    virtual bool      DeleteStopOrder(const ulong)=0;
    virtual bool      DeleteMarketStop(const ulong)=0;
    virtual bool      OrderModify(const ulong,const double);
@@ -578,13 +579,6 @@ ENUM_VOLUME_TYPE CStopBase::VolumeType(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStopBase::CheckStopOrder(double &,const ulong)
-  {
-   return false;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
 double CStopBase::StopLossCustom(const string,const ENUM_ORDER_TYPE,const double)
   {
    return 0;
@@ -640,7 +634,7 @@ bool CStopBase::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEv
       m_trails.SetContainer(GetPointer(this));
       if(!m_trails.Init(symbolmanager,event_man))
         {
-         Print(__FUNCTION__+": error in trailing manager initialization");
+         PrintFormat(__FUNCTION__+": error in trailing manager initialization");
          return false;
         }
      }
@@ -804,9 +798,15 @@ bool CStopBase::CheckTakeProfit(COrder *order,COrderStop *orderstop)
       return false;
    bool close=false;
    if(type==ORDER_TYPE_BUY)
-      if(price>=takeprofit) close=true;
+   {
+      if(price>=takeprofit) 
+         close=true;
+   }   
    else if(type==ORDER_TYPE_SELL)
-      if(price<=takeprofit) close=true;
+   {
+      if(price<=takeprofit) 
+         close=true;
+   }   
    if(close)
       return CloseStop(order,orderstop,price);
    return close;

@@ -125,8 +125,22 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double pr
      {
       if(in_points)
          price=PriceCalculate(type);
-      lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));
-      ret=SendOrder(type,lotsize,price,0,0);
+      double sl=0.0,tp=0.0;
+      if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
+        {
+         sl = m_main_stop.StopLossCustom()?m_main_stop.StopLossCustom(symbol,type,price):m_main_stop.StopLossCalculate(symbol,type,price);
+         tp = m_main_stop.TakeProfitCustom()?m_main_stop.TakeProfitCustom(symbol,type,price):m_main_stop.TakeProfitCalculate(symbol,type,price);
+        }
+      lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));  
+      if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
+      {
+         if (!m_main_stop.Broker())
+         {
+            sl = 0;
+            tp = 0;
+         }
+      }    
+      ret=SendOrder(type,lotsize,price,sl,tp);
       if(ret)
       {
          COrder *order = m_orders.NewOrder((int)m_trade.ResultOrder(),m_trade.RequestSymbol(),(int)m_trade.RequestMagic(),m_trade.RequestType(),m_trade.ResultVolume(),m_trade.ResultPrice());

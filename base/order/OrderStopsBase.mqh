@@ -95,6 +95,7 @@ bool COrderStopsBase::CheckNewTicket(COrderStop *order_stop)
 //+------------------------------------------------------------------+
 bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop)
   {
+   /*
    COrderStop *order_stop=NULL;
    if(CheckPointer(stop))
      {
@@ -110,7 +111,8 @@ bool COrderStopsBase::NewOrderStop(COrder *order,CStop *stop)
       order_stop.Init(order,stop,GetPointer(this));
       return Add(order_stop);
      }
-   return false;
+   */
+   return false;   
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

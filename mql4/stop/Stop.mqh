@@ -14,7 +14,7 @@ public:
                      CStop(void);
                      CStop(const string);
                     ~CStop(void);
-   virtual bool      CheckStopOrder(double &,const ulong) const;
+   virtual bool      CheckStopOrder(ENUM_STOP_MODE,COrder*,COrderStop*);
    virtual bool      DeleteStopOrder(const ulong);
    virtual bool      DeleteMarketStop(const ulong);
    virtual bool      Move(const ulong,const double,const double);
@@ -50,7 +50,7 @@ CStop::~CStop(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CStop::CheckStopOrder(double &volume_remaining,const ulong ticket) const
+bool CStop::CheckStopOrder(double &volume_remaining,COrder *main,COrderStop *orderstop)
   {
    if(ticket<=0)
       return false;

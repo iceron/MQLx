@@ -60,6 +60,14 @@ bool COrder::IsSuspended(void)
          return true;
         }
      }
+   if (AccountInfoInteger(ACCOUNT_MARGIN_MODE)==ACCOUNT_MARGIN_MODE_RETAIL_HEDGING)
+   {
+      if (!PositionSelectByTicket(Ticket()))
+      {
+         IsSuspended(true);
+         return true;
+      }
+   }
    return false;
   }
 //+------------------------------------------------------------------+
