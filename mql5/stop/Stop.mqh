@@ -97,10 +97,12 @@ bool CStop::CheckStopOrder(ENUM_STOP_MODE mode,COrder *order,COrderStop *orderst
               {
                if (IsHedging())
                {
-                  m_trade.PositionCloseBy(order.Ticket(),ticket);
+                  if (m_trade.PositionCloseBy(order.Ticket(),ticket))
+                  {
+                     order.Volume(order.Volume()-orderstop.Volume());
+                     return true;
+                  }   
                }
-               order.Volume(order.Volume()-orderstop.Volume());
-               return true;
               }
            }
          else
