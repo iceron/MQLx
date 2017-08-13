@@ -48,7 +48,6 @@ bool CStop::Init(CSymbolManager *symbolmanager,CAccountInfo *accountinfo,CEventA
   {
    m_margin_mode=(ENUM_ACCOUNT_MARGIN_MODE)AccountInfoInteger(ACCOUNT_MARGIN_MODE);
    return CStopBase::Init(symbolmanager,accountinfo,event_man);
-   return true;
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -97,9 +96,9 @@ bool CStop::CheckStopOrder(ENUM_STOP_MODE mode,COrder *order,COrderStop *orderst
               {
                if (IsHedging())
                {
-                  if (m_trade.PositionCloseBy(order.Ticket(),ticket))
-                  {
-                     order.Volume(order.Volume()-orderstop.Volume());
+                   if (m_trade.PositionCloseBy(order.Ticket(),ticket))
+                  {                     
+                     order.Volume(order.Volume()-h_ord.VolumeInitial());
                      return true;
                   }   
                }
@@ -307,7 +306,9 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
          double lotsize=MathMin(order.Volume(),LotSizeCalculate(order,orderstop));
          if(IsHedging())
            {
-            res=m_trade.PositionClose(order.Ticket());
+            if (lotsize==order.Volume())
+               res=m_trade.PositionClose(order.Ticket());
+            else res = m_trade.PositionClosePartial(order.Ticket(),lotsize,5);
            }
          else
            {
@@ -316,7 +317,9 @@ bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
             else if(type==ORDER_TYPE_SELL)
                res=m_trade.Buy(MathMin(lotsize,order.Volume()),price,0,0,m_comment);
             if(res)
+            {
                order.Volume(order.Volume()-lotsize);
+            }   
            }
         }
      }

@@ -42,7 +42,8 @@ void COrderStopBrokerBase::Check(double &volume)
       delete_sl=DeleteStopLoss();
       delete_tp=DeleteTakeProfit();
       if(delete_sl && delete_tp)
-         DeleteEntry();
+         if (DeleteEntry())
+            m_closed = true;
      }
   }
 //+------------------------------------------------------------------+

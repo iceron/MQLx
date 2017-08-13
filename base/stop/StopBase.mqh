@@ -708,11 +708,13 @@ double CStopBase::LotSizeCalculate(COrder *order,COrderStop *orderstop)
      }
    double maxvol=m_symbol.LotsMax();
    double minvol=m_symbol.LotsMin();
+   double lotstep=m_symbol.LotsStep();
+   double min = MathMin(minvol,lotstep);
    if(lotsize<minvol)
       lotsize=minvol;
    if(lotsize>maxvol)
       lotsize=maxvol;
-   return lotsize;
+   return NormalizeDouble(lotsize,(int)-MathLog10(min));
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

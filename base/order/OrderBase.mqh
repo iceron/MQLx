@@ -150,7 +150,7 @@ bool COrderBase::IsClosed(void) const
 //|                                                                  |
 //+------------------------------------------------------------------+
 COrderBase::IsSuspended(const bool value)
-  {
+  {   
    m_suspend=value;
   }
 //+------------------------------------------------------------------+
