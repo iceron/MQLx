@@ -225,7 +225,7 @@ bool CStop::DeleteMarketStop(const ulong ticket)
 double CStop::TakeProfitPrice(COrder *order,COrderStop *orderstop)
   {
    double val=m_takeprofit>0?TakeProfitCalculate(order.Symbol(),order.OrderType(),order.Price()):TakeProfitCustom(order.Symbol(),order.OrderType(),order.Price());
-   if(Pending() && (val>0.0))
+   if((Pending() || (Broker() && !IsHedging())) && (val>0.0))
       if(OpenStop(order,orderstop,val))
          orderstop.TakeProfitTicket(m_trade.ResultOrder());
    return val==0?val:NormalizeDouble(val,m_symbol.Digits());
@@ -236,7 +236,7 @@ double CStop::TakeProfitPrice(COrder *order,COrderStop *orderstop)
 double CStop::StopLossPrice(COrder *order,COrderStop *orderstop)
   {
    double val=m_stoploss>0?StopLossCalculate(order.Symbol(),order.OrderType(),order.Price()):StopLossCustom(order.Symbol(),order.OrderType(),order.Price());
-   if(Pending() && (val>0.0))
+   if((Pending() || (Broker() && !IsHedging())) && (val>0.0))
      {
       if(OpenStop(order,orderstop,val))
          orderstop.StopLossTicket(m_trade.ResultOrder());

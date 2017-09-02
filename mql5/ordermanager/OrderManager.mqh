@@ -134,7 +134,7 @@ bool COrderManager::TradeOpen(const string symbol,ENUM_ORDER_TYPE type,double pr
       lotsize=LotSizeCalculate(price,type,m_main_stop==NULL?0:m_main_stop.StopLossCalculate(symbol,type,price));  
       if(CheckPointer(m_main_stop)==POINTER_DYNAMIC)
       {
-         if (!m_main_stop.Broker())
+         if (!m_main_stop.Broker() || !IsHedging())
          {
             sl = 0;
             tp = 0;
