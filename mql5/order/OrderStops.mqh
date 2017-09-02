@@ -64,16 +64,15 @@ COrderStops::UpdateVolume(double deducted)
   {
    double old_volume = m_order.Volume()+deducted;
    double new_volume = m_order.Volume();
+   double factor = 0;
    if (old_volume>0)
-   {
-      double factor=new_volume/old_volume;
-      for(int i=0;i<Total();i++)
-        {
-         COrderStop *orderstop=At(i);
-         if(!CheckPointer(orderstop))
-            continue;
-         orderstop.UpdateVolume(factor);
-        }
-   }
+      factor=new_volume/old_volume;
+   for(int i=0;i<Total();i++)
+     {
+      COrderStop *orderstop=At(i);
+      if(!CheckPointer(orderstop))
+         continue;
+      orderstop.UpdateVolume(factor);
+     }
   }
 //+------------------------------------------------------------------+
