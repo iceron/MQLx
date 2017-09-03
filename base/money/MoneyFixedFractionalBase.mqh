@@ -80,7 +80,7 @@ bool CMoneyFixedFractionalBase::UpdateLotSize(const string symbol,const double p
       else ticks=MathAbs(price-sl)/m_symbol.TickSize();
       m_volume=((balance*(m_risk/100))/ticks)/m_symbol.TickValue();
      }
-   return NormalizeDouble(last_volume-m_volume,2)==0;
+   return last_volume-m_volume!=0;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

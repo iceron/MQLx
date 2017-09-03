@@ -57,7 +57,7 @@ bool CMoneyFixedRiskBase::UpdateLotSize(const string symbol,const double price,c
       else ticks=MathAbs(price-sl)/m_symbol.TickSize();
       m_volume=(m_risk/m_symbol.TickValue())/ticks;
      }
-   return NormalizeDouble(last_volume-m_volume,2)==0;
+   return last_volume-m_volume!=0;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

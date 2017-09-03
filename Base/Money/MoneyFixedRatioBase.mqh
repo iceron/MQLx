@@ -92,7 +92,7 @@ bool CMoneyFixedRatioBase::UpdateLotSize(const string symbol,const double price,
       m_volume=m_volume_base+((int)(balance/m_balance_inc))*m_volume_inc;
       m_balance=balance;
      }
-   return NormalizeDouble(last_volume-m_volume,2)==0;
+   return last_volume-m_volume!=0;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

@@ -196,10 +196,13 @@ void CMoneyBase::OnLotSizeUpdated(void)
    m_symbol = m_symbol_man.Get();
    double maxvol=m_symbol.LotsMax();
    double minvol=m_symbol.LotsMin();
+   double lotstep=m_symbol.LotsStep();
+   double min = MathMin(minvol,lotstep);
    if(m_volume<minvol)
       m_volume=minvol;
    if(m_volume>maxvol)
-      m_volume=maxvol;
+      m_volume=maxvol;   
+   m_volume = NormalizeDouble(m_volume,(int)-MathLog10(min));
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

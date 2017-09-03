@@ -71,7 +71,7 @@ bool CMoneyFixedRiskPerPointBase::UpdateLotSize(const string symbol,const double
       double balance=m_equity==false?m_account.Balance():m_account.Equity();
       m_volume=(m_risk/m_symbol.TickValue());
      }
-   return NormalizeDouble(last_volume-m_volume,2)==0;
+   return last_volume-m_volume!=0;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
