@@ -131,14 +131,17 @@ CSignalsBase::Check(void)
          if(m_signal_open>CMD_VOID)
            {
             ENUM_CMD signal_open=signal.SignalOpen();
-            if(m_signal_open==CMD_NEUTRAL)
-              {    
-               m_signal_open=signal_open;
-              }
-            else if(m_signal_open!=signal_open)
-              {               
-               m_signal_open=CMD_VOID;
-              }
+            if (signal_open!=CMD_NEUTRAL)
+            {
+               if(m_signal_open==CMD_NEUTRAL)
+                 {    
+                  m_signal_open=signal_open;
+                 }
+               else if(m_signal_open!=signal_open)
+                 {               
+                  m_signal_open=CMD_VOID;
+                 }
+            }
            }
         }
       if(signal.Exit())
@@ -146,14 +149,17 @@ CSignalsBase::Check(void)
          if(m_signal_close>CMD_VOID)
            {
             ENUM_CMD signal_close=signal.SignalClose();
-            if(m_signal_close==CMD_NEUTRAL)
-              {
-               m_signal_close=signal_close;
-              }
-            else if(m_signal_close!=signal_close)
-              {
-               m_signal_close=CMD_VOID;
-              }
+            if (signal_close!=CMD_NEUTRAL)
+            {
+               if(m_signal_close==CMD_NEUTRAL)
+                 {
+                  m_signal_close=signal_close;
+                 }
+               else if(m_signal_close!=signal_close)
+                 {
+                  m_signal_close=CMD_VOID;
+                 }
+            }
            }
         }
      }
