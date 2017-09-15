@@ -20,6 +20,7 @@ protected:
    ENUM_CMD          m_signal_close_last;
    bool              m_invert;
    bool              m_new_signal;
+   bool              m_new_signal_close;
    CSymbolManager   *m_symbol_man;
    CEventAggregator *m_event_man;
    CObject          *m_container;
@@ -62,6 +63,7 @@ CSignalsBase::CSignalsBase(void) : m_active(true),
                                    m_signal_open_last(CMD_NEUTRAL),
                                    m_signal_close_last(CMD_NEUTRAL),
                                    m_new_signal(true),
+                                   m_new_signal_close(false),
                                    m_invert(false)
   {
   }
@@ -163,9 +165,12 @@ CSignalsBase::Check(void)
    if(m_new_signal)
      {
       if(m_signal_open==m_signal_open_last)
-         m_signal_open = CMD_NEUTRAL;
+         m_signal_open = CMD_NEUTRAL;      
+     }
+   if(m_new_signal_close)
+     {
       if(m_signal_close==m_signal_close_last)
-         m_signal_close= CMD_NEUTRAL;
+         m_signal_close = CMD_NEUTRAL;      
      }
   }
 //+------------------------------------------------------------------+
