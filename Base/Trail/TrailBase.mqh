@@ -241,23 +241,55 @@ double CTrailBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const do
    activation=ActivationPrice(type,entry_price);
    deactivation=DeactivationPrice(type,entry_price);
    new_price=Price(type);
-   if((type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_TAKEPROFIT))
+   if(type==ORDER_TYPE_BUY)
      {
-      if(m_step>0 && (price>=activation-m_trail*point || activation==0.0) && (new_price>price+m_step*point))
-         next_stop=new_price;
-      else next_stop=activation-m_trail*point;      
-      if((deactivation>0 && next_stop>=deactivation && next_stop>0.0) || (deactivation==0))
-         if(next_stop<=new_price)
-            return next_stop;
+      if (m_target==TRAIL_TARGET_STOPLOSS)
+      {
+         if(m_step>0 && (activation==0.0 || price>=activation-m_trail*point) && (new_price>price+m_step*point))
+            next_stop=new_price;
+         else next_stop=activation-m_trail*point;
+         if(next_stop<price)
+            next_stop=price;
+         if((deactivation==0) || (deactivation>0 && next_stop>=deactivation && next_stop>0.0))
+            if(next_stop<=new_price)
+               return next_stop;
+      }
+      else if (m_target==TRAIL_TARGET_TAKEPROFIT)
+      {
+         if(m_step>0 && ( activation==0.0 || price>=activation) && (new_price>price+m_step*point))
+            next_stop=new_price;
+         else next_stop=activation+m_trail*point;
+         if(next_stop<price)
+            next_stop=price;
+         if((deactivation==0) || (deactivation>0 && next_stop<=deactivation && next_stop>0.0))
+            if(next_stop>=new_price)
+               return next_stop;
+      }
      }
-   if((type==ORDER_TYPE_SELL && m_target==TRAIL_TARGET_STOPLOSS) || (type==ORDER_TYPE_BUY && m_target==TRAIL_TARGET_TAKEPROFIT))
+   if(type==ORDER_TYPE_SELL)
      {
-      if(m_step>0 && (price<=activation+m_trail*point || activation==0.0) && (new_price<price-m_step*point))
-         next_stop=new_price;
-      else next_stop=activation+m_trail*point;      
-      if((deactivation>0 && next_stop<=deactivation && next_stop>0.0) || (deactivation==0))
-         if(next_stop>=new_price)
-            return next_stop;
+      if (m_target==TRAIL_TARGET_STOPLOSS)
+      {
+         if(m_step>0 && (activation==0.0 || price<=activation+m_trail*point) && (new_price<price-m_step*point))
+            next_stop=new_price;
+         else next_stop=activation+m_trail*point;
+         if(next_stop>price)
+            next_stop=price;     
+         if((deactivation==0) || (deactivation>0 && next_stop<=deactivation && next_stop>0.0))
+            if(next_stop>=new_price)
+               return next_stop;
+      }
+      else if (m_target==TRAIL_TARGET_TAKEPROFIT)
+      {
+         if(m_step>0 && (activation==0.0 || price<=activation) && (new_price<price-m_step*point))
+            next_stop=new_price;
+         else next_stop=activation-m_trail*point;
+         if(next_stop>price)
+            next_stop=price;     
+         if((deactivation==0) || (deactivation>0 && next_stop<=deactivation && next_stop>0.0))
+            if(next_stop<=new_price)
+               return next_stop;
+      }
      }
    return 0;
   }
@@ -269,12 +301,16 @@ double CTrailBase::Price(const ENUM_ORDER_TYPE type)
    if(type==ORDER_TYPE_BUY)
      {
       if(m_target==TRAIL_TARGET_STOPLOSS)
-         return m_symbol.Bid()-m_trail*m_symbol.Point();;
+         return m_symbol.Bid()-m_trail*m_symbol.Point();
+      else if(m_target==TRAIL_TARGET_TAKEPROFIT)
+         return m_symbol.Ask()+m_trail*m_symbol.Point();
      }
    else if(type==ORDER_TYPE_SELL)
      {
       if(m_target==TRAIL_TARGET_STOPLOSS)
-         return m_symbol.Ask()+m_trail*m_symbol.Point();;
+         return m_symbol.Ask()+m_trail*m_symbol.Point();
+      else if(m_target==TRAIL_TARGET_TAKEPROFIT)
+         return m_symbol.Bid()-m_trail*m_symbol.Point();
      }
    return 0;
   }
