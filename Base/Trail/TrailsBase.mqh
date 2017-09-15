@@ -31,10 +31,6 @@ public:
    void              Active(const bool activate);
    //--- checking
    virtual double    Check(const string,const ENUM_ORDER_TYPE,const double,const double,const ENUM_TRAIL_TARGET);
-   //--- recovery
-   virtual bool      CreateElement(const int);
-protected:
-
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -141,13 +137,6 @@ double CTrailsBase::Check(const string symbol,const ENUM_ORDER_TYPE type,const d
       }      
      }
    return ret;
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool CTrailsBase::CreateElement(const int index)
-  {
-   return true;
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
