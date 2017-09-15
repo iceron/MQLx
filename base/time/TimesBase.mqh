@@ -119,7 +119,7 @@ bool CTimesBase::Validate(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CTimesBase::Evaluate(datetime current) const
+bool CTimesBase::Evaluate(datetime current=0) const
   {
    if(!Active()) return true;
    for(int i=0;i<Total();i++)

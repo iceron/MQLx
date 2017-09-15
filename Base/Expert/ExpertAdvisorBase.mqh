@@ -758,11 +758,11 @@ datetime CExpertAdvisorBase::Time(const int index=0)
   {
    if (index>=0)
    {
-      double time[];
-      if(CopyTime(m_symbol_name,m_period,index,1,time)>0) 
-           return(time[0]);
+      datetime time[];
+      if(CopyTime(m_symbol_name,(ENUM_TIMEFRAMES)m_period,index,1,time)>0) 
+         return(time[0]);
    }     
-   return(-1);
+   return(0);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
