@@ -90,7 +90,6 @@ public:
    CMoneys          *Moneys(void);
    COrders          *Orders(void);
    COrders          *OrdersHistory(void);
-   //CArrayInt        *OtherMagic(void);
    CStops           *Stops(void);
    CSignals         *Signals(void);
    CTimes           *Times(void);
