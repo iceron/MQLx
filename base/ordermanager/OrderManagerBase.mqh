@@ -19,7 +19,6 @@ class COrderManagerBase : public CObject
   {
 protected:
    double            m_lotsize;
-   //int               m_price_points;
    string            m_comment;
    int               m_magic;
    int               m_expiration;
@@ -790,7 +789,6 @@ bool COrderManagerBase::Save(const int handle)
    if(handle==INVALID_HANDLE)
       return false;
    file.WriteDouble(m_lotsize);
-//file.WriteInteger(m_price_points);
    file.WriteString(m_comment);
    file.WriteInteger(m_expiration);
    file.WriteInteger(m_history_count);
