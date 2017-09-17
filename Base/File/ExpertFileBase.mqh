@@ -60,34 +60,6 @@ bool CExpertFileBase::ReadBool(bool &value)
 //--- failure
    return(false);
   }
-/*
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-template<typename T>
-bool CExpertFileBase::WriteObject(T *object)
-  {
-//--- check handle & object
-   if(m_handle!=INVALID_HANDLE)
-      if(CheckPointer(object))
-         return(object.Save(GetPointer(this)));
-//--- failure
-   return(false);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-template<typename T>
-bool CExpertFileBase::ReadObject(T *object)
-  {
-//--- check handle & object
-   if(m_handle!=INVALID_HANDLE)
-      if(CheckPointer(object))
-         return(object.Load(GetPointer(this)));
-//--- failure
-   return(false);
-  }
-*/
 //+------------------------------------------------------------------+
 #ifdef __MQL5__
 #include "..\..\MQL5\File\ExpertFile.mqh"
