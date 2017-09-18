@@ -135,6 +135,7 @@ public:
    virtual void      OnChartEvent(const int,const long&,const double&,const string&);
    virtual void      OnTimer(void);
    virtual void      OnTrade(void);
+   virtual void      OnDeinit(const int,const int);
    //--- recovery
    virtual bool      Save(const int);
    virtual bool      Load(const int);
@@ -151,7 +152,6 @@ protected:
    //--- symbol manager
    virtual bool      RefreshRates(void);
    //--- deinitialization
-   void              Deinit(const int);
    void              DeinitAccount(void);
    void              DeinitSignals(void);
    void              DeinitSymbol(void);
@@ -179,7 +179,7 @@ CExpertAdvisorBase::CExpertAdvisorBase(void) : m_active(true),
 //+------------------------------------------------------------------+
 CExpertAdvisorBase::~CExpertAdvisorBase(void)
   {
-   Deinit();
+   OnDeinit();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -755,12 +755,12 @@ bool CExpertAdvisorBase::TradeOpen(const string symbol,const ENUM_ORDER_TYPE typ
 //+------------------------------------------------------------------+
 datetime CExpertAdvisorBase::Time(const int index=0)
   {
-   if (index>=0)
-   {
+   if(index>=0)
+     {
       datetime time[];
-      if(CopyTime(m_symbol_name,(ENUM_TIMEFRAMES)m_period,index,1,time)>0) 
+      if(CopyTime(m_symbol_name,(ENUM_TIMEFRAMES)m_period,index,1,time)>0)
          return(time[0]);
-   }     
+     }
    return(0);
   }
 //+------------------------------------------------------------------+
@@ -781,17 +781,17 @@ void CExpertAdvisorBase::ManageOrdersHistory(void)
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::OnTick(void)
-  {   
+  {
    if(!Active())
       return false;
    if(m_on_tick_process)
       return false;
    m_on_tick_process=true;
    if(!RefreshRates())
-   {
+     {
       m_on_tick_process=true;
       return false;
-   }   
+     }
    DetectNewBars();
    bool  checkopenlong=false,
    checkopenshort=false,
@@ -826,22 +826,22 @@ bool CExpertAdvisorBase::OnTick(void)
         }
      }
    m_order_man.OnTick();
-   bool result = false;
+   bool result=false;
    if((checkopenlong || checkopenshort) && 
       (m_every_tick || IsNewBar(m_symbol_name,m_period)) && 
-      (!CheckPointer(m_times) || m_times.Evaluate()) &&
+      (!CheckPointer(m_times) || m_times.Evaluate()) && 
       (!m_one_trade_per_candle || m_last_trade_time<Time(0)))
      {
       if(checkopenlong)
-      {
-         result = TradeOpen(m_symbol_name,ORDER_TYPE_BUY,m_distance*m_distance_factor_long);
-      }   
+        {
+         result=TradeOpen(m_symbol_name,ORDER_TYPE_BUY,m_distance*m_distance_factor_long);
+        }
       if(checkopenshort)
-      {
-         result = TradeOpen(m_symbol_name,ORDER_TYPE_SELL,m_distance*m_distance_factor_short);
-      }   
-      if (result)
-         m_last_trade_time = TimeCurrent();
+        {
+         result=TradeOpen(m_symbol_name,ORDER_TYPE_SELL,m_distance*m_distance_factor_short);
+        }
+      if(result)
+         m_last_trade_time=TimeCurrent();
      }
    m_on_tick_process=false;
    return false;
@@ -867,18 +867,20 @@ void CExpertAdvisorBase::OnTrade(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-bool CExpertAdvisorBase::RefreshRates()
+void CExpertAdvisorBase::OnDeinit(const int reason=0,const int handle=INVALID_HANDLE)
   {
-   return m_symbol_man.RefreshRates();
+   if (CheckPointer(GetPointer(this))==POINTER_AUTOMATIC && reason>0 && handle!=INVALID_HANDLE)
+      Save(handle);
+   DeinitSymbol();
+   DeinitSignals();
+   DeinitTimes();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertAdvisorBase::Deinit(const int reason=0)
+bool CExpertAdvisorBase::RefreshRates()
   {
-   DeinitSymbol();
-   DeinitSignals();
-   DeinitTimes();
+   return m_symbol_man.RefreshRates();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |

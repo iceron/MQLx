@@ -125,7 +125,7 @@ protected:
    virtual double    TakeProfitCalculate(const ENUM_ORDER_TYPE,const double);
    ulong             SendOrder(const ENUM_ORDER_TYPE,const double,const double,const double,const double);
    //--- deinitialization  
-   virtual void      Deinit(const int);
+   virtual void      OnDeinit(const int);
    virtual void      DeinitAccount(void);
    virtual void      DeinitMoneys(void);
    virtual void      DeinitStops(void);
@@ -153,7 +153,7 @@ COrderManagerBase::COrderManagerBase() : m_lotsize(0.1),
 //+------------------------------------------------------------------+
 COrderManagerBase::~COrderManagerBase()
   {
-   Deinit();
+   OnDeinit();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -719,7 +719,7 @@ bool COrderManagerBase::AddStops(CStops *stops)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void COrderManagerBase::Deinit(const int reason=0)
+void COrderManagerBase::OnDeinit(const int reason=0)
   {
    DeinitAccount();
    DeinitStops();

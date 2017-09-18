@@ -20,6 +20,7 @@ public:
                      CExpertAdvisorsBase(void);
                     ~CExpertAdvisorsBase(void);
    virtual int       Type(void) const {return CLASS_TYPE_EXPERTS;}
+   virtual int       UninitializeReason(void) const {return m_uninit_reason;}
    //--- getters and setters
    void              SetContainer(CObject *container);
    CObject          *GetContainer(void);
@@ -36,8 +37,7 @@ public:
    virtual void      OnChartEvent(const int,const long&,const double&,const string&);
    virtual void      OnTimer(void);
    virtual void      OnTrade(void);
-   //--- deinitialization
-   virtual void      OnDeinit(const int reason=0);
+   virtual void      OnDeinit(const int,const int);
    //--- recovery
    virtual bool      CreateElement(const int);
    virtual bool      Save(const int);
@@ -199,9 +199,11 @@ int CExpertAdvisorsBase::TradesTotal(void) const
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void CExpertAdvisorsBase::OnDeinit(const int reason=0)
+void CExpertAdvisorsBase::OnDeinit(const int reason=0,const int handle=INVALID_HANDLE)
   {
    m_uninit_reason=reason;
+   if (CheckPointer(GetPointer(this))==POINTER_AUTOMATIC && m_uninit_reason>0 && handle!=INVALID_HANDLE)
+      Save(handle);
    Shutdown();
   }
 //+------------------------------------------------------------------+
@@ -237,12 +239,15 @@ bool CExpertAdvisorsBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::Load(const int handle)
   {
-   for(int i=0;i<Total();i++)
-     {
-      CExpertAdvisor *e=At(i);
-      if(!e.Load(handle))
-         return false;
-     }
+   if (m_uninit_reason>0 && CheckPointer(GetPointer(this))==POINTER_AUTOMATIC)
+   {
+      for(int i=0;i<Total();i++)
+        {
+         CExpertAdvisor *e=At(i);
+         if(!e.Load(handle))
+            return false;
+        }
+   }
    return true;
   }
 //+------------------------------------------------------------------+
