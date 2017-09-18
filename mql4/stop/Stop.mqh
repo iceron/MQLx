@@ -165,6 +165,8 @@ ulong CStop::OpenStop(COrder *order,COrderStop *orderstop,const double val)
 //+------------------------------------------------------------------+
 bool CStop::CloseStop(COrder *order,COrderStop *orderstop,const double price)
   {
+   if (order.Volume()<=0)
+      return true;
    bool res=false;
    ENUM_ORDER_TYPE type=(ENUM_ORDER_TYPE)order.OrderType();
    int ticket=(int) order.Ticket();
