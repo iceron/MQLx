@@ -202,8 +202,7 @@ int CExpertAdvisorsBase::TradesTotal(void) const
 void CExpertAdvisorsBase::OnDeinit(const int reason=0,const int handle=INVALID_HANDLE)
   {
    m_uninit_reason=reason;
-   if (CheckPointer(GetPointer(this))==POINTER_AUTOMATIC && m_uninit_reason>0 && handle!=INVALID_HANDLE)
-      Save(handle);
+   Save(handle);
    Shutdown();
   }
 //+------------------------------------------------------------------+
@@ -219,18 +218,21 @@ bool CExpertAdvisorsBase::CreateElement(const int index)
       return(false);
    m_data[index]=expert_advisor;
    m_sort_mode=-1;
-   return CheckPointer(m_data[index]);;
+   return CheckPointer(m_data[index]);
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::Save(const int handle)
   {
-   for(int i=0;i<Total();i++)
+   if(handle!=INVALID_HANDLE)
      {
-      CExpertAdvisor *e=At(i);
-      if(!e.Save(handle))
-         return false;
+      for(int i=0;i<Total();i++)
+        {
+         CExpertAdvisor *e=At(i);
+         if(!e.Save(handle))
+            return false;
+        }
      }
    return true;
   }
@@ -239,15 +241,15 @@ bool CExpertAdvisorsBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorsBase::Load(const int handle)
   {
-   if (m_uninit_reason>0 && CheckPointer(GetPointer(this))==POINTER_AUTOMATIC)
-   {
+   if(handle!=INVALID_HANDLE)
+     {
       for(int i=0;i<Total();i++)
         {
          CExpertAdvisor *e=At(i);
          if(!e.Load(handle))
             return false;
         }
-   }
+     }
    return true;
   }
 //+------------------------------------------------------------------+

@@ -33,6 +33,9 @@ public:
    virtual CCandle *Get(const string,const int) const;
    virtual bool      TradeProcessed(const string,const int) const;
    virtual void      TradeProcessed(const string,const int,const bool) const;
+   //--- recovery
+   virtual bool      Save(const int);
+   virtual bool      Load(const int);
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -161,6 +164,27 @@ CCandle *CCandleManagerBase::Get(const string symbol,const int timeframe) const
             return candle;
      }
    return NULL;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleManagerBase::Save(const int handle)
+  {
+   if(handle==INVALID_HANDLE)
+      return false;
+   file.WriteBool(m_active);
+   return CArrayObj::Save(handle);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool CCandleManagerBase::Load(const int handle)
+  {
+   if(handle==INVALID_HANDLE)
+      return false;
+   if(!file.ReadBool(m_active))
+      return false;
+   return CArrayObj::Load(handle);
   }
 //+------------------------------------------------------------------+
 #ifdef __MQL5__

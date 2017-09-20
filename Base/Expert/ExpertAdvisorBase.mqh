@@ -153,6 +153,7 @@ protected:
    virtual bool      RefreshRates(void);
    //--- deinitialization
    void              DeinitAccount(void);
+   void              DeinitCandle(void);
    void              DeinitSignals(void);
    void              DeinitSymbol(void);
    void              DeinitTimes(void);
@@ -869,11 +870,10 @@ void CExpertAdvisorBase::OnTrade(void)
 //+------------------------------------------------------------------+
 void CExpertAdvisorBase::OnDeinit(const int reason=0,const int handle=INVALID_HANDLE)
   {
-   if (CheckPointer(GetPointer(this))==POINTER_AUTOMATIC && reason>0 && handle!=INVALID_HANDLE)
-      Save(handle);
    DeinitSymbol();
    DeinitSignals();
    DeinitTimes();
+   DeinitCandle();
   }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -907,8 +907,17 @@ void CExpertAdvisorBase::DeinitTimes(void)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+void CExpertAdvisorBase::DeinitCandle(void)
+  {
+   m_candle_man.Shutdown();
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 bool CExpertAdvisorBase::Save(const int handle)
   {
+   if(handle==INVALID_HANDLE)
+      return true;
    return m_order_man.Save(handle);
   }
 //+------------------------------------------------------------------+
@@ -916,6 +925,8 @@ bool CExpertAdvisorBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool CExpertAdvisorBase::Load(const int handle)
   {
+   if(handle==INVALID_HANDLE)
+      return true;
    return m_order_man.Load(handle);
   }
 //+------------------------------------------------------------------+

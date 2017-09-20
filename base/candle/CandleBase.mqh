@@ -237,6 +237,14 @@ bool CCandleBase::Compare(MqlRates &rates) const
 //+------------------------------------------------------------------+
 bool CCandleBase::Save(const int handle)
   {
+   if(handle==INVALID_HANDLE)
+      return false;
+   file.WriteBool(m_new);
+   file.WriteBool(m_wait_for_new);
+   file.WriteBool(m_trade_processed);
+   file.WriteInteger(m_period);
+   file.WriteBool(m_active);
+   file.WriteStruct(m_last);
    return true;
   }
 //+------------------------------------------------------------------+
@@ -244,6 +252,20 @@ bool CCandleBase::Save(const int handle)
 //+------------------------------------------------------------------+
 bool CCandleBase::Load(const int handle)
   {
+   if(handle==INVALID_HANDLE)
+      return false;
+   if(!file.ReadBool(m_new))
+      return false;
+   if(!file.ReadBool(m_wait_for_new))
+      return false;
+   if(!file.ReadBool(m_trade_processed))
+      return false;
+   if(!file.ReadInteger(m_period))
+      return false;
+   if(!file.ReadBool(m_active))
+      return false;
+   if(!file.ReadStruct(m_last))
+      return false;
    return true;
   }
 //+------------------------------------------------------------------+

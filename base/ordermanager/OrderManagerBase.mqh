@@ -417,21 +417,21 @@ void COrderManagerBase::OnTradeTransaction(COrder*)
 //+------------------------------------------------------------------+
 int COrderManagerBase::FindOrderIndex(COrder *order,const bool history=false)
   {
-   if (CheckPointer(order))
-   {      
+   if(CheckPointer(order))
+     {
       COrders *orders;
-      if (!history)
-         orders = GetPointer(m_orders);
-      else orders = GetPointer(m_orders_history);
-      for (int i=0;i<orders.Total();i++)
-      {
-         COrder *ord = orders.At(i);
-         if (!CheckPointer(ord))
+      if(!history)
+         orders=GetPointer(m_orders);
+      else orders=GetPointer(m_orders_history);
+      for(int i=0;i<orders.Total();i++)
+        {
+         COrder *ord=orders.At(i);
+         if(!CheckPointer(ord))
             continue;
-         if (order.Compare(GetPointer(ord)))
+         if(order.Compare(GetPointer(ord)))
             return i;
-      }
-   }   
+        }
+     }
    return 0;
   }
 //+------------------------------------------------------------------+
@@ -627,26 +627,26 @@ double COrderManagerBase::PriceCalculate(ENUM_ORDER_TYPE &type,double points=0)
   {
    double price=0;
    double point=m_symbol.Point();
-   double ask=m_symbol.Ask();  
+   double ask=m_symbol.Ask();
    double bid=m_symbol.Bid();
    switch(type)
      {
       case ORDER_TYPE_BUY:
-        {              
+        {
          if(points>0)
             type=ORDER_TYPE_BUY_STOP;
          else if(points<0)
             type=ORDER_TYPE_BUY_LIMIT;
-         else price = ask;
+         else price=ask;
          break;
         }
       case ORDER_TYPE_SELL:
-        {         
+        {
          if(points>0)
             type=ORDER_TYPE_SELL_LIMIT;
          else if(points<0)
             type=ORDER_TYPE_SELL_STOP;
-         else price = bid;
+         else price=bid;
          break;
         }
       case ORDER_TYPE_BUY_LIMIT:
@@ -774,11 +774,11 @@ bool COrderManagerBase::AddMoneys(CMoneys *moneys)
 double COrderManagerBase::LotSizeCalculate(const double price,const ENUM_ORDER_TYPE type,const double stoploss)
   {
    if(CheckPointer(m_moneys))
-   {
-      double volume = m_moneys.Volume(m_symbol.Name(),0,type,stoploss);
-      if (volume>0)
+     {
+      double volume=m_moneys.Volume(m_symbol.Name(),0,type,stoploss);
+      if(volume>0)
          return volume;
-   }
+     }
    return m_lotsize;
   }
 //+------------------------------------------------------------------+
