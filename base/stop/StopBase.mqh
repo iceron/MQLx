@@ -879,6 +879,8 @@ double CStopBase::CheckTrailing(const string symbol,const ENUM_ORDER_TYPE type,c
 //+------------------------------------------------------------------+
 bool CStopBase::OrderModify(const ulong ticket,const double value)
   {
+   if(!CheckPointer(m_trade))
+      return false;
    return m_trade.OrderModify(ticket,value,0.0,0.0,0,0,0.0);
   }
 //+------------------------------------------------------------------+
