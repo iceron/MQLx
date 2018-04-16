@@ -106,7 +106,7 @@ bool CCandleManagerBase::Add(const string symbol,const int period)
          instrument.Refresh();
          CCandle *candle=new CCandle();
          candle.Init(instrument,period);
-         return Add(instrument);
+         return Add(candle);
         }
      }
    return false;
